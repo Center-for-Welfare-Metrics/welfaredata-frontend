@@ -8,6 +8,7 @@
     transform: translate(-50%,-50%);
     transition: all 500ms;
     z-index:-1;
+    white-space: nowrap;
 }
 
 .label.focus{
@@ -21,6 +22,8 @@
 .container{
     padding:2rem;
     position: relative;
+    display:flex;
+    flex-direction: column;
     i{
         position:absolute;
         top:2.5rem;
@@ -44,6 +47,12 @@
     
     input:-webkit-autofill {
         -webkit-text-fill-color: $local_white !important;
+    }
+    .error{
+        font-size:.8rem;
+        color:red;
+        white-space: pre-wrap;
+        text-align: center;
     }
 }
    

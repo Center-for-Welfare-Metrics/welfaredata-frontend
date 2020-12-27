@@ -40,7 +40,7 @@ const FormInput = (
                 onFocus={moveLabel}
                 onBlur={moveLabel}
             />
-            {error && <span>{error}</span>}
+            {error && <span className={styles.error}>{error.join('\n')}</span>}
         </div>
     )
 }
