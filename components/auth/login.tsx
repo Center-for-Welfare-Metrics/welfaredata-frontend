@@ -3,6 +3,9 @@ import SubmitButton from '../common/buttons/submit-button'
 import FormInput from '../common/inputs/form-input'
 import styles from './login.module.scss'
 import Link from 'next/link'
+import authApi from '../../api/auth'
+
+const Validator = require('validatorjs')
 
 const Login = () => {
 
@@ -12,7 +15,26 @@ const Login = () => {
 
     const [error,setError] = useState({email:[],password:[]})
 
-    
+    const login = () => {
+        let validation = new Validator({email,password},{
+            email:'required|email',
+            password:'min:6'
+        })
+        
+        validation.passes(()=>{
+            authApi.login({email,password})
+            .then((response)=>{
+                console.log(response)
+            })
+            .catch(({response})=>{
+                setError(response.data)
+            })
+        })
+
+        validation.fails(()=>{
+            setError(validation.errors.errors)
+        })
+    }
 
     return (
         <div className={styles.container}>
@@ -33,7 +55,7 @@ const Login = () => {
                 type='password'
                 icon='fa-key'
             />
-            <SubmitButton onClick={console.log}>Log in</SubmitButton>
+            <SubmitButton onClick={login}>Log in</SubmitButton>
             <span className={styles.register}>
                 Don't have account? <Link href='/register'>Register Now</Link>
             </span>
