@@ -1,12 +1,12 @@
-// import styles from '../styles/Home.module.css'
+import Link from 'next/link'
+import onlyGuest from '../components/HOC/onlyGuest'
 
 const Home = () => {
   return (
     <div>
-
+      <Link href='/login'>Login</Link>
     </div>
   )
-
 }
 
-export default Home
+export default onlyGuest(Home)

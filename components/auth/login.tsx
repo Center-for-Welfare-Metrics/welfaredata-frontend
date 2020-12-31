@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import SubmitButton from '../common/buttons/submit-button'
 import FormInput from '../common/inputs/form-input'
 import styles from './login.module.scss'
 import Link from 'next/link'
 import authApi from '../../api/auth'
+import UserContext from '../../context/user'
 
 const Validator = require('validatorjs')
 
@@ -15,6 +16,8 @@ const Login = () => {
 
     const [error,setError] = useState({email:[],password:[]})
 
+    const {setUser} = useContext(UserContext)
+
     const login = () => {
         let validation = new Validator({email,password},{
             email:'required|email',
@@ -24,10 +27,12 @@ const Login = () => {
         validation.passes(()=>{
             authApi.login({email,password})
             .then((response)=>{
-                console.log(response)
+                setUser(response.data)
             })
             .catch(({response})=>{
-                setError(response.data)
+                if(response){
+                    setError(response.data)
+                }
             })
         })
 
@@ -47,7 +52,7 @@ const Login = () => {
                 icon='fa-user'
             />
             <FormInput 
-                label='Password'
+                label='Senha'
                 value={password}
                 onChange={(e)=>setPassword(e.target.value)}
                 error={error.password}
@@ -55,9 +60,9 @@ const Login = () => {
                 type='password'
                 icon='fa-key'
             />
-            <SubmitButton onClick={login}>Log in</SubmitButton>
+            <SubmitButton onClick={login}>Entrar</SubmitButton>
             <span className={styles.register}>
-                Don't have account? <Link href='/register'>Register Now</Link>
+                Não tem uma conta? <Link href='/register'>Registre-se agora!</Link>
             </span>
         </div>
     )
