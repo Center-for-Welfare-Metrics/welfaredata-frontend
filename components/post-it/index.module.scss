@@ -1,0 +1,49 @@
+@import '../colors';
+
+$card_width:20rem;
+$card_height:15rem;
+
+.container{
+    width:$card_width;
+    height:$card_height;
+    background-color:$local_blue;
+    position:relative;
+    z-index:0;
+    margin:2rem;
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.background_icon{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:90%;
+    height:90%;
+    z-index:-1;
+    opacity: 1;
+    transition: opacity 500ms;
+}
+
+.buttons{
+    position: absolute;
+    bottom:0;
+    width:$card_width;
+    height: 50%;
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transition: opacity 500ms;
+}
+
+.container:hover .buttons{
+    opacity:1;
+    transition: opacity 500ms;
+}
+
+.container:hover .background_icon{
+    opacity: .5;
+    transition: opacity 500ms;
+}

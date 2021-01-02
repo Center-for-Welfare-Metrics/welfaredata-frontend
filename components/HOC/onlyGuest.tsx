@@ -9,7 +9,7 @@ const onlyGuest = Page => {
 
         useEffect(()=>{
             if(user){
-                Router.push('/test')
+                Router.push('/home')
             }
         },[user])
 
