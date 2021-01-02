@@ -43,8 +43,8 @@ function MyApp({ Component, pageProps }) {
           <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
           5rem
         </Head>
-        {/* <div>Icons made by <a href="https://www.flaticon.com/authors/vitaly-gorbachev" title="Vitaly Gorbachev">Vitaly Gorbachev</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> */}
         <Component {...pageProps} />
+        <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </UserContext.Provider>
     </>
 }
