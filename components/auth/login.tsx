@@ -18,7 +18,8 @@ const Login = () => {
 
     const {setUser} = useContext(UserContext)
 
-    const login = () => {
+    const login = (event) => {
+        event.preventDefault()
         let validation = new Validator({email,password},{
             email:'required|email',
             password:'min:6'
@@ -43,24 +44,26 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <FormInput 
-                label='Email'
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
-                error={error.email}
-                name='email'
-                icon='fa-user'
-            />
-            <FormInput 
-                label='Senha'
-                value={password}
-                onChange={(e)=>setPassword(e.target.value)}
-                error={error.password}
-                name='password'
-                type='password'
-                icon='fa-key'
-            />
-            <SubmitButton onClick={login}>Entrar</SubmitButton>
+            <form method='POST' onSubmit={login}>
+                <FormInput 
+                    label='Email'
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
+                    error={error.email}
+                    name='email'
+                    icon='fa-user'
+                />
+                <FormInput 
+                    label='Senha'
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
+                    error={error.password}
+                    name='password'
+                    type='password'
+                    icon='fa-key'
+                />
+                <SubmitButton>Entrar</SubmitButton>
+            </form>
             <span className={styles.register}>
                 Não tem uma conta? <Link href='/register'>Registre-se agora!</Link>
             </span>

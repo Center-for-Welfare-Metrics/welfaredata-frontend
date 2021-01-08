@@ -19,7 +19,8 @@ const Register = () => {
 
     const {setUser} = useContext(UserContext)
 
-    const register = () => {
+    const register = (event) => {
+        event.preventDefault()
         let validation = new Validator({email,password,password_confirmation},{
             email:'required|email',
             password:'min:6|confirmed'
@@ -43,33 +44,35 @@ const Register = () => {
 
     return (
         <div className={styles.container}>
-            <FormInput 
-                label='Email'
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
-                error={error.email}
-                name='email'
-                icon='fa-user'
-            />
-            <FormInput 
-                label='Senha'
-                value={password}
-                onChange={(e)=>setPassword(e.target.value)}
-                error={error.password}
-                name='password'
-                type='password'
-                icon='fa-key'
-            />
-            <FormInput 
-                label='Confirmar Senha'
-                value={password_confirmation}
-                onChange={(e)=>setPasswordConfirmation(e.target.value)}
-                error={error.password_confirmation}
-                name='password_confirmation'
-                type='password'
-                icon='fa-lock'
-            />
-            <SubmitButton onClick={register}>Registrar</SubmitButton>
+            <form method='POST' onSubmit={register}>
+                <FormInput 
+                    label='Email'
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
+                    error={error.email}
+                    name='email'
+                    icon='fa-user'
+                />
+                <FormInput 
+                    label='Senha'
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
+                    error={error.password}
+                    name='password'
+                    type='password'
+                    icon='fa-key'
+                />
+                <FormInput 
+                    label='Confirmar Senha'
+                    value={password_confirmation}
+                    onChange={(e)=>setPasswordConfirmation(e.target.value)}
+                    error={error.password_confirmation}
+                    name='password_confirmation'
+                    type='password'
+                    icon='fa-lock'
+                />
+                <SubmitButton>Registrar</SubmitButton>
+            </form>
             <span className={styles.register}>
                 Já tem uma conta? <Link href='/login'>Entrar</Link>
             </span>
