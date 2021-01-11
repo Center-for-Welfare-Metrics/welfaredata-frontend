@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import onlyGuest from '../components/HOC/onlyGuest'
+import onlyGuest from '@/components/HOC/onlyGuest'
 
 const Home = () => {
   return (

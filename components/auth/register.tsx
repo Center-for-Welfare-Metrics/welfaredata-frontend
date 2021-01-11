@@ -1,10 +1,10 @@
-import styles from './login.module.scss'
-import FormInput from '../common/inputs/form-input'
-import SubmitButton from '../common/buttons/submit-button'
-import Link from 'next/link'
 import { useContext, useState } from 'react'
-import authApi from '../../api/auth'
-import UserContext from '../../context/user'
+import Link from 'next/link'
+import FormInput from '@/components/common/inputs/form-input'
+import SubmitButton from '@/components/common/buttons/submit-button'
+import authApi from '@/api/auth'
+import UserContext from '@/context/user'
+import styles from './login.module.scss'
 
 const Validator = require('validatorjs')
 

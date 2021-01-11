@@ -1,10 +1,10 @@
 import { useContext } from "react"
-import withAuth from "../../components/HOC/withAuth"
-import DefaultLayout from "../../components/layouts/default"
-import PostIt from "../../components/post-it"
-import PostItGrid from "../../components/post-it/grid"
-import PostItButton from "../../components/post-it/it-button"
-import UserContext from '../../context/user'
+import withAuth from "@/components/HOC/withAuth"
+import DefaultLayout from "@/components/layouts/default"
+import PostIt from "@/components/post-it"
+import PostItGrid from "@/components/post-it/grid"
+import PostItButton from "@/components/post-it/it-button"
+import UserContext from '@/context/user'
 
 const Home = () => {
     const {logOut} = useContext(UserContext)

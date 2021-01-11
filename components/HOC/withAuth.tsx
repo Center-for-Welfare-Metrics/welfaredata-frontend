@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
-import UserContext from '../../context/user'
 import Router from 'next/router'
+import UserContext from '@/context/user'
 
 const withAuth = Page => {
     const Auth = (props) => {
