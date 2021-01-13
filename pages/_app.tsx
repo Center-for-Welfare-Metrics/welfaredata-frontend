@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import UserContext from '@/context/user'
+import UserContext,{IUser,IUserContext} from '@/context/user'
 import authApi from '@/api/auth'
 import './styles.scss'
 
 function MyApp({ Component, pageProps }) {
 
-  const [user,setUser] = useState(null)
+  const [user,setUser] = useState<IUser>(null)
   const [firstLoad,setFirstLoad] = useState(false)
 
   const logOut = () => {
@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
     })
   }
 
-  const userValue = {user,setUser,logOut}
+  const userValue : IUserContext = {user,setUser,logOut}
 
   useEffect(()=>{
     if(!user){

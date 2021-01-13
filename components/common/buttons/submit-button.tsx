@@ -1,11 +1,14 @@
+import {FC,ButtonHTMLAttributes} from 'react'
 import styles from './submit-button.module.scss'
 
-const SubmitButton = ({
-    children
+
+
+const SubmitButton : FC<ButtonHTMLAttributes<HTMLButtonElement>> = ({
+    children,...rest
 }) => {
 
     return (
-        <button type='submit' className={styles.container}>{children}</button>
+        <button className={styles.container} {...rest}>{children}</button>
     )
 }
 

@@ -1,23 +1,29 @@
-import { useState } from 'react'
+import { useState,FC,InputHTMLAttributes } from 'react'
 import styles from './form-input.module.scss'
 
-const FormInput = (
+interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
+    name:string,
+    type?:string,
+    error:string[],
+    label:string,
+    icon:string
+}
+
+const FormInput : FC<IFormInput> = (
     {
         name,
         type='text',
-        placeholder='',
-        onChange,
-        className='',
-        value,
         error,
         label,
-        icon
+        icon,
+        ...rest
     }
 ) => {
 
     const [onFocus,setFocus] = useState(false)
 
     const moveLabel = () => {
+        let {value} = rest
         if(!onFocus){
             setFocus(true)
         }else if(value===''){
@@ -33,17 +39,15 @@ const FormInput = (
                 id={name}
                 name={name}
                 type={type}
-                placeholder={placeholder}
-                onChange={onChange}
-                value={value}
-                className={`${className}`}
                 onFocus={moveLabel}
                 onBlur={moveLabel}
+                {...rest}
             />
             {error && <span className={styles.error}>
-                {
+                {error}
+                {/* {
                     Array.isArray(error)? (error.join('\n')) : (error)
-                }
+                } */}
             </span>}
         </div>
     )

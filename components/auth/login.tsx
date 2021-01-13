@@ -62,7 +62,7 @@ const Login = () => {
                     type='password'
                     icon='fa-key'
                 />
-                <SubmitButton>Entrar</SubmitButton>
+                <SubmitButton type='submit'>Entrar</SubmitButton>
             </form>
             <span className={styles.register}>
                 Não tem uma conta? <Link href='/register'>Registre-se agora!</Link>

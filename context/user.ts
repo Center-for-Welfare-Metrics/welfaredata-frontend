@@ -1,10 +1,18 @@
 import { createContext } from "react";
 
-const UserContext = createContext({
-    user:null,
-    setUser:(user:any) => {},
-    logOut:()=>{}
-})
+export interface IUser{
+    _id:string,
+    email:string,
+    __v:number
+}
+
+export interface IUserContext {
+    user:IUser,
+    setUser(user:IUser):void,
+    logOut():void
+}
+
+const UserContext = createContext<IUserContext>(null)
 
 
 export default UserContext
