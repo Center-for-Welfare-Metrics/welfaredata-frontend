@@ -9,25 +9,29 @@ import styles from './login.module.scss'
 const Validator = require('validatorjs')
 
 const Register = () => {
+
+    const [name,setName] = useState('')
+
     const [email,setEmail] = useState('')
 
     const [password,setPassword] = useState('')
 
     const [password_confirmation,setPasswordConfirmation] = useState('')
     
-    const [error,setError] = useState({email:[],password:[],password_confirmation:[]})
+    const [error,setError] = useState({email:[],password:[],password_confirmation:[],name:[]})
 
     const {setUser} = useContext(UserContext)
 
     const register = (event) => {
         event.preventDefault()
-        let validation = new Validator({email,password,password_confirmation},{
+        let validation = new Validator({name,email,password,password_confirmation},{
             email:'required|email',
-            password:'min:6|confirmed'
+            password:'min:6|confirmed',
+            name:'required'
         })
         
         validation.passes(()=>{
-            authApi.register({email,password,password_confirmation})
+            authApi.register({name,email,password,password_confirmation})
             .then((response)=>{
                 setUser(response.data)
             })
@@ -46,12 +50,20 @@ const Register = () => {
         <div className={styles.container}>
             <form method='POST' onSubmit={register}>
                 <FormInput 
+                    label='Name'
+                    value={name}
+                    onChange={(e)=>setName(e.target.value)}
+                    error={error.name}
+                    name='name'
+                    icon='fa-user'
+                />
+                <FormInput 
                     label='Email'
                     value={email}
                     onChange={(e)=>setEmail(e.target.value)}
                     error={error.email}
                     name='email'
-                    icon='fa-user'
+                    icon='fa-at'
                 />
                 <FormInput 
                     label='Senha'
@@ -71,10 +83,10 @@ const Register = () => {
                     type='password'
                     icon='fa-lock'
                 />
-                <SubmitButton>Registrar</SubmitButton>
+                <SubmitButton>Register</SubmitButton>
             </form>
             <span className={styles.register}>
-                Já tem uma conta? <Link href='/login'>Entrar</Link>
+                Already have an account? <Link href='/login'>Login!</Link>
             </span>
         </div>
     )

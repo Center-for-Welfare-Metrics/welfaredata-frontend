@@ -42,9 +42,8 @@
         text-indent: 1.6rem;
     }
     input:-webkit-autofill {
-        box-shadow: 0 0 0 30px $local_black inset;
+        box-shadow: 0 0 0 30px $local_blue inset;
     }
-    
     input:-webkit-autofill {
         -webkit-text-fill-color: $local_white !important;
     }

@@ -22,7 +22,7 @@ const Login = () => {
         event.preventDefault()
         let validation = new Validator({email,password},{
             email:'required|email',
-            password:'min:6'
+            password:'min:6',
         })
         
         validation.passes(()=>{
@@ -51,10 +51,10 @@ const Login = () => {
                     onChange={(e)=>setEmail(e.target.value)}
                     error={error.email}
                     name='email'
-                    icon='fa-user'
+                    icon='fa-at'
                 />
                 <FormInput 
-                    label='Senha'
+                    label='Password'
                     value={password}
                     onChange={(e)=>setPassword(e.target.value)}
                     error={error.password}
@@ -62,10 +62,10 @@ const Login = () => {
                     type='password'
                     icon='fa-key'
                 />
-                <SubmitButton type='submit'>Entrar</SubmitButton>
+                <SubmitButton type='submit'>Login</SubmitButton>
             </form>
             <span className={styles.register}>
-                Não tem uma conta? <Link href='/register'>Registre-se agora!</Link>
+                Don't have an account? <Link href='/register'>Register now!</Link>
             </span>
         </div>
     )

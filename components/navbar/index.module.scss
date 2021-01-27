@@ -1,0 +1,36 @@
+@import '../colors';
+
+.container{
+    position:absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    padding:1rem 0 1rem 0;
+}
+
+.navItems{
+    display:flex;
+}
+
+.userSection{
+    display:flex;
+    flex-direction: column;
+    margin-right: 2rem;
+}
+
+.username{
+    color:$local_green;
+}
+
+.logout{
+    cursor: pointer;
+    color:$local_blue;
+    transition: all 500ms;
+}
+
+.logout:hover{
+    color: lighten($local_blue,25%);
+    transition: all 500ms;
+}

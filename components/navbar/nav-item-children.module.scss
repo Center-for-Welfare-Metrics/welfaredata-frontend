@@ -1,0 +1,14 @@
+@import '../colors';
+
+.container{
+    text-decoration: none;
+    color:$local_blue;
+    white-space: nowrap;
+    transition: color 500ms;
+}
+
+
+.container:hover{
+    color:lighten($local_blue, 25%);
+    transition: color 500ms;
+}

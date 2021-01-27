@@ -1,7 +1,13 @@
+import NavBar from '../navbar'
 import styles from './default.module.scss'
 
-const DefaultLayout = ({children}) => (
+interface IDefaultLayout{
+    children:React.ReactNode
+}
+
+const DefaultLayout = ({children}:IDefaultLayout) => (
     <div className={styles.container}>
+        <NavBar />
         {children}
     </div>
 )

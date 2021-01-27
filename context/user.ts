@@ -1,6 +1,7 @@
 import { createContext } from "react";
 
 export interface IUser{
+    name:string,
     _id:string,
     email:string,
     __v:number
