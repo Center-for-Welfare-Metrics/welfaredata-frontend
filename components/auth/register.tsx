@@ -66,7 +66,7 @@ const Register = () => {
                     icon='fa-at'
                 />
                 <FormInput 
-                    label='Senha'
+                    label='Password'
                     value={password}
                     onChange={(e)=>setPassword(e.target.value)}
                     error={error.password}
@@ -75,7 +75,7 @@ const Register = () => {
                     icon='fa-key'
                 />
                 <FormInput 
-                    label='Confirmar Senha'
+                    label='Password Confirmation'
                     value={password_confirmation}
                     onChange={(e)=>setPasswordConfirmation(e.target.value)}
                     error={error.password_confirmation}
