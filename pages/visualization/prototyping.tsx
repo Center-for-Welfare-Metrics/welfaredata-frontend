@@ -1,13 +1,12 @@
 import withAuth from "@/components/HOC/withAuth"
 import DefaultLayout from "@/components/layouts/Default"
 
-const Home = () => {
+const PrototypingPage = () => {
     return (
         <DefaultLayout>
-            
+            Prototyping
         </DefaultLayout>
     )
 }
 
-
-export default withAuth(Home)
+export default withAuth(PrototypingPage)

@@ -1,0 +1,28 @@
+{
+    "default":{
+        "colors":{
+            "local_blue":"#38618c",
+            "local_yellow":"#FFE74C",
+            "local_white":"#FFFFFF",
+            "local_pink":"#A14A76",
+            "local_red":"#9C3848",
+            "local_green":"#4DA167",
+            "local_black":"#000000"
+        },
+        "fontSize":{
+            "very_small":".5rem",
+            "small":".8rem",
+            "normal":"1rem",
+            "large":"1.5rem",
+            "extraLarge":"2rem"
+        }
+    },
+    "light":{
+        "colors":{
+
+        }
+    }
+}
+
+
+

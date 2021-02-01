@@ -7,6 +7,10 @@
     transition: color 500ms;
 }
 
+.active{
+    color:lighten($local_blue, 25%);
+    opacity: 1;
+}
 
 .container:hover{
     color:lighten($local_blue, 25%);

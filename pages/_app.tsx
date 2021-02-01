@@ -1,13 +1,27 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
+import { ThemeProvider } from "styled-components"
+
+import {useTheme} from '../theme/useTheme'
+import { GlobalStyles } from '../theme/globalStyle'
+import { setToLocalStorage } from '@/utils/storage'
+import themes from '../theme/schema.json'
 import UserContext,{IUser,IUserContext} from '@/context/user'
 import authApi from '@/api/auth'
+
 import './styles.scss'
 
 function MyApp({ Component, pageProps }) {
 
   const [user,setUser] = useState<IUser>(null)
   const [firstLoad,setFirstLoad] = useState(false)
+
+  const {theme,themeLoaded} = useTheme()
+  const [selectedTheme,setSelectedTheme] = useState(theme)
+
+  useEffect(() => {
+    setSelectedTheme(theme);
+   }, [themeLoaded])
 
   const logOut = () => {
     authApi.logout().then(() => {
@@ -18,6 +32,7 @@ function MyApp({ Component, pageProps }) {
   const userValue : IUserContext = {user,setUser,logOut}
 
   useEffect(()=>{
+    setToLocalStorage('themes',themes)
     if(!user){
       authApi.get_user()
       .then(({data})=>{
@@ -37,7 +52,8 @@ function MyApp({ Component, pageProps }) {
     }
   },[user])
 
-  return firstLoad && <>
+  return (firstLoad && themeLoaded) && <ThemeProvider theme={selectedTheme}>
+      <GlobalStyles />
       <UserContext.Provider value={userValue}>
         <Head>
           <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
@@ -45,7 +61,8 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
         <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </UserContext.Provider>
-    </>
+    </ThemeProvider>
+    
 }
 
 export default MyApp

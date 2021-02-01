@@ -1,5 +1,7 @@
 import { useState,FC,InputHTMLAttributes } from 'react'
-import styles from './form-input.module.scss'
+
+import {Container,Label,Icon,Error,Input} from './FormInputStyled'
+
 
 interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     name:string,
@@ -32,10 +34,10 @@ const FormInput : FC<IFormInput> = (
     }
 
     return (
-        <div className={styles.container}>
-            <label className={`${styles.label} ${onFocus?styles.focus:''}`} htmlFor={name}>{label}</label>
-            <i aria-hidden className={`fas ${icon}`} />
-            <input 
+        <Container>
+            <Label focus={onFocus} htmlFor={name}>{label}</Label>
+            <Icon aria-hidden className={`fas ${icon}`} />
+            <Input 
                 id={name}
                 name={name}
                 type={type}
@@ -43,13 +45,10 @@ const FormInput : FC<IFormInput> = (
                 onBlur={moveLabel}
                 {...rest}
             />
-            {error && <span className={styles.error}>
+            {error && <Error>
                 {error}
-                {/* {
-                    Array.isArray(error)? (error.join('\n')) : (error)
-                } */}
-            </span>}
-        </div>
+            </Error>}
+        </Container>
     )
 }
 

@@ -1,0 +1,62 @@
+[
+    {
+        "name":"data entry",
+        "prefix":"/data_entry",
+        "childrens":[
+            {
+                "name":"simple cohort",
+                "href":"/simple_cohort"
+            },
+            {
+                "name":"multiple cohort",
+                "href":"/multiple_cohort"
+            },
+            {
+                "name":"no- or meta-cohort",
+                "href":"/meta-cohort"
+            },
+            {
+                "name":"sources",
+                "href":"/sources"
+            }
+        ]
+    },
+    {
+        "name":"processing",
+        "prefix":"/processing",
+        "childrens":[
+            {
+                "name":"repors",
+                "href":"/reports"
+            },
+            {
+                "name":"extraction",
+                "href":"/extraction"
+            }
+        ]
+    },
+    {
+        "name":"visualization",
+        "prefix":"/visualization",
+        "childrens":[
+            {
+                "name":"prototyping",
+                "href":"/prototyping"
+            }
+        ]
+    },
+    {
+        "name":"admin",
+        "prefix":"/admin",
+        "childrens":[
+            {
+                "name":"user privileges",
+                "href":"/user_privileges"
+            },
+            {
+                "name":"platform map",
+                "href":"/platform_map"
+            }
+        ]
+    }
+]
