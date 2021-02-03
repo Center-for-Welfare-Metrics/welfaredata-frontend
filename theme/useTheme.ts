@@ -15,7 +15,7 @@ export const useTheme = () => {
   useEffect(() =>{
     const themes = getFromLocalStorage('themes')
     const localTheme = getFromLocalStorage('theme');
-    localTheme ? setTheme(localTheme) : setTheme(themes.default);
+    localTheme ? setTheme(localTheme) : setTheme(themes?.default);
     setThemeLoaded(true);
   }, []);
 

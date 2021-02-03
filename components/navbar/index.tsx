@@ -1,5 +1,4 @@
 import NavItem from './NavItem'
-import NavItemChildren from './nav-item-children'
 
 import UserContext from '@/context/user'
 import { useContext } from 'react'
@@ -16,7 +15,7 @@ const NavBar = () => {
             <NavItems>
                 {
                     NavMap.map((nav_item) => (
-                        <NavItem name={nav_item.name} key={nav_item.prefix}>
+                        <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
                             {nav_item.childrens}
                         </NavItem>
                     ))

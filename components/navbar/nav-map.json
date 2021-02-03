@@ -36,12 +36,16 @@
         ]
     },
     {
-        "name":"visualization",
-        "prefix":"/visualization",
+        "name":"processograms",
+        "prefix":"/processograms",
         "childrens":[
             {
-                "name":"prototyping",
-                "href":"/prototyping"
+                "name":"pig",
+                "href":"/pig"
+            },
+            {
+                "name":"laying hens",
+                "href":"/laying_hens"
             }
         ]
     },

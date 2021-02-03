@@ -1,0 +1,44 @@
+import Processogram from "./Processogram"
+import {Container} from './ZooStyled'
+import ProcessogramContext from '@/context/processogram'
+import { useEffect, useRef, useState } from "react"
+import { TweenLite } from 'gsap'
+
+
+const svg_file_names = ['enhanced intensive.svg','european intensive.svg','outdoor semi-intensive.svg','conventional cages.svg']
+const Pigs = () => {
+
+    const containerRef = useRef<SVGElement>(null)
+
+    const [choosen,setChoosen] = useState(null)
+
+    const pigsContextValue = {choosen,setChoosen}
+
+    useEffect(()=>{
+        if(choosen){
+            let {top} = containerRef.current.getBoundingClientRect()
+            TweenLite.fromTo(containerRef.current,{
+                top:top
+            },{
+                position:'fixed',
+                top:'80%'
+            })
+        }
+    },[choosen])
+
+    return (
+        <ProcessogramContext.Provider value={pigsContextValue}>
+            <Container ref={containerRef}>
+                {
+                    svg_file_names.map((file_name) => (
+                        <Processogram key={file_name} file_name={file_name} />
+                    ))
+                }
+            </Container>
+        </ProcessogramContext.Provider>
+    )
+}
+
+
+
+export default Pigs
