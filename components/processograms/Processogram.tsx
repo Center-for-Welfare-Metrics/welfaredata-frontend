@@ -1,9 +1,11 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { TweenLite } from 'gsap'
+import { TweenLite, gsap } from 'gsap'
 import { Container,Svg } from './ProcessogramStyled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix } from '@/utils/processogram';
 import update from 'immutability-helper'
+
+gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
     file_name:string
@@ -26,6 +28,33 @@ const Processogram = ({file_name}:IProcessogram) => {
     const svgRef = useRef(null)
 
     const containerRef = useRef<HTMLElement>(null)
+
+    useEffect(()=>{
+        if(choosen){
+            if(choosen===file_name){
+                levelZeroSelec()
+            }else{
+                TweenLite.to(containerRef.current,{
+                    opacity:'0'
+                }).then(()=>{
+                    TweenLite.to(containerRef.current,{
+                        display:'none'
+                    })
+                })
+            }
+        }else{
+            TweenLite.to(containerRef.current,{
+                display:'block',
+                width:'60rem',
+                position:'static',
+                transform:'translate(0,0)'
+            }).then(()=>{
+                TweenLite.to(containerRef.current,{
+                    opacity:'1'
+                })
+            })
+        }
+    },[choosen])
 
     const withLimits = (screenInfo) => {
         return {
@@ -109,33 +138,6 @@ const Processogram = ({file_name}:IProcessogram) => {
             zIndex:'999'
         })
     }
-
-    useEffect(()=>{
-        if(choosen){
-            if(choosen===file_name){
-                levelZeroSelec()
-            }else{
-                TweenLite.to(containerRef.current,{
-                    opacity:'0'
-                }).then(()=>{
-                    TweenLite.to(containerRef.current,{
-                        display:'none'
-                    })
-                })
-            }
-        }else{
-            TweenLite.to(containerRef.current,{
-                display:'block',
-                width:'60rem',
-                position:'static',
-                transform:'translate(0,0)'
-            }).then(()=>{
-                TweenLite.to(containerRef.current,{
-                    opacity:'1'
-                })
-            })
-        }
-    },[choosen])
 
     const zoomOnElement = (element:HTMLElement) => {
         let scale = scaleElement(element)
