@@ -1,4 +1,4 @@
-import onlyGuest from '@/components/HOC/onlyGuest'
+import onlyGuest from '@/components/HOC/only-guest'
 import Router from 'next/router'
 import { useEffect } from 'react'
 

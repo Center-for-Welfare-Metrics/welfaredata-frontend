@@ -1,5 +1,5 @@
 import Register from "../../components/auth/register"
-import onlyGuest from "@/components/HOC/onlyGuest"
+import onlyGuest from "@/components/HOC/only-guest"
 import auth from "@/api/auth"
 import { useContext, useState } from "react"
 import UserContext from "@/context/user"

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 import Login from "@/components/auth/login"
-import onlyGuest from "@/components/HOC/onlyGuest"
+import onlyGuest from "@/components/HOC/only-guest"
 import UserContext from "@/context/user"
 import auth from "@/api/auth"
 

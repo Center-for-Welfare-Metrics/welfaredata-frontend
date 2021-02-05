@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import FormInput from '@/components/common/inputs/formInput'
-import SubmitButton from '@/components/common/buttons/submitButton'
-import {Container,Form,LinkTo} from './authStyled'
+import FormInput from '@/components/common/inputs/form-input'
+import SubmitButton from '@/components/common/buttons/submit-button'
+import {Container,Form,LinkTo} from './auth-styled'
 
 const Register = ({
     name,

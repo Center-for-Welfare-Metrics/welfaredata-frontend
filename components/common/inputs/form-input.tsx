@@ -1,6 +1,6 @@
 import { useState,FC,InputHTMLAttributes } from 'react'
 
-import {Container,Label,Icon,Error,Input} from './formInputStyled'
+import {Container,Label,Icon,Error,Input} from './form-input-styled'
 
 
 interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {

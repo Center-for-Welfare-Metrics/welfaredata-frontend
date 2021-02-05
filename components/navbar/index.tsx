@@ -1,8 +1,8 @@
-import NavItem from './NavItem'
+import NavItem from './nav-item'
 
 import UserContext from '@/context/user'
 import { useContext } from 'react'
-import { Containter, LogOut, NavItems, UserName, UserSection } from './IndexStyle'
+import { Containter, LogOut, NavItems, UserName, UserSection } from './index-styled'
 
 const NavMap : any[] = require('./nav-map.json')
 

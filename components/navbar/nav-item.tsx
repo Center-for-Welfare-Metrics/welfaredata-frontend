@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {Container,Name,Childrens, Children} from './NavItemStyled'
+import {Container,Name,Childrens, Children} from './nav-item-styled'
 import Router from 'next/router'
 
 interface INavItem {

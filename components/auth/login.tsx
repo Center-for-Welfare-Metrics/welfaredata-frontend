@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import SubmitButton from '@/components/common/buttons/submitButton'
-import FormInput from '@/components/common/inputs/formInput'
-import {Container,Form,LinkTo} from './authStyled'
+import SubmitButton from '@/components/common/buttons/submit-button'
+import FormInput from '@/components/common/inputs/form-input'
+import {Container,Form,LinkTo} from './auth-styled'
 
 const Login = (
     {

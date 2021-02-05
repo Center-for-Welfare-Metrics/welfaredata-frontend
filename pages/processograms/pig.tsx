@@ -1,4 +1,4 @@
-import withAuth from "@/components/HOC/withAuth"
+import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
 import Pigs from "@/components/processograms/pigs"
 
