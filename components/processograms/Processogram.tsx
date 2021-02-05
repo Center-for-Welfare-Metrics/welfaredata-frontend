@@ -1,115 +1,198 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { TweenLite } from 'gsap'
 import { Container,Svg } from './ProcessogramStyled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix } from '@/utils/processogram';
+import update from 'immutability-helper'
 
 interface IProcessogram {
     file_name:string
 }
 
+const LEVELS = ['--ps','--lf','--ph','--ci']
+
+const MARGIN_LIMIT_X = 200
+
+const MARGIN_LIMIT_Y = 200
+
 const Processogram = ({file_name}:IProcessogram) => {
 
     const {choosen,setChoosen} = useContext(ProcessogramContext)
 
+    const [level,setLevel] = useState(0)
+
+    const [history,setHistory] = useState({1:{x:0,y:0,scale:0}})
+
+    const svgRef = useRef(null)
+
+    const containerRef = useRef<HTMLElement>(null)
+
+    const withLimits = (screenInfo) => {
+        return {
+            ...screenInfo,
+            width:screenInfo.width - MARGIN_LIMIT_X,
+            height:screenInfo.height - MARGIN_LIMIT_Y,
+        }
+    }
+
+    const screenInfo = () => {
+        let {innerWidth,innerHeight} = window
+        return {
+            width:innerWidth,
+            height:innerHeight,
+            middleX:(innerWidth/2),
+            middleY:(innerHeight/2)
+        }
+    }
+
+    const elementInfo = (element:HTMLElement) => {
+        let {width,left,height,top} = element.getBoundingClientRect()
+        return {
+            middleX:((left) + (width/2)),
+            middleY:((top) + (height/2)),
+            width:width,
+            height:height
+        }
+    }
+
+    const currentScale = () => {
+        return history[level].scale
+    }
+    
+    const currentX = () => {
+        return history[level].x
+    }
+
+    const currentY = () => {
+        return history[level].y
+    }
+
+    const scaleElement = (element:HTMLElement) => {
+        let elInfo = elementInfo(element)
+        let srInfo = withLimits(screenInfo())
+        let scale_value = (srInfo.width/elInfo.width)
+        let element_future_height = (scale_value*elInfo.height)
+        if(element_future_height > srInfo.height){
+            scale_value = (srInfo.height/elInfo.height)
+        }
+        scale_value += currentScale()
+        return scale_value
+    }
+
+    const moveX = (element,scale) => {
+        let move = currentX() + ((screenInfo().middleX - elementInfo(element).middleX))
+
+        let new_move = (scale*move)/(currentScale() || 1)
+
+        return new_move
+    }
+
+    const moveY = (element,scale) => {
+        let move = currentY() + ((screenInfo().middleY - elementInfo(element).middleY))
+
+        let new_move = (scale*move)/(currentScale() || 1)
+
+        return new_move
+    }
+
+    const levelZeroSelec = () => {
+        setLevel(1)
+        let {top,left} = containerRef.current.getBoundingClientRect()
+        TweenLite.fromTo(containerRef.current,{
+            top,left
+        },{
+            width:'90%',
+            position:'fixed',
+            top:'50%',
+            left:'50%',
+            transform:'translate(-50%,-50%)',
+            zIndex:'999'
+        })
+    }
+
     useEffect(()=>{
         if(choosen){
-
+            if(choosen===file_name){
+                levelZeroSelec()
+            }else{
+                TweenLite.to(containerRef.current,{
+                    opacity:'0'
+                }).then(()=>{
+                    TweenLite.to(containerRef.current,{
+                        display:'none'
+                    })
+                })
+            }
+        }else{
+            TweenLite.to(containerRef.current,{
+                display:'block',
+                width:'60rem',
+                position:'static',
+                transform:'translate(0,0)'
+            }).then(()=>{
+                TweenLite.to(containerRef.current,{
+                    opacity:'1'
+                })
+            })
         }
     },[choosen])
 
-    const svgRef = useRef<SVGElement>(null)
-
-    const selectProcessogram = () => {
-        // setChoosen(file_name)
-    }
-
-    const navigate = () => {
-
-    }
-
-    const selected = ({target}:React.MouseEvent<SVGElement,MouseEvent>) => {
-        setChoosen(file_name)
-        levelChanger(target,'--ps')
-    }
-
     const zoomOnElement = (element:HTMLElement) => {
-        // let {processogram} = this.props
-        // this.newSelected(element,sufix)
-        let elementRect = element.getBoundingClientRect()
-        
-        // let position = {
-        //     x:(window.innerWidth/2) - (((clientRect.x - svg_rect.left) + (clientRect.width/2))),
-        //     y:(window.innerHeight/2) - ((clientRect.y + (clientRect.height/2)))
-        // }
-
-        // let new_gsap = {
-        //     // x:0,
-        //     // y:0,
-        //     scale:0,
-        //     // duration:1
-        // }
-
-        // let last_gsap = {
-        //     x:0,
-        //     y:0,
-        //     scale:1,
-        //     duration:1
-        // }
-
-        let scale = getScaleTo(elementRect)        
-        // let next_height = (clientRect.height/last_gsap.scale) * new_gsap.scale
-        // let next_top = ((((clientRect.top - last_gsap.y) - (svg_rect.top - last_gsap.y))/last_gsap.scale) * new_gsap.scale) + (svg_rect.top - last_gsap.y)
-        // // new_gsap.x = ((last_gsap.x + (position.x))/last_gsap.scale)*new_gsap.scale
-        // // new_gsap.y = (window.innerHeight/2) - (next_top + (next_height/2))
-        TweenLite.fromTo(svgRef.current,{
-            scale,
-            top:elementRect.top,
-            left:elementRect.left,
-            zIndex:'999'
-        },{
-            position:'fixed',
-            top:(window.innerHeight/2)-(elementRect.height/2),
-        })
-        // this.addGsapToLevel(this.state.level,new_gsap)
-    }
-
-    const getScaleTo = (clientRect) => {
-        let last_gsap = {
-            x:0,
-            y:0,
-            scale:1,
-            duration:1
+        let scale = scaleElement(element)
+        let move_x = moveX(element,scale)
+        let move_y = moveY(element,scale)
+        if(true){
+            let next_level = level+1
+            let to = {
+                x:move_x,
+                y:move_y,
+                scale:scale
+            }
+            setHistory(update(history,{
+                [next_level]:{$set:to}
+            }))
+            setLevel(next_level)
+            let value = JSON.parse(JSON.stringify(to))
+            TweenLite.to(svgRef.current,value)
         }
-        let element_height = (clientRect.height)/last_gsap.scale
-        let element_width = (clientRect.width)/last_gsap.scale
-        
-        let window_height = window.innerHeight - 200
-        let window_width = window.innerWidth - 200
-        
-        let scale_to = window_width/(element_width + 20)
-        let element_height_after_scale = ((element_height + 20) * scale_to)
-        if(element_height_after_scale > window_height){
-            scale_to = window_height/(element_height + 20)
-        }
-        return scale_to
     }
 
     const levelChanger = (target:EventTarget,sufix:string) => {
         let element = getElementByLayerSufix(target,sufix)
-        if(element){    
+        if(element){  
             zoomOnElement(element)
         }
     }
 
+    const selected = ({target}:React.MouseEvent<SVGElement,MouseEvent>) => {
+        if(level<=3){
+            levelChanger(target,LEVELS[level])
+        }
+    }
+
+    const contextMenu = (event:React.MouseEvent<HTMLElement,MouseEvent>) => {
+        event.preventDefault()
+        let previous_level = level-1
+        if(level>1){
+            let to = JSON.parse(JSON.stringify(history[previous_level]))
+            to.scale = to.scale === 0?1:to.scale
+            TweenLite.to(svgRef.current,to)
+            setLevel(previous_level)
+        }else if(level==1){
+            setChoosen(null)
+            setLevel(previous_level)
+        }
+    }
+
     return (
-        <Container>
+        <Container ref={containerRef}>
             <Svg 
-                off={(choosen && choosen!==file_name)?'true':'false'}
+                level={LEVELS[level]}
                 innerRef={svgRef} 
                 src={`/assets/svg/zoo/${file_name}`}
-                onClick={selected}
-            />         
+                onClick={choosen?selected:()=>setChoosen(file_name)}
+                onContextMenu={contextMenu}
+            />     
         </Container>
     )
 }

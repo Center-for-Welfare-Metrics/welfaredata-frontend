@@ -15,15 +15,7 @@ const Pigs = () => {
     const pigsContextValue = {choosen,setChoosen}
 
     useEffect(()=>{
-        if(choosen){
-            let {top} = containerRef.current.getBoundingClientRect()
-            TweenLite.fromTo(containerRef.current,{
-                top:top
-            },{
-                position:'fixed',
-                top:'80%'
-            })
-        }
+        
     },[choosen])
 
     return (

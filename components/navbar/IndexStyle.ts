@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import {lighten} from 'polished'
 
 export const Containter = styled.div`
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     width: 100%;

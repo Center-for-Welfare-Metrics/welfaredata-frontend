@@ -4,11 +4,25 @@ import SVG from 'react-inlinesvg'
 
 export const Container = styled.div`
     margin-bottom:5rem;
+    width:60rem;
+    transition:all 500ms;
 `
 
 export const Svg = styled(SVG)`
-    width: 60rem;
-    height:auto;
-    opacity:${({off})=>off==='true'?0.2:1};
+    ${({level})=>(
+        level==='--ps' && `
+            opacity:.5;
+            :hover{
+                opacity:1;
+            }
+        `
+    )}
+    [id*=${({level})=>level}]{
+        opacity:.5;
+        :hover{
+            opacity:1;
+        }
+        transition:all 500ms;
+    }
     transition:all 500ms;
 `

@@ -4,7 +4,7 @@ const getElementByLayerSufix = (node:any,sufix:string) => {
         node = node.parentNode
         count++
         if(count>20 || node === document) {
-            return false
+            return null
         }
     }
     return node
