@@ -1,5 +1,5 @@
 import NavBar from '../navbar'
-import {Container} from './DeafultStyled'
+import {Container} from './deafultStyled'
 
 interface IDefaultLayout{
     children:React.ReactNode

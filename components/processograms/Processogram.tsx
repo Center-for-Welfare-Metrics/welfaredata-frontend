@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { TweenLite, gsap } from 'gsap'
-import { Container,Svg } from './ProcessogramStyled'
+import { Container,Svg } from './processogramStyled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix } from '@/utils/processogram';
 import update from 'immutability-helper'

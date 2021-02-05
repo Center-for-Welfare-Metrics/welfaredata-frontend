@@ -1,5 +1,5 @@
-import Processogram from "./Processogram"
-import {Container} from './ZooStyled'
+import Processogram from "./processogram"
+import {Container} from './zooStyled'
 import ProcessogramContext from '@/context/processogram'
 import { useEffect, useRef, useState } from "react"
 import { TweenLite } from 'gsap'

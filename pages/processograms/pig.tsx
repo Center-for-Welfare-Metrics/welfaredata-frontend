@@ -1,6 +1,6 @@
 import withAuth from "@/components/HOC/withAuth"
 import DefaultLayout from "@/components/layouts"
-import Pigs from "@/components/processograms/Pigs"
+import Pigs from "@/components/processograms/pigs"
 
 const PigPage = () => {
     return (
