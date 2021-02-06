@@ -1,0 +1,1 @@
+export const SvgIcons = (file_name) => `/assets/svg/icons/${file_name}.svg`

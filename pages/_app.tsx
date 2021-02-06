@@ -4,8 +4,6 @@ import { ThemeProvider } from "styled-components"
 
 import {useTheme} from '../theme/useTheme'
 import { GlobalStyles } from '../theme/globalStyle'
-import { setToLocalStorage } from '@/utils/storage'
-import themes from '../theme/schema.json'
 import UserContext,{IUser,IUserContext} from '@/context/user'
 import authApi from '@/api/auth'
 
@@ -30,7 +28,6 @@ function MyApp({ Component, pageProps }) {
   const userValue : IUserContext = {user,setUser,logOut}
 
   useEffect(()=>{
-    setToLocalStorage('themes',themes)
     if(!user){
       authApi.get_user()
       .then(({data})=>{
