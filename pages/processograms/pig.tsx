@@ -8,7 +8,6 @@ const PigPage = () => {
     return (
         <DefaultLayout>
             <Pigs />
-            <ContextMenu />
         </DefaultLayout>
     )
 }

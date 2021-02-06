@@ -5,13 +5,12 @@ import {transparentize,lighten} from 'polished'
 
 export const Container = styled.div`
     position:absolute;
-    /* top:100%; */
-    left:2rem;
-    bottom:2rem;
+    opacity:0;
+    display:${({display})=>display};
     width:20rem;
     border:3px solid ${({theme})=>theme.colors.local_pink};
     border-radius:1rem;
-    background-color:${({theme})=>transparentize(0.5,theme.colors.local_black)};
+    background-color:${({theme})=>transparentize(0.4,theme.colors.local_black)};
     z-index:100;
 `
 

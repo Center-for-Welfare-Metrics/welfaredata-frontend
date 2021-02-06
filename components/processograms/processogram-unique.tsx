@@ -4,6 +4,7 @@ import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix } from '@/utils/processogram';
 import update from 'immutability-helper'
+import ContextMenu from '../context-menu';
 
 gsap.registerPlugin(TweenLite)
 
@@ -13,9 +14,16 @@ interface IProcessogram {
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const MARGIN_LIMIT_X = 200
+const MARGIN_LIMIT_X = 400
 
 const MARGIN_LIMIT_Y = 200
+
+const POSITIONS_BY_LEVEL = {
+    1:'bottom-right',
+    2:'bottom-left',
+    3:'bottom-right',
+    4:'top-left'
+}
 
 const Processogram = ({file_name}:IProcessogram) => {
 
@@ -26,6 +34,8 @@ const Processogram = ({file_name}:IProcessogram) => {
     const [history,setHistory] = useState({1:{x:0,y:0,scale:0}})
 
     const svgRef = useRef(null)
+
+    const [contextMenuOpen,setContextMenuOpen] = useState(false)
 
     const containerRef = useRef<HTMLElement>(null)
 
@@ -136,7 +146,7 @@ const Processogram = ({file_name}:IProcessogram) => {
             left:'50%',
             transform:'translate(-50%,-50%)',
             zIndex:'99'
-        })
+        }).duration(1)
     }
 
     const zoomOnElement = (element:HTMLElement) => {
@@ -155,7 +165,7 @@ const Processogram = ({file_name}:IProcessogram) => {
             }))
             setLevel(next_level)
             let value = JSON.parse(JSON.stringify(to))
-            TweenLite.to(svgRef.current,value)
+            TweenLite.to(svgRef.current,value).duration(1)
         }
     }
 
@@ -172,30 +182,41 @@ const Processogram = ({file_name}:IProcessogram) => {
         }
     }
 
-    const contextMenu = (event:React.MouseEvent<HTMLElement,MouseEvent>) => {
+    const toPreviousLevel = (event:React.MouseEvent<HTMLElement,MouseEvent>) => {
         event.preventDefault()
         let previous_level = level-1
         if(level>1){
             let to = JSON.parse(JSON.stringify(history[previous_level]))
             to.scale = to.scale === 0?1:to.scale
-            TweenLite.to(svgRef.current,to)
+            TweenLite.to(svgRef.current,to).duration(1)
             setLevel(previous_level)
         }else if(level==1){
             setChoosen(null)
+            setContextMenuOpen(false)
             setLevel(previous_level)
         }
     }
 
+    const choosenProcessogram = () => {
+        setChoosen(file_name)
+        setContextMenuOpen(true)
+    }
+
     return (
-        <Container ref={containerRef}>
-            <Svg 
-                level={LEVELS[level]}
-                innerRef={svgRef} 
-                src={`/assets/svg/zoo/${file_name}`}
-                onClick={choosen?selected:()=>setChoosen(file_name)}
-                onContextMenu={contextMenu}
-            />     
-        </Container>
+        <>
+            <Container ref={containerRef}>
+                <Svg 
+                    level={LEVELS[level]}
+                    innerRef={svgRef} 
+                    src={`/assets/svg/zoo/${file_name}`}
+                    onClick={choosen?selected:choosenProcessogram}
+                    onContextMenu={toPreviousLevel}
+                />                    
+            </Container>
+            {
+                contextMenuOpen && <ContextMenu position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
+            }
+        </>
     )
 }
 

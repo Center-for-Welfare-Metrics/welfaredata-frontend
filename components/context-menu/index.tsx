@@ -1,5 +1,9 @@
 import { SvgIcons } from '@/utils/assets_path'
+import { useEffect, useRef } from 'react'
 import { Container,Body,Footer,ButtonNavigator,ButtonIcon } from './index-styled'
+
+import { TweenLite, gsap } from 'gsap'
+gsap.registerPlugin(TweenLite)
 
 const map_buttons_navigation = [
     {
@@ -20,9 +24,70 @@ const map_buttons_navigation = [
     }
 ]
 
-const ContextMenu = () => {
+interface IContextMenu{
+    position:string
+    visible?:boolean
+}
+
+const POSITIONS = {
+    'bottom-right':{
+        bottom:'2rem',
+        right:'2rem',
+        top:'initial',
+        left:'initial'
+    },
+    'bottom-left':{
+        bottom:'2rem',
+        left:'2rem',
+        top:'initial',
+        right:'initial'
+    },
+    'top-right':{
+        top:'2rem',
+        right:'2rem',
+        bottom:'initial',
+        left:'initial'
+    },
+    'top-left':{
+        top:'2rem',
+        left:'2rem',
+        bottom:'initial',
+        right:'initial'
+    }
+}
+
+const ContextMenu = ({
+    position,
+    visible=false
+}:IContextMenu) => {
+
+    const containerRef = useRef<HTMLElement>(null)
+
+    useEffect(()=>{
+        if(visible){
+            let position = getPosition()
+            TweenLite.to(containerRef.current,{opacity:1}).delay(0.5).duration(0.5)
+        }
+    },[visible])
+
+    useEffect(()=>{
+        if(position && visible){
+            let to = getPosition(position)
+            TweenLite.to(containerRef.current,{opacity:0})
+            .duration(0.5)
+            .then(()=>{
+                TweenLite.to(containerRef.current,to).duration(0)
+                TweenLite.to(containerRef.current,{opacity:1}).duration(0.5)
+            })
+        }
+    },[position])
+
+    const getPosition = (position='bottom-right') => {
+        return JSON.parse(JSON.stringify(POSITIONS[position]))
+    }
+
     return (
-        <Container>
+        <Container ref={containerRef} display={visible?'block':'none'}>
             <Body>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ullamcorper malesuada consectetur. Proin commodo sem est, aliquam vulputate nibh bibendum non. Nulla facilisi. Proin eleifend, enim eu tempus tempus, est lectus sodales felis, quis ullamcorper justo diam id ligula. Proin mattis lorem nec posuere iaculis. Cras faucibus mollis nunc, ac vulputate eros hendrerit a. Ut sit amet blandit ex, eget fermentum urna. Nunc non neque vehicula, iaculis nunc varius, dignissim tellus. Duis suscipit dictum erat, ut fermentum est scelerisque et. Mauris ullamcorper nulla ac nibh tincidunt, ac rutrum libero eleifend. Phasellus a aliquam leo. Suspendisse varius consectetur leo, quis sodales eros tempor eget. Sed molestie lacus nisl, nec cursus diam rhoncus ac.
 
