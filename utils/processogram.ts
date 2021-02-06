@@ -28,7 +28,7 @@ const getFixedSufixAndLayerName = (sufix:string,element:HTMLElement) => {
 
     return {
         layer_name:layer_name,
-        sufix:new_sufix
+        fixed_sufix:new_sufix
     }
 }
 

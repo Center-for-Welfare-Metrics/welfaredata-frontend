@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { TweenLite, gsap } from 'gsap'
 import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
-import { getElementByLayerSufix } from '@/utils/processogram';
+import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
 import update from 'immutability-helper'
 import ContextMenu from '../context-menu';
 
@@ -14,7 +14,7 @@ interface IProcessogram {
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const MARGIN_LIMIT_X = 400
+const MARGIN_LIMIT_X = 200
 
 const MARGIN_LIMIT_Y = 200
 
@@ -31,7 +31,7 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     const [level,setLevel] = useState(0)
 
-    const [history,setHistory] = useState({1:{x:0,y:0,scale:0}})
+    const [history,setHistory] = useState({})
 
     const svgRef = useRef(null)
 
@@ -94,16 +94,20 @@ const Processogram = ({file_name}:IProcessogram) => {
         }
     }
 
+    const currentName = () => {
+        return history[level]?.name
+    }
+
     const currentScale = () => {
-        return history[level].scale
+        return history[level]?.scale
     }
     
     const currentX = () => {
-        return history[level].x
+        return history[level]?.x
     }
 
     const currentY = () => {
-        return history[level].y
+        return history[level]?.y
     }
 
     const scaleElement = (element:HTMLElement) => {
@@ -149,30 +153,41 @@ const Processogram = ({file_name}:IProcessogram) => {
         }).duration(1)
     }
 
-    const zoomOnElement = (element:HTMLElement) => {
+    const filterTweenLiteTo = (to) => {
+        let value = JSON.parse(JSON.stringify(to))
+        let scale = value.scale === 0?1:value.scale
+        return {
+            x:value.x,
+            y:value.y,
+            scale:scale
+        }
+    }
+
+    const zoomOnElement = (element:HTMLElement,sufix:string) => {
         let scale = scaleElement(element)
         let move_x = moveX(element,scale)
         let move_y = moveY(element,scale)
-        if(true){
-            let next_level = level+1
-            let to = {
-                x:move_x,
-                y:move_y,
-                scale:scale
-            }
-            setHistory(update(history,{
-                [next_level]:{$set:to}
-            }))
-            setLevel(next_level)
-            let value = JSON.parse(JSON.stringify(to))
-            TweenLite.to(svgRef.current,value).duration(1)
+        let next_level = level+1
+        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(sufix,element)
+        let to = {
+            x:move_x,
+            y:move_y,
+            scale:scale,
+            name:layer_name,
+            sufix:fixed_sufix
         }
+        setHistory(update(history,{
+            [next_level]:{$set:to}
+        }))
+        setLevel(next_level)
+        let value = filterTweenLiteTo(to)
+        TweenLite.to(svgRef.current,value).duration(1)
     }
 
     const levelChanger = (target:EventTarget,sufix:string) => {
         let element = getElementByLayerSufix(target,sufix)
         if(element){  
-            zoomOnElement(element)
+            zoomOnElement(element,sufix)
         }
     }
 
@@ -186,20 +201,30 @@ const Processogram = ({file_name}:IProcessogram) => {
         event.preventDefault()
         let previous_level = level-1
         if(level>1){
-            let to = JSON.parse(JSON.stringify(history[previous_level]))
-            to.scale = to.scale === 0?1:to.scale
+            let to = filterTweenLiteTo(history[previous_level])
             TweenLite.to(svgRef.current,to).duration(1)
             setLevel(previous_level)
         }else if(level==1){
             setChoosen(null)
             setContextMenuOpen(false)
             setLevel(previous_level)
+            setHistory({})
         }
     }
 
     const choosenProcessogram = () => {
         setChoosen(file_name)
         setContextMenuOpen(true)
+        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
+        setHistory(update(history,{
+            [1]:{$set:{
+                x:0,
+                y:0,
+                scale:0,
+                name:layer_name,
+                sufix:fixed_sufix
+            }}
+        }))
     }
 
     return (
@@ -214,7 +239,7 @@ const Processogram = ({file_name}:IProcessogram) => {
                 />                    
             </Container>
             {
-                contextMenuOpen && <ContextMenu position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
+                contextMenuOpen && <ContextMenu name={currentName()} position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
             }
         </>
     )
