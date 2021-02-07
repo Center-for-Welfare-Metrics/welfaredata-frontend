@@ -9,7 +9,8 @@ import ContextMenu from '../context-menu';
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
-    file_name:string
+    file_name:string,
+    scrollY:number
 }
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
@@ -25,7 +26,7 @@ const POSITIONS_BY_LEVEL = {
     4:'top-left'
 }
 
-const Processogram = ({file_name}:IProcessogram) => {
+const Processogram = ({file_name,scrollY}:IProcessogram) => {
 
     const {choosen,setChoosen} = useContext(ProcessogramContext)
 
@@ -39,32 +40,78 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     const containerRef = useRef<HTMLElement>(null)
 
+    const [levelZeroInfo,setLevelZeroInfo] = useState({top:0,left:0})
+
+    const [firstLoad,setFirstLoad] = useState(false)
+
     useEffect(()=>{
         if(choosen){
-            if(choosen===file_name){
-                levelZeroSelec()
+            let info = containerInfo()
+            setLevelZeroInfo(info)
+            setFirstLoad(true)
+            if(imChoosen(choosen)){                  
+                levelZeroSelec(info)                                                 
             }else{
-                TweenLite.to(containerRef.current,{
-                    opacity:'0'
-                }).then(()=>{
-                    TweenLite.to(containerRef.current,{
-                        display:'none'
-                    })
-                })
+                hideContainer(info)
             }
         }else{
-            TweenLite.to(containerRef.current,{
-                display:'block',
-                width:'60rem',
-                position:'static',
-                transform:'translate(0,0)'
-            }).then(()=>{
-                TweenLite.to(containerRef.current,{
-                    opacity:'1'
-                })
-            })
+            if(firstLoad){
+                moveContainerToDefaultPosition()
+            }
         }
     },[choosen])
+
+    const imChoosen = (choosen:string) => {
+        return choosen===file_name
+    }
+
+    const moveContainerToDefaultPosition = () => {
+        let { top,left } = levelZeroInfo
+
+        const backContainerToOriginalWidthAndAxisPosition = () => {
+            return TweenLite.to(containerRef.current,{top,left,width:'60rem',display:'block',transform:'translate(0,0)'})
+        }
+
+        const toTotalOpacity = () => {
+            return TweenLite.to(containerRef.current,{opacity:'1'})
+        }
+
+        const toStaticPosition = () => {
+            return TweenLite.to(containerRef.current,{position:'static'}).duration(0)
+        }
+
+        const setPageOriginalScrollY = () => {
+            window.scrollTo(0,scrollY)
+        }
+
+        backContainerToOriginalWidthAndAxisPosition()
+        .then(toTotalOpacity)
+        .then(toStaticPosition)
+        .then(setPageOriginalScrollY)
+    }
+
+    const hideContainer = ({top,left}) => {
+        const fixContainerPositionAxis = () => {
+            return TweenLite.to(containerRef.current,{top,left}).duration(0)
+        }
+        const changePositionAttr = () => {
+            return TweenLite.to(containerRef.current,{position:'absolute'}).duration(0)
+        }
+        
+        const fadeOut = () => {
+            return TweenLite.to(containerRef.current,{opacity:0})
+        }
+
+        const setDisplayToNone = () => {
+            TweenLite.to(containerRef.current,{display:'none'})
+        }
+
+        fixContainerPositionAxis()
+        .then(changePositionAttr)
+        .then(fadeOut)
+        .then(setDisplayToNone)
+    }
+    
 
     const withLimits = (screenInfo) => {
         return {
@@ -92,6 +139,11 @@ const Processogram = ({file_name}:IProcessogram) => {
             width:width,
             height:height
         }
+    }
+
+    const containerInfo = () => {
+        let {top,left} = containerRef.current.getBoundingClientRect()
+        return {top,left}
     }
 
     const currentName = () => {
@@ -138,19 +190,28 @@ const Processogram = ({file_name}:IProcessogram) => {
         return new_move
     }
 
-    const levelZeroSelec = () => {
+    const levelZeroSelec = ({top,left}) => {
+        const fixContainerPositionAxis = () => {
+            return TweenLite.to(containerRef.current,{top,left}).duration(0)
+        }
+
+        const changePositionAttr = () => {
+            return TweenLite.to(containerRef.current,{position:'fixed'}).duration(0)
+        }
+
+        const transformContainerToFocus = () => {
+            TweenLite.to(containerRef.current,{
+                width:'90%',
+                top:'50%',
+                left:'50%',
+                transform:'translate(-50%,-50%)',
+                zIndex:'99'
+            }).duration(1)
+        }
         setLevel(1)
-        let {top,left} = containerRef.current.getBoundingClientRect()
-        TweenLite.fromTo(containerRef.current,{
-            top,left
-        },{
-            width:'90%',
-            position:'fixed',
-            top:'50%',
-            left:'50%',
-            transform:'translate(-50%,-50%)',
-            zIndex:'99'
-        }).duration(1)
+        fixContainerPositionAxis()
+        .then(changePositionAttr)
+        .then(transformContainerToFocus)
     }
 
     const filterTweenLiteTo = (to) => {
