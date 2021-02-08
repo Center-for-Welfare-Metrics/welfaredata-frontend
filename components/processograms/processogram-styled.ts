@@ -17,6 +17,17 @@ export const Svg = styled(SVG)`
             }
         `
     )}
+    ${({level,g_id})=>(
+        level==='-last-' && `
+            [id*=--ci]{
+                opacity:.5;                
+            }
+            [id=${g_id}]{
+                opacity:1;
+            }
+        `
+    )}
+    
     [id*=${({level})=>level}]{
         opacity:.5;
         :hover{
