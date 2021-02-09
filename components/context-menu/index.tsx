@@ -2,7 +2,11 @@ import { SvgIcons } from '@/utils/assets_path'
 import { useEffect, useRef, useState } from 'react'
 import { Container,Body,Footer,ButtonNavigator,ButtonIcon } from './index-styled'
 
+import voca from 'voca'
+
 import { TweenLite, gsap } from 'gsap'
+
+
 gsap.registerPlugin(TweenLite)
 
 const map_buttons_navigation = [
@@ -54,18 +58,20 @@ const POSITIONS = {
 interface IContextMenu{
     position:string
     visible?:boolean
-    name?:string
+    informations:any,
+    figureInfo:any
 }
 
 const ContextMenu = ({
     position,
     visible=false,
-    name=''
+    informations,
+    figureInfo
 }:IContextMenu) => {
 
     const containerRef = useRef<HTMLElement>(null)
 
-    const [stateName,setStateName] = useState(name)
+    const [stateInformations,setStateInformations] = useState(informations)
 
     useEffect(()=>{
         if(visible){
@@ -74,17 +80,17 @@ const ContextMenu = ({
     },[visible])
 
     useEffect(()=>{
-        if(position && visible){
+        if(visible){
             let to = getPosition(position)
             TweenLite.to(containerRef.current,{opacity:0})
             .duration(0.5)
-            .then(()=>{
-                setStateName(name)
+            .then(()=>{                
+                setStateInformations(informations)                
                 TweenLite.to(containerRef.current,to).duration(0)
                 TweenLite.to(containerRef.current,{opacity:1}).duration(0.5)
             })
         }
-    },[position])
+    },[informations])
 
     const getPosition = (position='bottom-right') => {
         return JSON.parse(JSON.stringify(POSITIONS[position]))
@@ -92,17 +98,23 @@ const ContextMenu = ({
 
     return (
         <Container ref={containerRef} display={visible?'block':'none'}>
+            
             <Body>
-                {stateName}: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ullamcorper malesuada consectetur. Proin commodo sem est, aliquam vulputate nibh bibendum non. Nulla facilisi. Proin eleifend, enim eu tempus tempus, est lectus sodales felis, quis ullamcorper justo diam id ligula. Proin mattis lorem nec posuere iaculis. Cras faucibus mollis nunc, ac vulputate eros hendrerit a. Ut sit amet blandit ex, eget fermentum urna. Nunc non neque vehicula, iaculis nunc varius, dignissim tellus. Duis suscipit dictum erat, ut fermentum est scelerisque et. Mauris ullamcorper nulla ac nibh tincidunt, ac rutrum libero eleifend. Phasellus a aliquam leo. Suspendisse varius consectetur leo, quis sodales eros tempor eget. Sed molestie lacus nisl, nec cursus diam rhoncus ac.
-
-                Etiam eget massa lobortis, convallis sapien vitae, mattis purus. Vivamus quam quam, maximus at dolor a, mollis tincidunt leo. Etiam molestie consequat euismod. Vivamus elementum a ligula nec interdum. Vestibulum pulvinar ullamcorper mi, ut mollis sapien porttitor at. Nam sodales lacus purus. Vivamus tempus et arcu et elementum. In porttitor nibh sit amet dui luctus gravida. Vestibulum magna nunc, euismod quis consequat id, rutrum sit amet ex. Proin hendrerit justo eget nisl porttitor, nec eleifend orci mollis. Fusce sit amet nibh nulla. Etiam rhoncus quam odio, et rutrum sem ultrices et. Pellentesque vel tincidunt nisl. Vivamus ut mi dolor.
-
-                Nulla facilisi. In hac habitasse platea dictumst. Donec sed enim volutpat, mattis lectus id, imperdiet erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum eleifend ultrices posuere. Cras euismod arcu sit amet viverra fermentum. Suspendisse porta, lorem sed sodales tincidunt, ex lorem varius nibh, quis posuere neque sem fermentum lectus. Cras quis nunc bibendum magna posuere porttitor in venenatis magna. Quisque id vehicula lectus, sit amet consectetur dolor. Nam vitae ornare augue, in lacinia diam.
-
-                Sed scelerisque nulla a nulla scelerisque, ut egestas eros porta. Donec vitae est nisi. Suspendisse consequat fringilla velit molestie lobortis. Curabitur mattis vitae urna non pellentesque. Etiam ultricies tellus vel hendrerit bibendum. Morbi maximus, nulla vel scelerisque tempor, nisi elit sollicitudin erat, at sodales lacus felis eget est. Pellentesque finibus sem imperdiet nisi faucibus, vel interdum quam blandit.
-
-                Donec nibh mi, pretium ac interdum vitae, consectetur non erat. Mauris in arcu id quam congue vehicula. Cras in nibh dapibus elit dictum maximus non ut augue. Sed congue nulla tempus lacus convallis congue. Phasellus varius mattis nulla, et imperdiet sem posuere eget. Vivamus a metus nisl. Sed odio mi, aliquam lobortis nisi vitae, ornare tincidunt quam.
+                {
+                    stateInformations?
+                    (<>
+                        { voca.capitalize(stateInformations.name)}: {stateInformations.description || 'No description'}
+                    </>
+                    )
+                    :
+                    (<>
+                        No informations. <br/>
+                        Name on svg: {figureInfo?.name}
+                    </>
+                    )
+                }
             </Body>
+            
             <Footer>
                 {
                     map_buttons_navigation.map((button_navigator) => (

@@ -7,8 +7,9 @@ export interface IProcessogramContext {
     generateShareLink(processogram_tree:any):void,
     pageScrollY:number,
     setPageScrollY(pageScrollY:number):void,
-    allRefsLoaded:boolean,
-    setAllRefsLoaded(loaded:boolean):void
+    processogramTreeFromQuery:any,
+    setProcessogramTreeFromQuery(processogramTreeFromQuery:any):void,
+    getFigureRealInformations(history:any):any
 }
 
 const ProcessogramContext = createContext<IProcessogramContext>(null)

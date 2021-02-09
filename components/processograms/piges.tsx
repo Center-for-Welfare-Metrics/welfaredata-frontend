@@ -10,22 +10,12 @@ interface IPigs{
 }
 
 const Pigs = ({innerRef}:IPigs) => {
-    const {setAllRefsLoaded} = useContext(ProcessogramContext)
-
-    let inte = 0
-
-    const oneRefLoaded = () => {
-        inte+=1
-        if(inte===svg_file_names.length){
-            setAllRefsLoaded(true)
-        }
-    }
 
     return (
             <Container ref={innerRef} >
                 {
                     svg_file_names.map((file_name) => (
-                        <Processogram onRefLoaded={oneRefLoaded} key={file_name} file_name={file_name} />
+                        <Processogram key={file_name} file_name={file_name} />
                     ))
                 }
             </Container>

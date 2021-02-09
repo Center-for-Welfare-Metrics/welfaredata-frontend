@@ -9,11 +9,12 @@ import ContextMenu from '../context-menu';
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
-    file_name:string,
-    onRefLoaded():void
+    file_name:string
 }
 
 const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
+
+const innerLevels = ['','lf','ph','ci']
 
 const MARGIN_LIMIT_X = 200
 
@@ -26,15 +27,15 @@ const POSITIONS_BY_LEVEL = {
     4:'top-left'
 }
 
-const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
+const Processogram = ({file_name}:IProcessogram) => {
 
-    const {choosen,setChoosen,pageScrollY,generateShareLink} = useContext(ProcessogramContext)
+    const {choosen,setChoosen,pageScrollY,generateShareLink,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations} = useContext(ProcessogramContext)
 
     const [level,setLevel] = useState(0)
 
     const [history,setHistory] = useState({})
 
-    let svgRef : any = useRef(null)
+    const svgRef = useRef(null)
 
     const [contextMenuOpen,setContextMenuOpen] = useState(false)
 
@@ -45,6 +46,10 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
     const [firstLoad,setFirstLoad] = useState(false)
 
     const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
+
+    const [figureRealInformations,setFigureRealInformations] = useState(null)
+
+    const [figureSvgInformations,setFigureSvgInformations] = useState(null)
 
     useEffect(()=>{
         if(choosen){
@@ -66,20 +71,38 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
     useEffect(()=>{
         if(hasHistory()){
             generateShareLink(history)
+            captureFigureInformations()
+            if(processogramTreeFromQuery){
+                cameFromSharedLink()
+            }
         }
     },[history])
+
+    const captureFigureInformations = () => {
+        let informations = getFigureRealInformations(history)
+        setFigureRealInformations(informations)
+        setFigureSvgInformations({name:history[level].name})
+    }
+
+    const cameFromSharedLink = () => {
+        let elementToZoomId = processogramTreeFromQuery[innerLevels[level]]
+        if(elementToZoomId){
+            setProcessogramTreeFromQuery(update(processogramTreeFromQuery,{
+                $unset:[innerLevels[level]]
+            }))
+            let elementToZoomIn =  svgRef.current.getElementById(elementToZoomId)
+            setTimeout(() => {
+                zoomOnElement(elementToZoomIn,LEVELS[level])            
+            }, 1500);
+        }
+    }
 
     const hasHistory = () => {
         return Object.keys(history).length > 0
     }
 
     const imChoosen = (choosen:string) => {
-        return choosen===svgRef.id
-    }
-
-    const setSvgRef = (ref) => {
-        svgRef = ref
-        onRefLoaded()
+        return choosen===svgRef.current.id
     }
 
     const moveContainerToDefaultPosition = () => {
@@ -204,12 +227,11 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
     }
 
     const levelZeroSelec = ({top,left}) => {
-
         const initialSetup = () => {
             setLevel(1)
-            setIDFromCurrentFocusedElement(svgRef.id)
+            setIDFromCurrentFocusedElement(svgRef.current.id)
             setContextMenuOpen(true)
-            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef)
+            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
             setHistory(update(history,{
                 [1]:{$set:{
                     x:0,
@@ -217,7 +239,7 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
                     scale:0,
                     name:layer_name,
                     sufix:fixed_sufix,
-                    id:svgRef.id
+                    id:svgRef.current.id
                 }}
             }))
         }
@@ -239,7 +261,6 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
                 zIndex:'99'
             }).duration(1)
         }
-
 
         initialSetup()
         
@@ -273,12 +294,12 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
             sufix:fixed_sufix,
             id:element.id
         }
+        let value = filterTweenLiteTo(to)
+        TweenLite.to(svgRef.current,value).duration(1)
+        setLevel(next_level)
         setHistory(update(history,{
             [next_level]:{$set:to}
-        }))
-        setLevel(next_level)
-        let value = filterTweenLiteTo(to)
-        TweenLite.to(svgRef,value).duration(1)
+        }))        
     }
 
     const levelChanger = (target:EventTarget,sufix:string) => {
@@ -300,7 +321,7 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
 
         const backToPreviousLevel = () => {
             let to = filterTweenLiteTo(history[previous_level])
-            TweenLite.to(svgRef,to).duration(1)
+            TweenLite.to(svgRef.current,to).duration(1)
             setHistory(update(history,{
                 $unset:[level]
             }))
@@ -322,7 +343,7 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
     }
 
     const choosenProcessogram = () => {
-        setChoosen(svgRef.id)
+        setChoosen(svgRef.current.id)
     }
 
     return (
@@ -330,7 +351,7 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
             <Container ref={containerRef}>
                 <Svg 
                     level={LEVELS[level]}
-                    innerRef={setSvgRef} 
+                    innerRef={svgRef} 
                     src={`/assets/svg/zoo/${file_name}`}
                     onClick={choosen?selected:choosenProcessogram}
                     onContextMenu={toPreviousLevel}
@@ -338,7 +359,7 @@ const Processogram = ({file_name,onRefLoaded}:IProcessogram) => {
                 />                    
             </Container>
             {
-                contextMenuOpen && <ContextMenu name={currentName()} position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
+                contextMenuOpen && <ContextMenu figureInfo={figureSvgInformations} informations={figureRealInformations} position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
             }
         </>
     )
