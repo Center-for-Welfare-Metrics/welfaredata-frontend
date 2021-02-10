@@ -14,9 +14,6 @@ const translateBySufix = {
 }
 
 const PigPage = () => {
-
-    const containerRef = useRef<any>(null)
-
     const [choosen,setChoosen] = useState(null)
 
     const [shareLink,setShareLink] = useState('')
@@ -104,11 +101,10 @@ const PigPage = () => {
         }
     },[processograms])
 
-    return (
-        
+    return (        
         <DefaultLayout>
             <ProcessogramContext.Provider value={pigsContextValue}>
-                <Pigs innerRef={containerRef} />
+                <Pigs />
             </ProcessogramContext.Provider>
         </DefaultLayout>
     )

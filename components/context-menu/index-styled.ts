@@ -6,14 +6,20 @@ import {transparentize,lighten} from 'polished'
 export const Container = styled.div`
     position:absolute;
     opacity:0;
-    display:${({display})=>display};
     width:20rem;
     border:3px solid ${({theme})=>theme.colors.local_pink};
     border-radius:1rem;
-    background-color:${({theme})=>transparentize(0.4,theme.colors.local_black)};
-    z-index:100;
+    background-color:${({theme})=>transparentize(0.25,theme.colors.local_black)};
+    z-index:101;
 `
 
+export const FullBackground = styled.div`
+    top:0;
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:100;
+`
 
 export const Body = styled.div`
     height:25rem;

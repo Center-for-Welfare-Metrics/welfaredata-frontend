@@ -1,10 +1,12 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import { TweenLite, gsap } from 'gsap'
+
 import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
 import update from 'immutability-helper'
 import ContextMenu from '../context-menu';
+
+import { TweenLite, gsap } from 'gsap'
 
 gsap.registerPlugin(TweenLite)
 
@@ -16,20 +18,13 @@ const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-const MARGIN_LIMIT_X = 200
+const MARGIN_LIMIT_X = 400
 
-const MARGIN_LIMIT_Y = 200
-
-const POSITIONS_BY_LEVEL = {
-    1:'bottom-right',
-    2:'bottom-left',
-    3:'bottom-right',
-    4:'top-left'
-}
+const MARGIN_LIMIT_Y = 400
 
 const Processogram = ({file_name}:IProcessogram) => {
 
-    const {choosen,setChoosen,pageScrollY,generateShareLink,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations} = useContext(ProcessogramContext)
+    const {choosen,setChoosen,pageScrollY,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations} = useContext(ProcessogramContext)
 
     const [level,setLevel] = useState(0)
 
@@ -37,7 +32,7 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     const svgRef = useRef(null)
 
-    const [contextMenuOpen,setContextMenuOpen] = useState(false)
+    
 
     const containerRef = useRef<HTMLElement>(null)
 
@@ -47,17 +42,15 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
 
-    const [figureRealInformations,setFigureRealInformations] = useState(null)
-
-    const [figureSvgInformations,setFigureSvgInformations] = useState(null)
-
+    const [contextMenu,setContextMenu] = useState<any>({open:false,x:0,y:0})
+    
     useEffect(()=>{
         if(choosen){
             let info = containerInfo()
             setLevelZeroInfo(info)
             setFirstLoad(true)
-            if(imChoosen(choosen)){                  
-                levelZeroSelec(info)                                                 
+            if(imChoosen(choosen)){   
+                levelZeroSelec(info)
             }else{
                 hideContainer(info)
             }
@@ -69,20 +62,20 @@ const Processogram = ({file_name}:IProcessogram) => {
     },[choosen])
 
     useEffect(()=>{
-        if(hasHistory()){
-            generateShareLink(history)
-            captureFigureInformations()
+        if(level>0){
+            document.onclick = toPreviousLevel
+        }else{
+            document.onclick = null
+        }
+    },[level])
+
+    useEffect(()=>{
+        if(hasHistory()){       
             if(processogramTreeFromQuery){
                 cameFromSharedLink()
             }
         }
     },[history])
-
-    const captureFigureInformations = () => {
-        let informations = getFigureRealInformations(history)
-        setFigureRealInformations(informations)
-        setFigureSvgInformations({name:history[level].name})
-    }
 
     const cameFromSharedLink = () => {
         let elementToZoomId = processogramTreeFromQuery[innerLevels[level]]
@@ -109,7 +102,7 @@ const Processogram = ({file_name}:IProcessogram) => {
         let { top,left } = levelZeroInfo
 
         const backContainerToOriginalWidthAndAxisPosition = () => {
-            return TweenLite.to(containerRef.current,{top,left,width:'60rem',display:'block',transform:'translate(0,0)'})
+            return TweenLite.to(containerRef.current,{width:'60rem',top,left,display:'block',transform:'translate(0,0)'})
         }
 
         const toTotalOpacity = () => {
@@ -186,10 +179,6 @@ const Processogram = ({file_name}:IProcessogram) => {
         return {top,left}
     }
 
-    const currentName = () => {
-        return history[level]?.name
-    }
-
     const currentScale = () => {
         return history[level]?.scale
     }
@@ -229,8 +218,7 @@ const Processogram = ({file_name}:IProcessogram) => {
     const levelZeroSelec = ({top,left}) => {
         const initialSetup = () => {
             setLevel(1)
-            setIDFromCurrentFocusedElement(svgRef.current.id)
-            setContextMenuOpen(true)
+            setIDFromCurrentFocusedElement(svgRef.current.id)            
             let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
             setHistory(update(history,{
                 [1]:{$set:{
@@ -254,7 +242,7 @@ const Processogram = ({file_name}:IProcessogram) => {
 
         const transformContainerToFocus = () => {
             TweenLite.to(containerRef.current,{
-                width:'90%',
+                width:'80%',
                 top:'50%',
                 left:'50%',
                 transform:'translate(-50%,-50%)',
@@ -302,25 +290,35 @@ const Processogram = ({file_name}:IProcessogram) => {
         }))        
     }
 
-    const levelChanger = (target:EventTarget,sufix:string) => {
-        let element = getElementByLayerSufix(target,sufix)
-        if(element){  
-            zoomOnElement(element,sufix)
-        }
-    }
-
-    const selected = ({target}:React.MouseEvent<SVGElement,MouseEvent>) => {
+    const toNextLevel = (target:EventTarget,sufix:string) => {
         if(level<=3){
-            levelChanger(target,LEVELS[level])
+            let element = getElementByLayerSufix(target,sufix)
+            if(element){  
+                zoomOnElement(element,sufix)
+            }
         }
     }
 
-    const toPreviousLevel = (event:React.MouseEvent<HTMLElement,MouseEvent>) => {
-        event.preventDefault()
+    const selected = (event:Event) => {
+        if(level <5){
+            event.stopPropagation()
+            clickComeFrom(event.target,{
+                inside:()=>{
+                    toNextLevel(event.target,LEVELS[level])                    
+                },
+                outside:()=>{
+                    toPreviousLevel()
+                }
+            })
+        }
+    }
+
+    const toPreviousLevel = () => {
         let previous_level = level-1
 
         const backToPreviousLevel = () => {
             let to = filterTweenLiteTo(history[previous_level])
+            setIDFromCurrentFocusedElement(history[previous_level].id)
             TweenLite.to(svgRef.current,to).duration(1)
             setHistory(update(history,{
                 $unset:[level]
@@ -330,20 +328,63 @@ const Processogram = ({file_name}:IProcessogram) => {
 
         const backToFullPage = () => {
             setChoosen(null)
-            setContextMenuOpen(false)
+            setContextMenu({open:false})
             setLevel(previous_level)
             setHistory({})
         }
 
-        if(level>1){
+        if(level>1 && level <=4){
             backToPreviousLevel()
         }else if(level==1){
             backToFullPage()
         }
     }
 
-    const choosenProcessogram = () => {
+    const choosenProcessogram = (event:Event) => {
+        event.stopPropagation()
         setChoosen(svgRef.current.id)
+    }
+
+    const clickComeFrom = (element:any,{inside,outside}) => {
+        let currentParent = svgRef.current.getElementById(idFromCurrentFocusedElement)
+        if(level>1){
+            if(currentParent.contains(element)){
+                inside()
+            }else{
+                outside()
+            }
+        }else{
+            if(svgRef.current === element){
+                outside()
+            }else{
+                inside()
+            }
+        }
+    }
+
+    const OpenContextMenu = (event:MouseEvent) => {
+        event.preventDefault()
+        if(level<4){
+            let {target,clientX,clientY} = event
+            let element = getElementByLayerSufix(target,LEVELS[level])
+            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
+            
+            let document = getFigureRealInformations({
+                ...history,
+                [level+1]:{
+                    name:layer_name,
+                    sufix:fixed_sufix,
+                    id:element.id
+                }
+            })
+            let svg = {name:layer_name}
+            setContextMenu({open:true,x:clientX,y:clientY,document,svg})
+        }
+    }
+
+    const onClose = (event:Event) => {
+        event.stopPropagation()
+        setContextMenu({open:false})
     }
 
     return (
@@ -352,14 +393,14 @@ const Processogram = ({file_name}:IProcessogram) => {
                 <Svg 
                     level={LEVELS[level]}
                     innerRef={svgRef} 
-                    src={`/assets/svg/zoo/${file_name}`}
-                    onClick={choosen?selected:choosenProcessogram}
-                    onContextMenu={toPreviousLevel}
+                    src={`/assets/svg/zoo/${file_name}`}                    
                     g_id={idFromCurrentFocusedElement}
+                    onClick={choosen?selected:choosenProcessogram}
+                    onContextMenu={OpenContextMenu}
                 />                    
             </Container>
             {
-                contextMenuOpen && <ContextMenu figureInfo={figureSvgInformations} informations={figureRealInformations} position={POSITIONS_BY_LEVEL[level]} visible={contextMenuOpen} />
+                contextMenu.open && <ContextMenu onClose={onClose} infos={contextMenu} />
             }
         </>
     )

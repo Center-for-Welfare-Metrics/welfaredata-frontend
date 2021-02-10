@@ -9,14 +9,6 @@ export const Container = styled.div`
 `
 
 export const Svg = styled(SVG)`
-    ${({level})=>(
-        level==='--ps' && `
-            opacity:.5;
-            :hover{
-                opacity:1;
-            }
-        `
-    )}
     ${({level,g_id})=>(
         level==='-last-' && `
             [id*=--ci]{

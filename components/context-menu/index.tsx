@@ -1,11 +1,10 @@
 import { SvgIcons } from '@/utils/assets_path'
 import { useEffect, useRef, useState } from 'react'
-import { Container,Body,Footer,ButtonNavigator,ButtonIcon } from './index-styled'
+import { Container,Body,Footer,ButtonNavigator,ButtonIcon,FullBackground } from './index-styled'
 
 import voca from 'voca'
 
 import { TweenLite, gsap } from 'gsap'
-
 
 gsap.registerPlugin(TweenLite)
 
@@ -28,104 +27,60 @@ const map_buttons_navigation = [
     }
 ]
 
-const POSITIONS = {
-    'bottom-right':{
-        bottom:'2rem',
-        right:'2rem',
-        top:'initial',
-        left:'initial'
-    },
-    'bottom-left':{
-        bottom:'2rem',
-        left:'2rem',
-        top:'initial',
-        right:'initial'
-    },
-    'top-right':{
-        top:'2rem',
-        right:'2rem',
-        bottom:'initial',
-        left:'initial'
-    },
-    'top-left':{
-        top:'2rem',
-        left:'2rem',
-        bottom:'initial',
-        right:'initial'
-    }
-}
-
 interface IContextMenu{
-    position:string
-    visible?:boolean
-    informations:any,
-    figureInfo:any
+    infos:any,
+    onClose(event:Event):void
 }
 
 const ContextMenu = ({
-    position,
-    visible=false,
-    informations,
-    figureInfo
+    infos,
+    onClose
 }:IContextMenu) => {
 
     const containerRef = useRef<HTMLElement>(null)
 
-    const [stateInformations,setStateInformations] = useState(informations)
 
     useEffect(()=>{
-        if(visible){
-            TweenLite.to(containerRef.current,{opacity:1}).delay(0.5).duration(0.5)
+        if(infos.open){
+            TweenLite.to(containerRef.current,{left:infos.x,top:infos.y}).duration(0)
+            .then(()=>{
+                TweenLite.to(containerRef.current,{opacity:1}).duration(0)
+            })            
         }
-    },[visible])
-
-    useEffect(()=>{
-        if(visible){
-            let to = getPosition(position)
-            TweenLite.to(containerRef.current,{opacity:0})
-            .duration(0.5)
-            .then(()=>{                
-                setStateInformations(informations)                
-                TweenLite.to(containerRef.current,to).duration(0)
-                TweenLite.to(containerRef.current,{opacity:1}).duration(0.5)
-            })
-        }
-    },[informations])
-
-    const getPosition = (position='bottom-right') => {
-        return JSON.parse(JSON.stringify(POSITIONS[position]))
-    }
+    },[infos])
 
     return (
-        <Container ref={containerRef} display={visible?'block':'none'}>
-            
-            <Body>
-                {
-                    stateInformations?
-                    (<>
-                        { voca.capitalize(stateInformations.name)}: {stateInformations.description || 'No description'}
-                    </>
-                    )
-                    :
-                    (<>
-                        No informations. <br/>
-                        Name on svg: {figureInfo?.name}
-                    </>
-                    )
-                }
-            </Body>
-            
-            <Footer>
-                {
-                    map_buttons_navigation.map((button_navigator) => (
-                        <ButtonNavigator key={button_navigator.title}>
-                            <ButtonIcon src={button_navigator.src} title={button_navigator.title} />
-                        </ButtonNavigator>
-                    ))
-                }
-                
-            </Footer>
-        </Container>
+        <>
+            <FullBackground onClick={onClose} />
+            <Container ref={containerRef}>
+                <Body>
+                    {
+                        infos && infos.document?
+                        (<>
+                            { voca.capitalize(infos.document.name)}: {infos.document.description || 'No description'}
+                        </>
+                        )
+                        :
+                        (
+                        <>
+                            No informations. <br/>
+                            Name on svg: {infos.svg?.name}
+                        </>
+                        )
+                    }
+                </Body>            
+                <Footer>
+                    {
+                        map_buttons_navigation.map((button_navigator) => (
+                            <ButtonNavigator key={button_navigator.title}>
+                                <ButtonIcon src={button_navigator.src} title={button_navigator.title} />
+                            </ButtonNavigator>
+                        ))
+                    }
+                    
+                </Footer>
+            </Container>
+        </>
     )
 }
 
