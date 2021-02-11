@@ -54,12 +54,12 @@
         "prefix":"/admin",
         "childrens":[
             {
-                "name":"user privileges",
-                "href":"/user_privileges"
+                "name":"users",
+                "href":"/users"
             },
             {
-                "name":"platform map",
-                "href":"/platform_map"
+                "name":"privileges",
+                "href":"/privileges"
             }
         ]
     }
