@@ -6,6 +6,7 @@ import {useTheme} from '../theme/useTheme'
 import { GlobalStyles } from '../theme/globalStyle'
 import UserContext,{IUser,IUserContext} from '@/context/user'
 import authApi from '@/api/auth'
+import ContextMenu from '@/components/context-menu'
 
 function MyApp({ Component, pageProps }) {
 
@@ -14,6 +15,8 @@ function MyApp({ Component, pageProps }) {
 
   const {theme,themeLoaded} = useTheme()
   const [selectedTheme,setSelectedTheme] = useState(theme)
+
+  const [customContextMenu,setCustomContextMenu] = useState<any>({open:false,x:0,y:0})
 
   useEffect(() => {
     setSelectedTheme(theme);
@@ -27,7 +30,25 @@ function MyApp({ Component, pageProps }) {
 
   const userValue : IUserContext = {user,setUser,logOut}
 
+  const handleCustomContextMenu = (event:MouseEvent) => {
+    event.preventDefault()
+    let {clientX,clientY} = event
+    setCustomContextMenu({
+      open:true,
+      x:clientX,
+      y:clientY + window.scrollY
+    })
+  }
+
+  const closeCustomContextMenu = (event:MouseEvent) => {
+    event.stopPropagation()
+    setCustomContextMenu({
+      open:false
+    })
+  }
+
   useEffect(()=>{
+    document.oncontextmenu = handleCustomContextMenu
     if(!user){
       authApi.get_user()
       .then(({data})=>{
@@ -38,6 +59,9 @@ function MyApp({ Component, pageProps }) {
       })
     }else{
       setFirstLoad(true)
+    }
+    return () => {
+      document.oncontextmenu = null
     }
   },[])
 
@@ -57,6 +81,7 @@ function MyApp({ Component, pageProps }) {
           <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
         </Head>
         <Component {...pageProps} />
+        {customContextMenu.open && <ContextMenu infos={customContextMenu} attention={true} onClose={closeCustomContextMenu} />}
         <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </UserContext.Provider>
     </ThemeProvider>

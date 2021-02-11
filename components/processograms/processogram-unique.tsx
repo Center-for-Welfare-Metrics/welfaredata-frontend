@@ -24,15 +24,13 @@ const MARGIN_LIMIT_Y = 400
 
 const Processogram = ({file_name}:IProcessogram) => {
 
-    const {choosen,setChoosen,pageScrollY,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations} = useContext(ProcessogramContext)
+    const {choosen,setChoosen,pageScrollY,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations,generateShareLink} = useContext(ProcessogramContext)
 
     const [level,setLevel] = useState(0)
 
     const [history,setHistory] = useState({})
 
     const svgRef = useRef(null)
-
-    
 
     const containerRef = useRef<HTMLElement>(null)
 
@@ -71,6 +69,7 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     useEffect(()=>{
         if(hasHistory()){       
+            generateShareLink(history)
             if(processogramTreeFromQuery){
                 cameFromSharedLink()
             }
@@ -364,21 +363,30 @@ const Processogram = ({file_name}:IProcessogram) => {
 
     const OpenContextMenu = (event:MouseEvent) => {
         event.preventDefault()
+        event.stopPropagation()
         if(level<4){
             let {target,clientX,clientY} = event
             let element = getElementByLayerSufix(target,LEVELS[level])
-            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
-            
-            let document = getFigureRealInformations({
-                ...history,
-                [level+1]:{
-                    name:layer_name,
-                    sufix:fixed_sufix,
-                    id:element.id
-                }
-            })
-            let svg = {name:layer_name}
-            setContextMenu({open:true,x:clientX,y:clientY,document,svg})
+            if(element){
+                let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
+                
+                let document = getFigureRealInformations({
+                    ...history,
+                    [level+1]:{
+                        name:layer_name,
+                        sufix:fixed_sufix,
+                        id:element.id
+                    }
+                })
+                let svg = {name:layer_name}
+                setContextMenu({
+                    open:true,
+                    x:clientX,
+                    y:clientY + window.scrollY,
+                    document,
+                    svg
+                })
+            }
         }
     }
 

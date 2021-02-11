@@ -9,8 +9,8 @@ export const Container = styled.div`
     width:20rem;
     border:3px solid ${({theme})=>theme.colors.local_pink};
     border-radius:1rem;
-    background-color:${({theme})=>transparentize(0.25,theme.colors.local_black)};
-    z-index:101;
+    background-color:${({theme})=>transparentize(0.20,theme.colors.local_black)};
+    z-index:999;
 `
 
 export const FullBackground = styled.div`
@@ -18,7 +18,7 @@ export const FullBackground = styled.div`
     position:absolute;
     width:100%;
     height:100%;
-    z-index:100;
+    z-index:99;
 `
 
 export const Body = styled.div`
@@ -41,6 +41,9 @@ export const Body = styled.div`
     }
 `
 
+export const AttentionBody = styled(Body)`
+    height:fit-content;
+`
 
 export const Footer = styled.div`
     border-top:5px solid ${({theme})=>theme.colors.local_pink};

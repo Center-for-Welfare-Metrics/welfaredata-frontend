@@ -19,7 +19,6 @@ export const Svg = styled(SVG)`
             }
         `
     )}
-    
     [id*=${({level})=>level}]{
         opacity:.5;
         :hover{
