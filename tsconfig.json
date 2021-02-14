@@ -22,7 +22,8 @@
       "@/components/*":["components/*"],
       "@/context/*":["context/*"],
       "@/api/*":["api/*"],
-      "@/utils/*":["utils/*"]
+      "@/utils/*":["utils/*"],
+      "@/buttons/*":["components/common/buttons/*"]
     }
   },
   "include": [
