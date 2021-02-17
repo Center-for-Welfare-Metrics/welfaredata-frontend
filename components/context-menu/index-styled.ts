@@ -18,7 +18,7 @@ export const FullBackground = styled.div`
     position:absolute;
     width:100%;
     height:100%;
-    z-index:99;
+    z-index:998;
 `
 
 export const Body = styled.div`

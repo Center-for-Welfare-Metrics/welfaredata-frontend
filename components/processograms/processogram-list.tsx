@@ -1,4 +1,4 @@
-import Processogram from "@/components/processograms/processogram-unique"
+import Processogram from "@/components/processograms/processogram"
 import {Container} from '@/components/processograms/zoo-styled'
 import ProcessogramContext from '@/context/processogram'
 import { useContext, useEffect, useRef } from "react"
@@ -6,9 +6,12 @@ import { TweenLite, gsap } from 'gsap'
 
 gsap.registerPlugin(TweenLite)
 
-const svg_file_names = ['european intensive.svg','enhanced intensive.svg','outdoor semi-intensive.svg']
+interface IProcessogramList {
+    file_names:string[],
+    folder:string
+}
 
-const Pigs = () => {
+const ProcessogramList = ({file_names,folder}:IProcessogramList) => {
 
     const {choosen} = useContext(ProcessogramContext)
 
@@ -34,12 +37,12 @@ const Pigs = () => {
     return (
             <Container ref={containerRef} type={choosen?'1':'0'} >
                 {
-                    svg_file_names.map((file_name) => (
-                        <Processogram key={file_name} file_name={file_name} />
+                    file_names.map((file_name) => (
+                        <Processogram key={file_name} file_name={`${folder}/${file_name}`} />
                     ))
                 }
             </Container>
     )
 }
 
-export default Pigs
+export default ProcessogramList

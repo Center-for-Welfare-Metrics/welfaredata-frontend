@@ -395,6 +395,13 @@ const Processogram = ({file_name}:IProcessogram) => {
         setContextMenu({open:false})
     }
 
+    const svgOnClick = (event:Event) => {
+        
+            
+        choosen?selected(event):choosenProcessogram(event)
+            
+    }
+
     return (
         <>
             <Container ref={containerRef}>
@@ -403,7 +410,7 @@ const Processogram = ({file_name}:IProcessogram) => {
                     innerRef={svgRef} 
                     src={`/assets/svg/zoo/${file_name}`}                    
                     g_id={idFromCurrentFocusedElement}
-                    onClick={choosen?selected:choosenProcessogram}
+                    onClick={svgOnClick}
                     onContextMenu={OpenContextMenu}
                 />                    
             </Container>

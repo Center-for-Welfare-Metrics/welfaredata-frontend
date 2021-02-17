@@ -1,41 +1,26 @@
 import React from 'react'
-import { Container,Table, Td, Tr } from './table-styled'
-import { DateTime } from 'luxon'
-import { IUser } from '@/context/user'
+import { Container,Table, Td, Tr } from './default-table-styled'
 
-const dateFormat = (date:string) => {
-    return DateTime.fromISO(date).toFormat('DD')
+interface IColumn {
+    Header:string,
+    accessor:string,
+    preRender?(rowValue:string):any
 }
 
-const COLUMNS = [
-    {
-        Header: 'Email',
-        accessor: 'email',
-    },
-    {
-        Header: 'Name',
-        accessor: 'name',
-    },
-    {
-        Header: 'Created At',
-        accessor: 'createdAt',
-        preRender: dateFormat
-    },
-    {
-        Header: 'Updated At',
-        accessor: 'updatedAt',
-        preRender: dateFormat
-    }
-]
 
-const UsersTable = ({data}:{data:IUser[]}) => {
+interface IDefaultTable {
+    data:any[],
+    columns:IColumn[]
+}
+
+const DefaultTable = ({data,columns}:IDefaultTable) => {
     return (
         <Container>
             <Table>
                 <tbody>
                     <Tr>
                         {
-                            COLUMNS.map((column) => (
+                            columns.map((column) => (
                                 <th key={column.accessor}>{column.Header}</th>
                             ))
                         }
@@ -43,7 +28,7 @@ const UsersTable = ({data}:{data:IUser[]}) => {
                 {
                 data.map((row) => (
                     <Tr key={row._id}>{
-                        COLUMNS.map((column) => (
+                        columns.map((column) => (
                             <Td key={column.accessor}>
                                 {
                                     row[column.accessor] &&
@@ -68,4 +53,4 @@ const UsersTable = ({data}:{data:IUser[]}) => {
 }
 
 
-export default UsersTable
+export default DefaultTable
