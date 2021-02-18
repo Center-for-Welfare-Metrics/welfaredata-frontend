@@ -1,7 +1,8 @@
-import { SvgIcons } from '@/utils/assets_path'
-import { useEffect, useRef, useState } from 'react'
-import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground } from './index-styled'
-
+import { SvgPath } from '@/utils/assets_path'
+import { useEffect, useRef } from 'react'
+import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground } from './context-menu-styled'
+import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
+import { IContextMenu } from '@/context/context-menu'
 import voca from 'voca'
 
 import { TweenLite, gsap } from 'gsap'
@@ -11,33 +12,31 @@ gsap.registerPlugin(TweenLite)
 const map_buttons_navigation = [
     {
         title:'Charts',
-        src:SvgIcons('barchart')
+        src:SvgPath({file_name:'barchart',folder:'icons'})
     },
     {
         title:'Media',
-        src:SvgIcons('media')
+        src:SvgPath({file_name:'media',folder:'icons'})
     },
     {
         title:'Sources',
-        src:SvgIcons('books')
+        src:SvgPath({file_name:'books',folder:'icons'})
     },
     {
         title:'Feedback',
-        src:SvgIcons('pencil')
+        src:SvgPath({file_name:'pencil',folder:'icons'})
     }
 ]
 
-interface IContextMenu{
-    infos?:any
+interface IContextMenuComponent{
+    infos?:IContextMenu
     onClose(event:Event):void
-    attention?:boolean
 }
 
 const ContextMenu = ({
     infos=null,
-    onClose,
-    attention=false
-}:IContextMenu) => {
+    onClose
+}:IContextMenuComponent) => {
 
     const containerRef = useRef<HTMLElement>(null)
 
@@ -100,12 +99,18 @@ const ContextMenu = ({
         e.preventDefault()
     }
 
+    const innerOnClick = (e:Event) => {
+        if(infos.type === 'options'){
+            onClose(e)
+        }
+    }
+
     return (
         <>
             <FullBackground onContextMenu={innerContextMenu} onClick={onClose} />
-            <Container onContextMenu={innerContextMenu} onClick={(e:Event)=>e.stopPropagation()} ref={containerRef}>
+            <Container type={infos.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>
                 {
-                    !attention?
+                    infos.type === 'processogram' && 
                     <Body>
                         {infos && infos.document?
                         (<>
@@ -120,15 +125,9 @@ const ContextMenu = ({
                         </>
                         )}
                     </Body>
-                    :
-                    <AttentionBody>
-                        <>
-                            if you perform this action on a element of the processogram, you will be able to obtain more information, links to bibliography, videos - and even provide us with feedback about that element!
-                        </>
-                    </AttentionBody>
-                }
+                }                
                 {
-                    !attention && 
+                    infos.type === 'processogram' && 
                     <Footer>
                     {
                         map_buttons_navigation.map((button_navigator) => (
@@ -138,7 +137,30 @@ const ContextMenu = ({
                         ))
                     }                    
                     </Footer>
-                }                            
+                }
+                {
+                    infos.type === 'options' && 
+                    <Options>
+                        {infos.options?.map(({text,onClick,icon,type})=>
+                            <Option type={type} onClick={()=>onClick(infos.optionTarget)} key={text}>
+                                <OptionIcon
+                                    src={SvgPath({file_name:icon,folder:'minimal-icons'})} 
+                                /> 
+                                <OptionText>
+                                    {text}
+                                </OptionText>
+                            </Option>
+                        )}
+                    </Options>
+                }       
+                {
+                    infos.type === 'none' &&
+                    <AttentionBody>
+                        <>
+                            if you perform this action on a element of the processogram, you will be able to obtain more information, links to bibliography, videos - and even provide us with feedback about that element!
+                        </>
+                    </AttentionBody>
+                }                     
             </Container>
         </>
     )

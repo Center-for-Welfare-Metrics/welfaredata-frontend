@@ -12,7 +12,7 @@ import { DangerButton, SuccessButton } from '@/components/common/buttons/default
 
 import adminUsersApi from '@/api/admin/users'
 
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const Validator = require('validatorjs')
 
@@ -20,11 +20,11 @@ interface UserModal extends IModal{
     user?:IUser
 }
 
-const UserModal = ({onClose,isOpen,user}:UserModal) => {
+const UserModal = ({onClose,isOpen,user,clear}:UserModal) => {
 
-    const [name,setName] = useState(user?.name || '')
+    const [name,setName] = useState('')
 
-    const [email,setEmail] = useState(user?.email || '')
+    const [email,setEmail] = useState('')
 
     const [password,setPassword] = useState('')
 
@@ -38,6 +38,8 @@ const UserModal = ({onClose,isOpen,user}:UserModal) => {
 
     useEffect(()=>{
         if(user){
+            setName(user.name)
+            setEmail(user.email)
             setHasUser(true)
         }else{
             setHasUser(false)
@@ -52,12 +54,13 @@ const UserModal = ({onClose,isOpen,user}:UserModal) => {
         }
     },[password])
 
-    const clear = () => {
+    const localClear = () => {
         setName('')
         setEmail('')
         setPassword('')
         setPasswordConfirmation('')
         setError({})
+        if(clear)clear()
     }
 
     const create = (event) => {
@@ -89,7 +92,7 @@ const UserModal = ({onClose,isOpen,user}:UserModal) => {
     }
 
     return (
-        <Modal onClose={onClose} isOpen={isOpen} clear={clear}>
+        <Modal onClose={onClose} isOpen={isOpen} clear={localClear}>
             <Container>
                 <FormHeader>Personal Informations</FormHeader>                
                 <FormInput 
@@ -97,7 +100,8 @@ const UserModal = ({onClose,isOpen,user}:UserModal) => {
                     value={name}
                     onChange={(e)=>setName(e.target.value)}
                     error={error.name}
-                    name='name'                
+                    name='name'      
+                    disabled={hasUser}          
                 />
                 <FormHeader>Account Informations</FormHeader>   
                 <FormInput 
@@ -132,7 +136,7 @@ const UserModal = ({onClose,isOpen,user}:UserModal) => {
                 }
                 <ActionButtons>
                     <DangerButton onClick={onClose}>Cancel</DangerButton>
-                    <SuccessButton onClick={create}>Create User</SuccessButton>
+                    <SuccessButton disabled={hasUser} onClick={create}>{hasUser?'Update User':'Create User'}</SuccessButton>
                 </ActionButtons>
             </Container>
         </Modal>

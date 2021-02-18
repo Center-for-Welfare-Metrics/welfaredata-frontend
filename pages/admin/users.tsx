@@ -13,7 +13,7 @@ const dateFormat = (date:string) => {
     return DateTime.fromISO(date).toFormat('DD')
 }
 
-const columns = [
+const tableColumns = [
     {
         Header: 'Email',
         accessor: 'email',
@@ -34,7 +34,6 @@ const columns = [
     }
 ]
 
-
 const UsersPage = () => {
 
     const [users,setUsers] = useState([])
@@ -50,14 +49,31 @@ const UsersPage = () => {
         })
     },[])
 
+    useEffect(()=>{
+        if(userOnEdit){
+            setUserModalOpen(true)
+        }
+    },[userOnEdit])
+
     return (
         <DefaultLayout>   
             <AdminLayout>
                 <UsersTableContainer>
-                    <DefaultTable data={users} columns={columns} />
+                    <DefaultTable 
+                        options={
+                            [
+                                {text:'Open',onClick:(row)=>setUserOnEdit(row),icon:'push-pin',type:'primary'},
+                                {text:'Delete',onClick:console.log,icon:'eliminar',type:'danger'},
+                                {text:'Report',onClick:console.log,icon:'exclamation-button',type:'warning'}
+                            ]
+                        } 
+                        rowClick={(row)=>setUserOnEdit(row)} 
+                        data={users} 
+                        columns={tableColumns} 
+                    />
                     <DefaultButton onClick={()=>setUserModalOpen(true)}>new user</DefaultButton>
                 </UsersTableContainer>
-                <UserModal isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
+                <UserModal clear={()=>setUserOnEdit(null)} isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
             </AdminLayout>
         </DefaultLayout>
     )

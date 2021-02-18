@@ -2,6 +2,7 @@
     "default":{
         "colors":{
             "local_blue":"#38618c",
+            "local_deep_blue":"#1b2f43",
             "local_yellow":"#FFE74C",
             "local_white":"#FFFFFF",
             "local_pink":"#730e28",

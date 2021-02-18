@@ -1,5 +1,7 @@
-import React from 'react'
-import { Container,Table, Td, Tr } from './default-table-styled'
+import ContextMenu from '@/context/context-menu'
+import React, { useContext, useEffect, useState } from 'react'
+import { Container,Table, Td, Tr,Th } from './default-table-styled'
+import {IContextOptions} from '@/context/context-menu'
 
 interface IColumn {
     Header:string,
@@ -7,44 +9,66 @@ interface IColumn {
     preRender?(rowValue:string):any
 }
 
-
 interface IDefaultTable {
     data:any[],
-    columns:IColumn[]
+    columns:IColumn[],
+    rowClick?(row:any):void,
+    options?:IContextOptions[]
 }
 
-const DefaultTable = ({data,columns}:IDefaultTable) => {
+const DefaultTable = ({data,columns,rowClick,options}:IDefaultTable) => {
+
+    const {setContextMenu,contextMenu} = useContext(ContextMenu)
+
+    const onRowClick = (row) => () => {
+        rowClick(row)
+    }
+
+    const onRowContextMenu = (row) => (event:MouseEvent) => {
+        event.preventDefault()
+        event.stopPropagation()
+        let {clientX,clientY} = event
+        setContextMenu({
+            open:true,
+            type:'options',
+            x:clientX,
+            y:clientY,
+            options:options,
+            optionTarget:row
+        })
+    }
+
     return (
         <Container>
             <Table>
                 <tbody>
-                    <Tr>
+                    <Th>
                         {
                             columns.map((column) => (
                                 <th key={column.accessor}>{column.Header}</th>
                             ))
                         }
-                    </Tr>                            
+                    </Th>                            
                 {
-                data.map((row) => (
-                    <Tr key={row._id}>{
-                        columns.map((column) => (
-                            <Td key={column.accessor}>
-                                {
-                                    row[column.accessor] &&
-                                    column.preRender?
-                                    (
-                                        column.preRender(row[column.accessor])
-                                    )
-                                    :
-                                    (
-                                        row[column.accessor]
-                                    )
-                                }
-                            </Td>
-                        ))}
-                    </Tr>
-                ))
+                    data.map((row) => (
+                        <Tr onContextMenu={onRowContextMenu(row)} onClick={onRowClick(row)} key={row._id}>{
+                            columns.map((column) => (
+                                <Td key={column.accessor}>                                
+                                    {
+                                        row[column.accessor] &&
+                                        column.preRender?
+                                        (
+                                            column.preRender(row[column.accessor])
+                                        )
+                                        :
+                                        (
+                                            row[column.accessor]
+                                        )
+                                    }
+                                </Td>
+                            ))}
+                        </Tr>
+                    ))
                 }            
                 </tbody>
             </Table>

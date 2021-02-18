@@ -5,9 +5,10 @@ import { ThemeProvider } from "styled-components"
 import {useTheme} from '../theme/useTheme'
 import { GlobalStyles } from '../theme/globalStyle'
 import UserContext,{IUser,IUserContext} from '@/context/user'
+import ContextMenuContext,{IContextMenu} from '@/context/context-menu'
 import authApi from '@/api/auth'
-import ContextMenu from '@/components/context-menu'
-import toast, { Toaster } from 'react-hot-toast';
+import ContextMenu from '@/components/context-menu/context-menu'
+import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }) {
 
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps }) {
   const {theme,themeLoaded} = useTheme()
   const [selectedTheme,setSelectedTheme] = useState(theme)
 
-  const [customContextMenu,setCustomContextMenu] = useState<any>({open:false,x:0,y:0})
+  const [contextMenu,setContextMenu] = useState<IContextMenu>({open:false,x:0,y:0,type:'none'})
+
+  const contextMenuValues = {contextMenu,setContextMenu}
 
   useEffect(() => {
     setSelectedTheme(theme);
@@ -34,17 +37,19 @@ function MyApp({ Component, pageProps }) {
   const handleCustomContextMenu = (event:MouseEvent) => {
     event.preventDefault()
     let {clientX,clientY} = event
-    setCustomContextMenu({
+    setContextMenu({
       open:true,
       x:clientX,
-      y:clientY + window.scrollY
+      y:clientY + window.scrollY,
+      type:'none'
     })
   }
 
   const closeCustomContextMenu = (event:MouseEvent) => {
     event.stopPropagation()
-    setCustomContextMenu({
-      open:false
+    setContextMenu({
+      open:false,
+      type:'none'
     })
   }
 
@@ -75,17 +80,19 @@ function MyApp({ Component, pageProps }) {
   return (firstLoad && themeLoaded) && 
   <ThemeProvider theme={selectedTheme}>
       <GlobalStyles />
-      <UserContext.Provider value={userValue}>
-        <Head>
-          <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
-        </Head>
-        <Toaster position='top-right' reverseOrder={false} toastOptions={{duration:5000}} />
-        <Component {...pageProps} />
-        {customContextMenu.open && <ContextMenu infos={customContextMenu} attention={true} onClose={closeCustomContextMenu} />}
-        <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-      </UserContext.Provider>
+      <ContextMenuContext.Provider value={contextMenuValues}>
+        <UserContext.Provider value={userValue}>
+          <Head>
+            <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
+            <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
+          </Head>
+          <Toaster position='top-right' reverseOrder={false} toastOptions={{duration:5000}} />
+          <Component {...pageProps} />
+          {contextMenu.open && <ContextMenu infos={contextMenu} onClose={closeCustomContextMenu} />}
+          <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+        </UserContext.Provider>
+      </ContextMenuContext.Provider>
     </ThemeProvider>
     
 }

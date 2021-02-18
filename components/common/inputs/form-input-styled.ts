@@ -49,6 +49,10 @@ export const Input = styled.input`
     :-webkit-autofill {
         -webkit-text-fill-color: ${({theme})=>theme.colors.local_white} !important;
     }
+    :disabled{
+        cursor:not-allowed;
+        color:gray;
+    }
 `
 
 export const Error = styled.span`

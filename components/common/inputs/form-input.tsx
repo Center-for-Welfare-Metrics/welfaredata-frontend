@@ -1,4 +1,4 @@
-import { useState,FC,InputHTMLAttributes } from 'react'
+import { useState,FC,InputHTMLAttributes, useEffect } from 'react'
 
 import {Container,Label,Icon,Error,Input} from './form-input-styled'
 
@@ -8,7 +8,8 @@ interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     type?:string,
     error:string[],
     label:string,
-    icon?:string
+    icon?:string,
+    value:any
 }
 
 const FormInput : FC<IFormInput> = (
@@ -18,6 +19,7 @@ const FormInput : FC<IFormInput> = (
         error,
         label,
         icon,
+        value,
         ...rest
     }
 ) => {
@@ -25,13 +27,18 @@ const FormInput : FC<IFormInput> = (
     const [onFocus,setFocus] = useState(false)
 
     const moveLabel = () => {
-        let {value} = rest
         if(!onFocus){
             setFocus(true)
         }else if(value===''){
             setFocus(false)
         }
     }
+
+    useEffect(()=>{
+        if(value){
+            setFocus(true)
+        }
+    },[value])
 
     return (
         <Container>
@@ -43,6 +50,7 @@ const FormInput : FC<IFormInput> = (
                 type={type}
                 onFocus={moveLabel}
                 onBlur={moveLabel}
+                value={value}
                 {...rest}
             />
             {error && <Error>

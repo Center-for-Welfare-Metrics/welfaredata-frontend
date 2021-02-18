@@ -1,1 +1,8 @@
-export const SvgIcons = (file_name) => `/assets/svg/icons/${file_name}.svg`
+export interface ISvgPath {
+    file_name:string
+    folder:'avatars'|'education'|'icons'|'minimal-icons'|'zoo'
+}
+
+export const SvgPath = ({file_name,folder}:ISvgPath) => (
+    `/assets/svg/${folder}/${file_name}.svg`
+)

@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { darken } from 'polished'
+import { darken,transparentize } from 'polished'
 
 
 export const Container = styled.div`
-    background-color: ${({theme})=>theme.colors.local_blue};
+    background-color: ${({theme})=>theme.colors.local_deep_blue};
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -12,7 +12,7 @@ export const Container = styled.div`
     top:40%;
     left:50%;
     transform:translate(-50%,-50%);
-    box-shadow: 15px 17px 20px -5px rgba(55, 96, 139, 0.4);
+    box-shadow: 15px 17px 20px -5px ${({theme})=>transparentize(0.4,theme.colors.local_deep_blue)};
     padding-bottom:1.5rem;
 `
 

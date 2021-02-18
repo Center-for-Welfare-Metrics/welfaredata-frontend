@@ -18,7 +18,7 @@ const shake = keyframes`
 
 export const DefaultButton = styled.button`
     margin-top:1rem;
-    background-color:${({theme})=>theme.colors.local_blue};
+    background-color:${({theme})=>theme.colors.local_deep_blue};
     color:white;
     border: none;
     border-radius: 1rem;
@@ -28,6 +28,13 @@ export const DefaultButton = styled.button`
     :hover{
         transform: scale(1.15) translateY(-5px);
         transition: transform 500ms;
+    }
+    :disabled{
+        background-color:gray;
+        :hover{
+            transform:scale(1) translateY(0);
+        }
+        cursor:not-allowed;
     }
     transition: transform 500ms;
 `

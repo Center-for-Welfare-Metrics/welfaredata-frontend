@@ -4,7 +4,7 @@ import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
 import update from 'immutability-helper'
-import ContextMenu from '../context-menu';
+import ContextMenuContext from '@/context/context-menu'
 
 import { TweenLite, gsap } from 'gsap'
 
@@ -39,9 +39,9 @@ const Processogram = ({file_name}:IProcessogram) => {
     const [firstLoad,setFirstLoad] = useState(false)
 
     const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
-
-    const [contextMenu,setContextMenu] = useState<any>({open:false,x:0,y:0})
     
+    const {setContextMenu,contextMenu} = useContext(ContextMenuContext)
+
     useEffect(()=>{
         if(choosen){
             let info = containerInfo()
@@ -327,7 +327,10 @@ const Processogram = ({file_name}:IProcessogram) => {
 
         const backToFullPage = () => {
             setChoosen(null)
-            setContextMenu({open:false})
+            setContextMenu({
+                open:false,
+                type:'none'
+            })
             setLevel(previous_level)
             setHistory({})
         }
@@ -384,22 +387,15 @@ const Processogram = ({file_name}:IProcessogram) => {
                     x:clientX,
                     y:clientY + window.scrollY,
                     document,
-                    svg
+                    svg,
+                    type:'processogram'
                 })
             }
         }
     }
 
-    const onClose = (event:Event) => {
-        event.stopPropagation()
-        setContextMenu({open:false})
-    }
-
     const svgOnClick = (event:Event) => {
-        
-            
         choosen?selected(event):choosenProcessogram(event)
-            
     }
 
     return (
@@ -414,9 +410,6 @@ const Processogram = ({file_name}:IProcessogram) => {
                     onContextMenu={OpenContextMenu}
                 />                    
             </Container>
-            {
-                contextMenu.open && <ContextMenu onClose={onClose} infos={contextMenu} />
-            }
         </>
     )
 }

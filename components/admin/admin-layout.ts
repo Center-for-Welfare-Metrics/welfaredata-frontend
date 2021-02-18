@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 export const AdminLayout = styled.div`
     padding:0 30rem 0 30rem;
     display:flex;

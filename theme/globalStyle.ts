@@ -11,4 +11,8 @@ export const GlobalStyles = createGlobalStyle`
         height: 100%;
         font-family: 'Titillium Web', sans-serif;
     }
+    button {
+        font-family : inherit;
+        font-size: 1em;
+    }
 `
