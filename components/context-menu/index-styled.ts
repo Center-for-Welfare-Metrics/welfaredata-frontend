@@ -7,7 +7,7 @@ export const Container = styled.div`
     position:absolute;
     opacity:0;
     width:20rem;
-    border:3px solid ${({theme})=>theme.colors.local_pink};
+    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.local_pink}`};
     border-radius:1rem;
     background-color:${({theme})=>transparentize(0.20,theme.colors.local_black)};
     z-index:999;

@@ -19,8 +19,10 @@
         "fontFamily":{
 
         },
-        "spacing":{
-
+        "borderSize":{
+            "very_small":"1px",
+            "medium":"3px",
+            "large":"5px"
         }
     },
     "light":{

@@ -1,11 +1,12 @@
 import styled from 'styled-components'
 
-
 export const Container = styled.div`
     padding:2rem;
     position: relative;
     display:flex;
     flex-direction: column;
+    box-sizing:border-box;
+    width:100%;
 `
 
 export const Icon = styled.i`
@@ -36,7 +37,6 @@ export const Label = styled.label`
 
 export const Input = styled.input`
     height: 2rem;
-    width:15rem;
     border:none;
     background-color: transparent;
     color:${({theme})=>theme.colors.local_white};
@@ -44,7 +44,7 @@ export const Input = styled.input`
     outline: none;
     text-indent: 1.6rem;
     :-webkit-autofill {
-        box-shadow: 0 0 0 30px ${({theme})=>theme.colors.local_blue} inset;
+        transition-delay: 9999s;
     }
     :-webkit-autofill {
         -webkit-text-fill-color: ${({theme})=>theme.colors.local_white} !important;

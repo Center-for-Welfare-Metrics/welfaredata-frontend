@@ -7,7 +7,7 @@ import { AdminLayout } from "@/components/admin/admin-layout"
 import { UsersTableContainer } from "@/components/admin/users/users-styled"
 import DefaultTable from "@/components/common/tables/default-table"
 import { DateTime } from 'luxon'
-import Modal from "@/components/common/modal/modal"
+import UserModal from "@/components/admin/users/user-modal"
 
 const dateFormat = (date:string) => {
     return DateTime.fromISO(date).toFormat('DD')
@@ -39,6 +39,8 @@ const UsersPage = () => {
 
     const [users,setUsers] = useState([])
 
+    const [userOnEdit,setUserOnEdit] = useState(null)
+
     const [userModalOpen,setUserModalOpen] = useState(false)
 
     useEffect(()=>{
@@ -50,13 +52,13 @@ const UsersPage = () => {
 
     return (
         <DefaultLayout>   
-            {/* <AdminLayout>
+            <AdminLayout>
                 <UsersTableContainer>
                     <DefaultTable data={users} columns={columns} />
                     <DefaultButton onClick={()=>setUserModalOpen(true)}>new user</DefaultButton>
                 </UsersTableContainer>
-                <Modal isOpen={userModalOpen} onClose={()=>setUserModalOpen(false)}></Modal>
-            </AdminLayout> */}
+                <UserModal isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
+            </AdminLayout>
         </DefaultLayout>
     )
 }

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import FormInput from '@/components/common/inputs/form-input'
 import SubmitButton from '@/components/common/buttons/submit-button'
 import {Container,Form,LinkTo} from './auth-styled'
+import StrongPasswordBar from '../miscellaneous/strong-password-bar'
 
 const Register = ({
     name,
@@ -13,7 +14,8 @@ const Register = ({
     password_confirmation,
     setPasswordConfirmation,
     error,
-    register
+    register,
+    passwordStrength
 }) => {
 
     return (
@@ -44,6 +46,7 @@ const Register = ({
                     type='password'
                     icon='fa-key'
                 />
+                <StrongPasswordBar strength={passwordStrength} />
                 <FormInput 
                     label='Password Confirmation'
                     value={password_confirmation}

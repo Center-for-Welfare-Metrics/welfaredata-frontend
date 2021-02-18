@@ -8,7 +8,7 @@ interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     type?:string,
     error:string[],
     label:string,
-    icon:string
+    icon?:string
 }
 
 const FormInput : FC<IFormInput> = (
@@ -36,7 +36,7 @@ const FormInput : FC<IFormInput> = (
     return (
         <Container>
             <Label focus={onFocus} htmlFor={name}>{label}</Label>
-            <Icon aria-hidden className={`fas ${icon}`} />
+            {icon && <Icon aria-hidden className={`fas ${icon}`} />}
             <Input 
                 id={name}
                 name={name}

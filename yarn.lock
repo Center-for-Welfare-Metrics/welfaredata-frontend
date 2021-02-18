@@ -1122,6 +1122,11 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+check-password-strength@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/check-password-strength/-/check-password-strength-1.0.15.tgz#b50c009a64cfb993946ba7c884434e290c7ddfba"
+  integrity sha512-e43Hzwets7P/oeFmCxdzLC9xUVH3mfP70WRchAj23+NPct8dy/yLEZC3ikTZ0/Cht9rcPMoACIiEGyVkiqWjkw==
+
 chokidar@3.4.3, chokidar@^3.4.1:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.3.tgz#c1df38231448e45ca4ac588e6c79573ba6a57d5b"
@@ -2211,6 +2216,11 @@ globule@^1.0.0:
     glob "~7.1.1"
     lodash "~4.17.10"
     minimatch "~3.0.2"
+
+goober@^2.0.15:
+  version "2.0.33"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.0.33.tgz#f8480e11263cde506c7008058b8a98f317935f18"
+  integrity sha512-Wy9HYzmmqmB1PTMQCY3+hlREZ4Lk7kaac6PZeWlJxOM6lIO9lsrU2yBu33TiougO0AC6bBxxIVueDP+nEGNWJw==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.3:
   version "4.2.4"
@@ -3477,6 +3487,11 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
+password-validator@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/password-validator/-/password-validator-5.1.1.tgz#f1dd03a862fa73abf6cbff437acb516aaa784684"
+  integrity sha512-PsnXRlCHzZGviGro9iJXo76vj7Y7Txd0OyJhLsF4pCpsDn53iIuhX5h0mYr93KqkNrc7Htk4jocaYFGVjG/Ohw==
+
 path-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-0.0.1.tgz#e6c4ddd7ed3aa27c68a20cc4e50e1a4ee83bbc4a"
@@ -3887,6 +3902,13 @@ react-from-dom@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.5.1.tgz#5ab82944209059aded60dc26abf43f8989126fa2"
   integrity sha512-ki6OGVgSjDCF0Gt4SMl2cUNBA9ZB8g59bwv9ZiSEXQ37Cw9ZGY0s7EgfPFQYDvaiVx22jto7/dYgQeS+Qw1Mfw==
+
+react-hot-toast@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-hot-toast/-/react-hot-toast-1.0.2.tgz#162f020ba7c0b20f2f25bb7738458c435e84107c"
+  integrity sha512-wp89H0WA6EtiexAg5l3ys+WaZ3u0xM/FJWxl6YxR3hlquWhKvO9snBgTe4ATPEcgbS6pbc43RbuBINOkYOzA5A==
+  dependencies:
+    goober "^2.0.15"
 
 react-inlinesvg@^2.2.2:
   version "2.2.2"

@@ -7,6 +7,7 @@ import { GlobalStyles } from '../theme/globalStyle'
 import UserContext,{IUser,IUserContext} from '@/context/user'
 import authApi from '@/api/auth'
 import ContextMenu from '@/components/context-menu'
+import toast, { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }) {
 
@@ -80,6 +81,7 @@ function MyApp({ Component, pageProps }) {
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
         </Head>
+        <Toaster position='top-right' reverseOrder={false} toastOptions={{duration:5000}} />
         <Component {...pageProps} />
         {customContextMenu.open && <ContextMenu infos={customContextMenu} attention={true} onClose={closeCustomContextMenu} />}
         <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

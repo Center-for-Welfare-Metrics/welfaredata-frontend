@@ -12,16 +12,22 @@ export const Table = styled.table`
 
 export const Td = styled.td`
     border: 1px solid ${({theme})=>theme.colors.local_blue};
+    border-left:none;
+    border-right:none;
     text-align: left;
     padding: 8px;
+    :first-child{
+        border-left:1px solid ${({theme})=>theme.colors.local_blue};
+    }
+    :last-child{
+        border-right:1px solid ${({theme})=>theme.colors.local_blue};
+    }
 `
 
 export const Th = styled(Td)`
-
+    
 `
 
 export const Tr = styled.tr`
-    :nth-child(even){
-        background-color:${({theme})=>theme.colors.local_black}
-    }
+    
 `

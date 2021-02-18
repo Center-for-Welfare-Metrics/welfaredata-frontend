@@ -1,6 +1,9 @@
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
+    html{
+        scroll-behavior: smooth;
+    }
     body{
         background-color: ${({theme}) => theme.colors.local_black};
         margin:0;
