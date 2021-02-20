@@ -1,0 +1,55 @@
+import ContextMenu from '@/context/context-menu'
+import { IRole } from '@/context/roles'
+import { useContext } from 'react'
+import {Container,RoleDescription,RoleName} from './role-card-styled'
+
+interface IRoleCard {
+    role:IRole
+    onClick?(role:IRole,e?:Event):void
+}
+
+const RoleCard = ({role,onClick}:IRoleCard) => {
+
+    const {setContextMenu} = useContext(ContextMenu)
+
+    const click = (event:Event) => {
+        onClick(role,event)
+    }
+
+    const onContextMenu = (event:MouseEvent) => {
+        let { clientX,clientY } = event
+        event.stopPropagation()
+        event.preventDefault()
+        setContextMenu({
+            open:true,
+            type:'options',
+            x:clientX,
+            y:clientY,
+            options:[
+                {
+                    text:'Open',
+                    icon:'push-pin',
+                    onClick:()=>onClick(role),
+                    type:'primary',
+                },
+                {
+                    text:'Delete',
+                    icon:'eliminar',
+                    onClick:()=>onClick(role),
+                    type:'danger'
+                }
+            ],
+            optionTarget:role
+        })
+    }
+
+    return (
+        <Container onContextMenu={onContextMenu} onClick={click}>
+            <RoleName>{role.name}</RoleName>
+            <RoleDescription>{role.description}</RoleDescription>
+        </Container>
+    )
+}
+
+
+export default RoleCard

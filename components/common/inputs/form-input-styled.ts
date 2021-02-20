@@ -34,27 +34,6 @@ export const Label = styled.label`
         z-index:auto;
     `}
 `
-
-export const Input = styled.input`
-    height: 2rem;
-    border:none;
-    background-color: transparent;
-    color:${({theme})=>theme.colors.local_white};
-    border-bottom:1px solid ${({theme})=>theme.colors.local_white};
-    outline: none;
-    text-indent: 1.6rem;
-    :-webkit-autofill {
-        transition-delay: 9999s;
-    }
-    :-webkit-autofill {
-        -webkit-text-fill-color: ${({theme})=>theme.colors.local_white} !important;
-    }
-    :disabled{
-        cursor:not-allowed;
-        color:gray;
-    }
-`
-
 export const Error = styled.span`
     font-size:${({theme})=>theme.fontSize.small};
     color:${({theme})=>theme.colors.local_red};

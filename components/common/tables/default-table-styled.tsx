@@ -1,12 +1,6 @@
 import styled from 'styled-components'
 import {lighten,darken} from 'polished'
 
-export const Container = styled.div`
-    background-color:${({theme})=>theme.colors.local_deep_blue};
-    box-shadow: 0px 0px 4.5px -2px ${({theme})=> lighten(0.08,theme.colors.local_white)};
-    padding:2rem;
-`
-
 export const Table = styled.table`
     color:${({theme})=>theme.colors.local_white};
     border-collapse: collapse;

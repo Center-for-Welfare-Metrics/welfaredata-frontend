@@ -1,0 +1,128 @@
+import { DefaultButton } from "@/components/common/buttons/default-button-styled"
+import { PrimaryCard } from "@/components/common/cards/cards"
+import PrivilegesContext from "@/context/privileges_context"
+import { IRole } from "@/context/roles"
+import { useContext, useEffect, useState } from "react"
+import { ManagementTitle,ManagementCardDefaultContainer } from "../admin-layout"
+import RoleCard from "./role-card"
+import RoleModal from "./role-modal"
+import adminRolesApi from '@/api/admin/roles'
+import toast from 'react-hot-toast';
+
+const RolesManagement = () => {
+
+    const [roleModalIsOpen,setRoleModalIsOpen] = useState(false)
+    
+    const [roleOnEdit,setRoleOnEdit] = useState<IRole>(null)
+
+    const {roles,fetchRoles} = useContext(PrivilegesContext)
+
+    useEffect(()=>{
+        if(roleOnEdit){
+            setRoleModalIsOpen(true)
+        }
+    },[roleOnEdit])
+
+    const roleClick = (role:IRole) => {
+        setRoleOnEdit(role)
+    }
+
+    const clearOnModalClose = () => {
+        setRoleOnEdit(null)
+    }
+
+    const onSuccess = (role:IRole) => {
+        if(role._id){
+            adminRolesApi.update(role._id,role)
+            .then(()=>{
+                setRoleModalIsOpen(false)
+                toast.success('Role updated successfully!')
+                fetchRoles()
+            })
+        }else{
+            adminRolesApi.create(role)
+            .then(()=>{
+                setRoleModalIsOpen(false)
+                toast.success('Role created successfully!')
+                fetchRoles()
+            })
+        }
+    }
+
+    return (
+        <>
+            <ManagementCardDefaultContainer>
+                <ManagementTitle>Roles</ManagementTitle>
+                <PrimaryCard>
+                    {
+                        roles.map((role) => (
+                            <RoleCard 
+                                key={role._id} 
+                                onClick={roleClick} 
+                                role={role} 
+                            />
+                        ))
+                    }
+                </PrimaryCard>
+                <DefaultButton onClick={()=>{setRoleModalIsOpen(true)}}>new role</DefaultButton>
+            </ManagementCardDefaultContainer>
+            <RoleModal onSuccess={onSuccess} role={roleOnEdit} clear={clearOnModalClose} onClose={()=>setRoleModalIsOpen(false)} isOpen={roleModalIsOpen} />
+        </>
+    )
+}
+
+
+
+export default RolesManagement
+
+
+// const roles : IRole[] = [
+//     {
+//         _id:'2',
+//         __v:0,
+//         name:'Admin',
+//         description:'Can do everything',
+//         can:{
+//             create:['all'],
+//             read:['all'],
+//             update:['all'],
+//             delete:['all']
+//         }
+//     },
+//     {
+//         _id:'1',
+//         __v:0,
+//         name:'Basic',
+//         description:'Provides basic access to resources and this text is to increase description length',
+//         can:{
+//             create:[],
+//             read:['processograms'],
+//             update:[],
+//             delete:[]
+//         }
+//     },
+//     {
+//         _id:'3',
+//         __v:0,
+//         name:'Editor',
+//         description:'Can only update informations',
+//         can:{
+//             create:[],
+//             read:['processograms','users'],
+//             update:['processograms'],
+//             delete:[]
+//         }
+//     },
+//     {
+//         _id:'4',
+//         __v:0,
+//         name:'Author',
+//         description:'Create and Update informations',
+//         can:{
+//             create:['processograms','users'],
+//             read:['processograms','users'],
+//             update:['processograms'],
+//             delete:[]
+//         }
+//     }
+// ]

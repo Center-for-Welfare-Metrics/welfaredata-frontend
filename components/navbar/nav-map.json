@@ -54,12 +54,8 @@
         "prefix":"/admin",
         "childrens":[
             {
-                "name":"users",
-                "href":"/users"
-            },
-            {
-                "name":"privileges",
-                "href":"/privileges"
+                "name":"users and privileges",
+                "href":"/users_and_privileges"
             }
         ]
     }

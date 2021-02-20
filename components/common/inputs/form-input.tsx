@@ -1,12 +1,13 @@
 import { useState,FC,InputHTMLAttributes, useEffect } from 'react'
 
-import {Container,Label,Icon,Error,Input} from './form-input-styled'
+import {Container,Label,Icon,Error} from './form-input-styled'
+import { LabeledInput } from './inputs'
 
 
-interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
+export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     name:string,
     type?:string,
-    error:string[],
+    error?:string,
     label:string,
     icon?:string,
     value:any
@@ -44,7 +45,7 @@ const FormInput : FC<IFormInput> = (
         <Container>
             <Label focus={onFocus} htmlFor={name}>{label}</Label>
             {icon && <Icon aria-hidden className={`fas ${icon}`} />}
-            <Input 
+            <LabeledInput 
                 id={name}
                 name={name}
                 type={type}

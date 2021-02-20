@@ -1,8 +1,8 @@
 import Modal, {IModal} from '@/components/common/modal'
 import { IUser } from '@/context/user'
 
-import { useEffect, useState } from 'react'
-import { ActionButtons, Container,FormHeader } from './users-styled'
+import { FormEvent, useContext, useEffect, useState } from 'react'
+import { Container,FormHeader } from './users-styled'
 
 import FormInput from '@/components/common/inputs/form-input'
 
@@ -13,36 +13,44 @@ import { DangerButton, SuccessButton } from '@/components/common/buttons/default
 import adminUsersApi from '@/api/admin/users'
 
 import toast from 'react-hot-toast';
+import { ActionButtons } from '@/components/common/modal/modal-styled'
+import { IRole } from '@/context/roles'
+import BoxSelect from '@/components/common/selects/box-select'
+import PrivilegesContext from '@/context/privileges_context'
 
 const Validator = require('validatorjs')
 
 interface UserModal extends IModal{
-    user?:IUser
+    user?:IUser,
+    onSuccess():void
 }
 
-const UserModal = ({onClose,isOpen,user,clear}:UserModal) => {
+const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
+
+    const {roles} = useContext(PrivilegesContext)
+
+    const [_id,setId] = useState(undefined)
 
     const [name,setName] = useState('')
 
     const [email,setEmail] = useState('')
 
+    const [userRole,setUserRole] = useState<IRole>(null)
+
     const [password,setPassword] = useState('')
 
     const [password_confirmation,setPasswordConfirmation] = useState('')
-
+    
     const [error,setError] = useState<any>({})
 
     const [passwordStrength,setPasswordStrength] = useState('')
-
-    const [hasUser,setHasUser] = useState(false)
 
     useEffect(()=>{
         if(user){
             setName(user.name)
             setEmail(user.email)
-            setHasUser(true)
-        }else{
-            setHasUser(false)
+            setUserRole(user.role)
+            setId(user._id)
         }
     },[user])
 
@@ -54,17 +62,22 @@ const UserModal = ({onClose,isOpen,user,clear}:UserModal) => {
         }
     },[password])
 
+    const hasUser = () => {
+        return _id !== undefined
+    }
+
     const localClear = () => {
         setName('')
         setEmail('')
         setPassword('')
         setPasswordConfirmation('')
         setError({})
+        setUserRole(null)
+        setId(undefined)
         if(clear)clear()
     }
 
-    const create = (event) => {
-        event.preventDefault()
+    const create = () => {
         if(passwordStrength==='Weak'){
             setError({password:'Password too weak!'})
         }else{
@@ -75,9 +88,10 @@ const UserModal = ({onClose,isOpen,user,clear}:UserModal) => {
             })
             
             validation.passes(()=>{
-                adminUsersApi.create({name,email,password,password_confirmation})                
+                adminUsersApi.create({name,email,password,password_confirmation,role:userRole._id})
                 .then(()=>{
                     toast.success('User created successfully!')
+                    onSuccess()
                     onClose()
                 })
                 .catch((error)=>{
@@ -91,54 +105,98 @@ const UserModal = ({onClose,isOpen,user,clear}:UserModal) => {
         }
     }
 
+    const changeUserRole = (role:IRole) => {
+        if(userRole && (userRole._id === role._id)){
+            setUserRole(null)
+        }else{
+            setUserRole(role)
+        }
+    }
+
+    const update = () => {
+        adminUsersApi.update(_id,{
+            role:userRole._id
+        })
+        .then(()=>{
+            toast.success('User updated successfully!')
+            onSuccess()
+            onClose()
+        })
+    }
+
+    const successClick = (event:FormEvent) => {
+        event.preventDefault()
+        if(hasUser()){
+            update()
+        }else{
+            create()
+        }
+    }
+
     return (
         <Modal onClose={onClose} isOpen={isOpen} clear={localClear}>
-            <Container>
-                <FormHeader>Personal Informations</FormHeader>                
-                <FormInput 
-                    label='Name'
-                    value={name}
-                    onChange={(e)=>setName(e.target.value)}
-                    error={error.name}
-                    name='name'      
-                    disabled={hasUser}          
-                />
-                <FormHeader>Account Informations</FormHeader>   
-                <FormInput 
-                    label='Email'
-                    value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
-                    error={error.email}
-                    name='email'
-                    disabled={hasUser}                
-                />
-                {
-                    !hasUser &&
-                    <>
-                        <FormInput 
-                            label='Password'
-                            value={password}
-                            onChange={(e)=>setPassword(e.target.value)}
-                            error={error.password}
-                            name='password'
-                            type='password'                    
-                        />
-                        <StrongPasswordBar strength={passwordStrength} />
-                        <FormInput 
-                            label='Password Confirmation'
-                            value={password_confirmation}
-                            onChange={(e)=>setPasswordConfirmation(e.target.value)}
-                            error={error.password_confirmation}
-                            name='password_confirmation'
-                            type='password'
-                        />
-                    </>
-                }
-                <ActionButtons>
-                    <DangerButton onClick={onClose}>Cancel</DangerButton>
-                    <SuccessButton disabled={hasUser} onClick={create}>{hasUser?'Update User':'Create User'}</SuccessButton>
-                </ActionButtons>
-            </Container>
+            <form method="post" onSubmit={successClick}>
+                <Container>                
+                    <FormHeader>Role</FormHeader>
+                    <BoxSelect 
+                        value={userRole}
+                        options={roles}
+                        prepare={{
+                            key:'_id',
+                            render:'name'
+                        }}
+                        onChoose={changeUserRole}
+                    />
+                    <FormHeader>Personal Informations</FormHeader>                
+                    <FormInput 
+                        label='Name'
+                        value={name}
+                        onChange={(e)=>setName(e.target.value)}
+                        error={error.name}
+                        required
+                        name='name'      
+                        disabled={hasUser()}          
+                    />
+                    <FormHeader>Account Informations</FormHeader>   
+                    <FormInput 
+                        label='Email'
+                        value={email}
+                        onChange={(e)=>setEmail(e.target.value)}
+                        error={error.email}                        
+                        required
+                        name='email'
+                        disabled={hasUser()}                
+                    />
+                    {
+                        !hasUser() &&
+                        <>
+                            <FormInput 
+                                label='Password'
+                                value={password}
+                                onChange={(e)=>setPassword(e.target.value)}
+                                error={error.password}
+                                required
+                                name='password'
+                                type='password'                    
+                            />
+                            <StrongPasswordBar strength={passwordStrength} />
+                            <FormInput 
+                                label='Password Confirmation'
+                                value={password_confirmation}
+                                onChange={(e)=>setPasswordConfirmation(e.target.value)}
+                                required
+                                error={error.password_confirmation}
+                                name='password_confirmation'
+                                type='password'
+                            />
+                        </>
+                    }
+                    <ActionButtons>
+                        <DangerButton type='button' onClick={onClose}>Cancel</DangerButton>
+                        <SuccessButton>{hasUser()?'Update User':'Create User'}</SuccessButton>
+                    </ActionButtons>
+                </Container>
+            </form>
         </Modal>
     )
 }

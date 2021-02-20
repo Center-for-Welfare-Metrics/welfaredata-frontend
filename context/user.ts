@@ -1,10 +1,12 @@
 import { createContext } from "react";
+import { IRole } from "./roles";
 
 export interface IUser{
     name:string,
     _id:string,
     email:string,
-    __v:number
+    __v:number,
+    role?:IRole
 }
 
 export interface IUserContext {

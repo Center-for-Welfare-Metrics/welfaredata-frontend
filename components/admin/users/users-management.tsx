@@ -1,13 +1,11 @@
-import withAuth from "@/components/HOC/with-auth"
 import { useEffect, useState } from "react"
 import usersAdminApi from '@/api/admin/users'
 import { DefaultButton } from "@/buttons/default-button-styled"
-import DefaultLayout from "@/components/layouts"
-import { AdminLayout } from "@/components/admin/admin-layout"
-import { UsersTableContainer } from "@/components/admin/users/users-styled"
 import DefaultTable from "@/components/common/tables/default-table"
 import { DateTime } from 'luxon'
 import UserModal from "@/components/admin/users/user-modal"
+import { PrimaryCard } from "@/components/common/cards/cards"
+import { ManagementTitle,ManagementCardDefaultContainer } from "../admin-layout"
 
 const dateFormat = (date:string) => {
     return DateTime.fromISO(date).toFormat('DD')
@@ -23,6 +21,13 @@ const tableColumns = [
         accessor: 'name',
     },
     {
+        Header:'Role',
+        accessor:'role',
+        preRender:(role)=>{
+            return role.name
+        }
+    },
+    {
         Header: 'Created At',
         accessor: 'createdAt',
         preRender: dateFormat
@@ -34,7 +39,7 @@ const tableColumns = [
     }
 ]
 
-const UsersPage = () => {
+const UsersManagement = () => {
 
     const [users,setUsers] = useState([])
 
@@ -43,10 +48,7 @@ const UsersPage = () => {
     const [userModalOpen,setUserModalOpen] = useState(false)
 
     useEffect(()=>{
-        usersAdminApi.get({skip:0,limit:10,name:'',createdBy:''})
-        .then(({data})=>{
-            setUsers(data)
-        })
+        fetchUsers()
     },[])
 
     useEffect(()=>{
@@ -55,10 +57,19 @@ const UsersPage = () => {
         }
     },[userOnEdit])
 
+
+    const fetchUsers = () => {
+        usersAdminApi.get({skip:0,limit:10,name:'',createdBy:''})
+        .then(({data})=>{
+            setUsers(data)
+        })
+    }
+
     return (
-        <DefaultLayout>   
-            <AdminLayout>
-                <UsersTableContainer>
+        <>
+            <ManagementCardDefaultContainer>
+                <ManagementTitle>Users</ManagementTitle>
+                <PrimaryCard>
                     <DefaultTable 
                         options={
                             [
@@ -71,12 +82,12 @@ const UsersPage = () => {
                         data={users} 
                         columns={tableColumns} 
                     />
-                    <DefaultButton onClick={()=>setUserModalOpen(true)}>new user</DefaultButton>
-                </UsersTableContainer>
-                <UserModal clear={()=>setUserOnEdit(null)} isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
-            </AdminLayout>
-        </DefaultLayout>
+                </PrimaryCard>
+                <DefaultButton onClick={()=>setUserModalOpen(true)}>new user</DefaultButton>
+            </ManagementCardDefaultContainer>
+            <UserModal onSuccess={fetchUsers} clear={()=>setUserOnEdit(null)} isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
+        </>
     )
 }
 
-export default withAuth(UsersPage)
+export default UsersManagement

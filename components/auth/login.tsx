@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import SubmitButton from '@/components/common/buttons/submit-button'
+import { SuccessButton } from '@/components/common/buttons/default-button-styled'
 import FormInput from '@/components/common/inputs/form-input'
 import {Container,Form,LinkTo} from './auth-styled'
 
@@ -33,7 +33,7 @@ const Login = (
                     type='password'
                     icon='fa-key'
                 />
-                <SubmitButton type='submit'>Login</SubmitButton>
+                <SuccessButton type='submit'>Login</SuccessButton>
             </Form>
             <LinkTo>
                 Don't have an account? <Link href='/register'>Register now!</Link>

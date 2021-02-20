@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import FormInput from '@/components/common/inputs/form-input'
-import SubmitButton from '@/components/common/buttons/submit-button'
+import { SuccessButton } from '@/components/common/buttons/default-button-styled'
 import {Container,Form,LinkTo} from './auth-styled'
 import StrongPasswordBar from '../miscellaneous/strong-password-bar'
 
@@ -56,7 +56,7 @@ const Register = ({
                     type='password'
                     icon='fa-lock'
                 />
-                <SubmitButton>Register</SubmitButton>
+                <SuccessButton type='submit'>Register</SuccessButton>
             </Form>
             <LinkTo>
                 Already have an account? <Link href='/login'>Login!</Link>

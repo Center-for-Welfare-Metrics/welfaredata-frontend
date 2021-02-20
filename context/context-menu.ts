@@ -3,7 +3,7 @@ import { createContext } from "react";
 export interface IContextOptions {
     text:string
     icon:string
-    onClick(row:any):void
+    onClick(optionTarget:any):void
     type:'primary'|'success'|'danger'|'warning'
 }
 
