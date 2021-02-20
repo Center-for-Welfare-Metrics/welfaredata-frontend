@@ -27,4 +27,5 @@ export const Option = styled.div`
     :hover{
         background-color:${({theme})=> darken(0.1,theme.colors.local_red)};
     }
+    ${({selected})=>selected?'transform:scale(1.015);':''}
 `
