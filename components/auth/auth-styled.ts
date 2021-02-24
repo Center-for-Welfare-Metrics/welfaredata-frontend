@@ -28,11 +28,13 @@ export const LinkTo = styled.span`
     margin-top:.5rem;
     color:white;
     a{
-        color: ${({theme})=>theme.colors.local_yellow};
+        color: ${({theme})=>transparentize(0.6,theme.colors.local_yellow)};
         transition: color 500ms;
+        margin-left:.5rem;
+        cursor:not-allowed;
     }
     a:hover{
-        color: ${({theme})=> darken(0.1,theme.colors.local_yellow) };
+        /* color: ${({theme})=> darken(0.1,theme.colors.local_yellow) }; */
         transition: color 500ms;
     }
 `

@@ -17,13 +17,11 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
 
     const [name,setName] = useState('')
 
-    const [_id,setId] = useState(null)
+    const [_id,setId] = useState(undefined)
 
     const [description,setDescription] = useState('')
 
     const [can,setCan] = useState<Ican>({create:[],delete:[],read:[],update:[]})
-
-    const [hasRole,setHasRole] = useState(false)
 
     useEffect(()=>{
         if(role){
@@ -31,9 +29,6 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
             setCan(role.can)
             setId(role._id)
             setDescription(role.description)
-            setHasRole(true)
-        }else{
-            setHasRole(false)
         }
     },[role])
 
@@ -41,8 +36,13 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
         setName('')
         setDescription('')
         setCan({create:[],delete:[],read:[],update:[]})
+        setId(undefined)
         clear()
     }    
+
+    const hasRole = () => {
+        return _id !== undefined
+    }
 
     const onGrantedAddition = (permission:'read'|'create'|'update'|'delete') => (granted:string) => {
         setCan(update(can,{
@@ -73,7 +73,7 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
                         onChange={(e)=>setName(e.target.value)}
                         placeholder='Role name'
                         autoComplete='off'
-                        autoFocus={!hasRole}
+                        autoFocus={!hasRole()}
                         required
                     />
                     <DescriptionInput 
@@ -94,7 +94,7 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
                     </PermissionsSection>
                     <ActionButtons>
                         <DangerButton type='button' onClick={onClose}>Cancel</DangerButton>
-                        <SuccessButton type='submit'>{hasRole?'Update Role':'Create Role'}</SuccessButton>
+                        <SuccessButton type='submit'>{hasRole()?'Update Role':'Create Role'}</SuccessButton>
                     </ActionButtons>
                 </Container>
             </form>

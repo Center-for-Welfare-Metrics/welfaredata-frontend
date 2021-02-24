@@ -13,10 +13,10 @@ const UsersAndPrivileges = () => {
     const [roles,setRoles] = useState<IRole[]>([])
 
     const fetchRoles = () => {
-        adminRolesApi.get({skip:0,limit:10,createdBy:'',name:''})
-        .then(({data}) => {
-            setRoles(data)
-        })
+        // adminRolesApi.get({skip:0,limit:10,createdBy:'',name:''})
+        // .then(({data}) => {
+        //     setRoles(data)
+        // })
     }
 
     const privilegesContextValues : IPrivileges = {roles,setRoles,fetchRoles}
@@ -28,10 +28,10 @@ const UsersAndPrivileges = () => {
     return (
         <PrivilegesContext.Provider value={privilegesContextValues}>
             <DefaultLayout>   
-                <AdminLayout>
+                {/* <AdminLayout>
                     <RolesManagement />
                     <UsersManagement />                
-                </AdminLayout>
+                </AdminLayout> */}
             </DefaultLayout>
         </PrivilegesContext.Provider>
     )

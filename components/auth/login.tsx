@@ -36,7 +36,7 @@ const Login = (
                 <SuccessButton type='submit'>Login</SuccessButton>
             </Form>
             <LinkTo>
-                Don't have an account? <Link href='/register'>Register now!</Link>
+                Don't have an account?<a>Register now!</a>
             </LinkTo>
         </Container>
     )
