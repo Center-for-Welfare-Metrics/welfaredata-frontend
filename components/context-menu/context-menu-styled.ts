@@ -15,7 +15,7 @@ export const Container = styled.div`
 
 export const FullBackground = styled.div`
     top:0;
-    position:absolute;
+    position:fixed;
     width:100%;
     height:100%;
     z-index:998;

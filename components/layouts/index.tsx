@@ -1,4 +1,4 @@
-import NavBar from '../navbar'
+import NavBar from '../NAVBAR'
 import {Container} from './deafult-styled'
 
 interface IDefaultLayout{

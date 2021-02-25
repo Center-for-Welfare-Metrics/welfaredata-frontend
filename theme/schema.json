@@ -11,11 +11,12 @@
             "local_black":"#000000"
         },
         "fontSize":{
-            "very_small":".5rem",
+            "verySmall":".5rem",
             "small":".8rem",
             "normal":"1rem",
             "large":"1.5rem",
-            "extraLarge":"2rem"
+            "extraLarge":"2rem",
+            "extraVeryLarge":"2.5rem"
         },
         "fontFamily":{
 

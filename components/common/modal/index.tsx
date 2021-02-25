@@ -1,3 +1,4 @@
+import { StyleTypes } from '@/utils/consts'
 import { useEffect, useState } from 'react'
 import { Container, FadedModalBackground } from './modal-styled'
 
@@ -6,9 +7,10 @@ export interface IModal {
     isOpen:boolean
     children?:React.ReactNode
     clear?():void
+    type?:StyleTypes
 }
 
-const Modal = ({onClose,isOpen,children,clear}:IModal) => {
+const Modal = ({onClose,isOpen,children,clear,type='primary'}:IModal) => {
 
     const [internalOpen,setInternalOpen] = useState(false)
 
@@ -37,7 +39,7 @@ const Modal = ({onClose,isOpen,children,clear}:IModal) => {
     return (
         internalOpen &&
         <>
-            <Container isOpen={fadeOpen}>
+            <Container type={type} isOpen={fadeOpen}>
                 {children}
             </Container>
             <FadedModalBackground isOpen={fadeOpen} onClick={onClose} />

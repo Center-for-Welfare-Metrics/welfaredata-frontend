@@ -1,11 +1,12 @@
+import { StyleTypes } from "./consts"
 
 
 export interface IColorType {
     theme:any
-    type:'primary' | 'success' | 'warning' | 'danger'
+    type: StyleTypes
 }
 
-export const ColorType = ({theme,type}:IColorType) => {
+export const GetColorType = ({theme,type}:IColorType) => {
     switch(type){
         case 'primary':
             return theme.colors.local_blue
@@ -15,6 +16,8 @@ export const ColorType = ({theme,type}:IColorType) => {
             return theme.colors.local_red
         case 'warning':
             return theme.colors.local_yellow
+        case 'default':
+            return theme.colors.local_deep_blue
         default:
             return theme.colors.local_white
     }

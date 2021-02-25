@@ -78,7 +78,7 @@ const ContextMenu = ({
             if(isOverFlowingOnAxis(infos.x,elInfo.width,scInfo.width)){
                 translate.x = '-100%'
             }
-            if(isOverFlowingOnAxis(infos.y,elInfo.height,scInfo.heihgt)){
+            if(isOverFlowingOnAxis(infos.y,elInfo.height,scInfo.heihgt + window.scrollY)){
                 translate.y = '-100%'
             }
 
@@ -102,6 +102,9 @@ const ContextMenu = ({
     const innerOnClick = (e:Event) => {
         if(infos.type === 'options'){
             onClose(e)
+        }else{
+            console.log(e)
+            e.stopPropagation()
         }
     }
 

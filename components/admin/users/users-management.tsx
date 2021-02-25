@@ -6,6 +6,9 @@ import { DateTime } from 'luxon'
 import UserModal from "@/components/admin/users/user-modal"
 import { PrimaryCard } from "@/components/common/cards/cards"
 import { ManagementTitle,ManagementCardDefaultContainer } from "../admin-layout"
+import { IUser } from "@/context/user"
+import Dialog from "@/components/common/dialog/dialog"
+import toast from "react-hot-toast"
 
 const dateFormat = (date:string) => {
     return DateTime.fromISO(date).toFormat('DD')
@@ -43,7 +46,11 @@ const UsersManagement = () => {
 
     const [users,setUsers] = useState([])
 
-    const [userOnEdit,setUserOnEdit] = useState(null)
+    const [userOnEdit,setUserOnEdit] = useState<IUser>(null)
+
+    const [userOnDelete,setUserOnDelete] = useState<IUser>(null)
+
+    const [openDeleteDialog,setOpenDeleteDialog] = useState(false)
 
     const [userModalOpen,setUserModalOpen] = useState(false)
 
@@ -52,16 +59,33 @@ const UsersManagement = () => {
     },[])
 
     useEffect(()=>{
+        if(userOnDelete){
+            setOpenDeleteDialog(true)
+        }
+    },[userOnDelete])
+
+    useEffect(()=>{
         if(userOnEdit){
             setUserModalOpen(true)
         }
     },[userOnEdit])
 
-
     const fetchUsers = () => {
         usersAdminApi.get({skip:0,limit:10,name:'',createdBy:''})
         .then(({data})=>{
             setUsers(data)
+        })
+    }
+
+    const deleteUser = () => {
+        usersAdminApi.delete(userOnDelete._id)
+        .then(() => {
+            toast.success('User deleted successfully!')
+            fetchUsers()
+            setOpenDeleteDialog(false)
+        })
+        .catch(() => {
+            toast.error('Something gone wrong')
         })
     }
 
@@ -73,12 +97,12 @@ const UsersManagement = () => {
                     <DefaultTable 
                         options={
                             [
-                                {text:'Open',onClick:(row)=>setUserOnEdit(row),icon:'push-pin',type:'primary'},
-                                {text:'Delete',onClick:console.log,icon:'eliminar',type:'danger'},
+                                {text:'Open',onClick:setUserOnEdit,icon:'push-pin',type:'primary'},
+                                {text:'Delete',onClick:setUserOnDelete,icon:'eliminar',type:'danger'},
                                 {text:'Report',onClick:console.log,icon:'exclamation-button',type:'warning'}
                             ]
                         } 
-                        rowClick={(row)=>setUserOnEdit(row)} 
+                        rowClick={setUserOnEdit}
                         data={users} 
                         columns={tableColumns} 
                     />
@@ -86,6 +110,16 @@ const UsersManagement = () => {
                 <DefaultButton onClick={()=>setUserModalOpen(true)}>new user</DefaultButton>
             </ManagementCardDefaultContainer>
             <UserModal onSuccess={fetchUsers} clear={()=>setUserOnEdit(null)} isOpen={userModalOpen} user={userOnEdit} onClose={()=>setUserModalOpen(false)} />
+            <Dialog 
+                isOpen={openDeleteDialog} 
+                onClose={()=>setOpenDeleteDialog(false)}
+                clear={()=>setUserOnDelete(null)}
+                title={`Do you really want to remove the user '${userOnDelete?.name}'?`}
+                subtitle='this action cannot be undone'
+                type='danger'
+                onConfirm={deleteUser}
+                confirmText='Remove'
+            />
         </>
     )
 }

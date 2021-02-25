@@ -8,12 +8,17 @@ import RoleCard from "./role-card"
 import RoleModal from "./role-modal"
 import adminRolesApi from '@/api/admin/roles'
 import toast from 'react-hot-toast';
+import Dialog from "@/components/common/dialog/dialog"
 
 const RolesManagement = () => {
 
     const [roleModalIsOpen,setRoleModalIsOpen] = useState(false)
     
     const [roleOnEdit,setRoleOnEdit] = useState<IRole>(null)
+
+    const [roleOnDelete,setRoleOnDelete] = useState<IRole>(null)
+
+    const [openDeleteDialog,setOpenDeleteDialog] = useState(false)
 
     const {roles,fetchRoles} = useContext(PrivilegesContext)
 
@@ -23,9 +28,11 @@ const RolesManagement = () => {
         }
     },[roleOnEdit])
 
-    const roleClick = (role:IRole) => {
-        setRoleOnEdit(role)
-    }
+    useEffect(()=>{
+        if(roleOnDelete){
+            setOpenDeleteDialog(true)
+        }
+    },[roleOnDelete])
 
     const clearOnModalClose = () => {
         setRoleOnEdit(null)
@@ -49,6 +56,19 @@ const RolesManagement = () => {
         }
     }
 
+    const deleteRole = () => {
+        adminRolesApi.delete(roleOnDelete._id)
+        .then(() => {
+            toast.success('Role deleted successfully!')
+            fetchRoles()
+            setOpenDeleteDialog(false)
+        })
+        .catch(() => {
+            toast.error('Something gone wrong')
+            setOpenDeleteDialog(false)
+        })
+    }
+
     return (
         <>
             <ManagementCardDefaultContainer>
@@ -57,8 +77,9 @@ const RolesManagement = () => {
                     {
                         roles.map((role) => (
                             <RoleCard 
+                                onDelete={setRoleOnDelete}
                                 key={role._id} 
-                                onClick={roleClick} 
+                                onClick={setRoleOnEdit} 
                                 role={role} 
                             />
                         ))
@@ -67,6 +88,16 @@ const RolesManagement = () => {
                 <DefaultButton onClick={()=>{setRoleModalIsOpen(true)}}>new role</DefaultButton>
             </ManagementCardDefaultContainer>
             <RoleModal onSuccess={onSuccess} role={roleOnEdit} clear={clearOnModalClose} onClose={()=>setRoleModalIsOpen(false)} isOpen={roleModalIsOpen} />
+            <Dialog
+                isOpen={openDeleteDialog}
+                onClose={()=>setOpenDeleteDialog(false)}
+                clear={()=>setRoleOnDelete(null)}
+                onConfirm={deleteRole}
+                type='danger'
+                title={`Do you really want to remove '${roleOnDelete?.name}' role?`}
+                subtitle='This action cannot be undone'
+                confirmText='Remove'
+            />
         </>
     )
 }

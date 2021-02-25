@@ -5,15 +5,16 @@ import {Container,RoleDescription,RoleName} from './role-card-styled'
 
 interface IRoleCard {
     role:IRole
-    onClick?(role:IRole,e?:Event):void
+    onClick(role:IRole):void
+    onDelete(role:IRole):void
 }
 
-const RoleCard = ({role,onClick}:IRoleCard) => {
+const RoleCard = ({role,onClick,onDelete}:IRoleCard) => {
 
     const {setContextMenu} = useContext(ContextMenu)
 
     const click = (event:Event) => {
-        onClick(role,event)
+        onClick(role)
     }
 
     const onContextMenu = (event:MouseEvent) => {
@@ -35,7 +36,7 @@ const RoleCard = ({role,onClick}:IRoleCard) => {
                 {
                     text:'Delete',
                     icon:'eliminar',
-                    onClick:()=>onClick(role),
+                    onClick:()=>onDelete(role),
                     type:'danger'
                 }
             ],

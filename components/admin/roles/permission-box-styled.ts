@@ -1,4 +1,4 @@
-import { ColorType } from '@/utils/theme'
+import { GetColorType } from '@/utils/theme'
 import styled from 'styled-components'
 import { lighten, transparentize,darken } from 'polished'
 
@@ -22,7 +22,7 @@ export const DeleteGranted = styled.div`
     }
     margin-left:-.25rem;
     border-radius:.5rem;
-    color:${({theme}) => lighten(0.1,ColorType({theme,type:'danger'})) };
+    color:${({theme}) => lighten(0.1,GetColorType({theme,type:'danger'})) };
     background-color:${({theme})=>transparentize(0.7,theme.colors.local_black)};
     position:absolute;
     top:0;
@@ -117,24 +117,24 @@ export const Container = styled.div`
     max-height:3rem;
     margin-top:1.5rem;
     position:relative;
-    border:3px solid ${({theme,type}) => ColorType({theme,type})};
+    border:3px solid ${({theme,type}) => GetColorType({theme,type})};
     border-radius:1rem;
     ${PermissionName},${HelperMessage}{
-        color:${({theme,type}) => ColorType({theme,type})};
+        color:${({theme,type}) => GetColorType({theme,type})};
     };
     ${Granted},${AddGranted},${GrantedListStyled}{
-        background-color:${({theme,type}) => transparentize(0.5,ColorType({theme,type}))};
+        background-color:${({theme,type}) => transparentize(0.5,GetColorType({theme,type}))};
     }
     ${AddGranted}{
         opacity:0;
     }
     ${GrantedOption}{
         :hover{
-            background-color:${({theme,type}) => darken(0.3,ColorType({theme,type})) };
+            background-color:${({theme,type}) => darken(0.3,GetColorType({theme,type})) };
         }
     }
     :hover{
-        border:3px solid ${({theme,type}) => lighten(0.2,ColorType({theme,type}))};
+        border:3px solid ${({theme,type}) => lighten(0.2,GetColorType({theme,type}))};
         ${AddGranted}{
             opacity:1;
         }

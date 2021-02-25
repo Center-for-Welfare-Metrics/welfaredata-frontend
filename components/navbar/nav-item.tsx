@@ -25,7 +25,7 @@ const NavItem = ({children,name,prefix}:INavItem) => {
 
     return (
         <Container>
-            <Name active={Router.pathname.includes(prefix)}>{name}</Name>
+            <Name active={Router.pathname.startsWith(Router.basePath + prefix)}>{name}</Name>
             <Childrens>
                 {
                     children.sort(sort_children).map((item_children) => (

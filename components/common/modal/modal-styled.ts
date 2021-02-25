@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { transparentize,lighten } from 'polished'
+import { GetColorType } from '@/utils/theme'
 
 export const Container = styled.div`
     position:fixed;
@@ -7,7 +8,7 @@ export const Container = styled.div`
     left:50%;
     transform:translate(-50%,-40%);
     background-color:black;
-    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.local_blue}`};
+    border:${({theme,type})=>`${theme.borderSize.medium} solid ${ GetColorType({theme,type})}`};
     z-index:997;
     opacity:${({isOpen})=>isOpen?1:0};
     color:white;

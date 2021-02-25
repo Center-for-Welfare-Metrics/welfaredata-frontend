@@ -1,5 +1,6 @@
 import styled, {keyframes} from 'styled-components'
 import { darken } from 'polished'
+import { GetColorType } from '@/utils/theme'
 
 const shake = keyframes`
     10%, 90% {
@@ -18,7 +19,7 @@ const shake = keyframes`
 
 export const DefaultButton = styled.button`
     margin-top:1rem;
-    background-color:${({theme})=>theme.colors.local_deep_blue};
+    background-color:${({theme})=>GetColorType({theme,type:'default'})};
     color:white;
     border: none;
     border-radius: 1rem;
@@ -40,7 +41,7 @@ export const DefaultButton = styled.button`
 `
 
 export const DangerButton = styled(DefaultButton)`
-    background-color:${({theme})=> darken(0.15,theme.colors.local_red)};
+    background-color:${({theme})=> darken(0.15,GetColorType({theme,type:'danger'}))};
     color:${({theme})=>theme.colors.local_black};
     :hover{
         animation: ${shake} 0.82s cubic-bezier(.36,.07,.19,.97) both;
@@ -49,6 +50,10 @@ export const DangerButton = styled(DefaultButton)`
     }
 `
 
+export const PrimaryButton = styled(DefaultButton)`
+    background-color:${({theme})=>GetColorType({theme,type:'primary'})};
+`
+
 export const SuccessButton = styled(DefaultButton)`
-    background-color:${({theme})=>theme.colors.local_green};
+    background-color:${({theme})=>GetColorType({theme,type:'success'})};
 `
