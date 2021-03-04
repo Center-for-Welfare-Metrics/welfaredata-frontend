@@ -1,5 +1,5 @@
 import NavItem from './nav-item'
-
+import React from 'react'
 import UserContext from '@/context/user'
 import { useContext } from 'react'
 import { Containter, LogOut, NavItems, UserName, UserSection } from './index-styled'
@@ -30,4 +30,4 @@ const NavBar = () => {
 }
 
 
-export default NavBar
+export default React.memo(NavBar)

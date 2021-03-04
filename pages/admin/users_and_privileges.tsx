@@ -26,14 +26,14 @@ const UsersAndPrivileges = () => {
     },[])
 
     return (
-        <PrivilegesContext.Provider value={privilegesContextValues}>
-            <DefaultLayout>   
+        <DefaultLayout>   
+            <PrivilegesContext.Provider value={privilegesContextValues}>
                 <AdminLayout>
                     <RolesManagement />
                     <UsersManagement />                
                 </AdminLayout>
-            </DefaultLayout>
-        </PrivilegesContext.Provider>
+            </PrivilegesContext.Provider>
+        </DefaultLayout>
     )
 }
 

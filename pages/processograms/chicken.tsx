@@ -6,7 +6,8 @@ import { useEffect, useState } from "react"
 
 import processogramApi from '@/api/processogram'
 
-const PigPage = () => {
+
+const LayingHensPage = () => {
 
     const [processograms,setProcessograms] = useState<any>([])
 
@@ -18,13 +19,13 @@ const PigPage = () => {
 
     },[])
 
-    return (        
+    return (
         <DefaultLayout>
             <Container>
-                <ProductionSystemSelector processograms={processograms}  specie='pig' />
+                <ProductionSystemSelector processograms={processograms} specie='chicken' />
             </Container>
         </DefaultLayout>
     )
 }
 
-export default withAuth(PigPage)
+export default withAuth(LayingHensPage)

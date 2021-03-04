@@ -1,18 +1,23 @@
 import { createContext } from "react";
 
+export interface IProcessogramContextCurrentState {
+    target:any,
+    id_tree:any,
+    svg_id:string
+}
+
 export interface IProcessogramContext {
-    choosen:any,
-    setChoosen(choosen:any):void,
-    shareLink:string,
-    generateShareLink(processogram_tree:any):void,
-    pageScrollY:number,
-    setPageScrollY(pageScrollY:number):void,
-    processogramTreeFromQuery:any,
-    setProcessogramTreeFromQuery(processogramTreeFromQuery:any):void,
-    getFigureRealInformations(history:any):any
+    choosen:any
+    setChoosen(choosen:any):void
+    shareLink:string
+    generateShareLink(processogram_tree:any):void
+    processogramTreeFromQuery:any
+    setProcessogramTreeFromQuery(processogramTreeFromQuery:any):void
+    currentState(history:any):IProcessogramContextCurrentState
+    history:any
+    setHistory(history:any):void
 }
 
 const ProcessogramContext = createContext<IProcessogramContext>(null)
-
 
 export default ProcessogramContext

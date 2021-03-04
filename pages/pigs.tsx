@@ -1,9 +1,9 @@
-import ProcessogramHomePage from "@/components/processograms/processograms-home-page"
+import ProductionSystemSelector from "@/components/processograms/production-system-selector"
 
 const PublicPigsPage = () => {
     return (
         <>
-            <ProcessogramHomePage folder='pigs' file_names={['conventional intensive.svg','european intensive.svg','enhanced intensive.svg','outdoor semi-intensive.svg']} />
+            <ProductionSystemSelector specie='pigs' />
         </>
     )
 

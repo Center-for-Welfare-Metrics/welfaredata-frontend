@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { darken,transparentize } from 'polished'
+import { transparentize } from 'polished'
 
 
 export const Container = styled.div`
@@ -34,7 +34,6 @@ export const LinkTo = styled.span`
         cursor:not-allowed;
     }
     a:hover{
-        /* color: ${({theme})=> darken(0.1,theme.colors.local_yellow) }; */
         transition: color 500ms;
     }
 `

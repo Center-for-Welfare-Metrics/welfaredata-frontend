@@ -1,3 +1,4 @@
+import { SpeciesTypes } from "@/utils/enum_types";
 import { createContext } from "react";
 
 export interface IContextOptions {
@@ -16,7 +17,9 @@ export interface IContextMenu {
     svg?:any
     optionTarget?:any
     type:'options' | 'processogram' | 'none'
+    specie?:SpeciesTypes
 }
+
 
 export interface IContextMenuContext {
     contextMenu:IContextMenu,

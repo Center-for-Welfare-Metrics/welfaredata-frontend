@@ -57,3 +57,8 @@ export const PrimaryButton = styled(DefaultButton)`
 export const SuccessButton = styled(DefaultButton)`
     background-color:${({theme})=>GetColorType({theme,type:'success'})};
 `
+
+export const WarningButton = styled(DefaultButton)`
+    background-color:${({theme})=>GetColorType({theme,type:'warning'})};
+    color:${({theme})=>theme.colors.local_black};
+`

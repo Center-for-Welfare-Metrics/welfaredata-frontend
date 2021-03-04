@@ -1,4 +1,4 @@
-import { StyleTypes } from "./consts"
+import { StyleTypes } from "./enum_types"
 
 
 export interface IColorType {

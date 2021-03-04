@@ -1,18 +1,20 @@
+import DataEntryContext from '@/context/data-entry'
+import { useContext } from 'react'
 import ProcessogramCard from '../miscellaneous/processogram-card'
-import { Container } from './dataentry-processogram-styled'
+import { Container } from './specie-selector-styled'
 
-const DataEntryProcessogramPage = () => {
+const SpecieSelector = () => {
 
     return (
         <Container>
             <ProcessogramCard 
                 title='Pig'
-                specie='pigs'
+                specie='pig'
                 productionSystem='conventional intensive'
             />
             <ProcessogramCard 
                 title='Laying Hens'
-                specie='hens'
+                specie='chicken'
                 productionSystem='conventional cages'
             />
         </Container>
@@ -22,4 +24,4 @@ const DataEntryProcessogramPage = () => {
 
 
 
-export default DataEntryProcessogramPage
+export default SpecieSelector

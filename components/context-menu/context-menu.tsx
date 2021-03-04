@@ -1,11 +1,13 @@
 import { SvgPath } from '@/utils/assets_path'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground } from './context-menu-styled'
 import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
 import { IContextMenu } from '@/context/context-menu'
 import voca from 'voca'
 
 import { TweenLite, gsap } from 'gsap'
+import { needSetInformations, showOnScreen } from '@/utils/processogram'
+import processogramApi from '@/api/processogram'
 
 gsap.registerPlugin(TweenLite)
 
@@ -40,9 +42,26 @@ const ContextMenu = ({
 
     const containerRef = useRef<HTMLElement>(null)
 
+    const [temporary,setTemporary] = useState<any>(null)
+
+    const [loading,setLoading] = useState(false)
+
     useEffect(()=>{
         if(infos.open){
-            openContextMenu()           
+            openContextMenu()
+            if(!infos.document){
+                if(infos.type === 'processogram'){
+                    let {field,name} = needSetInformations(infos.svg?.id)
+                    setLoading(true)
+                    processogramApi.getOneReference(field,{
+                        name:name,
+                        specie:infos.specie
+                    }).then(({data}) => {
+                        setLoading(false)
+                        setTemporary(data)
+                    })
+                }   
+            }
         }
     },[infos])
 
@@ -108,6 +127,13 @@ const ContextMenu = ({
         }
     }
 
+    const getPossibleFieldReference = () => {
+        console.log(infos.svg)
+        let {field} = needSetInformations(infos.svg?.id)
+
+        return field
+    }
+
     return (
         <>
             <FullBackground onContextMenu={innerContextMenu} onClick={onClose} />
@@ -115,18 +141,25 @@ const ContextMenu = ({
                 {
                     infos.type === 'processogram' && 
                     <Body>
-                        {infos && infos.document?
-                        (<>
-                            { voca.capitalize(infos.document.name)}: {infos.document.description || 'No description'}
-                        </>
-                        )
-                        :
-                        (
-                        <>
-                            No informations. <br/>
-                            Name on svg: {infos.svg?.name}
-                        </>
-                        )}
+                        {
+                            loading?
+                            (null)
+                            :
+                            (
+                                infos && (infos.document || temporary)?
+                                (<>
+                                    { voca.capitalize(showOnScreen('name',(infos.document || temporary),getPossibleFieldReference()))}: {showOnScreen('description',(infos.document || temporary),getPossibleFieldReference()) || 'No description'}
+                                </>
+                                )
+                                :
+                                (
+                                <>
+                                    No informations. <br/>
+                                    Name on svg: {infos.svg?.name}
+                                </>
+                                )
+                            )
+                        }                        
                     </Body>
                 }                
                 {

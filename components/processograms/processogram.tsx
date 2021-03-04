@@ -6,53 +6,76 @@ import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/proces
 import update from 'immutability-helper'
 import ContextMenuContext from '@/context/context-menu'
 
-import { TweenLite, gsap } from 'gsap'
+import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
+import CustomContext from '@/context/custom-global-styles';
 
+import { TweenLite, gsap } from 'gsap'
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
-    file_name:string
+    productionSystem:ProductionSystemTypes,
+    specie:SpeciesTypes
+    parent?:HTMLElement
 }
-
+interface ILevelZeroInfo {
+    top?:number
+    left?:number
+    width?:number
+}
 const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-const MARGIN_LIMIT_X = 400
+const MARGIN_LIMIT_X = 200
 
-const MARGIN_LIMIT_Y = 400
+const MARGIN_LIMIT_Y = 200
 
-const Processogram = ({file_name}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
 
-    const {choosen,setChoosen,pageScrollY,processogramTreeFromQuery,setProcessogramTreeFromQuery,getFigureRealInformations,generateShareLink} = useContext(ProcessogramContext)
+    const {choosen,setChoosen,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState,generateShareLink,history,setHistory} = useContext(ProcessogramContext)
 
-    const [level,setLevel] = useState(0)
+    const [level,setLevel] = useState(0)    
 
-    const [history,setHistory] = useState({})
+    const [parentScrollY,setParentScrollY] = useState(0)
 
     const svgRef = useRef(null)
 
     const containerRef = useRef<HTMLElement>(null)
 
-    const [levelZeroInfo,setLevelZeroInfo] = useState({top:0,left:0})
+    const [levelZeroInfo,setLevelZeroInfo] = useState<ILevelZeroInfo>(null)
 
     const [firstLoad,setFirstLoad] = useState(false)
 
     const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
-    
-    const {setContextMenu,contextMenu} = useContext(ContextMenuContext)
+
+    const { setContextMenu } = useContext(ContextMenuContext)
+
+    const {setNeedFixedBody} = useContext(CustomContext)
+
+    useEffect(() => {
+        setLevelZeroInfo(containerInfo())
+    },[])
+
+    useEffect(()=>{
+        if(levelZeroInfo){
+            TweenLite.to(containerRef.current,{width:levelZeroInfo.width}).duration(0)
+        }
+    },[levelZeroInfo])
 
     useEffect(()=>{
         if(choosen){
             let info = containerInfo()
             setLevelZeroInfo(info)
             setFirstLoad(true)
+            setScrollY()
             if(imChoosen(choosen)){   
                 levelZeroSelec(info)
             }else{
                 hideContainer(info)
             }
+            setNeedFixedBody(true)
         }else{
+            setNeedFixedBody(false)
             if(firstLoad){
                 moveContainerToDefaultPosition()
             }
@@ -76,6 +99,11 @@ const Processogram = ({file_name}:IProcessogram) => {
         }
     },[history])
 
+    const setScrollY = () => {
+        let targetY = parent?.offsetTop || window.scrollY
+        setParentScrollY(targetY)        
+    }
+
     const cameFromSharedLink = () => {
         let elementToZoomId = processogramTreeFromQuery[innerLevels[level]]
         if(elementToZoomId){
@@ -98,10 +126,10 @@ const Processogram = ({file_name}:IProcessogram) => {
     }
 
     const moveContainerToDefaultPosition = () => {
-        let { top,left } = levelZeroInfo
+        let { top,left,width} = levelZeroInfo
 
         const backContainerToOriginalWidthAndAxisPosition = () => {
-            return TweenLite.to(containerRef.current,{width:'60rem',top,left,display:'block',transform:'translate(0,0)'})
+            return TweenLite.to(containerRef.current,{width,top,left,display:'block',transform:'translate(0,0)'})
         }
 
         const toTotalOpacity = () => {
@@ -113,7 +141,8 @@ const Processogram = ({file_name}:IProcessogram) => {
         }
 
         const setPageOriginalScrollY = () => {
-            window.scrollTo(0,pageScrollY)
+            let target = parent || window
+            target.scrollTo(0,parentScrollY)
         }
 
         backContainerToOriginalWidthAndAxisPosition()
@@ -122,10 +151,12 @@ const Processogram = ({file_name}:IProcessogram) => {
         .then(setPageOriginalScrollY)
     }
 
-    const hideContainer = ({top,left}) => {
+    const hideContainer = ({top,left,width}) => {
+
         const fixContainerPositionAxis = () => {
             return TweenLite.to(containerRef.current,{top,left}).duration(0)
         }
+
         const changePositionAttr = () => {
             return TweenLite.to(containerRef.current,{position:'absolute'}).duration(0)
         }
@@ -154,12 +185,19 @@ const Processogram = ({file_name}:IProcessogram) => {
     }
 
     const screenInfo = () => {
-        let {innerWidth,innerHeight} = window
+        let {innerWidth,innerHeight} =  window        
+        let width,height,top,left = null
+        if(parent){
+            width = parent.getBoundingClientRect().width
+            height = parent.getBoundingClientRect().height
+            top = parent.getBoundingClientRect().top
+            left = parent.getBoundingClientRect().left            
+        }
         return {
-            width:innerWidth,
-            height:innerHeight,
-            middleX:(innerWidth/2),
-            middleY:(innerHeight/2)
+            width:((width+left) || innerWidth),
+            height:((height+top) || innerHeight),
+            middleX:(((width+left) || innerWidth)/2),
+            middleY:(( (height+top) || innerHeight)/2)
         }
     }
 
@@ -174,8 +212,8 @@ const Processogram = ({file_name}:IProcessogram) => {
     }
 
     const containerInfo = () => {
-        let {top,left} = containerRef.current.getBoundingClientRect()
-        return {top,left}
+        let {top,left,width} = containerRef.current.getBoundingClientRect()
+        return {top,left,width}
     }
 
     const currentScale = () => {
@@ -214,7 +252,7 @@ const Processogram = ({file_name}:IProcessogram) => {
         return new_move
     }
 
-    const levelZeroSelec = ({top,left}) => {
+    const levelZeroSelec = ({top,left,width}) => {
         const initialSetup = () => {
             setLevel(1)
             setIDFromCurrentFocusedElement(svgRef.current.id)            
@@ -236,12 +274,12 @@ const Processogram = ({file_name}:IProcessogram) => {
         }
 
         const changePositionAttr = () => {
-            return TweenLite.to(containerRef.current,{position:'fixed'}).duration(0)
+            return TweenLite.to(containerRef.current,{position:'absolute'}).duration(0)
         }
 
         const transformContainerToFocus = () => {
             TweenLite.to(containerRef.current,{
-                width:'80%',
+                width:withLimits(screenInfo()).width,
                 top:'50%',
                 left:'50%',
                 transform:'translate(-50%,-50%)',
@@ -373,7 +411,7 @@ const Processogram = ({file_name}:IProcessogram) => {
             if(element){
                 let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
                 
-                let document = getFigureRealInformations({
+                let {target} = currentState({
                     ...history,
                     [level+1]:{
                         name:layer_name,
@@ -381,14 +419,15 @@ const Processogram = ({file_name}:IProcessogram) => {
                         id:element.id
                     }
                 })
-                let svg = {name:layer_name}
+                let svg = {name:layer_name,id:element.id}
                 setContextMenu({
                     open:true,
                     x:clientX,
                     y:clientY + window.scrollY,
-                    document,
+                    document:target,
                     svg,
-                    type:'processogram'
+                    type:'processogram',
+                    specie:specie
                 })
             }
         }
@@ -404,7 +443,7 @@ const Processogram = ({file_name}:IProcessogram) => {
                 <Svg 
                     level={LEVELS[level]}
                     innerRef={svgRef} 
-                    src={`/assets/svg/zoo/${file_name}`}                    
+                    src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
                     g_id={idFromCurrentFocusedElement}
                     onClick={svgOnClick}
                     onContextMenu={OpenContextMenu}

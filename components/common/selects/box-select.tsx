@@ -1,18 +1,19 @@
 import { Container,Options,Option} from './box-select-styled'
+import React from 'react'
 
 interface IPrepare {
     key:string,
     render:string
 }
 
-interface IFormSelect{
+interface IBoxSelect{
     options:any[]
     prepare:IPrepare
     value:any
     onChoose(option:any):void
 }
 
-const FormSelect = ({value,options,prepare,onChoose}:IFormSelect) => {
+const BoxSelect = ({value,options,prepare,onChoose}:IBoxSelect) => {
     
     const isSelected = (option) => {
         if(value){
@@ -39,4 +40,4 @@ const FormSelect = ({value,options,prepare,onChoose}:IFormSelect) => {
 }
 
 
-export default FormSelect
+export default React.memo(BoxSelect)

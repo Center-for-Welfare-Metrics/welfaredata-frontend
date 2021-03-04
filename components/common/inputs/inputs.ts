@@ -2,17 +2,18 @@ import styled from 'styled-components'
 import { lighten } from 'polished'
 
 export const LabeledInput = styled.input`
-    height: 2rem;
+    padding:.5rem 0 .5rem 0;
     border:none;
     background-color: transparent;
     color:${({theme})=>theme.colors.local_white};
     border-bottom:1px solid ${({theme})=>theme.colors.local_white};
     outline: none;
-    text-indent: 1.6rem;
     :disabled{
         cursor:not-allowed;
     }
+    font-size:${({theme})=>theme.fontSize.normal};
 `
+
 
 
 export const CleanInput = styled.input`
@@ -43,4 +44,20 @@ export const CleanTextArea = styled.textarea`
         background-color: ${({theme})=> lighten(0.1,theme.colors.local_pink)};
         transition: background-color 500ms;
     }
+    :disabled{
+        cursor:not-allowed;
+    }
+    font-size:1rem;
+    height:fit-content;
+    max-height:10rem;
+`
+
+
+export const LabeledTextArea = styled(CleanTextArea)`
+    padding:.5rem 0 .5rem 0;
+    border:none;
+    background-color: transparent;
+    color:${({theme})=>theme.colors.local_white};
+    border-bottom:1px solid ${({theme})=>theme.colors.local_white};
+    outline: none;
 `

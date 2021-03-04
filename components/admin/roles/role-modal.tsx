@@ -1,4 +1,4 @@
-import { DangerButton, SuccessButton } from "@/components/common/buttons/default-button-styled"
+import { DangerButton, SuccessButton,WarningButton } from "@/components/common/buttons/default-button-styled"
 import Modal,{IModal} from "@/components/common/modal"
 import { ActionButtons } from "@/components/common/modal/modal-styled"
 import { IRole } from "@/context/roles"
@@ -94,7 +94,12 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
                     </PermissionsSection>
                     <ActionButtons>
                         <DangerButton type='button' onClick={onClose}>Cancel</DangerButton>
-                        <SuccessButton type='submit'>{hasRole()?'Update Role':'Create Role'}</SuccessButton>
+                        {
+                            hasRole()?
+                            (<WarningButton type='submit'>Update Role</WarningButton>)
+                            :
+                            (<SuccessButton type='submit'>Create Role</SuccessButton>)
+                        }                        
                     </ActionButtons>
                 </Container>
             </form>

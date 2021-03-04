@@ -1,4 +1,5 @@
 import { Container, Line,LineContainer, StrengthText } from './strong-password-bar-styled'
+import React from 'react'
 
 interface IStrongBar {
     strength:string
@@ -25,4 +26,4 @@ const StrongPasswordBar = ({strength}:IStrongBar) => {
 }
 
 
-export default StrongPasswordBar
+export default React.memo(StrongPasswordBar)

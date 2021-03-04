@@ -4,8 +4,9 @@ import SVG from 'react-inlinesvg'
 
 export const Container = styled.div`
     margin-bottom:5rem;
-    width:60rem;
+    width:100%;
     transition:width 500ms;
+    overflow:visible;
 `
 
 export const Svg = styled(SVG)`

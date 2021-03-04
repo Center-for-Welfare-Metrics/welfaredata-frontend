@@ -1,7 +1,9 @@
+import React from 'react'
 import Modal,{IModal} from '@/components/common/modal'
-import { StyleTypes } from '@/utils/consts'
+import { StyleTypes } from '@/utils/enum_types'
 import { DangerButton, DefaultButton } from '../buttons/default-button-styled'
 import { Container, SubTitle, Title,ActionButtons } from './dialog-styled'
+
 
 interface IDialog extends IModal{
     type:StyleTypes
@@ -30,4 +32,4 @@ const Dialog = ({isOpen,onClose,clear,type,onConfirm,title,subtitle,confirmText}
 
 
 
-export default Dialog
+export default React.memo(Dialog)

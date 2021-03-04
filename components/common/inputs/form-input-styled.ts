@@ -26,12 +26,13 @@ export const Label = styled.label`
     transition: all 500ms;
     z-index:-1;
     white-space: nowrap;
-    ${({ focus }) => focus && `
+    ${({ focus,theme }) => focus && `
         top:1rem;
         left:2rem;
         transform: translate(0,0);
         transition: all 500ms;
         z-index:auto;
+        font-size:${theme.fontSize.small}
     `}
 `
 export const Error = styled.span`

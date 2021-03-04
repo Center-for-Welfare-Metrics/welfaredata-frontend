@@ -1,6 +1,7 @@
-import { StyleTypes } from '@/utils/consts'
+import { StyleTypes } from '@/utils/enum_types'
 import { useEffect, useState } from 'react'
 import { Container, FadedModalBackground } from './modal-styled'
+import React from 'react'
 
 export interface IModal {
     onClose(evt?:Event):void

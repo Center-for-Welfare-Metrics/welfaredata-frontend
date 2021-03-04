@@ -57,10 +57,60 @@ const historyToProcessogramTree = (history:any) => {
     return processogram_tree
 }
 
+const translateBySufix = {
+    lf:'lifefates',
+    ph:'phases',
+    ci:'circumstances'
+}
+
+const generateInformationsToPushNewLayer = (svg_id:string) => {
+    try {
+        let [name,sufix] = svg_id.split('--')
+        name = name.replace('_',' ')
+        sufix = sufix.replace(/(-| )\d+/g,'')
+        return {
+            pushTo:translateBySufix[sufix],
+            initialObject:{name}
+        }
+    } catch (error) {
+        return null
+    }
+}
+
+const fieldNameBySufix = {
+    ps:'productionSystem',
+    lf:'lifeFate',
+    ph:'phase',
+    ci:'circumstance'
+}
+
+const needSetInformations = (svg_id:string) => {
+    let [name,sufix] = svg_id.split('--')
+    name = name.replace('_',' ')
+    sufix = sufix.replace(/(-| )\d+/g,'')
+    return {
+        collectionName:translateBySufix[sufix],
+        field:fieldNameBySufix[sufix],
+        name
+    }
+}
+
+const showOnScreen = (field:string,document:any,field_reference:string) => {
+    let show = ''
+    show = document[field]
+    if(document[field_reference]){
+        show = document[field_reference][field]
+    }
+    return show
+}
+
 export {
     getElementByLayerSufix,
     getFixedSufixAndLayerName,
     historyToProcessogramTree,
     encodeProcessogramTree,
-    decodeProcessogramTree
+    decodeProcessogramTree,
+    generateInformationsToPushNewLayer,
+    showOnScreen,
+    needSetInformations
 }

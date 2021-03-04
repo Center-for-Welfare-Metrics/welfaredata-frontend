@@ -2,29 +2,33 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { ThemeProvider } from "styled-components"
 
-import {useTheme} from '../theme/useTheme'
+import { useTheme } from '../theme/useTheme'
 import { GlobalStyles } from '../theme/globalStyle'
-import UserContext,{IUser,IUserContext} from '@/context/user'
-import ContextMenuContext,{IContextMenu} from '@/context/context-menu'
+import UserContext, { IUser, IUserContext } from '@/context/user'
+import ContextMenuContext, { IContextMenu } from '@/context/context-menu'
 import authApi from '@/api/auth'
 import ContextMenu from '@/components/context-menu/context-menu'
 import { Toaster } from 'react-hot-toast';
+import CustomGlobalStyles, { ICustomGlobalStyles } from '@/context/custom-global-styles'
 
 function MyApp({ Component, pageProps }) {
 
-  const [user,setUser] = useState<IUser>(null)
-  const [firstLoad,setFirstLoad] = useState(false)
+  const [user, setUser] = useState<IUser>(null)
+  const [firstLoad, setFirstLoad] = useState(false)
 
-  const {theme,themeLoaded} = useTheme()
-  const [selectedTheme,setSelectedTheme] = useState(theme)
+  const { theme, themeLoaded } = useTheme()
+  const [selectedTheme, setSelectedTheme] = useState(theme)
 
-  const [contextMenu,setContextMenu] = useState<IContextMenu>({open:false,x:0,y:0,type:'none'})
+  const [contextMenu, setContextMenu] = useState<IContextMenu>({ open: false, x: 0, y: 0, type: 'none' })
+  const [needFixedBody, setNeedFixedBody] = useState(false)
 
-  const contextMenuValues = {contextMenu,setContextMenu}
+  const customGlobalStyles: ICustomGlobalStyles = { needFixedBody, setNeedFixedBody }
+
+  const contextMenuValues = { contextMenu, setContextMenu }
 
   useEffect(() => {
     setSelectedTheme(theme);
-   }, [themeLoaded])
+  }, [themeLoaded])
 
   const logOut = () => {
     authApi.logout().then(() => {
@@ -32,69 +36,71 @@ function MyApp({ Component, pageProps }) {
     })
   }
 
-  const userValue : IUserContext = {user,setUser,logOut}
+  const userValue: IUserContext = { user, setUser, logOut }
 
-  const handleCustomContextMenu = (event:MouseEvent) => {
+  const handleCustomContextMenu = (event: MouseEvent) => {
     event.preventDefault()
-    let {clientX,clientY} = event
+    let { clientX, clientY } = event
     setContextMenu({
-      open:true,
-      x:clientX,
-      y:clientY + window.scrollY,
-      type:'none'
+      open: true,
+      x: clientX,
+      y: clientY + window.scrollY,
+      type: 'none'
     })
   }
 
-  const closeCustomContextMenu = (event:MouseEvent) => {
+  const closeCustomContextMenu = (event: MouseEvent) => {
     event.stopPropagation()
     setContextMenu({
-      open:false,
-      type:'none'
+      open: false,
+      type: 'none'
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     document.oncontextmenu = handleCustomContextMenu
-    if(!user){
+    if (!user) {
       authApi.get_user()
-      .then(({data})=>{
-        setUser(data)
-      })
-      .catch(()=>{
-        setFirstLoad(true)
-      })
-    }else{
+        .then(({ data }) => {
+          setUser(data)
+        })
+        .catch(() => {
+          setFirstLoad(true)
+        })
+    } else {
       setFirstLoad(true)
     }
     return () => {
       document.oncontextmenu = null
     }
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    if (user) {
       setFirstLoad(true)
     }
-  },[user])
+  }, [user])
 
-  return (firstLoad && themeLoaded) && 
-  <ThemeProvider theme={selectedTheme}>
-      <GlobalStyles />
-      <ContextMenuContext.Provider value={contextMenuValues}>
+  return (firstLoad && themeLoaded) &&
+    <ThemeProvider theme={selectedTheme}>
+      <Head>
+        <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
+      </Head>
+      <CustomGlobalStyles.Provider value={customGlobalStyles}>
+        <GlobalStyles needFixedBody={needFixedBody} />
         <UserContext.Provider value={userValue}>
-          <Head>
-            <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
-          </Head>
-          <Toaster position='top-right' reverseOrder={false} toastOptions={{duration:5000}} />
-          <Component {...pageProps} />
-          {contextMenu.open && <ContextMenu infos={contextMenu} onClose={closeCustomContextMenu} />}
-          <div style={{position:'fixed',bottom:0,right:0,opacity:'.2'}}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+          <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }} />
+          <ContextMenuContext.Provider value={contextMenuValues}>
+            <Component {...pageProps} />
+            {contextMenu.open && <ContextMenu infos={contextMenu} onClose={closeCustomContextMenu} />}
+          </ContextMenuContext.Provider>
         </UserContext.Provider>
-      </ContextMenuContext.Provider>
+      </CustomGlobalStyles.Provider>
+      <div style={{ position: 'fixed', bottom: 0, right: 0, opacity: '.2' }}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </ThemeProvider>
-    
+
 }
 
 export default MyApp

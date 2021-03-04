@@ -1,4 +1,4 @@
-import { ProductionSystemTypes, SpeciesTypes } from "./consts"
+import { ProductionSystemTypes, SpeciesTypes } from "./enum_types"
 
 export interface ISvgPath {
     file_name:string

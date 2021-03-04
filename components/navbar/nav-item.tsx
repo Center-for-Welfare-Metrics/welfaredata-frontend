@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {Container,Name,Childrens, Children} from './nav-item-styled'
 import Router from 'next/router'
+import React from 'react'
 
 interface INavItem {
     children:any[]
@@ -40,4 +41,4 @@ const NavItem = ({children,name,prefix}:INavItem) => {
 }
 
 
-export default NavItem
+export default React.memo(NavItem)

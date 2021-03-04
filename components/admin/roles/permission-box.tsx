@@ -1,3 +1,4 @@
+import React from 'react'
 import { RESOURCES } from "@/utils/consts"
 import { useState } from "react"
 import { Container, PermissionName,Granted,GrantedContainer, HelperMessage, AddGranted,DeleteGranted,GrantedListStyled,GrantedListBackground, GrantedOption } from "./permission-box-styled"
@@ -91,4 +92,4 @@ const PermissionBox = ({type,granted,onAddClick,onRemoveClick}:IPermissionBox) =
 
 
 
-export default PermissionBox
+export default React.memo(PermissionBox)
