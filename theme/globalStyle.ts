@@ -57,7 +57,7 @@ export const GlobalStyles = createGlobalStyle`
     }
     @media screen and (max-width:1300px){
         html{
-            zoom:.80;
+            zoom:.75;
         }
     }
 `
