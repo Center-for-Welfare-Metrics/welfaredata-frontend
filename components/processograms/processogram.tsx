@@ -5,7 +5,7 @@ import ProcessogramContext from '@/context/processogram'
 import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
 import update from 'immutability-helper'
 import ContextMenuContext from '@/context/context-menu'
-
+import Router from 'next/router'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import CustomContext from '@/context/custom-global-styles';
 
@@ -95,13 +95,15 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
             generateShareLink(history)
             if(processogramTreeFromQuery){
                 cameFromSharedLink()
+                Router.push({query:{specie}})
             }
         }
     },[history])
 
     const setScrollY = () => {
-        let targetY = parent?.offsetTop || window.scrollY
-        setParentScrollY(targetY)        
+        let targetY = parent?.scrollTop || window.scrollY
+        
+        setParentScrollY(targetY)
     }
 
     const cameFromSharedLink = () => {
@@ -129,11 +131,11 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
         let { top,left,width} = levelZeroInfo
 
         const backContainerToOriginalWidthAndAxisPosition = () => {
-            return TweenLite.to(containerRef.current,{width,top,left,display:'block',transform:'translate(0,0)'})
+            return TweenLite.to(containerRef.current,{transform:'translate(0,0)',width,top,left,display:'block'}).duration(0.5)
         }
 
         const toTotalOpacity = () => {
-            return TweenLite.to(containerRef.current,{opacity:'1'})
+            return TweenLite.to(containerRef.current,{opacity:'1'}).duration(0.5)
         }
 
         const toStaticPosition = () => {
@@ -193,11 +195,12 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
             top = parent.getBoundingClientRect().top
             left = parent.getBoundingClientRect().left            
         }
+        console.log(height,top)
         return {
-            width:((width+left) || innerWidth),
-            height:((height+top) || innerHeight),
-            middleX:(((width+left) || innerWidth)/2),
-            middleY:(( (height+top) || innerHeight)/2)
+            width:(width || innerWidth),
+            height:(height || innerHeight),
+            middleX:((width || innerWidth)/2) + (left || 0),
+            middleY:((height || innerHeight)/2) + (top || 0)
         }
     }
 
@@ -284,7 +287,7 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
                 left:'50%',
                 transform:'translate(-50%,-50%)',
                 zIndex:'99'
-            }).duration(1)
+            }).duration(0.5)
         }
 
         initialSetup()

@@ -11,7 +11,7 @@ const NavBar = () => {
     const {user,logOut} = useContext(UserContext)
 
     return (
-        <Containter>
+        <Containter onClick={(e:Event)=>e.stopPropagation()}>
             <NavItems>
                 {
                     NavMap.map((nav_item) => (

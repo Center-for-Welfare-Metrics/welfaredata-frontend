@@ -1,20 +1,43 @@
-import { FieldReferenceTypes } from "@/utils/enum_types";
+import { FieldReferenceTypes, TabTypes } from "@/utils/enum_types";
 import { createContext } from "react";
 
-export interface IDataEntryFormInformations {
+export interface IMedia {
+    _id: string
+    originalName: string
+    url: string
+    size: number
+    type: string
+    name?: string
+    descripition?: string
+}
+
+export interface ICommonDataEntry {
     _id?:string
     name:string
     description:string
-    lifefates?:any
-    phases?:any
-    circumstances?:any
+    global_population?:string
+    medias?:IMedia[]
+}
+
+export interface IDataEntryFormInformations extends ICommonDataEntry {
+    lifefates?:IDataEntryFormInformations
+    phases?:IDataEntryFormInformations
+    circumstances?:IDataEntryFormInformations
+    productionSystem?:ICommonDataEntry
+    lifeFate?:ICommonDataEntry
+    phase?:ICommonDataEntry
+    circumstance?:ICommonDataEntry
 }
 
 export interface IDataEntryContext {
     currentInformations:IDataEntryFormInformations
     currentFieldReference: FieldReferenceTypes
     // setCurrentInformations(currentInformations:IDataEntryFormInformations):void
-    updateCurrentInformations(update:any):void
+    updateCurrentInformations(update:any,withDelay:boolean):void
+    updateReferenceData(value:any,callback?:any)
+    handleReferenceDataChange(value:any)
+    tab:TabTypes,
+    setTab(tab:TabTypes):void
 }
 
 const DataEntryContext = createContext<IDataEntryContext>(null)

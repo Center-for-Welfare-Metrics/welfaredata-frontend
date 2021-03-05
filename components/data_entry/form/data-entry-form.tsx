@@ -1,36 +1,34 @@
-import { TabTypes } from "@/utils/enum_types"
 import { useContext, useEffect, useState } from "react"
 import { Container,Body,Tabs, Tab } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
-import MediaTab from '@/components/data_entry/form/tabs/media'
+import MediaTab from '@/components/data_entry/form/tabs/media/media'
 import { TABS } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
 
-const DataEntryForm = () => {
+const DataEntryForm = () => {    
 
-    const [currentTab,setTab] = useState<TabTypes>('basic')
+    const {currentFieldReference,tab,setTab} = useContext(DataEntryContext)
 
-    const {currentFieldReference} = useContext(DataEntryContext)
-
-    useEffect(()=>{
-        if(!TABS[currentFieldReference].includes(currentTab)){
+    useEffect(()=>{        
+        if(!TABS[currentFieldReference].includes(tab)){
             setTab('basic')
         }
+        
     },[currentFieldReference])
 
     return (
         
         <Container>
             <Body>
-                {currentTab === 'basic' && <BasicTab /> }
-                {currentTab === 'media' && <MediaTab /> }
+                {tab === 'basic' && <BasicTab /> }
+                {tab === 'media' && <MediaTab /> }
             </Body>
             <Tabs>
                 {
-                    TABS[currentFieldReference].map((tab) => 
-                    <Tab onClick={()=>setTab(tab)} active={currentTab===tab} key={tab}>
-                        {voca.capitalize(tab)}
+                    TABS[currentFieldReference].map((tab_reference) => 
+                    <Tab onClick={()=>setTab(tab_reference)} active={tab===tab_reference} key={tab_reference}>
+                        {voca.capitalize(tab_reference)}
                     </Tab>)
                 }
             </Tabs>

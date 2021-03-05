@@ -8,10 +8,11 @@ export interface IModal {
     isOpen:boolean
     children?:React.ReactNode
     clear?():void
-    type?:StyleTypes
+    type?:StyleTypes,
+    isDialog?:boolean
 }
 
-const Modal = ({onClose,isOpen,children,clear,type='primary'}:IModal) => {
+const Modal = ({onClose,isOpen,children,clear,type='primary',isDialog}:IModal) => {
 
     const [internalOpen,setInternalOpen] = useState(false)
 
@@ -40,7 +41,7 @@ const Modal = ({onClose,isOpen,children,clear,type='primary'}:IModal) => {
     return (
         internalOpen &&
         <>
-            <Container type={type} isOpen={fadeOpen}>
+            <Container isDialog={isDialog} type={type} isOpen={fadeOpen}>
                 {children}
             </Container>
             <FadedModalBackground isOpen={fadeOpen} onClick={onClose} />

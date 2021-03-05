@@ -9,3 +9,5 @@ export type ProductionSystemTypes = 'conventional cages' | 'conventional intensi
 export type TabTypes = 'basic' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
 
 export type FieldReferenceTypes = 'productionSystem' | 'lifeFate' | 'phase' | 'circumstance'
+
+export type CommonIconsTypes = string | 'push-pin' | 'eliminar' | 'exclamation-button' | 'upload-to-cloud'

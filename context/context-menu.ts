@@ -1,9 +1,9 @@
-import { SpeciesTypes } from "@/utils/enum_types";
+import { CommonIconsTypes, SpeciesTypes } from "@/utils/enum_types";
 import { createContext } from "react";
 
 export interface IContextOptions {
     text:string
-    icon:string
+    icon:CommonIconsTypes
     onClick(optionTarget:any):void
     type:'primary'|'success'|'danger'|'warning'
 }

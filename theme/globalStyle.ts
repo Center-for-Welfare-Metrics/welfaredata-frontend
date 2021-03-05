@@ -1,3 +1,4 @@
+import { lighten } from 'polished'
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
@@ -23,5 +24,40 @@ export const GlobalStyles = createGlobalStyle`
     input:-webkit-autofill:active {
     -webkit-transition-delay: 9999s;
         transition-delay: 9999s;
+    }
+    html{
+        div{
+            ::-webkit-scrollbar {
+            width: .25rem;
+            height: .25rem;
+            }
+            ::-webkit-scrollbar-thumb {
+                background-color: ${({theme})=>theme.colors.local_pink};
+                transition: background-color 500ms;
+                border-radius:2rem;
+            }
+            ::-webkit-scrollbar-thumb:hover{
+                background-color: ${({theme})=> lighten(0.1,theme.colors.local_pink)};
+                transition: background-color 500ms;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: .5rem;
+            height: .5rem;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: ${({theme})=>theme.colors.local_white};
+            transition: background-color 500ms;
+            border-radius:2rem;
+        }
+        ::-webkit-scrollbar-thumb:hover{
+            background-color: ${({theme})=> lighten(0.1,theme.colors.local_white)};
+            transition: background-color 500ms;
+        }
+    }
+    @media screen and (max-width:1300px){
+        html{
+            zoom:.75;
+        }
     }
 `

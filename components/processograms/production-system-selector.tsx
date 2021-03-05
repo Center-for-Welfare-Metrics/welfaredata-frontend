@@ -2,7 +2,6 @@ import Processogram from "@/components/processograms/processogram"
 import ProcessogramContext, { IProcessogramContext } from '@/context/processogram'
 import { historyToProcessogramTree, encodeProcessogramTree, decodeProcessogramTree } from "@/utils/processogram"
 import { useEffect, useRef, useState } from "react"
-import processogramApi from '@/api/processogram'
 import Router from 'next/router'
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
@@ -15,7 +14,8 @@ interface IProcessogramsHomePage {
     processograms:any[],
     parent?:HTMLElement,
     onChange?(currentInformations:any,id_tree:any,svg_id:string):void
-    setTarget?(target:any):void
+    setTarget?(target:any):void,
+    triggerToSetFetchData?:any
 }
 
 const translateBySufix = {
@@ -31,7 +31,7 @@ const fieldNameBySufix = {
     ci:'circumstance'
 }
 
-const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget}:IProcessogramsHomePage) => {
+const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget,triggerToSetFetchData}:IProcessogramsHomePage) => {
     const [choosen,setChoosen] = useState(null)
 
     const [shareLink,setShareLink] = useState('')
@@ -68,11 +68,21 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
         }
     },[processograms])
 
+    useEffect(() => {
+        if(Object.keys(history).length > 0){
+            let {target} = currentState(history)
+            if(target){            
+                setTarget?.(target)
+            }
+        }
+    },[triggerToSetFetchData])
+
+
     useEffect(()=>{
         if(choosen){
             if(parent){
                 TweenLite.to(parent,{height:parent.getBoundingClientRect().height,overflow:'hidden'}).duration(0)
-            }            
+            }       
         }else{
             if(firstLoad){
                 onChange?.(null,null,null)
@@ -85,15 +95,6 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
             }
         }
     },[choosen])
-
-    useEffect(() => {
-        if(Object.keys(history).length > 0){
-            let {target} = currentState(history)
-            if(target){            
-                setTarget?.(target)
-            }
-        }
-    },[processograms])
 
     const currentState = (history:any) => {
         let lastObject : any = {}
@@ -129,33 +130,29 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
         }
     }
  
-    const generateShareLink = (history:any) => {
-        // let {target,id_tree,svg_id} = currentState(history)
-        // onChange?.(target,id_tree,svg_id)
-        // let processogram_tree = historyToProcessogramTree(history)
+    const generateShareLink = (history:any) => {        
+        let processogram_tree = historyToProcessogramTree(history)
 
-        // let encoded_tree = encodeProcessogramTree(processogram_tree)
+        let encoded_tree = encodeProcessogramTree(processogram_tree)
 
-        // let base_url = window.location.host
+        let base_url = window.location.host + window.location.pathname
 
-        // Router.push({query:{to:encoded_tree,specie}})
-
-        // let share_link = base_url + '?to=' + encoded_tree
+        let share_link = base_url + '?to=' + encoded_tree
         
-        // setShareLink(share_link)
+        setShareLink(share_link)
     }
 
     const processogramContextValues : IProcessogramContext = {history,setHistory, choosen,setChoosen,shareLink,generateShareLink,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState}    
 
     return (                
         <ProcessogramContext.Provider value={processogramContextValues}>
-            <Container ref={containerRef} type={choosen?'1':'0'} >
+            
                 {
                     SPECIES[specie].map((productionSystem) => (
                         <Processogram parent={parent} key={productionSystem} specie={specie} productionSystem={productionSystem}/>
                     ))
                 }
-            </Container>
+            
         </ProcessogramContext.Provider>        
     )
 }

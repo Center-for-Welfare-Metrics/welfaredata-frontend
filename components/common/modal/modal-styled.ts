@@ -13,20 +13,21 @@ export const Container = styled.div`
     opacity:${({isOpen})=>isOpen?1:0};
     color:white;
     transition:opacity 500ms;
-    width:30rem;
+    width:${({isDialog})=> isDialog?'fit-content':'30rem'};
     border-radius:1rem;
     max-height:98%;
     overflow-y:auto;
     ::-webkit-scrollbar {
         width: .25rem;
+        height: .25rem;
     }
     ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors.local_blue};
+        background-color: ${({theme,type})=>GetColorType({theme,type})};
         transition: background-color 500ms;
         border-radius:2rem;
     }
     ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors.local_blue)};
+        background-color: ${({theme,type})=> lighten(0.1,GetColorType({theme,type}))};
         transition: background-color 500ms;
     }
 `

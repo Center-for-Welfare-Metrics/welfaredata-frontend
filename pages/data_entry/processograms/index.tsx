@@ -1,16 +1,15 @@
+import Dialog from "@/components/common/dialog/dialog"
 import SpecieSelector from "@/components/processograms/specie-selector"
 import DefaultLayout from "@/components/layouts"
 import withAuth from "@/components/HOC/with-auth"
 
-const DataEntryPage = () => {
+const ProcessogramDataEntryPage = () => {
     return (
-        <DefaultLayout>
-            {
-                <SpecieSelector />
-            }
+        <DefaultLayout>              
+            <SpecieSelector />                            
         </DefaultLayout>
     )
 
 }
 
-export default withAuth(DataEntryPage)
+export default withAuth(ProcessogramDataEntryPage)

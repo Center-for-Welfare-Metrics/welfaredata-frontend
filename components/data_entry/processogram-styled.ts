@@ -19,25 +19,13 @@ export const FormSpace = styled.div`
     width:40%;
 `
 
-export const ProcessogramSpace = styled.div`
-    ::-webkit-scrollbar {
-        width: .25rem;
-    }
-    ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors.local_pink};
-        transition: background-color 500ms;
-        border-radius:2rem;
-    }
-    ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors.local_pink)};
-        transition: background-color 500ms;
-    }
+export const ProcessogramSpace = styled.div`    
+    /* margin-top:5rem; */
     padding:0 4rem 0 4rem;
     width:60%;
-    max-height:800px;
+    height:800px;
     position:relative;
-    overflow-x:hidden;
-    overflow-y:scroll;
+    overflow:auto;
 `
 
 export const Container = styled.div`

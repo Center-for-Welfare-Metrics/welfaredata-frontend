@@ -1,13 +1,15 @@
 import { Content,InnerContent } from './full-screen-view-styled'
 
 import { FadedModalBackground } from '@/components/common/modal/modal-styled'
+import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 
 interface IFullScreenView {
     children?:React.ReactNode,
-    onClose(evt?:Event):void
+    onClose(evt?:Event):void,
+    onContextMenu(evt:MouseEvent):void
 }
 
-const FullScreenView = ({children,onClose}:IFullScreenView) => {
+const FullScreenView = ({children,onClose,onContextMenu}:IFullScreenView) => {
 
 
     return (
@@ -17,7 +19,7 @@ const FullScreenView = ({children,onClose}:IFullScreenView) => {
                     {children}                    
                 </InnerContent>
             </Content>
-            <FadedModalBackground isOpen={true} onClick={onClose} />
+            <FadedModalBackground onContextMenu={onContextMenu} isOpen={true} onClick={onClose} />
         </>
     )
 }

@@ -1,7 +1,7 @@
-import { ProductionSystemTypes, SpeciesTypes } from "./enum_types"
+import { CommonIconsTypes, ProductionSystemTypes, SpeciesTypes } from "./enum_types"
 
 export interface ISvgPath {
-    file_name:string
+    file_name: CommonIconsTypes
     folder:'avatars'|'education'|'icons'|'minimal-icons'|'zoo'
 }
 

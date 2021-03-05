@@ -1,5 +1,6 @@
 import ContextMenu from '@/context/context-menu'
 import { IRole } from '@/context/roles'
+import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 import { useContext } from 'react'
 import {Container,RoleDescription,RoleName} from './role-card-styled'
 
@@ -19,8 +20,7 @@ const RoleCard = ({role,onClick,onDelete}:IRoleCard) => {
 
     const onContextMenu = (event:MouseEvent) => {
         let { clientX,clientY } = event
-        event.stopPropagation()
-        event.preventDefault()
+        DefaultEventComportamentOnContextMenuOpen(event)
         setContextMenu({
             open:true,
             type:'options',

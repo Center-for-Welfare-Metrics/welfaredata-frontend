@@ -2,6 +2,7 @@ import ContextMenu from '@/context/context-menu'
 import React, { useContext } from 'react'
 import { Table, Td, Tr,Th } from './default-table-styled'
 import {IContextOptions} from '@/context/context-menu'
+import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 
 interface IColumn {
     Header:string,
@@ -25,8 +26,7 @@ const DefaultTable = ({data,columns,rowClick,options}:IDefaultTable) => {
     }
 
     const onRowContextMenu = (row) => (event:MouseEvent) => {
-        event.preventDefault()
-        event.stopPropagation()
+        DefaultEventComportamentOnContextMenuOpen(event)
         let {clientX,clientY} = event
         setContextMenu({
             open:true,

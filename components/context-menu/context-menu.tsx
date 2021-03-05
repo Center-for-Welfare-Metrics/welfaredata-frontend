@@ -59,6 +59,8 @@ const ContextMenu = ({
                     }).then(({data}) => {
                         setLoading(false)
                         setTemporary(data)
+                    }).catch(()=>{
+                        setLoading(false)
                     })
                 }   
             }
@@ -128,7 +130,6 @@ const ContextMenu = ({
     }
 
     const getPossibleFieldReference = () => {
-        console.log(infos.svg)
         let {field} = needSetInformations(infos.svg?.id)
 
         return field

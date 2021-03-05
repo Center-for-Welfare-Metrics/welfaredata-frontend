@@ -1,5 +1,5 @@
-import DataEntryContext, { IDataEntryContext, IDataEntryFormInformations } from '@/context/data-entry'
-import { SpeciesTypes } from '@/utils/enum_types'
+import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormInformations } from '@/context/data-entry'
+import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
 import ProductionSystemSelector from '../processograms/production-system-selector'
 import { Container,FormSpace,ProcessogramSpace,Title,SubTitle,NoProductionSystemSelected } from './processogram-styled'
@@ -21,20 +21,26 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     
     const [currentInformations,setCurrentInformations] = useState<IDataEntryFormInformations>(null)
 
-    const [currentFieldReference,setCurrentFieldReference] = useState<string>(null)
+    const [currentFieldReference,setCurrentFieldReference] = useState<FieldReferenceTypes>(null)
 
     const [idTree,setIdTree] = useState<any>(null)
 
     const [processograms,setProcessograms] = useState<any[]>([])
 
+    const [tab,setTab] = useState<TabTypes>('basic')
+
+    const [modificationsCount,setModificationsCount] = useState(0)
+
     const timer = useRef(null)
 
     useEffect(()=>{
-        processogramApi.all()
+        if(!idTree){
+            processogramApi.all()
         .then(({data})=>{
             setProcessograms(data)
         })
-    },[])
+        }
+    },[idTree])
 
     useEffect(()=>{
         if(containerRef.current){
@@ -42,40 +48,80 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }
     },[containerRef.current])
 
-    const refreshProcessograms = (_id,new_processogram) => {
+    const refreshProcessograms = (_id,updated_processogram) => {
         let indexOf = processograms.findIndex(x => x._id === _id)
          
         if(indexOf>=0){
             setProcessograms(update(processograms,{                
-                [indexOf]:{$merge:new_processogram}
+                [indexOf]:{$merge:updated_processogram}
             }))
         }
     }
 
-    const updateProcessogram = (values) => {
-        // clearTimeout(timer.current)
-        // timer.current = setTimeout(() => {
-        //     processogramApi.update({
-        //         id_tree:{...idTree,_id:undefined},
-        //         values:values
-        //     },
-        //     idTree._id)
-        //     .then(({data}) => {
-        //         refreshProcessograms(idTree._id,data)
-        //     })
-        // }, 500);                
+    const updateReferenceData = (value : any,callback=null) => {
+        let reference : ICommonDataEntry = currentInformations[currentFieldReference]  
+        processogramApi.updateReference(currentFieldReference,reference._id,value).then(({data}) => {                   
+            updateCurrentInformations({
+                [currentFieldReference]:data
+            },false)
+            if(callback){
+                callback()
+            }
+        }) 
     }
 
-    const updateCurrentInformations = (updateValue) => {
+    const updateReferenceDataWithDelay = (value : any,callback=null) => {
+        clearTimeout(timer.current)
+        timer.current = setTimeout(() => {
+            let reference : ICommonDataEntry = currentInformations[currentFieldReference]  
+            processogramApi.updateReference(currentFieldReference,reference._id,value).then(({data}) => {                               
+                updateProcessogram()
+            }) 
+        }, 500);          
+    }
+
+    const handleReferenceDataChange = (value:any) => {
+        setCurrentInformations(update(currentInformations,{
+            [currentFieldReference]:{$merge:value}
+        }))
+        updateReferenceDataWithDelay(value)
+    }
+
+    const updateProcessogramWithDelay = () => {
+        clearTimeout(timer.current)
+        timer.current = setTimeout(() => {
+            processogramApi.getOne(idTree._id)
+            .then(({data}) => {            
+                console.log(data)
+                refreshProcessograms(idTree._id,data)
+            }) 
+        }, 500);            
+    }
+    
+    const updateProcessogram = () => {
+        if(idTree._id){             
+            processogramApi.getOne(idTree._id)
+            .then(({data}) => {            
+                console.log(data)
+                refreshProcessograms(idTree._id,data)
+            })  
+        }
+    }
+
+    const updateCurrentInformations = (updateValue,withDelay) => {
         setCurrentInformations(
             update(currentInformations,{
                 $merge:updateValue
             })
-        )
-        updateProcessogram(updateValue)
+        )                      
+        if(withDelay){ 
+            updateProcessogramWithDelay()
+        }else{
+            updateProcessogram()
+        }
     }
     
-    const contextValues : IDataEntryContext = {currentInformations,currentFieldReference,updateCurrentInformations}
+    const contextValues : IDataEntryContext = {currentInformations,currentFieldReference,updateCurrentInformations,tab,setTab,updateReferenceData,handleReferenceDataChange}
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
         setIdTree(id_tree)
@@ -86,14 +132,14 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }else{
             setCurrentFieldReference(null)
         }
-        if(!currentInformations && id_tree){
+        if(!currentInformations && id_tree){            
             needToCreateNew(id_tree,svg_id)
         }
     }
 
     const needToCreateNew = (id_tree,svg_id) => {     
         let needed_informations = needSetInformations(svg_id)
-        if(Object.keys(id_tree).length > 0){
+        if(Object.keys(id_tree).length > 0){            
             createNewLayer(needed_informations,id_tree)
         }else{
             createNewProcessogram(needed_informations)
@@ -152,21 +198,25 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         .then(createLayer)
         .then(({data}) => {            
             refreshProcessograms(id_tree._id,data)
+            setModificationsCount(modificationsCount+1)
         })
     }
 
     return (
         <DataEntryContext.Provider value={contextValues}>
             <Container>            
-                <ProcessogramSpace ref={containerRef}>{
+                <ProcessogramSpace ref={containerRef}>
+                {
                     loaded &&
                     <ProductionSystemSelector 
                         specie={specie}
                         parent={containerRef.current}
                         onChange={onChange}
-                        processograms={processograms}
+                        processograms={processograms}                        
                         setTarget={setCurrentInformations}
-                    />}
+                        triggerToSetFetchData={modificationsCount}
+                    />
+                }
                 </ProcessogramSpace>
                 <FormSpace onClick={(e:Event)=>e.stopPropagation()}>
                     {

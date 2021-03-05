@@ -1,20 +1,19 @@
-import MediaFile from '.'
+import MediaFile from './media-file'
 import { Container } from './list-styled'
+import { IMedia } from '@/context/data-entry'
+import React from 'react'
 
 interface IMediaFileList {
-    srcs:string[]
+    medias:IMedia[]
 }
 
 
-const MediaFileList = ({srcs}:IMediaFileList) => {
+const MediaFileList = ({medias}:IMediaFileList) => {
     return (
         <Container>
             {
-                srcs.map((src) => (
-                    <MediaFile 
-                        key={src}
-                        src={src}
-                    />
+                medias.map((media) => (
+                    <MediaFile media={media} key={media._id} />
                 ))
             }
         </Container>
@@ -22,4 +21,4 @@ const MediaFileList = ({srcs}:IMediaFileList) => {
 }
 
 
-export default MediaFileList
+export default React.memo(MediaFileList)
