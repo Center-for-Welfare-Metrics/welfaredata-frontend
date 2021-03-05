@@ -11,6 +11,7 @@ export const TitleInput = styled(CleanInput)`
 
 export const DescriptionInput = styled(CleanTextArea)`
     font-size:1.1rem;
+    height:5rem;
     max-height:5rem;
     width:100%;
 `
