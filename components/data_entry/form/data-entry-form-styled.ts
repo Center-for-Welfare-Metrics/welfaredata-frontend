@@ -35,7 +35,7 @@ export const Tabs = styled.div`
 export const Body = styled.div`
     width:70%;
     max-height:50rem;
-    position:relative;
+    position:${({load})=>load?'relative':'static'};
 `
 
 

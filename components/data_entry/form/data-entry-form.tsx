@@ -22,7 +22,7 @@ const DataEntryForm = () => {
     return (
         
         <Container>
-            <Body>
+            <Body load={!(!onFetch && currentInformations)}>
                 {
                     (!onFetch && currentInformations)?
                     (
