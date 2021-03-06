@@ -9,10 +9,11 @@ export interface IModal {
     children?:React.ReactNode
     clear?():void
     type?:StyleTypes,
-    isDialog?:boolean
+    isDialog?:boolean,
+    overflowY?:string
 }
 
-const Modal = ({onClose,isOpen,children,clear,type='primary',isDialog}:IModal) => {
+const Modal = ({onClose,isOpen,children,clear,type='primary',isDialog,overflowY='auto'}:IModal) => {
 
     const [internalOpen,setInternalOpen] = useState(false)
 
@@ -41,7 +42,7 @@ const Modal = ({onClose,isOpen,children,clear,type='primary',isDialog}:IModal) =
     return (
         internalOpen &&
         <>
-            <Container isDialog={isDialog} type={type} isOpen={fadeOpen}>
+            <Container overflowY={overflowY} isDialog={isDialog} type={type} isOpen={fadeOpen}>
                 {children}
             </Container>
             <FadedModalBackground isOpen={fadeOpen} onClick={onClose} />

@@ -1,7 +1,14 @@
 import { transparentize } from 'polished';
 import styled from 'styled-components'
 
+import Loader from "react-loader-spinner";
 
+export const CustomLoader = styled(Loader)`
+    top:50%;
+    left:50%;
+    transform:translate(-50%,0); 
+    position:absolute;
+`
 
 export const Tab = styled.div`
     color:${({theme,active}) => active?theme.colors.local_pink:transparentize(0.3,theme.colors.local_pink)};
@@ -28,6 +35,7 @@ export const Tabs = styled.div`
 export const Body = styled.div`
     width:70%;
     max-height:50rem;
+    position:relative;
 `
 
 

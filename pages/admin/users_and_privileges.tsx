@@ -12,6 +12,8 @@ const UsersAndPrivileges = () => {
 
     const [roles,setRoles] = useState<IRole[]>([])
 
+    const [onFetch,setOnFetch] = useState(false)
+
     const fetchRoles = () => {
         adminRolesApi.get({skip:0,limit:10,createdBy:'',name:''})
         .then(({data}) => {
@@ -19,7 +21,7 @@ const UsersAndPrivileges = () => {
         })
     }
 
-    const privilegesContextValues : IPrivileges = {roles,setRoles,fetchRoles}
+    const privilegesContextValues : IPrivileges = {roles,setRoles,fetchRoles,onFetch,setOnFetch}
 
     useEffect(()=>{
         fetchRoles()

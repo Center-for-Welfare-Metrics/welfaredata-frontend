@@ -10,7 +10,8 @@ const Login = (
         password,
         setPassword,
         login,
-        error
+        error,
+        onFetch=false
     }
 ) => {
     return (
@@ -33,7 +34,7 @@ const Login = (
                     type='password'
                     icon='fa-key'
                 />
-                <SuccessButton type='submit'>Login</SuccessButton>
+                <SuccessButton disabled={onFetch} load={onFetch} type='submit'>Login</SuccessButton>
             </Form>
             <LinkTo>
                 Don't have an account?<a>Register now!</a>

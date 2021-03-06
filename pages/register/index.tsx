@@ -18,8 +18,10 @@ const RegisterPage = () => {
     const [password,setPassword] = useState('')
 
     const [password_confirmation,setPasswordConfirmation] = useState('')
-    
+        
     const [error,setError] = useState<any>({})
+
+    const [onFetch,setOnFetch] = useState(false)
 
     const {setUser} = useContext(UserContext)
 
@@ -45,8 +47,10 @@ const RegisterPage = () => {
             })
             
             validation.passes(()=>{
+                setOnFetch(true)
                 auth.register({name,email,password,password_confirmation})
                 .then((response)=>{
+                    setOnFetch(false)
                     setUser(response.data)
                 })
                 .catch((error)=>{

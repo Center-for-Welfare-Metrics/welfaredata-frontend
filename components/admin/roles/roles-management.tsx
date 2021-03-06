@@ -20,7 +20,7 @@ const RolesManagement = () => {
 
     const [openDeleteDialog,setOpenDeleteDialog] = useState(false)
 
-    const {roles,fetchRoles} = useContext(PrivilegesContext)
+    const {roles,fetchRoles,setOnFetch} = useContext(PrivilegesContext)
 
     useEffect(()=>{
         if(roleOnEdit){
@@ -39,9 +39,11 @@ const RolesManagement = () => {
     }
 
     const onSuccess = (role:IRole) => {
-        if(role._id){
+        setOnFetch(true)
+        if(role._id){            
             adminRolesApi.update(role._id,role)
             .then(()=>{
+                setOnFetch(false)
                 setRoleModalIsOpen(false)
                 toast.success('Role updated successfully!')
                 fetchRoles()
@@ -49,6 +51,7 @@ const RolesManagement = () => {
         }else{
             adminRolesApi.create(role)
             .then(()=>{
+                setOnFetch(false)
                 setRoleModalIsOpen(false)
                 toast.success('Role created successfully!')
                 fetchRoles()

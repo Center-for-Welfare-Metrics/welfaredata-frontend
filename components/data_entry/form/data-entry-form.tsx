@@ -1,14 +1,16 @@
 import { useContext, useEffect, useState } from "react"
-import { Container,Body,Tabs, Tab } from './data-entry-form-styled'
+import { Container,Body,Tabs, Tab,CustomLoader } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
 import MediaTab from '@/components/data_entry/form/tabs/media/media'
 import { TABS } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
 
+import theme from 'theme/schema.json'
+
 const DataEntryForm = () => {    
 
-    const {currentFieldReference,tab,setTab} = useContext(DataEntryContext)
+    const {currentFieldReference,tab,setTab,onFetch,currentInformations} = useContext(DataEntryContext)
 
     useEffect(()=>{        
         if(!TABS[currentFieldReference].includes(tab)){
@@ -21,8 +23,24 @@ const DataEntryForm = () => {
         
         <Container>
             <Body>
-                {tab === 'basic' && <BasicTab /> }
-                {tab === 'media' && <MediaTab /> }
+                {
+                    (!onFetch && currentInformations)?
+                    (
+                        <>
+                            {tab === 'basic' && <BasicTab /> }
+                            {tab === 'media' && <MediaTab /> }
+                        </>
+                    )
+                    :
+                    (
+                        <CustomLoader 
+                            color={theme.default.colors.local_pink}
+                            type='ThreeDots'
+                            height={100}
+                            width={100}   
+                        />
+                    )
+                }                
             </Body>
             <Tabs>
                 {

@@ -2,11 +2,12 @@ import { DangerButton, SuccessButton,WarningButton } from "@/components/common/b
 import Modal,{IModal} from "@/components/common/modal"
 import { ActionButtons } from "@/components/common/modal/modal-styled"
 import { IRole } from "@/context/roles"
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import PermissionBox from "./permission-box"
 import { TitleInput, DescriptionInput,Container, HelperText, PermissionsSection } from "./role-modal-styled"
 import { Ican } from '@/context/roles'
 import update from 'immutability-helper'
+import PrivilegesContext from "@/context/privileges_context"
 
 interface IRoleModal extends IModal {
     role?:IRole,
@@ -22,6 +23,8 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
     const [description,setDescription] = useState('')
 
     const [can,setCan] = useState<Ican>({create:[],delete:[],read:[],update:[]})
+    
+    const {onFetch} = useContext(PrivilegesContext)
 
     useEffect(()=>{
         if(role){
@@ -64,7 +67,7 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} clear={localClear}>
+        <Modal overflowY='hidden' isOpen={isOpen} onClose={onClose} clear={localClear}>
             <form method='POST' onSubmit={submitForm}>
                 <Container>
                     <TitleInput 
@@ -96,9 +99,9 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
                         <DangerButton type='button' onClick={onClose}>Cancel</DangerButton>
                         {
                             hasRole()?
-                            (<WarningButton type='submit'>Update Role</WarningButton>)
+                            (<WarningButton disabled={onFetch} load={onFetch} type='submit'>Update Role</WarningButton>)
                             :
-                            (<SuccessButton type='submit'>Create Role</SuccessButton>)
+                            (<SuccessButton disabled={onFetch} load={onFetch} type='submit'>Create Role</SuccessButton>)
                         }                        
                     </ActionButtons>
                 </Container>

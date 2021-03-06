@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components'
+import styled, {keyframes,css} from 'styled-components'
 import { darken } from 'polished'
 import { GetColorType } from '@/utils/theme'
 
@@ -14,6 +14,15 @@ const shake = keyframes`
     }
     40%, 60% {
         transform: translate3d(4px, 0, 0);
+    }
+`
+
+const spin = keyframes`
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
     }
 `
 
@@ -38,6 +47,7 @@ export const DefaultButton = styled.button`
         cursor:not-allowed;
     }
     transition: transform 500ms;
+    ${({load})=>load?css`animation:${spin} 1s infinite linear;`:''}
 `
 
 export const DangerButton = styled(DefaultButton)`
@@ -50,15 +60,18 @@ export const DangerButton = styled(DefaultButton)`
     }
 `
 
+
+
 export const PrimaryButton = styled(DefaultButton)`
     background-color:${({theme})=>GetColorType({theme,type:'primary'})};
 `
 
 export const SuccessButton = styled(DefaultButton)`
-    background-color:${({theme})=>GetColorType({theme,type:'success'})};
+    background-color:${({theme})=>GetColorType({theme,type:'success'})};            
 `
 
 export const WarningButton = styled(DefaultButton)`
     background-color:${({theme})=>GetColorType({theme,type:'warning'})};
     color:${({theme})=>theme.colors.local_black};
 `
+

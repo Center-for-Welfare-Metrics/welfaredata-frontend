@@ -31,6 +31,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [modificationsCount,setModificationsCount] = useState(0)
 
+    const [onFetch,setOnFetch] = useState(false)
+
     const timer = useRef(null)
 
     useEffect(()=>{
@@ -121,11 +123,11 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }
     }
     
-    const contextValues : IDataEntryContext = {currentInformations,currentFieldReference,updateCurrentInformations,tab,setTab,updateReferenceData,handleReferenceDataChange}
+    const contextValues : IDataEntryContext = {currentInformations,currentFieldReference,updateCurrentInformations,tab,setTab,updateReferenceData,handleReferenceDataChange,onFetch,setOnFetch}
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
         setIdTree(id_tree)
-        setCurrentInformations(currentInformations)
+        setCurrentInformations(currentInformations)        
         if(svg_id){
             let { field } = needSetInformations(svg_id)
             setCurrentFieldReference(field)
@@ -133,6 +135,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             setCurrentFieldReference(null)
         }
         if(!currentInformations && id_tree){            
+            setOnFetch(true)
             needToCreateNew(id_tree,svg_id)
         }
     }
@@ -167,7 +170,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
         searchReferenceData()
         .then(createProcessogram)
-        .then(({data}) => {            
+        .then(({data}) => {  
+            setOnFetch(false)
             setProcessograms(update(processograms,{
                 $push:[data]
             }))            
@@ -196,7 +200,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
         searchReferenceData()
         .then(createLayer)
-        .then(({data}) => {            
+        .then(({data}) => {    
+            setOnFetch(false)        
             refreshProcessograms(id_tree._id,data)
             setModificationsCount(modificationsCount+1)
         })
@@ -220,7 +225,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                 </ProcessogramSpace>
                 <FormSpace onClick={(e:Event)=>e.stopPropagation()}>
                     {
-                        currentInformations?
+                        currentInformations || onFetch?
                         (
                             <DataEntryForm />
                         )

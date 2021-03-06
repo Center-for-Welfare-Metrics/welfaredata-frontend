@@ -15,7 +15,8 @@ const Register = ({
     setPasswordConfirmation,
     error,
     register,
-    passwordStrength
+    passwordStrength,
+    onFetch=false
 }) => {
 
     return (
@@ -56,7 +57,7 @@ const Register = ({
                     type='password'
                     icon='fa-lock'
                 />
-                <SuccessButton type='submit'>Register</SuccessButton>
+                <SuccessButton load={onFetch} type='submit'>Register</SuccessButton>
             </Form>
             <LinkTo>
                 Already have an account? <Link href='/login'>Login!</Link>

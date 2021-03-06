@@ -16,7 +16,7 @@ export const Container = styled.div`
     width:${({isDialog})=> isDialog?'fit-content':'30rem'};
     border-radius:1rem;
     max-height:98%;
-    overflow-y:auto;
+    overflow-y:${({overflowY})=>overflowY};
     ::-webkit-scrollbar {
         width: .25rem;
         height: .25rem;
@@ -48,4 +48,5 @@ export const ActionButtons = styled.div`
     display:flex;
     justify-content:space-between;
     padding:0 2rem 0 2rem;
+    /* overflow-y:hidden; */
 `

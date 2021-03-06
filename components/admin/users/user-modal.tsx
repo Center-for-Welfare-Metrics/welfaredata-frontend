@@ -8,7 +8,7 @@ import FormInput from '@/components/common/inputs/form-input'
 
 import CheckPasswordStrength from 'check-password-strength'
 import StrongPasswordBar from '@/components/miscellaneous/strong-password-bar'
-import { DangerButton, SuccessButton } from '@/components/common/buttons/default-button-styled'
+import { DangerButton, SuccessButton, WarningButton } from '@/components/common/buttons/default-button-styled'
 
 import adminUsersApi from '@/api/admin/users'
 
@@ -44,6 +44,8 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
     const [error,setError] = useState<any>({})
 
     const [passwordStrength,setPasswordStrength] = useState('')
+
+    const {onFetch,setOnFetch} = useContext(PrivilegesContext)
 
     useEffect(()=>{
         if(user){
@@ -88,9 +90,11 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
             })
             
             validation.passes(()=>{
+                setOnFetch(true)
                 adminUsersApi.create({name,email,password,password_confirmation,role:userRole._id})
                 .then(()=>{
-                    toast.success('User created successfully!')
+                    setOnFetch(false)
+                    toast.success('User created successfully!')                    
                     onSuccess()
                     onClose()
                 })
@@ -114,17 +118,19 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
     }
 
     const update = () => {
+        setOnFetch(true)
         adminUsersApi.update(_id,{
             role:userRole._id
         })
         .then(()=>{
+            setOnFetch(false)
             toast.success('User updated successfully!')
             onSuccess()
             onClose()
         })
     }
 
-    const successClick = (event:FormEvent) => {
+    const successClick = (event:FormEvent) => {       
         event.preventDefault()
         if(hasUser()){
             update()
@@ -134,7 +140,7 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
     }
 
     return (
-        <Modal onClose={onClose} isOpen={isOpen} clear={localClear}>
+        <Modal overflowY={hasUser()?'hidden':'auto'} onClose={onClose} isOpen={isOpen} clear={localClear}>
             <form method="post" onSubmit={successClick}>
                 <Container>                
                     <FormHeader>Role</FormHeader>
@@ -193,7 +199,12 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
                     }
                     <ActionButtons>
                         <DangerButton type='button' onClick={onClose}>Cancel</DangerButton>
-                        <SuccessButton>{hasUser()?'Update User':'Create User'}</SuccessButton>
+                        {
+                            hasUser()?
+                            (<WarningButton disabled={onFetch} load={onFetch} type='submit'>Update User</WarningButton>)
+                            :
+                            (<SuccessButton disabled={onFetch} load={onFetch} type='submit'>Create User</SuccessButton>)
+                        }                           
                     </ActionButtons>
                 </Container>
             </form>

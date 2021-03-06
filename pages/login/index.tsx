@@ -14,6 +14,8 @@ const LoginPage = () => {
 
     const [error,setError] = useState({email:[],password:[]})
 
+    const [onFetch,setOnFetch] = useState(false)
+
     const {setUser} = useContext(UserContext)
 
     const login = (event) => {
@@ -24,8 +26,10 @@ const LoginPage = () => {
         })
         
         validation.passes(()=>{
+            setOnFetch(true)
             auth.login({email,password})
             .then((response)=>{
+                setOnFetch(false)
                 setUser(response.data)
             })
             .catch(({response})=>{
@@ -48,6 +52,7 @@ const LoginPage = () => {
             setPassword={setPassword}
             error={error}
             login={login}
+            onFetch={onFetch}
         />
     )
 }

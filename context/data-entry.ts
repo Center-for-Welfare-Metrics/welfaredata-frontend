@@ -32,7 +32,8 @@ export interface IDataEntryFormInformations extends ICommonDataEntry {
 export interface IDataEntryContext {
     currentInformations:IDataEntryFormInformations
     currentFieldReference: FieldReferenceTypes
-    // setCurrentInformations(currentInformations:IDataEntryFormInformations):void
+    onFetch:boolean
+    setOnFetch(onFetch:boolean):void
     updateCurrentInformations(update:any,withDelay:boolean):void
     updateReferenceData(value:any,callback?:any)
     handleReferenceDataChange(value:any)

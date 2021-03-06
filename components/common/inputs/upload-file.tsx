@@ -1,5 +1,5 @@
 import { SvgPath } from "@/utils/assets_path"
-import { FormEvent, LegacyRef, MutableRefObject } from "react"
+import { FormEvent, MutableRefObject } from "react"
 import { Container,Form,Input,Label,SvgIcon,LoaderContainer,Progress,CustomLoader } from "./upload-file-styled"
 
 import theme from 'theme/schema.json'
