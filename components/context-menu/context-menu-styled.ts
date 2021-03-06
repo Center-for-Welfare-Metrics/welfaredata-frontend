@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {transparentize,lighten} from 'polished'
-
+import Loader from "react-loader-spinner";
 
 
 export const Container = styled.div`
@@ -64,4 +64,9 @@ export const ButtonIcon = styled.img`
     height:auto;
 `
 
-
+export const CustomLoader = styled(Loader)`
+    top:35%;
+    left:50%;
+    transform:translate(-50%,-50%); 
+    position:absolute;
+`

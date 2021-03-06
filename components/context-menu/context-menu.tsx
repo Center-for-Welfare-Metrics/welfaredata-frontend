@@ -1,6 +1,6 @@
 import { SvgPath } from '@/utils/assets_path'
 import { useEffect, useRef, useState } from 'react'
-import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground } from './context-menu-styled'
+import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground,CustomLoader } from './context-menu-styled'
 import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
 import { IContextMenu } from '@/context/context-menu'
 import voca from 'voca'
@@ -8,7 +8,7 @@ import voca from 'voca'
 import { TweenLite, gsap } from 'gsap'
 import { needSetInformations, showOnScreen } from '@/utils/processogram'
 import processogramApi from '@/api/processogram'
-
+import theme from 'theme/schema.json'
 gsap.registerPlugin(TweenLite)
 
 const map_buttons_navigation = [
@@ -144,7 +144,14 @@ const ContextMenu = ({
                     <Body>
                         {
                             loading?
-                            (null)
+                            (
+                                <CustomLoader 
+                                    color={theme.default.colors.local_pink}
+                                    type='ThreeDots'
+                                    height={100}
+                                    width={100}   
+                                />
+                            )
                             :
                             (
                                 infos && (infos.document || temporary)?
