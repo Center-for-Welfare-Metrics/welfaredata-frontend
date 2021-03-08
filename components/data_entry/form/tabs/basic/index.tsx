@@ -17,13 +17,13 @@ const BasicTab = () => {
 
     return (
         <>
-            <FormInput 
+            {/* <FormInput 
                 value={ voca.titleCase( showOnScreen('name',currentInformations,currentFieldReference) || '') }
                 onChange={handleChange}
                 label='Name'
                 name='name'
                 disabled={true}
-            />
+            /> */}
             <FormInput 
                 value={ showOnScreen('description',currentInformations,currentFieldReference) || '' }
                 onChange={handleChange}
