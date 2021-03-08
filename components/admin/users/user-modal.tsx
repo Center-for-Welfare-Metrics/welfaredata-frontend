@@ -83,10 +83,11 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
         if(passwordStrength==='Weak'){
             setError({password:'Password too weak!'})
         }else{
-            let validation = new Validator({name,email,password,password_confirmation},{
+            let validation = new Validator({name,email,password,password_confirmation,role:userRole?._id},{
                 email:'required|email',
                 password:'min:6|confirmed|max:32|required',
-                name:'required'
+                name:'required',
+                role:'required'
             })
             
             validation.passes(()=>{
@@ -152,6 +153,7 @@ const UserModal = ({onClose,isOpen,user,clear,onSuccess}:UserModal) => {
                             render:'name'
                         }}
                         onChoose={changeUserRole}
+                        error={error.role}
                     />
                     <FormHeader>Personal Informations</FormHeader>                
                     <FormInput 

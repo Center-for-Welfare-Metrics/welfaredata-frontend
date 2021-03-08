@@ -1,4 +1,4 @@
-import { Container,Options,Option} from './box-select-styled'
+import { Container,Options,Option,Error} from './box-select-styled'
 import React from 'react'
 
 interface IPrepare {
@@ -11,9 +11,10 @@ interface IBoxSelect{
     prepare:IPrepare
     value:any
     onChoose(option:any):void
+    error?:any
 }
 
-const BoxSelect = ({value,options,prepare,onChoose}:IBoxSelect) => {
+const BoxSelect = ({value,options,prepare,onChoose,error}:IBoxSelect) => {
     
     const isSelected = (option) => {
         if(value){
@@ -35,6 +36,10 @@ const BoxSelect = ({value,options,prepare,onChoose}:IBoxSelect) => {
                         ))
                     }
                 </Options>
+                {
+                    error && 
+                    <Error>{error}</Error>
+                }
             </Container>                    
     )
 }

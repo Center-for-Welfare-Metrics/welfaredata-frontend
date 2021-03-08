@@ -1,5 +1,6 @@
-import styled,{css} from 'styled-components'
-import { darken } from 'polished'
+import styled,{css,keyframes} from 'styled-components'
+import { darken, lighten } from 'polished'
+import { GetColorType } from '@/utils/theme'
 
 
 export const Container = styled.div`
@@ -7,8 +8,7 @@ export const Container = styled.div`
     margin-bottom:1rem;
 `
 
-export const Options = styled.div`
-    background-color:${({theme})=>theme.colors.red};
+export const Options = styled.div`    
     border-radius:1rem;
 `
 
@@ -28,4 +28,9 @@ export const Option = styled.div`
         background-color:${({theme})=> darken(0.1,theme.colors.red)};
     }
     ${({selected})=>selected?css`transform:scale(1.015);`:''}
+`
+
+export const Error = styled.div`
+    color:${({theme})=> GetColorType({theme,type:'danger'})};
+    text-align:center;
 `
