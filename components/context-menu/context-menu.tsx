@@ -146,7 +146,7 @@ const ContextMenu = ({
                             loading?
                             (
                                 <CustomLoader 
-                                    color={theme.default.colors.local_pink}
+                                    color={theme.default.colors.pink}
                                     type='ThreeDots'
                                     height={100}
                                     width={100}   

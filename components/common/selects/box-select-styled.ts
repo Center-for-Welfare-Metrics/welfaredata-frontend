@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled,{css} from 'styled-components'
 import { darken } from 'polished'
 
 
@@ -8,7 +8,7 @@ export const Container = styled.div`
 `
 
 export const Options = styled.div`
-    background-color:${({theme})=>theme.colors.local_red};
+    background-color:${({theme})=>theme.colors.red};
     border-radius:1rem;
 `
 
@@ -23,9 +23,9 @@ export const Option = styled.div`
         border-bottom-left-radius:1rem;
         border-bottom-right-radius:1rem;
     }
-    background-color:${({theme,selected})=>selected?darken(0.1,theme.colors.local_red):theme.colors.local_red};
+    background-color:${({theme,selected})=>selected?darken(0.1,theme.colors.red):theme.colors.red};
     :hover{
-        background-color:${({theme})=> darken(0.1,theme.colors.local_red)};
+        background-color:${({theme})=> darken(0.1,theme.colors.red)};
     }
-    ${({selected})=>selected?'transform:scale(1.015);':''}
+    ${({selected})=>selected?css`transform:scale(1.015);`:''}
 `

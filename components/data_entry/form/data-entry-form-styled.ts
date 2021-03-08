@@ -11,7 +11,7 @@ export const CustomLoader = styled(Loader)`
 `
 
 export const Tab = styled.div`
-    color:${({theme,active}) => active?theme.colors.local_pink:transparentize(0.3,theme.colors.local_pink)};
+    color:${({theme,active}) => active?theme.colors.blue:transparentize(0.3,theme.colors.blue)};
     font-size:${({theme})=>theme.fontSize.large};
     transform: ${({active}) => active?'scale(1.2)':'scale(1)'};
     cursor: pointer;

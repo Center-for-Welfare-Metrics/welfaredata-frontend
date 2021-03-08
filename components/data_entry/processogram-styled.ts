@@ -1,4 +1,3 @@
-import { lighten } from 'polished'
 import styled from 'styled-components'
 
 export const NoProductionSystemSelected = styled.div`
@@ -6,12 +5,12 @@ export const NoProductionSystemSelected = styled.div`
 `
 
 export const SubTitle = styled.h2`
-    color:${({theme})=>theme.colors.local_white};
+    color:${({theme})=>theme.colors.blue};
     text-align:center;
 `
 
 export const Title = styled.h1`
-    color:${({theme})=>theme.colors.local_white};
+    color:${({theme})=>theme.colors.blue};
     text-align:center;
 `
 
@@ -20,7 +19,6 @@ export const FormSpace = styled.div`
 `
 
 export const ProcessogramSpace = styled.div`    
-    /* margin-top:5rem; */
     padding:0 4rem 0 4rem;
     width:60%;
     height:800px;

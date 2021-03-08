@@ -47,6 +47,9 @@ const RolesManagement = () => {
                 setRoleModalIsOpen(false)
                 toast.success('Role updated successfully!')
                 fetchRoles()
+            }).catch(()=>{
+                toast.error('Something gone wrong')
+                setOnFetch(false)
             })
         }else{
             adminRolesApi.create(role)
@@ -55,6 +58,9 @@ const RolesManagement = () => {
                 setRoleModalIsOpen(false)
                 toast.success('Role created successfully!')
                 fetchRoles()
+            }).catch(()=>{
+                toast.error('Something gone wrong')
+                setOnFetch(false)
             })
         }
     }

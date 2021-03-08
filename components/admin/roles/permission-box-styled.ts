@@ -6,7 +6,7 @@ export const PermissionName = styled.div`
     position:absolute;
     top:-1rem;
     left:.5rem;
-    background-color:${({theme})=>theme.colors.local_black};
+    background-color:${({theme})=>theme.colors.black};
 `
 
 export const GrantedContainer = styled.div`
@@ -23,7 +23,7 @@ export const DeleteGranted = styled.div`
     margin-left:-.25rem;
     border-radius:.5rem;
     color:${({theme}) => lighten(0.1,GetColorType({theme,type:'danger'})) };
-    background-color:${({theme})=>transparentize(0.7,theme.colors.local_black)};
+    background-color:${({theme})=>transparentize(0.7,theme.colors.black)};
     position:absolute;
     top:0;
     width:100%;
@@ -44,7 +44,7 @@ export const Granted = styled.div`
     :first-child{
         margin-left:0;
     }
-    background-color:${({theme}) => transparentize(0.5,theme.colors.local_red)};
+    background-color:${({theme}) => transparentize(0.5,theme.colors.red)};
     cursor: pointer;
     position:relative;
     ${DeleteGranted}{
@@ -96,7 +96,7 @@ export const GrantedOption = styled.div`
 export const GrantedListStyled = styled.div`
     width:fit-content;
     height:fit-content;
-    z-index:103;
+    z-index:2;
     margin-left:.5rem;
     border-radius:.5rem;
 `
@@ -108,7 +108,6 @@ export const GrantedListBackground = styled.div`
     left:0;
     width:100%;
     height:100%;
-    z-index:102;
 `
 
 export const Container = styled.div`

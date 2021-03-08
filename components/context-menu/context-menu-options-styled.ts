@@ -18,7 +18,7 @@ export const Option = styled.div`
     background-color:transparent;
     border:none;
     cursor: pointer;
-    color:${({theme})=>theme.colors.local_yellow};
+    color:${({theme})=>theme.colors.yellow};
     display:flex;
     align-items:center;
     :first-child{
@@ -40,7 +40,7 @@ export const Option = styled.div`
         transition: transform 500ms;
     }
     :hover{
-        background-color:${({theme})=>theme.colors.local_black};
+        background-color:${({theme})=>theme.colors.black};
         ${OptionText}{
             color:${({theme,type}) => lighten(0.2,GetColorType({theme,type}))};
             transform:scale(1.1);

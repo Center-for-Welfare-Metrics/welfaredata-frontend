@@ -27,7 +27,7 @@ const UploadFile = ({setFile,inputFileRef,onFetch,progress}:IUploadFile) => {
                 {onFetch && <LoaderContainer>
                     <Progress>{progress}%</Progress>
                     <CustomLoader
-                        color={theme.default.colors.local_pink}
+                        color={theme.default.colors.pink}
                         type='ThreeDots'
                         height={45}
                         width={45}                        

@@ -54,7 +54,8 @@ const MediaFile = ({media}:IMediaFile) => {
         }) 
     }
 
-    return (           
+    return (    
+        <>       
         <Container onContextMenu={onContextMenu}>         
             {   
                 media.type.includes('image') && 
@@ -68,14 +69,7 @@ const MediaFile = ({media}:IMediaFile) => {
                         <source src={media.url+'#t=0.1'} type={media.type}></source>
                     </Video>
                 </Thumb> 
-            }
-            {   
-                open && 
-                <FullScreenView onContextMenu={DefaultEventComportamentOnContextMenuOpen} onClose={()=>toggle(false)}>                
-                    { media.type.includes('image') && <FullImage src={media.url} /> }
-                    { media.type.includes('video') && <Video autoPlay controls><source src={media.url} type={media.type}></source></Video> }
-                </FullScreenView> 
-            }             
+            }           
             <Dialog 
                 isOpen={openDeleteDialog}
                 onClose={()=>setOpenDeleteDialog(null)}                
@@ -98,7 +92,15 @@ const MediaFile = ({media}:IMediaFile) => {
                 onConfirm={deleteMedia}
                 type='danger'                    
             />            
-        </Container>                       
+        </Container>   
+        {   
+            open && 
+            <FullScreenView onContextMenu={DefaultEventComportamentOnContextMenuOpen} onClose={()=>toggle(false)}>                
+                { media.type.includes('image') && <FullImage src={media.url} /> }
+                { media.type.includes('video') && <Video autoPlay controls><source src={media.url} type={media.type}></source></Video> }
+            </FullScreenView> 
+        }      
+        </>                
     )
 }
 

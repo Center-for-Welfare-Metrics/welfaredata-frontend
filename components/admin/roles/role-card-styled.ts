@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {lighten} from 'polished'
 
 export const Container = styled(SecondaryCard)`
-    box-shadow: 0px 0px 5px 0 ${({theme})=> lighten(0.1,theme.colors.local_black)};
+    box-shadow: 0px 0px 5px 0 ${({theme})=> lighten(0.1,theme.colors.black)};
     width:18rem;
     height:fit-content;
     margin-top:1rem;

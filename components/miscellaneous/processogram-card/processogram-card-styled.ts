@@ -1,18 +1,16 @@
 import styled from 'styled-components'
 import SVG from 'react-inlinesvg'
-import { transparentize } from 'polished'
 
 export const Title = styled.div`
-    color:${({theme}) => theme.colors.local_pink};
+    color:${({theme}) => theme.colors.pink};
     font-size:${({theme}) => theme.fontSize.extraVeryLarge};
-    z-index:99;
+    z-index:2;
     text-align:center;
     font-weight:bold;
 `
 
 export const SvgBackground = styled(SVG)`
     position:absolute;
-    z-index:77;
     transform-origin:0% 25%;
     transform:scale(6);
     opacity:.6;

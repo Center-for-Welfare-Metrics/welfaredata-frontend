@@ -50,7 +50,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }
     },[containerRef.current])
 
-    const refreshProcessograms = (_id,updated_processogram) => {
+    const refreshProcessograms = (_id,updated_processogram) => {        
         let indexOf = processograms.findIndex(x => x._id === _id)
          
         if(indexOf>=0){

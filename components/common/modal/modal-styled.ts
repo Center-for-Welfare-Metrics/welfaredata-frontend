@@ -9,7 +9,7 @@ export const Container = styled.div`
     transform:translate(-50%,-40%);
     background-color:black;
     border:${({theme,type})=>`${theme.borderSize.medium} solid ${ GetColorType({theme,type})}`};
-    z-index:997;
+    z-index:498;
     opacity:${({isOpen})=>isOpen?1:0};
     color:white;
     transition:opacity 500ms;
@@ -38,8 +38,8 @@ export const FadedModalBackground = styled.div`
     left:0;
     width:100%;
     height:100%;
-    background-color:${({theme})=> transparentize(0.3,theme.colors.local_black)};
-    z-index:996;
+    background-color:${({theme})=> transparentize(0.3,theme.colors.black)};
+    z-index:497;
     opacity:${({isOpen})=>isOpen?1:0};
     transition:opacity 500ms;
 `
@@ -47,6 +47,5 @@ export const FadedModalBackground = styled.div`
 export const ActionButtons = styled.div`
     display:flex;
     justify-content:space-between;
-    padding:0 2rem 0 2rem;
-    /* overflow-y:hidden; */
+    padding:0 2rem 0 2rem;    
 `

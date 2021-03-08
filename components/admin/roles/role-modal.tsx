@@ -84,7 +84,8 @@ const RoleModal = ({isOpen,onClose,clear,role,onSuccess}:IRoleModal) => {
                         value={description}
                         onChange={(e)=>setDescription(e.target.value)}
                         placeholder='Add a brief description of this role here'
-                        required
+                        required     
+                        rows={4}                                                                
                     />
                     <HelperText>
                         Users with this role will be able to:

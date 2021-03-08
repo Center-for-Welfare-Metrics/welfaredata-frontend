@@ -18,13 +18,13 @@ export const Line = styled.div`
     width:2rem;
     height:.5rem;
     background-color:${({theme,current,strength})=> {
-        let color = theme.colors.local_red
+        let color = theme.colors.red
         if(strength>1){
-            color = darken(0.1,theme.colors.local_green)
+            color = darken(0.1,theme.colors.green)
         }
 
         if(strength>=current){
-            color = lighten(0.1,theme.colors.local_green)
+            color = lighten(0.1,theme.colors.green)
         }        
         return color
     }};
@@ -34,18 +34,18 @@ export const Line = styled.div`
 
 export const StrengthText = styled.span`
     color:${({theme,strength})=>{
-        let color = theme.colors.local_red
+        let color = theme.colors.red
 
         if(strength==1){
-            color = lighten(0.05,theme.colors.local_red)
+            color = lighten(0.05,theme.colors.red)
         }
 
         if(strength>1){
-            color = darken(0.1,theme.colors.local_green)
+            color = darken(0.1,theme.colors.green)
         }
 
         if(strength>2){
-            color = lighten(0.1,theme.colors.local_green)
+            color = lighten(0.1,theme.colors.green)
         }
         return color
     }};

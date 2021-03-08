@@ -52,7 +52,7 @@ export const DefaultButton = styled.button`
 
 export const DangerButton = styled(DefaultButton)`
     background-color:${({theme})=> darken(0.15,GetColorType({theme,type:'danger'}))};
-    color:${({theme})=>theme.colors.local_black};
+    color:${({theme})=>theme.colors.black};
     :hover{
         animation: ${shake} 0.82s cubic-bezier(.36,.07,.19,.97) both;
         transform: translate3d(0, 0, 0);
@@ -72,6 +72,6 @@ export const SuccessButton = styled(DefaultButton)`
 
 export const WarningButton = styled(DefaultButton)`
     background-color:${({theme})=>GetColorType({theme,type:'warning'})};
-    color:${({theme})=>theme.colors.local_black};
+    color:${({theme})=>theme.colors.black};
 `
 

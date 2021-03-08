@@ -7,10 +7,11 @@ export const Container = styled.div`
     position:absolute;
     opacity:0;
     width:${({type})=>type==='options'?'fit-content':'20rem'};
-    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.local_pink}`};
+    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.pink}`};
     border-radius:1rem;
-    background-color:${({theme})=>transparentize(0.20,theme.colors.local_black)};
-    z-index:999;
+    background-color:${({theme})=>transparentize(0.3,theme.colors.black)};
+    z-index:500;
+    backdrop-filter:blur(5px);
 `
 
 export const FullBackground = styled.div`
@@ -18,12 +19,12 @@ export const FullBackground = styled.div`
     position:fixed;
     width:100%;
     height:100%;
-    z-index:998;
+    z-index:499;
 `
 
 export const Body = styled.div`
     height:25rem;
-    color:${({theme}) => theme.colors.local_white};
+    color:${({theme}) => theme.colors.white};
     overflow-y:auto;
     padding:0 .5rem 0 .5rem;
     margin:.25rem;
@@ -31,12 +32,12 @@ export const Body = styled.div`
         width: .25rem;
     }
     ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors.local_pink};
+        background-color: ${({theme})=>theme.colors.pink};
         transition: background-color 500ms;
         border-radius:2rem;
     }
     ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors.local_pink)};
+        background-color: ${({theme})=> lighten(0.1,theme.colors.pink)};
         transition: background-color 500ms;
     }
 `
@@ -46,7 +47,7 @@ export const AttentionBody = styled(Body)`
 `
 
 export const Footer = styled.div`
-    border-top:5px solid ${({theme})=>theme.colors.local_pink};
+    border-top:5px solid ${({theme})=>theme.colors.pink};
     display:flex;
     height:fit-content;
 `

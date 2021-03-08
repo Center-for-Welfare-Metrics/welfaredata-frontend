@@ -5,7 +5,7 @@ import MediaTab from '@/components/data_entry/form/tabs/media/media'
 import { TABS } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
-
+import { Title } from "@/components/data_entry/form/tabs/tab-commons-styled"
 import theme from 'theme/schema.json'
 
 const DataEntryForm = () => {    
@@ -22,11 +22,12 @@ const DataEntryForm = () => {
     return (
         
         <Container>
-            <Body load={!(!onFetch && currentInformations)}>
+            <Body load={!(!onFetch && currentInformations)}>                
                 {
                     (!onFetch && currentInformations)?
                     (
                         <>
+                            <Title>{ voca.titleCase(currentInformations[currentFieldReference]?.name) }</Title>
                             {tab === 'basic' && <BasicTab /> }
                             {tab === 'media' && <MediaTab /> }
                         </>
@@ -34,7 +35,7 @@ const DataEntryForm = () => {
                     :
                     (
                         <CustomLoader 
-                            color={theme.default.colors.local_pink}
+                            color={theme.default.colors.pink}
                             type='ThreeDots'
                             height={100}
                             width={100}   

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
-import {lighten,darken} from 'polished'
 
 export const Table = styled.table`
-    color:${({theme})=>theme.colors.local_white};
+    color:${({theme})=>theme.colors.white};
     border-collapse: collapse;
 `
 
@@ -23,10 +22,10 @@ export const Tr = styled.tr`
     text-align:left;
     cursor: pointer;
     :nth-child(even){
-        background-color: ${({theme})=>theme.colors.local_black};
+        background-color: ${({theme})=>theme.colors.black};
     }
     :nth-child(odd){
-        background-color: ${({theme})=>theme.colors.local_deep_blue};
+        background-color: ${({theme})=>theme.colors.deep_blue};
     }
     :hover{
         transform: scale(1.07) translateY(-5px);

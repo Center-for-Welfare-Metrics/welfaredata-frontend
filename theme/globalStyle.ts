@@ -1,23 +1,49 @@
 import { lighten } from 'polished'
-import { createGlobalStyle } from 'styled-components'
+import  { createGlobalStyle,css } from 'styled-components'
+
+const scrollBar = (color,size='.5rem') => css`
+    ::-webkit-scrollbar {
+        width: ${size};
+        height: ${size};
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: ${({theme})=>theme.colors[color]};
+        transition: background-color 500ms;
+        border-radius:2rem;
+    }
+    ::-webkit-scrollbar-thumb:hover{
+        background-color: ${({theme})=> lighten(0.1,theme.colors[color])};
+        transition: background-color 500ms;
+    }
+`
 
 export const GlobalStyles = createGlobalStyle`
+    html,body,div,textarea{        
+        ${scrollBar('white')}
+    }
     body{
-        background-color: ${({theme}) => theme.colors.local_black};
+        background-color: ${({theme}) => theme.colors.black};
         margin:0;
         width:100%;
         height: 100%;
         font-family: 'Titillium Web', sans-serif;
         position:${({needFixedBody})=>needFixedBody?'fixed':'static'};
     }
-    button {
-        font-family : inherit;
-        font-size: 1em;
+    div,textarea{
+        ${scrollBar('blue','.25rem')}
     }
     textarea{
         font-family : inherit;
         font-size: 1em;
+        ${scrollBar('white','.25rem')}
     }
+    button {
+        font-family : inherit;
+        font-size: 1em;
+    }
+
+    /* --------------------- hack | gambiarra ---------------- */
+
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -25,36 +51,10 @@ export const GlobalStyles = createGlobalStyle`
     -webkit-transition-delay: 9999s;
         transition-delay: 9999s;
     }
-    html{
-        div{
-            ::-webkit-scrollbar {
-            width: .25rem;
-            height: .25rem;
-            }
-            ::-webkit-scrollbar-thumb {
-                background-color: ${({theme})=>theme.colors.local_pink};
-                transition: background-color 500ms;
-                border-radius:2rem;
-            }
-            ::-webkit-scrollbar-thumb:hover{
-                background-color: ${({theme})=> lighten(0.1,theme.colors.local_pink)};
-                transition: background-color 500ms;
-            }
-        }
-        ::-webkit-scrollbar {
-            width: .5rem;
-            height: .5rem;
-        }
-        ::-webkit-scrollbar-thumb {
-            background-color: ${({theme})=>theme.colors.local_white};
-            transition: background-color 500ms;
-            border-radius:2rem;
-        }
-        ::-webkit-scrollbar-thumb:hover{
-            background-color: ${({theme})=> lighten(0.1,theme.colors.local_white)};
-            transition: background-color 500ms;
-        }
-    }
+
+    /* --------------------- hack | gambiarra ---------------- */
+
+
     @media screen and (max-width:1300px){
         html{
             zoom:.75;

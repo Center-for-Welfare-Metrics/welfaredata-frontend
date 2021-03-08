@@ -9,16 +9,16 @@ export interface IColorType {
 export const GetColorType = ({theme,type}:IColorType) => {
     switch(type){
         case 'primary':
-            return theme.colors.local_blue
+            return theme.colors.blue
         case 'success':
-            return theme.colors.local_green
+            return theme.colors.green
         case 'danger':
-            return theme.colors.local_red
+            return theme.colors.red
         case 'warning':
-            return theme.colors.local_yellow
+            return theme.colors.yellow
         case 'default':
-            return theme.colors.local_deep_blue
+            return theme.colors.deep_blue
         default:
-            return theme.colors.local_white
+            return theme.colors.white
     }
 }

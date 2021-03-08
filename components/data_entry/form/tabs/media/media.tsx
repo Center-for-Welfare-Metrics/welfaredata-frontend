@@ -1,11 +1,14 @@
 import MediaFileList from "@/components/common/media_file/list"
 import DataEntryContext, { IDataEntryFormInformations } from "@/context/data-entry"
-import { FormEvent, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 
 import { Container } from './media-styled'
 
+import { Title } from '../tab-commons-styled'
+
 import processogramApi from '@/api/processogram'
 import UploadFile from "@/components/common/inputs/upload-file"
+import voca from 'voca'
 
 const MediasTab = () => {
 
@@ -51,7 +54,8 @@ const MediasTab = () => {
 
     return (
         <Container>
-            <MediaFileList medias={currentInformations[currentFieldReference]?.medias || []} />
+            {/* <Title>{ voca.titleCase(currentInformations[currentFieldReference]?.name) }</Title> */}
+            <MediaFileList medias={ currentInformations[currentFieldReference]?.medias || [] } />
             <UploadFile                 
                 setFile={setFile}                
                 inputFileRef={inputFileRef}

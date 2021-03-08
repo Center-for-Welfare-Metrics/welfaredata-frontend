@@ -8,7 +8,7 @@ export const CustomLoader = styled(Loader)`
 `
 
 export const Progress = styled.div`
-    color:${({theme})=>theme.colors.local_pink};
+    color:${({theme})=>theme.colors.blue};
     font-size:${({theme}) => theme.fontSize.large};
     position:absolute;
     top:-.5rem;
@@ -27,7 +27,7 @@ export const LoaderContainer = styled.div`
 
 export const SvgIcon = styled(SVG)`
     path{
-        fill: ${({theme}) => theme.colors.local_pink} !important;
+        fill: ${({theme}) => theme.colors.blue} !important;
     }
     :hover{
         transition:transform 500ms;
