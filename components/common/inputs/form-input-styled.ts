@@ -1,4 +1,4 @@
-import { lighten } from 'polished'
+import { lighten, transparentize } from 'polished'
 import styled,{css} from 'styled-components'
 
 export const Container = styled.div`
@@ -19,7 +19,7 @@ export const Icon = styled.i`
 `
 
 export const Label = styled.label`
-    color:${({theme})=>lighten(0.1,theme.colors.white)};
+    color:${({theme})=>transparentize(0.5,theme.colors.white)};
     position:absolute;
     top:50%;
     left:50%;
@@ -33,7 +33,8 @@ export const Label = styled.label`
         transform: translate(0,0);
         transition: all 500ms;
         z-index:auto;
-        font-size:${theme.fontSize.small}
+        font-size:${theme.fontSize.small};
+        color:${({theme})=>theme.colors.white};
     `}
 `
 export const Error = styled.span`

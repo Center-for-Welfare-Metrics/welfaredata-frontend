@@ -1,7 +1,7 @@
 import FormInput from "@/components/common/inputs/form-input"
 import DataEntryContext from "@/context/data-entry"
 import { showOnScreen } from "@/utils/processogram"
-import { ChangeEvent, useContext } from "react"
+import { useContext } from "react"
 import voca from 'voca'
 
 const BasicTab = () => {
