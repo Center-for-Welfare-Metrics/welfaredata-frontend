@@ -1,5 +1,4 @@
 import {Title,Container,SvgBackground} from './processogram-card-styled'
-import SVG from 'react-inlinesvg'
 import { SvgZooPath } from '@/utils/assets_path'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types'
 import Link from 'next/link'
@@ -18,13 +17,11 @@ const ProcessogramCard = ({title,specie,productionSystem}:IProcessogramCard) => 
             pathname:'processograms/[specie]',
             query:{specie}
         }}>
-            <Container>            
-                <>
-                    <Title>{title}</Title>
-                    <SvgBackground 
-                        src={SvgZooPath({specie,productionSystem})}
-                    />
-                </>            
+            <Container>                            
+                <Title>{title}</Title>
+                <SvgBackground 
+                    src={SvgZooPath({specie,productionSystem})}
+                />                      
             </Container>
         </Link>
     )

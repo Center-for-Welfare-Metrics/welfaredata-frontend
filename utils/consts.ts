@@ -11,15 +11,15 @@ export const SPECIES = {
     chicken:CHICKEN
 }
 
-export const CommonTabs : TabTypes[] = ['basic','media']
+export const CommonTabs : TabTypes[] = ['description','media']
 
-export const ProductionSystemTABS : TabTypes[] = [...CommonTabs,'sources','quality assessment']
+export const ProductionSystemTABS : TabTypes[] = [...CommonTabs,'sources']
 
 export const LifeFateTABS : TabTypes[] = [...CommonTabs]
 
-export const PhaseTABS : TabTypes[] = [...CommonTabs, 'location','data']
+export const PhaseTABS : TabTypes[] = [...CommonTabs]
 
-export const CircumstanceTabs : TabTypes[] = [...CommonTabs,'data']
+export const CircumstanceTabs : TabTypes[] = [...CommonTabs]
 
 export const TABS = {
     productionSystem:ProductionSystemTABS,

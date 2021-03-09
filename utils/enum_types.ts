@@ -6,7 +6,7 @@ export type SpeciesTypes = 'chicken' | 'pig'
 
 export type ProductionSystemTypes = 'conventional cages' | 'conventional intensive' | 'enhanced intensive' | 'european intensive' | 'outdoor semi-intensive'
 
-export type TabTypes = 'basic' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
+export type TabTypes = 'description' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
 
 export type FieldReferenceTypes = 'productionSystem' | 'lifeFate' | 'phase' | 'circumstance'
 

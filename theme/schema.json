@@ -14,6 +14,7 @@
             "verySmall":".5rem",
             "small":".8rem",
             "normal":"1rem",
+            "normal1":"1.2rem",
             "large":"1.5rem",
             "extraLarge":"2rem",
             "extraVeryLarge":"2.5rem"

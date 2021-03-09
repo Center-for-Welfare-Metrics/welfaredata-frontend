@@ -21,11 +21,11 @@ export const Svg = styled(SVG)`
         `
     )}
     [id*=${({level})=>level}]{
-        opacity:.5;
+        stroke-opacity:.5;
         :hover{
-            opacity:1;
+            stroke-opacity:1;
         }
-        transition:opacity 500ms;
+        transition:stroke-opacity 500ms;
     }
-    transition:opacity 500ms;
+    transition:stroke-opacity 500ms;
 `

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import SVG from 'react-inlinesvg'
 
 export const Title = styled.div`
-    color:${({theme}) => theme.colors.pink};
+    color:${({theme}) => theme.colors.blue};
     font-size:${({theme}) => theme.fontSize.extraVeryLarge};
     z-index:2;
     text-align:center;
@@ -10,9 +10,10 @@ export const Title = styled.div`
 `
 
 export const SvgBackground = styled(SVG)`
-    position:absolute;
-    transform-origin:0% 25%;
-    transform:scale(6);
+    transform-origin:0% 45%;
+    transform:scale(4);
+    width:10rem;
+    height:10rem;
     opacity:.6;
     transition:opacity 500ms;
     :hover{
@@ -21,10 +22,8 @@ export const SvgBackground = styled(SVG)`
 `
 
 export const Container = styled.div`
-    width:10rem;
-    height:10rem;
-    position:relative;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
     overflow:hidden;

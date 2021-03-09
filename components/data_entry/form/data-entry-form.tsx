@@ -14,7 +14,7 @@ const DataEntryForm = () => {
 
     useEffect(()=>{        
         if(!TABS[currentFieldReference].includes(tab)){
-            setTab('basic')
+            setTab('description')
         }
         
     },[currentFieldReference])
@@ -28,7 +28,7 @@ const DataEntryForm = () => {
                     (
                         <>
                             <Title>{ voca.titleCase(currentInformations[currentFieldReference]?.name) }</Title>
-                            {tab === 'basic' && <BasicTab /> }
+                            {tab === 'description' && <BasicTab /> }
                             {tab === 'media' && <MediaTab /> }
                         </>
                     )

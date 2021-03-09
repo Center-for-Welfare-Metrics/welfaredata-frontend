@@ -11,12 +11,10 @@ export const CustomLoader = styled(Loader)`
 `
 
 export const Tab = styled.div`
-    color:${({theme,active}) => active?theme.colors.blue:transparentize(0.3,theme.colors.blue)};
-    font-size:${({theme})=>theme.fontSize.large};
+    color:${({theme,active}) => active?theme.colors.blue:transparentize(0.2,theme.colors.blue)};
+    font-size:${({theme})=>theme.fontSize.normal1};
     transform: ${({active}) => active?'scale(1.2)':'scale(1)'};
     cursor: pointer;
-    line-height:2rem;
-    font-weight:bold;
     :hover{
         transform: scale(1.2);
         transition: transform 500ms, color 500ms;
@@ -26,7 +24,7 @@ export const Tab = styled.div`
 
 
 export const Tabs = styled.div`
-    width:30%;
+    /* width:30%; */
     margin-top:2rem;
 `
 
@@ -41,4 +39,5 @@ export const Body = styled.div`
 
 export const Container = styled.div`
     display:flex;
+    justify-content:center;
 `

@@ -13,7 +13,7 @@ const SpecieSelector = () => {
                 productionSystem='conventional intensive'
             />
             <ProcessogramCard 
-                title='Laying Hens'
+                title='Chicken'
                 specie='chicken'
                 productionSystem='conventional cages'
             />
