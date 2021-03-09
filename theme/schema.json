@@ -8,7 +8,8 @@
             "pink":"#730e28",
             "red":"#9C3848",
             "green":"#4DA167",
-            "black":"#000000"
+            "black":"#000000",
+            "gray":"#919191"
         },
         "fontSize":{
             "verySmall":".5rem",

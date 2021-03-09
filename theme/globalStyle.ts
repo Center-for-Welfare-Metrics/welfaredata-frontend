@@ -19,7 +19,7 @@ const scrollBar = (color,size='.5rem') => css`
 
 export const GlobalStyles = createGlobalStyle`
     html,body,div,textarea{        
-        ${scrollBar('white')}
+        ${scrollBar('gray')}
     }
     body{
         background-color: ${({theme}) => theme.colors.black};
