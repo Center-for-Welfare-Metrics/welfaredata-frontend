@@ -1,12 +1,10 @@
 import FormInput from "@/components/common/inputs/form-input"
 import DataEntryContext from "@/context/data-entry"
-import { showOnScreen } from "@/utils/processogram"
 import { useContext } from "react"
-import voca from 'voca'
 
 const BasicTab = () => {
 
-    const {currentInformations,handleReferenceDataChange,currentFieldReference} = useContext(DataEntryContext)
+    const {currentInformations,handleReferenceDataChange,currentFieldReference,updateCurrentInformations,handleLocalDataChange} = useContext(DataEntryContext)
 
     const handleChange = (event:any) => {
         let { value,name } = event.target
@@ -15,25 +13,32 @@ const BasicTab = () => {
         })
     }   
 
+    const handleLocalChange = (event:any) => {
+        let { value,name } = event.target
+        handleLocalDataChange({
+            [name]:value
+        })
+    }
+
     return (
         <>
-            {/* <FormInput 
-                value={ voca.titleCase( showOnScreen('name',currentInformations,currentFieldReference) || '') }
-                onChange={handleChange}
-                label='Name'
-                name='name'
-                disabled={true}
-            /> */}
             <FormInput 
-                value={ showOnScreen('description',currentInformations,currentFieldReference) || '' }
+                value={ currentInformations[currentFieldReference]?.description }
                 onChange={handleChange}
-                label='Description'
+                label='Global'
                 name='description'
                 multiline={true}
-                rows={4}
-                // disabled={true}
-            />            
-        </>
+                rows={4}            
+            />
+            <FormInput 
+                value={ currentInformations.description || '' }
+                onChange={handleLocalChange}
+                label='Local'
+                name='description'
+                multiline={true}
+                rows={4}            
+            />    
+        </>       
     )
 }
 

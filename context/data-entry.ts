@@ -38,7 +38,8 @@ export interface IDataEntryContext {
     updateReferenceData(value:any,callback?:any)
     handleReferenceDataChange(value:any)
     tab:TabTypes,
-    setTab(tab:TabTypes):void
+    setTab(tab:TabTypes):void,
+    handleLocalDataChange(value:any):void
 }
 
 const DataEntryContext = createContext<IDataEntryContext>(null)

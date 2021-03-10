@@ -27,7 +27,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [processograms,setProcessograms] = useState<any[]>([])
 
-    const [tab,setTab] = useState<TabTypes>('basic')
+    const [tab,setTab] = useState<TabTypes>('description')
 
     const [modificationsCount,setModificationsCount] = useState(0)
 
@@ -76,8 +76,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         clearTimeout(timer.current)
         timer.current = setTimeout(() => {
             let reference : ICommonDataEntry = currentInformations[currentFieldReference]  
-            processogramApi.updateReference(currentFieldReference,reference._id,value).then(({data}) => {                               
-                updateProcessogram()
+            processogramApi.updateReference(currentFieldReference,reference._id,value).then(() => {                               
+                refreshProcessogram()
             }) 
         }, 500);          
     }
@@ -89,22 +89,40 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         updateReferenceDataWithDelay(value)
     }
 
-    const updateProcessogramWithDelay = () => {
+    const handleLocalDataChange = (value:any) => {
+        setCurrentInformations(update(currentInformations,{
+            $merge:value
+        }))
+        updateProcessogramWithDelay(value)
+    }
+
+    const updateProcessogramWithDelay = (value:any) => {
+        clearTimeout(timer.current)
+        timer.current = setTimeout(()=>{
+            processogramApi.update({
+                id_tree:{...idTree,_id:undefined},
+                values:value,
+            },idTree._id)
+            .then(({data}) => {
+                refreshProcessograms(idTree._id,data)
+            })
+        },1000)
+    }
+
+    const refreshProcessogramWithDelay = () => {
         clearTimeout(timer.current)
         timer.current = setTimeout(() => {
             processogramApi.getOne(idTree._id)
-            .then(({data}) => {            
-                console.log(data)
+            .then(({data}) => {                            
                 refreshProcessograms(idTree._id,data)
             }) 
         }, 500);            
     }
     
-    const updateProcessogram = () => {
-        if(idTree._id){             
+    const refreshProcessogram = () => {
+        if(idTree._id){          
             processogramApi.getOne(idTree._id)
             .then(({data}) => {            
-                console.log(data)
                 refreshProcessograms(idTree._id,data)
             })  
         }
@@ -117,13 +135,24 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             })
         )                      
         if(withDelay){ 
-            updateProcessogramWithDelay()
+            refreshProcessogramWithDelay()
         }else{
-            updateProcessogram()
+            refreshProcessogram()
         }
     }
     
-    const contextValues : IDataEntryContext = {currentInformations,currentFieldReference,updateCurrentInformations,tab,setTab,updateReferenceData,handleReferenceDataChange,onFetch,setOnFetch}
+    const contextValues : IDataEntryContext = {
+        currentInformations,
+        currentFieldReference,
+        tab,
+        setTab,
+        updateReferenceData,
+        updateCurrentInformations,
+        handleReferenceDataChange,
+        onFetch,
+        setOnFetch,
+        handleLocalDataChange
+    }
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
         setIdTree(id_tree)
