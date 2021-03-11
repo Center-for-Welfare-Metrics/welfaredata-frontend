@@ -35,7 +35,6 @@ export const GlobalStyles = createGlobalStyle`
     textarea{
         font-family : inherit;
         font-size: 1em;
-        ${scrollBar('white','.25rem')}
     }
     button {
         font-family : inherit;

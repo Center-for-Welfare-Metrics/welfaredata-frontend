@@ -4,15 +4,15 @@ import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 import { useContext, useState } from 'react'
 import FullScreenView from './full-screen-view'
 import { Image, FullImage,Video,Thumb,Container,DialogMiniImage,DialogMiniThumb, DialogVideo } from './media-file-styled'
-import processogramApi from '@/api/processogram'
 import Dialog from '@/components/common/dialog/dialog'
 import toast from 'react-hot-toast'
 
 export interface IMediaFile {
     media:IMedia
+    isLocal?:boolean
 }
 
-const MediaFile = ({media}:IMediaFile) => {
+const MediaFile = ({media,isLocal}:IMediaFile) => {
 
     const [open,toggle] = useState(false)
 
@@ -20,7 +20,7 @@ const MediaFile = ({media}:IMediaFile) => {
 
     const { setContextMenu } = useContext(ContextMenu)
 
-    const { currentInformations,currentFieldReference,updateReferenceData } = useContext(DataEntryContext)
+    const { currentInformations,currentFieldReference,updateReferenceData,handleLocalInputChange } = useContext(DataEntryContext)
 
     const onContextMenu = (event:MouseEvent) => {
         DefaultEventComportamentOnContextMenuOpen(event)
@@ -50,8 +50,18 @@ const MediaFile = ({media}:IMediaFile) => {
         let indexOfDelete = medias.findIndex(x => x._id === media._id)
         medias.splice(indexOfDelete,1)
         updateReferenceData({medias},()=>{
-            toast.success('Media deleted successfully!')   
+            toast.success('Global media deleted successfully!')   
         }) 
+    }
+
+    const deleteLocalMedia = () => {        
+        let medias  = currentInformations.medias
+        console.log(medias,media)
+        let indexOfDelete = medias.findIndex(x => x._id === media._id)
+        console.log(indexOfDelete)
+        medias.splice(indexOfDelete,1)
+        handleLocalInputChange({medias},false)
+        toast.success('Specific media deleted successfully!')
     }
 
     return (    
@@ -89,7 +99,7 @@ const MediaFile = ({media}:IMediaFile) => {
                     </>
                 }
                 subtitle='this action cannot be undone'
-                onConfirm={deleteMedia}
+                onConfirm={isLocal?deleteLocalMedia:deleteMedia}
                 type='danger'                    
             />            
         </Container>   

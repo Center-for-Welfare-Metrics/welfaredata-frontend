@@ -19,11 +19,11 @@ export const Icon = styled.i`
 `
 
 export const Label = styled.label`
-    color:${({theme})=>transparentize(0.5,theme.colors.white)};
+    color:${({theme})=>transparentize(0.5,theme.colors.blue)};
     position:absolute;
     top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    left:2.2rem;  
+    transform: translateY(-50%);
     transition: all 500ms;
     z-index:-1;
     white-space: nowrap;
@@ -34,7 +34,7 @@ export const Label = styled.label`
         transition: all 500ms;
         z-index:auto;
         font-size:${theme.fontSize.small};
-        color:${({theme})=>theme.colors.white};
+        color:${({theme})=>theme.colors.blue};
     `}
 `
 export const Error = styled.span`

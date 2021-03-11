@@ -82,18 +82,23 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }, 500);          
     }
 
-    const handleReferenceDataChange = (value:any) => {
+    const handleReferenceInputChange = (value:any) => {
         setCurrentInformations(update(currentInformations,{
             [currentFieldReference]:{$merge:value}
         }))
         updateReferenceDataWithDelay(value)
     }
 
-    const handleLocalDataChange = (value:any) => {
+    const handleLocalInputChange = (value:any,withDelay=true) => {
         setCurrentInformations(update(currentInformations,{
             $merge:value
         }))
-        updateProcessogramWithDelay(value)
+        if(withDelay){
+            updateProcessogramWithDelay(value)
+        }else{
+            updateProcessogram(value)
+        }
+        
     }
 
     const updateProcessogramWithDelay = (value:any) => {
@@ -106,8 +111,18 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             .then(({data}) => {
                 refreshProcessograms(idTree._id,data)
             })
-        },1000)
+        },500)
     }
+
+    const updateProcessogram = (value:any) => {
+        processogramApi.update({
+            id_tree:{...idTree,_id:undefined},
+            values:value,
+        },idTree._id)
+        .then(({data}) => {
+            refreshProcessograms(idTree._id,data)
+        }) 
+    } 
 
     const refreshProcessogramWithDelay = () => {
         clearTimeout(timer.current)
@@ -148,10 +163,11 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         setTab,
         updateReferenceData,
         updateCurrentInformations,
-        handleReferenceDataChange,
+        handleReferenceInputChange,
         onFetch,
         setOnFetch,
-        handleLocalDataChange
+        handleLocalInputChange,
+        idTree
     }
 
     const onChange = (currentInformations,id_tree,svg_id) => {           

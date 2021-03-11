@@ -36,10 +36,11 @@ export interface IDataEntryContext {
     setOnFetch(onFetch:boolean):void
     updateCurrentInformations(update:any,withDelay:boolean):void
     updateReferenceData(value:any,callback?:any)
-    handleReferenceDataChange(value:any)
+    handleReferenceInputChange(value:any)
     tab:TabTypes,
     setTab(tab:TabTypes):void,
-    handleLocalDataChange(value:any):void
+    handleLocalInputChange(value:any,withDelay?:boolean):void,
+    idTree:any
 }
 
 const DataEntryContext = createContext<IDataEntryContext>(null)

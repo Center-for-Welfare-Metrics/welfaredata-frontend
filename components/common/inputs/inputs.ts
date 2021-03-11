@@ -10,7 +10,7 @@ export const LabeledInput = styled.input`
     border:none;
     background-color: transparent;
     color:${({theme})=> globalColor(theme)};
-    border-bottom:1px solid ${({theme})=>globalColor(theme)};
+    border-bottom:1px solid ${({theme})=>theme.colors.blue};
     outline: none;
     :disabled{
         cursor:not-allowed;
@@ -47,6 +47,6 @@ export const LabeledTextArea = styled(CleanTextArea)`
     border:none;
     background-color: transparent;
     color:${({theme})=>globalColor(theme)};
-    border-bottom:1px solid ${({theme})=>globalColor(theme)};
+    border-bottom:1px solid ${({theme})=>theme.colors.blue};
     outline: none;
 `

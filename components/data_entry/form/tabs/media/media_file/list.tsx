@@ -4,16 +4,17 @@ import { IMedia } from '@/context/data-entry'
 import React from 'react'
 
 interface IMediaFileList {
-    medias:IMedia[]
+    medias:IMedia[],
+    isLocal?:boolean
 }
 
 
-const MediaFileList = ({medias}:IMediaFileList) => {
+const MediaFileList = ({medias,isLocal=false}:IMediaFileList) => {
     return (
         <Container>
             {
                 medias.map((media) => (
-                    <MediaFile media={media} key={media._id} />
+                    <MediaFile isLocal={isLocal} media={media} key={media._id} />
                 ))
             }
         </Container>
@@ -21,4 +22,4 @@ const MediaFileList = ({medias}:IMediaFileList) => {
 }
 
 
-export default React.memo(MediaFileList)
+export default MediaFileList

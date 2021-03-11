@@ -6,6 +6,7 @@ export const Container = styled.div`
     height:6rem;
     margin-right:.5rem;
     margin-bottom:.5rem;
+    background-color:${({theme})=>theme.colors.deep_blue};
 `
 
 export const Image = styled.div`

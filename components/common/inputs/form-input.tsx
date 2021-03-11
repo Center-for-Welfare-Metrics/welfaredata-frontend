@@ -33,9 +33,9 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
 
     const [onFocus,setFocus] = useState(false)
 
-    const moveLabel = () => {
-        if(!onFocus){
-            setFocus(true)
+    const moveLabel = (focus) => (event) => {
+        if(focus){
+            setFocus(true)  
         }else if(value===''){
             setFocus(false)
         }
@@ -47,7 +47,7 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
         }else{
             setFocus(false)
         }
-    },[value,defaultValue])
+    },[])
 
     return (
         <Container>
@@ -59,8 +59,8 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         id={name}
                         name={name}
                         type={type}
-                        onFocus={moveLabel}
-                        onBlur={moveLabel}
+                        onFocus={moveLabel(true)}
+                        onBlur={moveLabel(false)}
                         value={value}
                         disabled={disabled}
                         {...rest}
@@ -72,8 +72,8 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         id={name}
                         name={name}
                         type={type}
-                        onFocus={moveLabel}
-                        onBlur={moveLabel}
+                        onFocus={moveLabel(true)}
+                        onBlur={moveLabel(false)}
                         value={value}
                         disabled={disabled}
                         {...rest}

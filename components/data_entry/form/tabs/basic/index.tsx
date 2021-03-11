@@ -4,18 +4,18 @@ import { useContext } from "react"
 
 const BasicTab = () => {
 
-    const {currentInformations,handleReferenceDataChange,currentFieldReference,updateCurrentInformations,handleLocalDataChange} = useContext(DataEntryContext)
+    const {currentInformations,currentFieldReference,handleReferenceInputChange,handleLocalInputChange} = useContext(DataEntryContext)
 
     const handleChange = (event:any) => {
         let { value,name } = event.target
-        handleReferenceDataChange({
+        handleReferenceInputChange({
             [name]:value
         })
     }   
 
     const handleLocalChange = (event:any) => {
         let { value,name } = event.target
-        handleLocalDataChange({
+        handleLocalInputChange({
             [name]:value
         })
     }
@@ -33,7 +33,7 @@ const BasicTab = () => {
             <FormInput 
                 value={ currentInformations.description || '' }
                 onChange={handleLocalChange}
-                label='Local'
+                label='Specific'
                 name='description'
                 multiline={true}
                 rows={4}            
