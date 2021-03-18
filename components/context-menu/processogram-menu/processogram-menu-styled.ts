@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled,{css} from 'styled-components'
 import {lighten} from 'polished'
 import Loader from "react-loader-spinner"
 
@@ -18,7 +18,13 @@ export const ButtonNavigator = styled.div`
 
 export const ButtonIcon = styled.img`
     width:100%;
+    filter:${({active}) => active?`brightness(1.2)`:`brightness(1)`};
     height:auto;
+    :hover{
+        filter:brightness(1.2);
+        transition:filter 500ms;
+    }
+    transition:filter 500ms;
 `
 
 export const Description = styled.div`

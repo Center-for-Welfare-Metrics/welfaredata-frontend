@@ -9,7 +9,7 @@ export const OptionText = styled.span`
 `
 
 export const OptionIcon = styled(SVG)`
-    width:1.5rem;    
+    width:1.5rem;
 `
 
 export const Option = styled.div`
