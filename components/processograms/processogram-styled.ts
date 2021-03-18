@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 
 import SVG from 'react-inlinesvg'
 
@@ -11,7 +11,7 @@ export const Container = styled.div`
 
 export const Svg = styled(SVG)`
     ${({level,g_id})=>(
-        level==='-last-' && `
+        level==='-last-' && css`
             [id*=--ci]{
                 opacity:.5;                
             }

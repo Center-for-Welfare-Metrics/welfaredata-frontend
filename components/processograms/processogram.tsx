@@ -284,9 +284,10 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
             TweenLite.to(containerRef.current,{
                 width:withLimits(screenInfo()).width,
                 top:'50%',
-                left:'50%',
-                transform:'translate(-50%,-50%)',
-                zIndex:'99'
+                left:'50%',                
+                zIndex:'99',
+                translateX:'-50%',
+                translateY:'-50%',
             }).duration(0.5)
         }
 

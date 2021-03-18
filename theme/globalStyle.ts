@@ -27,7 +27,7 @@ export const GlobalStyles = createGlobalStyle`
         width:100%;
         height: 100%;
         font-family: 'Titillium Web', sans-serif;
-        position:${({needFixedBody})=>needFixedBody?'fixed':'static'};
+        position:${({needFixedBody})=>needFixedBody?'fixed':'relative'};
     }
     div,textarea{
         ${scrollBar('blue','.25rem')}

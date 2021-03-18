@@ -1,61 +1,41 @@
 import { SvgPath } from '@/utils/assets_path'
-import { useEffect, useRef, useState } from 'react'
-import { Container,Body,AttentionBody,Footer,ButtonNavigator,ButtonIcon,FullBackground,CustomLoader } from './context-menu-styled'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { Container,AttentionBody,FullBackground } from './context-menu-styled'
 import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
-import { IContextMenu } from '@/context/context-menu'
-import voca from 'voca'
 
 import { TweenLite, gsap } from 'gsap'
-import { needSetInformations, showOnScreen } from '@/utils/processogram'
+import { needSetInformations } from '@/utils/processogram'
 import processogramApi from '@/api/processogram'
-import theme from 'theme/schema.json'
+
+import ProcessogramMenu from '@/components/context-menu/processogram-menu/processogram-menu'
+
+import ContextMenuContext from '@/context/context-menu'
+
 gsap.registerPlugin(TweenLite)
 
-const map_buttons_navigation = [
-    {
-        title:'Charts',
-        src:SvgPath({file_name:'barchart',folder:'icons'})
-    },
-    {
-        title:'Media',
-        src:SvgPath({file_name:'media',folder:'icons'})
-    },
-    {
-        title:'Sources',
-        src:SvgPath({file_name:'books',folder:'icons'})
-    },
-    {
-        title:'Feedback',
-        src:SvgPath({file_name:'pencil',folder:'icons'})
-    }
-]
 
 interface IContextMenuComponent{
-    infos?:IContextMenu
     onClose(event:Event):void
 }
 
 const ContextMenu = ({
-    infos=null,
     onClose
 }:IContextMenuComponent) => {
 
-    const containerRef = useRef<HTMLElement>(null)
+    const containerRef = useRef<HTMLElement>(null) 
 
-    const [temporary,setTemporary] = useState<any>(null)
-
-    const [loading,setLoading] = useState(false)
+    const {contextMenu,setLoading,setTemporary} = useContext(ContextMenuContext)
 
     useEffect(()=>{
-        if(infos.open){
+        if(contextMenu.open){
             openContextMenu()
-            if(!infos.document){
-                if(infos.type === 'processogram'){
-                    let {field,name} = needSetInformations(infos.svg?.id)
+            if(!contextMenu.document){
+                if(contextMenu.type === 'processogram'){
+                    let {field,name} = needSetInformations(contextMenu.svg?.id)
                     setLoading(true)
                     processogramApi.getOneReference(field,{
                         name:name,
-                        specie:infos.specie
+                        specie:contextMenu.specie
                     }).then(({data}) => {
                         setLoading(false)
                         setTemporary(data)
@@ -65,11 +45,11 @@ const ContextMenu = ({
                 }   
             }
         }
-    },[infos])
+    },[contextMenu])
 
     const screenInfo = () => {
         let {innerHeight,innerWidth} = window
-
+        console.log(innerHeight)
         return {
             width:innerWidth,
             heihgt:innerHeight
@@ -84,7 +64,7 @@ const ContextMenu = ({
 
     const openContextMenu = () => {
         const setAxisPosition = () => {
-            return TweenLite.to(containerRef.current,{left:infos.x,top:infos.y}).duration(0)
+            return TweenLite.to(containerRef.current,{left:contextMenu.x,top:contextMenu.y}).duration(0)
         }
 
         const checkIfContextMenuIsOverFlowingScreen = () => {
@@ -96,14 +76,15 @@ const ContextMenu = ({
             let elInfo = elementInfo()
             let scInfo = screenInfo()
             let translate = {x:'0',y:'0'}
-            if(isOverFlowingOnAxis(infos.x,elInfo.width,scInfo.width)){
+            if(isOverFlowingOnAxis(contextMenu.x,elInfo.width,scInfo.width)){
                 translate.x = '-100%'
             }
-            if(isOverFlowingOnAxis(infos.y,elInfo.height,scInfo.heihgt + window.scrollY)){
+            console.log(contextMenu.y,elInfo.height)
+            if(isOverFlowingOnAxis(contextMenu.y,elInfo.height,scInfo.heihgt + window.scrollY)){
                 translate.y = '-100%'
             }
 
-            return TweenLite.to(containerRef.current,{transform:`translate(${translate.x},${translate.y})`}).duration(0)
+            return TweenLite.to(containerRef.current,{translateX:translate.x,translateY:translate.y}).duration(0)
         }
 
         const turnContextMenuVisible = () => {
@@ -121,72 +102,26 @@ const ContextMenu = ({
     }
 
     const innerOnClick = (e:Event) => {
-        if(infos.type === 'options'){
+        if(contextMenu.type === 'options'){
             onClose(e)
-        }else{
-            console.log(e)
+        }else{            
             e.stopPropagation()
         }
-    }
-
-    const getPossibleFieldReference = () => {
-        let {field} = needSetInformations(infos.svg?.id)
-
-        return field
     }
 
     return (
         <>
             <FullBackground onContextMenu={innerContextMenu} onClick={onClose} />
-            <Container type={infos.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>
+            <Container type={contextMenu.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>
                 {
-                    infos.type === 'processogram' && 
-                    <Body>
-                        {
-                            loading?
-                            (
-                                <CustomLoader 
-                                    color={theme.default.colors.pink}
-                                    type='ThreeDots'
-                                    height={100}
-                                    width={100}   
-                                />
-                            )
-                            :
-                            (
-                                infos && (infos.document || temporary)?
-                                (<>
-                                    { voca.capitalize(showOnScreen('name',(infos.document || temporary),getPossibleFieldReference()))}: {showOnScreen('description',(infos.document || temporary),getPossibleFieldReference()) || 'No description'}
-                                </>
-                                )
-                                :
-                                (
-                                <>
-                                    No informations. <br/>
-                                    Name on svg: {infos.svg?.name}
-                                </>
-                                )
-                            )
-                        }                        
-                    </Body>
+                    contextMenu.type === 'processogram' && 
+                    <ProcessogramMenu />
                 }                
                 {
-                    infos.type === 'processogram' && 
-                    <Footer>
-                    {
-                        map_buttons_navigation.map((button_navigator) => (
-                            <ButtonNavigator key={button_navigator.title}>
-                                <ButtonIcon src={button_navigator.src} title={button_navigator.title} />
-                            </ButtonNavigator>
-                        ))
-                    }                    
-                    </Footer>
-                }
-                {
-                    infos.type === 'options' && 
+                    contextMenu.type === 'options' && 
                     <Options>
-                        {infos.options?.map(({text,onClick,icon,type})=>
-                            <Option type={type} onClick={()=>onClick(infos.optionTarget)} key={text}>
+                        {contextMenu.options?.map(({text,onClick,icon,type})=>
+                            <Option type={type} onClick={()=>onClick(contextMenu.optionTarget)} key={text}>
                                 <OptionIcon
                                     src={SvgPath({file_name:icon,folder:'minimal-icons'})} 
                                 /> 
@@ -198,7 +133,7 @@ const ContextMenu = ({
                     </Options>
                 }       
                 {
-                    infos.type === 'none' &&
+                    contextMenu.type === 'none' &&
                     <AttentionBody>
                         <>
                             if you perform this action on a element of the processogram, you will be able to obtain more information, links to bibliography, videos - and even provide us with feedback about that element!

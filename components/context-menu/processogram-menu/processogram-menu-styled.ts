@@ -1,25 +1,33 @@
 import styled from 'styled-components'
-import {transparentize,lighten} from 'polished'
-import Loader from "react-loader-spinner";
+import {lighten} from 'polished'
+import Loader from "react-loader-spinner"
 
-
-export const Container = styled.div`
-    position:absolute;
-    opacity:0;
-    width:${({type})=>type==='options'?'fit-content':'20rem'};
-    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.pink}`};
-    border-radius:1rem;
-    background-color:${({theme})=>transparentize(0.3,theme.colors.black)};
-    z-index:500;
-    backdrop-filter:blur(5px);
+export const Footer = styled.div`
+    border-top:5px solid ${({theme})=>theme.colors.pink};
+    display:flex;
+    height:fit-content;
 `
 
-export const FullBackground = styled.div`
-    top:0;
-    position:fixed;
+
+export const ButtonNavigator = styled.div`
+    padding:.5rem .5rem 0 .5rem;
+    border:none;
+    cursor: pointer;
+`
+
+
+export const ButtonIcon = styled.img`
     width:100%;
-    height:100%;
-    z-index:499;
+    height:auto;
+`
+
+export const Description = styled.div`
+    margin-top:.5rem;
+`
+
+
+export const Title = styled.div`
+    text-align:center;
 `
 
 export const Body = styled.div`
@@ -41,11 +49,6 @@ export const Body = styled.div`
         transition: background-color 500ms;
     }
 `
-
-export const AttentionBody = styled(Body)`
-    height:fit-content;
-`
-
 export const CustomLoader = styled(Loader)`
     top:35%;
     left:50%;

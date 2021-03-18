@@ -20,11 +20,16 @@ function MyApp({ Component, pageProps }) {
   const [selectedTheme, setSelectedTheme] = useState(theme)
 
   const [contextMenu, setContextMenu] = useState<IContextMenu>({ open: false, x: 0, y: 0, type: 'none' })
+
+  const [loading,setLoading] = useState(false)
+
+  const [temporary,setTemporary] = useState<any>(null)
+
   const [needFixedBody, setNeedFixedBody] = useState(false)
 
   const customGlobalStyles: ICustomGlobalStyles = { needFixedBody, setNeedFixedBody }
 
-  const contextMenuValues = { contextMenu, setContextMenu }
+  const contextMenuValues = { contextMenu, setContextMenu,loading,setLoading,temporary,setTemporary}
 
   useEffect(() => {
     setSelectedTheme(theme);
@@ -94,7 +99,7 @@ function MyApp({ Component, pageProps }) {
           <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }} />
           <ContextMenuContext.Provider value={contextMenuValues}>
             <Component {...pageProps} />
-            {contextMenu.open && <ContextMenu infos={contextMenu} onClose={closeCustomContextMenu} />}
+            {contextMenu.open && <ContextMenu onClose={closeCustomContextMenu} />}
           </ContextMenuContext.Provider>
         </UserContext.Provider>
       </CustomGlobalStyles.Provider>

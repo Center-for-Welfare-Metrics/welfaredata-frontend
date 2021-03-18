@@ -42,8 +42,6 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     const [history,setHistory] = useState({})
 
-    const containerRef = useRef(null)
-
     useEffect(() => {
         if(Object.keys(history).length > 0){
             let {target,id_tree,svg_id} = currentState(history)

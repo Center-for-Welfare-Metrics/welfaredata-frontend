@@ -96,12 +96,24 @@ const needSetInformations = (svg_id:string) => {
 }
 
 const showOnScreen = (field:string,document:any,field_reference:string) => {
-    let show = ''
-    show = document[field]
-    if(show) return show
+    if(document[field]){
+        return document[field]
+    }
     if(document[field_reference]){
         return document[field_reference][field] || ''
     }
+    return ''
+}
+
+const showLocalInformations = (document:any,field:string) => {
+    return document[field]
+}
+
+const showReferenceInformation = (field:string,document:any,field_reference:string) => {
+    if(document[field_reference]){
+        return document[field_reference][field] || ''
+    }
+    return ''
 }
 
 export {
@@ -112,5 +124,7 @@ export {
     decodeProcessogramTree,
     generateInformationsToPushNewLayer,
     showOnScreen,
-    needSetInformations
+    needSetInformations,
+    showLocalInformations,
+    showReferenceInformation
 }

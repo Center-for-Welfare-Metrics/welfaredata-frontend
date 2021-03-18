@@ -9,6 +9,8 @@ import update from 'immutability-helper'
 import processogramApi from '@/api/processogram'
 import { needSetInformations } from '@/utils/processogram'
 
+import lodash from 'lodash'
+
 interface IProcessogramDataEntry {
     specie:SpeciesTypes
 }
@@ -22,6 +24,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const [currentInformations,setCurrentInformations] = useState<IDataEntryFormInformations>(null)
 
     const [currentFieldReference,setCurrentFieldReference] = useState<FieldReferenceTypes>(null)
+
+    const [currentProductionSystem,setCurrentProductionSystem] = useState<IDataEntryFormInformations>(null)
 
     const [idTree,setIdTree] = useState<any>(null)
 
@@ -38,11 +42,22 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     useEffect(()=>{
         if(!idTree){
             processogramApi.all()
-        .then(({data})=>{
-            setProcessograms(data)
-        })
+            .then(({data})=>{
+                setProcessograms(data)
+            })
         }
+        console.log(idTree)
     },[idTree])
+
+    useEffect(()=> {       
+        if(currentInformations !== undefined){            
+            if(lodash.keys(currentInformations).includes('productionSystem')){
+                setCurrentProductionSystem(currentInformations)
+            }            
+        }else{            
+            setCurrentProductionSystem(null)
+        }
+    },[currentInformations])
 
     useEffect(()=>{
         if(containerRef.current){
@@ -107,7 +122,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             processogramApi.update({
                 id_tree:{...idTree,_id:undefined},
                 values:value,
-            },idTree._id)
+            },currentProductionSystem._id)
             .then(({data}) => {
                 refreshProcessograms(idTree._id,data)
             })
@@ -171,7 +186,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     }
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
-        setIdTree(id_tree)
+        setIdTree(id_tree)        
         setCurrentInformations(currentInformations)        
         if(svg_id){
             let { field } = needSetInformations(svg_id)
@@ -247,7 +262,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         .then(createLayer)
         .then(({data}) => {    
             setOnFetch(false)        
-            refreshProcessograms(id_tree._id,data)
+            refreshProcessograms(id_tree._id,data)            
             setModificationsCount(modificationsCount+1)
         })
     }

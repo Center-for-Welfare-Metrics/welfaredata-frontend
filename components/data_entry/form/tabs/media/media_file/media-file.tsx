@@ -10,9 +10,12 @@ import toast from 'react-hot-toast'
 export interface IMediaFile {
     media:IMedia
     isLocal?:boolean
+    disabledContext?:boolean
+    deleteMedia?(media:IMedia):void
+    deleteLocalMedia?(media:IMedia):void
 }
 
-const MediaFile = ({media,isLocal}:IMediaFile) => {
+const MediaFile = ({media,isLocal,deleteMedia,deleteLocalMedia,disabledContext}:IMediaFile) => {
 
     const [open,toggle] = useState(false)
 
@@ -20,48 +23,28 @@ const MediaFile = ({media,isLocal}:IMediaFile) => {
 
     const { setContextMenu } = useContext(ContextMenu)
 
-    const { currentInformations,currentFieldReference,updateReferenceData,handleLocalInputChange } = useContext(DataEntryContext)
-
     const onContextMenu = (event:MouseEvent) => {
         DefaultEventComportamentOnContextMenuOpen(event)
-        setContextMenu({
-            open:true,
-            type:'options',
-            options:[{
-                text:'Open',
-                icon:'push-pin',
-                onClick:()=>toggle(true),
-                type:'primary'
-            },{
-                text:'Delete',
-                icon:'eliminar',
-                onClick:()=>setOpenDeleteDialog(true),
-                type:'danger'
-            }],
-            x:event.clientX,
-            y:event.clientY,
-            optionTarget:media            
-        })
-    }
-    
-    const deleteMedia = () => {
-        let reference : IDataEntryFormInformations = currentInformations[currentFieldReference]        
-        let medias  = reference.medias
-        let indexOfDelete = medias.findIndex(x => x._id === media._id)
-        medias.splice(indexOfDelete,1)
-        updateReferenceData({medias},()=>{
-            toast.success('Global media deleted successfully!')   
-        }) 
-    }
-
-    const deleteLocalMedia = () => {        
-        let medias  = currentInformations.medias
-        console.log(medias,media)
-        let indexOfDelete = medias.findIndex(x => x._id === media._id)
-        console.log(indexOfDelete)
-        medias.splice(indexOfDelete,1)
-        handleLocalInputChange({medias},false)
-        toast.success('Specific media deleted successfully!')
+        if(!disabledContext){
+            setContextMenu({
+                open:true,
+                type:'options',
+                options:[{
+                    text:'Open',
+                    icon:'push-pin',
+                    onClick:()=>toggle(true),
+                    type:'primary'
+                },{
+                    text:'Delete',
+                    icon:'eliminar',
+                    onClick:()=>setOpenDeleteDialog(true),
+                    type:'danger'
+                }],
+                x:event.clientX,
+                y:event.clientY,
+                optionTarget:media            
+            })
+        }
     }
 
     return (    
@@ -99,10 +82,10 @@ const MediaFile = ({media,isLocal}:IMediaFile) => {
                     </>
                 }
                 subtitle='this action cannot be undone'
-                onConfirm={isLocal?deleteLocalMedia:deleteMedia}
+                onConfirm={isLocal?()=>deleteLocalMedia(media):()=>deleteMedia(media)}
                 type='danger'                    
             />            
-        </Container>   
+        </Container> 
         {   
             open && 
             <FullScreenView onContextMenu={DefaultEventComportamentOnContextMenuOpen} onClose={()=>toggle(false)}>                
