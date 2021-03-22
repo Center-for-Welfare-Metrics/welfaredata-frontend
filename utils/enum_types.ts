@@ -4,7 +4,13 @@ export type StyleTypes = 'primary' | 'success' | 'warning' | 'danger' | 'default
 
 export type SpeciesTypes = 'chicken' | 'pig' 
 
-export type ProductionSystemTypes = 'conventional cages' | 'conventional intensive' | 'enhanced intensive' | 'european intensive' | 'outdoor semi-intensive'
+export type ProductionSystemTypes = 'conventional cages' | 
+'conventional intensive' | 
+'enhanced intensive' | 
+'european intensive' | 
+'outdoor semi-intensive' | 
+'furnished cages' |
+'single tier'
 
 export type TabTypes = 'description' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
 

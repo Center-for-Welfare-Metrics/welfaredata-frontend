@@ -1,11 +1,14 @@
-import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader} from './processogram-menu-styled'
+import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader,ShareIcon} from './processogram-menu-styled'
 
 import { SvgPath } from '@/utils/assets_path'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import theme from 'theme/schema.json'
 import Home from './tabs/home'
 import Media from './tabs/media/body'
 import ContextMenu from '@/context/context-menu'
+
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import toast from 'react-hot-toast'
 
 const map_buttons_navigation = [
     {
@@ -33,10 +36,17 @@ const map_buttons_navigation = [
 const ProcessogramMenu = () => {
 
     const [tab,setTab] = useState('home')
-   
+    
+    const [copied,setCopied] = useState(0)
 
     const {contextMenu,temporary,loading} = useContext(ContextMenu)
 
+    useEffect(()=>{
+        if(copied){
+            toast.success('Copied!')
+        }
+    },[copied])
+    
     return (
         loading?
         (
@@ -49,7 +59,14 @@ const ProcessogramMenu = () => {
         )
         :
         (
-            <> 
+            <>  <span title='Share'>
+                    <CopyToClipboard 
+                        text={contextMenu.shareUrl || ''}
+                        onCopy={()=>setCopied(copied+1)}
+                    >
+                        <ShareIcon />
+                    </CopyToClipboard>
+                </span>
                 {
                     contextMenu && (contextMenu.document || temporary)?
                     (

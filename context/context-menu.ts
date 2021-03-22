@@ -19,6 +19,7 @@ export interface IContextMenu {
     optionTarget?:any
     type:'options' | 'processogram' | 'none'
     specie?:SpeciesTypes
+    shareUrl?:string
 }
 
 

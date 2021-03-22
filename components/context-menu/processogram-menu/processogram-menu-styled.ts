@@ -1,9 +1,18 @@
 import styled,{css} from 'styled-components'
 import {lighten} from 'polished'
 import Loader from "react-loader-spinner"
+import ShareOutlined from '@material-ui/icons/ShareOutlined'
+
+export const ShareIcon = styled(ShareOutlined)`
+    position:absolute;
+    right:.5rem;
+    top:.5rem;
+    color:${({theme})=>theme.colors.blue};
+    cursor: pointer;
+`
 
 export const Footer = styled.div`
-    border-top:5px solid ${({theme})=>theme.colors.pink};
+    border-top:5px solid ${({theme})=>theme.colors.blue};
     display:flex;
     height:fit-content;
 `
@@ -46,7 +55,7 @@ export const Body = styled.div`
         width: .25rem;
     }
     ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors.pink};
+        background-color: ${({theme})=>theme.colors.blue};
         transition: background-color 500ms;
         border-radius:2rem;
     }

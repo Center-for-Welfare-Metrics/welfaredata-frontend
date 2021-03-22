@@ -42,6 +42,8 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     const [history,setHistory] = useState({})
 
+    const [mouseOverOn,setMouseOverOn] = useState('')
+
     useEffect(() => {
         if(Object.keys(history).length > 0){
             let {target,id_tree,svg_id} = currentState(history)
@@ -137,10 +139,22 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
         let share_link = base_url + '?to=' + encoded_tree
         
-        setShareLink(share_link)
+        setShareLink(share_link)        
     }
 
-    const processogramContextValues : IProcessogramContext = {history,setHistory, choosen,setChoosen,shareLink,generateShareLink,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState}    
+    const processogramContextValues : IProcessogramContext = {
+        history,
+        setHistory, 
+        choosen,
+        setChoosen,
+        shareLink,
+        generateShareLink,
+        processogramTreeFromQuery,
+        setProcessogramTreeFromQuery,
+        currentState,
+        mouseOverOn,
+        setMouseOverOn
+    }    
 
     return (                
         <ProcessogramContext.Provider value={processogramContextValues}>

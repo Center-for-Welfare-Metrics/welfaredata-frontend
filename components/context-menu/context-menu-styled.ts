@@ -7,7 +7,7 @@ export const Container = styled.div`
     position:absolute;
     opacity:0;
     width:${({type})=>type==='options'?'fit-content':'20rem'};
-    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.pink}`};
+    border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.blue}`};
     border-radius:1rem;
     background-color:${({theme})=>transparentize(0.3,theme.colors.black)};
     z-index:500;
@@ -52,3 +52,4 @@ export const CustomLoader = styled(Loader)`
     transform:translate(-50%,-50%); 
     position:absolute;
 `
+

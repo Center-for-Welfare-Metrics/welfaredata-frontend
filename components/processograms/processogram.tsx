@@ -32,7 +32,7 @@ const MARGIN_LIMIT_Y = 200
 
 const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
 
-    const {choosen,setChoosen,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState,generateShareLink,history,setHistory} = useContext(ProcessogramContext)
+    const {choosen,setChoosen,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState,generateShareLink,history,setHistory,shareLink,setMouseOverOn,mouseOverOn} = useContext(ProcessogramContext)
 
     const [level,setLevel] = useState(0)    
 
@@ -195,7 +195,7 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
             top = parent.getBoundingClientRect().top
             left = parent.getBoundingClientRect().left            
         }
-        console.log(height,top)
+        
         return {
             width:(width || innerWidth),
             height:(height || innerHeight),
@@ -431,7 +431,8 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
                     document:target,
                     svg,
                     type:'processogram',
-                    specie:specie
+                    specie:specie,
+                    shareUrl:shareLink
                 })
             }
         }
@@ -441,16 +442,27 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
         choosen?selected(event):choosenProcessogram(event)
     }
 
+    const mouseOver = (event:any) => {
+        let {currentTarget} = event
+        setMouseOverOn(currentTarget.id)
+    }
+
+    useEffect(()=>{        
+        console.log(mouseOverOn)
+    },[mouseOverOn])
+
     return (
         <>
-            <Container ref={containerRef}>
+            <Container g_id={idFromCurrentFocusedElement} level={LEVELS[level]} mouseover={mouseOverOn} ref={containerRef}>
                 <Svg 
                     level={LEVELS[level]}
                     innerRef={svgRef} 
                     src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
                     g_id={idFromCurrentFocusedElement}
                     onClick={svgOnClick}
-                    onContextMenu={OpenContextMenu}
+                    onContextMenu={OpenContextMenu}                   
+                    onMouseOver={mouseOver}
+                    onMouseOut={()=>setMouseOverOn('')}
                 />                    
             </Container>
         </>

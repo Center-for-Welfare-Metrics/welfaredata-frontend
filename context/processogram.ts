@@ -16,6 +16,8 @@ export interface IProcessogramContext {
     currentState(history:any):IProcessogramContextCurrentState
     history:any
     setHistory(history:any):void
+    mouseOverOn:string
+    setMouseOverOn(mouseOverOn:string):void
 }
 
 const ProcessogramContext = createContext<IProcessogramContext>(null)

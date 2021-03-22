@@ -1,6 +1,4 @@
 import styled from 'styled-components'
-import {lighten} from 'polished'
-import Loader from "react-loader-spinner"
 
 export const Footer = styled.div`
     border-top:5px solid ${({theme})=>theme.colors.pink};
@@ -28,12 +26,4 @@ export const Description = styled.div`
 
 export const Title = styled.div`
     text-align:center;
-`
-
-
-export const CustomLoader = styled(Loader)`
-    top:35%;
-    left:50%;
-    transform:translate(-50%,-50%); 
-    position:absolute;
 `

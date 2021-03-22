@@ -7,25 +7,59 @@ export const Container = styled.div`
     width:100%;
     transition:width 500ms;
     overflow:visible;
+    transition:stroke-opacity 500ms;
+    ${({level,mouseover})=>(         
+         level === '--ps' && mouseover === '' && css`
+            stroke-opacity:1;
+            transition:stroke-opacity 500ms;
+         `
+    )}
+    ${({level,mouseover})=>(         
+         level === '--ps' && mouseover !== '' && css`
+            stroke-opacity:.5;
+            transition:stroke-opacity 500ms;
+            [id=${mouseover}]{
+                stroke-opacity:1;
+                transition:stroke-opacity 500ms;
+            }
+         `
+    )}
 `
 
 export const Svg = styled(SVG)`
+    ${({level})=>(         
+         level === '--lf' && css`
+            stroke-opacity:.5;            
+            [id*=--lf]{
+                transition:stroke-opacity 500ms;
+                :hover{                    
+                    stroke-opacity:1;
+                    transition:stroke-opacity 500ms;
+                }
+            }
+         `
+    )}
+    ${({level,g_id})=> level!=='--ps' && css`
+        stroke-opacity:.3;
+        [id=${g_id}]{     
+            stroke-opacity:.5;       
+            [id*=${level}]{                
+                transition:stroke-opacity 500ms;
+                :hover{
+                    stroke-opacity:1;
+                    transition:stroke-opacity 500ms;
+                }
+            }            
+        }  
+    `}
     ${({level,g_id})=>(
-        level==='-last-' && css`
+        level === '-last-' && css`
             [id*=--ci]{
-                opacity:.5;                
+                stroke-opacity:.5;                
             }
             [id=${g_id}]{
-                opacity:1;
+                stroke-opacity:1;
             }
         `
     )}
-    [id*=${({level})=>level}]{
-        stroke-opacity:.5;
-        :hover{
-            stroke-opacity:1;
-        }
-        transition:stroke-opacity 500ms;
-    }
-    transition:stroke-opacity 500ms;
 `

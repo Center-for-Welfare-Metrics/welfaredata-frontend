@@ -1,6 +1,6 @@
 import { SvgPath } from '@/utils/assets_path'
 import { useContext, useEffect, useRef, useState } from 'react'
-import { Container,AttentionBody,FullBackground } from './context-menu-styled'
+import { Container,AttentionBody,FullBackground  } from './context-menu-styled'
 import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
 
 import { TweenLite, gsap } from 'gsap'
@@ -112,7 +112,7 @@ const ContextMenu = ({
     return (
         <>
             <FullBackground onContextMenu={innerContextMenu} onClick={onClose} />
-            <Container type={contextMenu.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>
+            <Container type={contextMenu.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>                
                 {
                     contextMenu.type === 'processogram' && 
                     <ProcessogramMenu />
