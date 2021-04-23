@@ -26,9 +26,9 @@ const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-const MARGIN_LIMIT_X = 200
+const MARGIN_LIMIT_X = 400
 
-const MARGIN_LIMIT_Y = 200
+const MARGIN_LIMIT_Y = 400
 
 const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
 
@@ -443,26 +443,37 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
     }
 
     const mouseOver = (event:any) => {
-        let {currentTarget} = event
-        setMouseOverOn(currentTarget.id)
+        let {target} = event        
+        let elementOnMouseOver = getElementByLayerSufix(target,LEVELS[level])    
+        if(elementOnMouseOver){    
+            if(mouseOverOn!==elementOnMouseOver.id){
+                setMouseOverOn(elementOnMouseOver.id)
+            }
+        }else{
+            setMouseOverOn('')
+        }
     }
 
-    useEffect(()=>{        
-        console.log(mouseOverOn)
-    },[mouseOverOn])
+    // useEffect(()=>{
+    //     console.log(idFromCurrentFocusedElement)
+    // },[idFromCurrentFocusedElement])
 
     return (
         <>
-            <Container g_id={idFromCurrentFocusedElement} level={LEVELS[level]} mouseover={mouseOverOn} ref={containerRef}>
+            <Container 
+                level={LEVELS[level]}  
+                ref={containerRef}
+                mouseover={mouseOverOn}
+                focusedlayer={idFromCurrentFocusedElement}
+            >
                 <Svg 
                     level={LEVELS[level]}
                     innerRef={svgRef} 
                     src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
-                    g_id={idFromCurrentFocusedElement}
                     onClick={svgOnClick}
                     onContextMenu={OpenContextMenu}                   
-                    onMouseOver={mouseOver}
-                    onMouseOut={()=>setMouseOverOn('')}
+                    onMouseOver={(e)=>mouseOver(e)}
+                    onMouseOut={()=>setMouseOverOn('')}                    
                 />                    
             </Container>
         </>
