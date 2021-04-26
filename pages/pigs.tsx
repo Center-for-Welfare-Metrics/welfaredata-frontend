@@ -20,7 +20,7 @@ const PublicPigsPage = () => {
 
     return (
         <Container>
-            <ProductionSystemSelector specie='pig' processograms={processograms} />
+            <ProductionSystemSelector data_entry={false} specie='pig' processograms={processograms} />
         </Container>
     )
 
