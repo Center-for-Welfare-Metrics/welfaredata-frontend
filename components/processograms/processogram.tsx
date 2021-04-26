@@ -369,6 +369,7 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
 
         const backToFullPage = () => {
             setChoosen(null)
+            setIDFromCurrentFocusedElement('')
             setContextMenu({
                 open:false,
                 type:'none'
@@ -454,9 +455,9 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
         }
     }
 
-    // useEffect(()=>{
-    //     console.log(idFromCurrentFocusedElement)
-    // },[idFromCurrentFocusedElement])
+    useEffect(()=>{
+        console.log(idFromCurrentFocusedElement)
+    },[idFromCurrentFocusedElement])
 
     return (
         <>

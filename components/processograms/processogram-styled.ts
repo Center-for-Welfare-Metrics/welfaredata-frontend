@@ -2,29 +2,55 @@ import styled, {css} from 'styled-components'
 
 import SVG from 'react-inlinesvg'
 
+const time = '500ms'
+
 export const Container = styled.div`
     margin-bottom:5rem;
     width:100%;
-    transition:width 500ms;
+    transition:width ${time};
     overflow:visible;    
-    ${({mouseover}) => (
+    ${({mouseover,focusedlayer}) => (
         mouseover==='' && css`
             svg{
-                stroke-opacity:1;    
-                transition:stroke-opacity 500ms;            
+                stroke-opacity:.3;    
+                transition:stroke-opacity ${time};            
             }
+            ${
+                focusedlayer?(css`
+                    [id=${focusedlayer}]{
+                        stroke-opacity:1;
+                        transition:stroke-opacity ${time};  
+                    }
+                `):
+                (css`
+                    svg{
+                        stroke-opacity:1;
+                        transition:stroke-opacity ${time};
+                    }
+                `)
+            }            
         `
     )}
-    ${({mouseover}) => (        
+    ${({mouseover,focusedlayer}) => (     
         mouseover !=='' && css`
             svg{
-                stroke-opacity:.3;    
-                transition:stroke-opacity 500ms;            
+                stroke-opacity:.3; 
+                transition:stroke-opacity ${time};            
             }
-            [id=${mouseover}]{
-                stroke-opacity:1;
-                transition:stroke-opacity 500ms;
-            }
+            ${
+                focusedlayer?(css`
+                    #${focusedlayer} > [id=${mouseover}]{
+                        stroke-opacity:1;
+                        transition:stroke-opacity ${time};
+                    }
+                `):
+                (css`
+                    [id=${mouseover}]{
+                        stroke-opacity:1;
+                        transition:stroke-opacity ${time};
+                    }
+                `)
+            }            
         `
     )}
 `
