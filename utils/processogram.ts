@@ -1,3 +1,5 @@
+import voca from 'voca'
+
 const getElementByLayerSufix = (node:any,sufix:string) => {
     let count = 0
     while(!(node.id.includes(sufix))){
@@ -95,6 +97,23 @@ const needSetInformations = (svg_id:string) => {
     }
 }
 
+const completeNameBySufix = {
+    ps:'Production System',
+    lf:'Life Fate',
+    ph:'Phase',
+    ci:'Circumstance'
+}
+
+const getReadableInformations = (svg_id:string) => {
+    let [name,sufix] = svg_id.split('--')
+    name = voca.titleCase(name.replace('_',' '))
+    sufix = sufix.replace(/(-| )\d+/g,'')
+    return {
+        name,
+        layerName:completeNameBySufix[sufix]
+    }
+}
+
 const showOnScreen = (field:string,document:any,field_reference:string) => {
     if(document[field]){
         return document[field]
@@ -126,5 +145,6 @@ export {
     showOnScreen,
     needSetInformations,
     showLocalInformations,
-    showReferenceInformation
+    showReferenceInformation,
+    getReadableInformations
 }

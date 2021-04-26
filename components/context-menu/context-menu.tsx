@@ -49,7 +49,7 @@ const ContextMenu = ({
 
     const screenInfo = () => {
         let {innerHeight,innerWidth} = window
-        console.log(innerHeight)
+
         return {
             width:innerWidth,
             heihgt:innerHeight
@@ -79,7 +79,7 @@ const ContextMenu = ({
             if(isOverFlowingOnAxis(contextMenu.x,elInfo.width,scInfo.width)){
                 translate.x = '-100%'
             }
-            console.log(contextMenu.y,elInfo.height)
+
             if(isOverFlowingOnAxis(contextMenu.y,elInfo.height,scInfo.heihgt + window.scrollY)){
                 translate.y = '-100%'
             }

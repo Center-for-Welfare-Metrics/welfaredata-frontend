@@ -280,6 +280,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                         processograms={processograms}                        
                         setTarget={setCurrentInformations}
                         triggerToSetFetchData={modificationsCount}
+                        data_entry={true}
                     />
                 }
                 </ProcessogramSpace>

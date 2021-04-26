@@ -16,6 +16,7 @@ interface IProcessogram {
     productionSystem:ProductionSystemTypes,
     specie:SpeciesTypes
     parent?:HTMLElement
+    data_entry:boolean
 }
 interface ILevelZeroInfo {
     top?:number
@@ -26,15 +27,31 @@ const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-const MARGIN_LIMIT_X = 400
+// const MARGIN_LIMIT_X = 0
 
-const MARGIN_LIMIT_Y = 400
+// const MARGIN_LIMIT_Y = 0
 
-const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram) => {
 
-    const {choosen,setChoosen,processogramTreeFromQuery,setProcessogramTreeFromQuery,currentState,generateShareLink,history,setHistory,shareLink,setMouseOverOn,mouseOverOn} = useContext(ProcessogramContext)
-
-    const [level,setLevel] = useState(0)    
+    const {
+        choosen,
+        setChoosen,
+        processogramTreeFromQuery,
+        setProcessogramTreeFromQuery,
+        currentState,
+        generateShareLink,
+        history,
+        setHistory,
+        shareLink,
+        setMouseOverOn,
+        mouseOverOn,
+        idFromCurrentFocusedElement,
+        setIDFromCurrentFocusedElement,
+        level,
+        setLevel,        
+        setOnContext,
+        onContext
+    } = useContext(ProcessogramContext)    
 
     const [parentScrollY,setParentScrollY] = useState(0)
 
@@ -44,13 +61,13 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
 
     const [levelZeroInfo,setLevelZeroInfo] = useState<ILevelZeroInfo>(null)
 
-    const [firstLoad,setFirstLoad] = useState(false)
+    const [firstLoad,setFirstLoad] = useState(false)        
 
-    const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
-
-    const { setContextMenu } = useContext(ContextMenuContext)
+    const { setContextMenu,contextMenu } = useContext(ContextMenuContext)
 
     const {setNeedFixedBody} = useContext(CustomContext)
+
+    const margin = data_entry?0:400
 
     useEffect(() => {
         setLevelZeroInfo(containerInfo())
@@ -99,6 +116,14 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
             }
         }
     },[history])
+
+    useEffect(()=>{
+        if(contextMenu.open){
+            setOnContext(contextMenu.svg?.id)
+        }else{
+            setOnContext('')
+        }
+    },[contextMenu])
 
     const setScrollY = () => {
         let targetY = parent?.scrollTop || window.scrollY
@@ -181,8 +206,8 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
     const withLimits = (screenInfo) => {
         return {
             ...screenInfo,
-            width:screenInfo.width - MARGIN_LIMIT_X,
-            height:screenInfo.height - MARGIN_LIMIT_Y,
+            width:screenInfo.width - margin,
+            height:screenInfo.height - margin,
         }
     }
 
@@ -410,54 +435,92 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
     const OpenContextMenu = (event:MouseEvent) => {
         event.preventDefault()
         event.stopPropagation()
-        if(level<4){
-            let {target,clientX,clientY} = event
-            let element = getElementByLayerSufix(target,LEVELS[level])
-            if(element){
-                let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
-                
-                let {target} = currentState({
-                    ...history,
-                    [level+1]:{
-                        name:layer_name,
-                        sufix:fixed_sufix,
-                        id:element.id
-                    }
-                })
-                let svg = {name:layer_name,id:element.id}
-                setContextMenu({
-                    open:true,
-                    x:clientX,
-                    y:clientY + window.scrollY,
-                    document:target,
-                    svg,
-                    type:'processogram',
-                    specie:specie,
-                    shareUrl:shareLink
-                })
+        let element = null
+        let {clientX,clientY} = event
+        if(level<(LEVELS.length-1)){
+            let {target} = event
+            element = getElementByLayerSufix(target,LEVELS[level])
+        }else{
+            let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
+            element = getElementByLayerSufix(target,LEVELS[level-1])
+        }
+        if(element){
+            if(idFromCurrentFocusedElement && level<(LEVELS.length-1)){
+                if(checkIfParentHasChild(idFromCurrentFocusedElement,element.id)){
+                    continueWithValidContextMenuOpen(element,clientX,clientY)    
+                }else{
+                    let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
+                    element = getElementByLayerSufix(target,LEVELS[level-1])
+                    continueWithValidContextMenuOpen(element,clientX,clientY)    
+                }
+            }else{
+                continueWithValidContextMenuOpen(element,clientX,clientY)
+            }
+        }else{
+            if(idFromCurrentFocusedElement){
+                let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
+                element = getElementByLayerSufix(target,LEVELS[level-1])
+                continueWithValidContextMenuOpen(element,clientX,clientY)    
             }
         }
+    }
+
+    const continueWithValidContextMenuOpen = (element,clientX,clientY) => {
+        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
+                
+        let {target} = currentState({
+            ...history,
+            [level+1]:{
+                name:layer_name,
+                sufix:fixed_sufix,
+                id:element.id
+            }
+        })
+        let svg = {name:layer_name,id:element.id}
+        
+        setContextMenu({
+            open:true,
+            x:clientX,
+            y:clientY + window.scrollY,
+            document:target,
+            svg,
+            type:'processogram',
+            specie:specie,
+            shareUrl:shareLink
+        })
     }
 
     const svgOnClick = (event:Event) => {
         choosen?selected(event):choosenProcessogram(event)
     }
 
-    const mouseOver = (event:any) => {
-        let {target} = event        
-        let elementOnMouseOver = getElementByLayerSufix(target,LEVELS[level])    
-        if(elementOnMouseOver){    
-            if(mouseOverOn!==elementOnMouseOver.id){
-                setMouseOverOn(elementOnMouseOver.id)
-            }
-        }else{
-            setMouseOverOn('')
+    const checkIfParentHasChild = (parentId,childId) => {
+        let parent = containerRef.current.querySelector(`#${parentId}`)
+        if(parent){
+            return parent.querySelector(`#${childId}`) !== null            
         }
+        return false
     }
 
-    useEffect(()=>{
-        console.log(idFromCurrentFocusedElement)
-    },[idFromCurrentFocusedElement])
+    const mouseOver = (event:any) => {
+        let {target} = event        
+        let elementOnMouseOver = getElementByLayerSufix(target,LEVELS[level])
+        if(!contextMenu.open){
+            if(elementOnMouseOver){
+                if(idFromCurrentFocusedElement){
+                    if(checkIfParentHasChild(idFromCurrentFocusedElement,elementOnMouseOver.id)){
+                        setMouseOverOn(elementOnMouseOver.id)
+                    }else{
+                        setMouseOverOn('')
+                    }
+                }else{
+                    setMouseOverOn(elementOnMouseOver.id)
+                }
+            }else{
+                setMouseOverOn('')        
+            }
+        }        
+    }
 
     return (
         <>
@@ -466,6 +529,7 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
                 ref={containerRef}
                 mouseover={mouseOverOn}
                 focusedlayer={idFromCurrentFocusedElement}
+                oncontext={onContext}
             >
                 <Svg 
                     level={LEVELS[level]}
@@ -473,7 +537,7 @@ const Processogram = ({productionSystem,specie,parent}:IProcessogram) => {
                     src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
                     onClick={svgOnClick}
                     onContextMenu={OpenContextMenu}                   
-                    onMouseOver={(e)=>mouseOver(e)}
+                    onMouseOver={mouseOver}
                     onMouseOut={()=>setMouseOverOn('')}                    
                 />                    
             </Container>

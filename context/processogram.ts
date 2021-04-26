@@ -18,7 +18,16 @@ export interface IProcessogramContext {
     setHistory(history:any):void
     mouseOverOn:string
     setMouseOverOn(mouseOverOn:string):void
+    idFromCurrentFocusedElement:string
+    setIDFromCurrentFocusedElement(idFromCurrentFocusedElement:string):void
+    level:number,
+    setLevel(level:number):void,
+    onContext:string,
+    setOnContext(onContext:string):void
 }
+
+
+
 
 const ProcessogramContext = createContext<IProcessogramContext>(null)
 

@@ -21,7 +21,7 @@ const PigPage = () => {
     return (        
         <DefaultLayout>
             <Container>
-                <ProductionSystemSelector processograms={processograms}  specie='pig' />
+                <ProductionSystemSelector data_entry={false} processograms={processograms}  specie='pig' />
             </Container>
         </DefaultLayout>
     )

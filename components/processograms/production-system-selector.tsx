@@ -1,12 +1,12 @@
 import Processogram from "@/components/processograms/processogram"
 import ProcessogramContext, { IProcessogramContext } from '@/context/processogram'
-import { historyToProcessogramTree, encodeProcessogramTree, decodeProcessogramTree } from "@/utils/processogram"
+import { historyToProcessogramTree, encodeProcessogramTree, decodeProcessogramTree, getReadableInformations } from "@/utils/processogram"
 import { useEffect, useRef, useState } from "react"
 import Router from 'next/router'
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
-import {Container} from '@/components/processograms/zoo-styled'
 import { TweenLite, gsap } from 'gsap'
+import { Title,GreatTitle } from './production-system-selector-styled'
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogramsHomePage {
@@ -15,7 +15,8 @@ interface IProcessogramsHomePage {
     parent?:HTMLElement,
     onChange?(currentInformations:any,id_tree:any,svg_id:string):void
     setTarget?(target:any):void,
-    triggerToSetFetchData?:any
+    triggerToSetFetchData?:any,
+    data_entry:boolean
 }
 
 const translateBySufix = {
@@ -31,7 +32,7 @@ const fieldNameBySufix = {
     ci:'circumstance'
 }
 
-const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget,triggerToSetFetchData}:IProcessogramsHomePage) => {
+const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget,triggerToSetFetchData,data_entry}:IProcessogramsHomePage) => {
     const [choosen,setChoosen] = useState(null)
 
     const [shareLink,setShareLink] = useState('')
@@ -43,6 +44,12 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
     const [history,setHistory] = useState({})
 
     const [mouseOverOn,setMouseOverOn] = useState('')
+
+    const [idFromCurrentFocusedElement,setIDFromCurrentFocusedElement] = useState('')
+
+    const [level,setLevel] = useState(0)    
+
+    const [onContext,setOnContext] = useState('')
 
     useEffect(() => {
         if(Object.keys(history).length > 0){
@@ -153,19 +160,47 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
         setProcessogramTreeFromQuery,
         currentState,
         mouseOverOn,
-        setMouseOverOn
-    }    
+        setMouseOverOn,
+        idFromCurrentFocusedElement,
+        setIDFromCurrentFocusedElement,
+        level,
+        setLevel,
+        onContext,
+        setOnContext
+    }
+
+    const titleGenerator = () => {
+        let greatTitle = null
+        if(idFromCurrentFocusedElement){
+            greatTitle = getReadableInformations(idFromCurrentFocusedElement)
+        }
+        if(mouseOverOn){
+            greatTitle = getReadableInformations(mouseOverOn)
+        }
+        if(onContext){
+            greatTitle = getReadableInformations(onContext)
+        }
+        return greatTitle
+    }
 
     return (                
         <ProcessogramContext.Provider value={processogramContextValues}>
-            
-                {
-                    SPECIES[specie].map((productionSystem) => (
-                        <Processogram parent={parent} key={productionSystem} specie={specie} productionSystem={productionSystem}/>
-                    ))
-                }
-            
-        </ProcessogramContext.Provider>        
+            <GreatTitle>
+            {
+                titleGenerator()?.layerName
+            }
+            </GreatTitle>
+            <Title>
+            {
+                titleGenerator()?.name
+            }
+            </Title>            
+            {
+                SPECIES[specie].map((productionSystem) => (
+                    <Processogram data_entry={data_entry} parent={parent} key={productionSystem} specie={specie} productionSystem={productionSystem}/>
+                ))
+            }     
+        </ProcessogramContext.Provider>       
     )
 }
 

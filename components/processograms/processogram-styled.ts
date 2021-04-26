@@ -8,7 +8,7 @@ export const Container = styled.div`
     margin-bottom:5rem;
     width:100%;
     transition:width ${time};
-    overflow:visible;    
+    overflow:visible;
     ${({mouseover,focusedlayer}) => (
         mouseover==='' && css`
             svg{
@@ -51,6 +51,18 @@ export const Container = styled.div`
                     }
                 `)
             }            
+        `
+    )}
+    ${({oncontext,focusedlayer}) => (
+        oncontext !=='' && css`
+            [id=${focusedlayer}]{
+                stroke-opacity:.3;
+                transition:stroke-opacity ${time};  
+            }
+            [id=${oncontext}]{
+                stroke-opacity:1;
+                transition:stroke-opacity ${time};
+            }
         `
     )}
 `

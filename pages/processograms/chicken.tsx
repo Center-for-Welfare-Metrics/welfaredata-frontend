@@ -22,7 +22,7 @@ const LayingHensPage = () => {
     return (
         <DefaultLayout>
             <Container>
-                <ProductionSystemSelector processograms={processograms} specie='chicken' />
+                <ProductionSystemSelector data_entry={false} processograms={processograms} specie='chicken' />
             </Container>
         </DefaultLayout>
     )
