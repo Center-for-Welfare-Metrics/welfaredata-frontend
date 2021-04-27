@@ -23,7 +23,7 @@ const BasicTab = () => {
     return (
         <>
             <FormInput 
-                value={ currentInformations[currentFieldReference]?.description }
+                value={ currentInformations[currentFieldReference]?.description || '' }
                 onChange={handleChange}
                 label='Global'
                 name='description'

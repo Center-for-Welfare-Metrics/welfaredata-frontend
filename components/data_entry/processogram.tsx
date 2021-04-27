@@ -45,8 +45,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             .then(({data})=>{
                 setProcessograms(data)
             })
-        }
-        console.log(idTree)
+        }        
     },[idTree])
 
     useEffect(()=> {       
@@ -187,13 +186,14 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
         setIdTree(id_tree)        
-        setCurrentInformations(currentInformations)        
+        setCurrentInformations(currentInformations)     
         if(svg_id){
             let { field } = needSetInformations(svg_id)
             setCurrentFieldReference(field)
         }else{
             setCurrentFieldReference(null)
-        }
+        }        
+        console.log(currentInformations)
         if(!currentInformations && id_tree){            
             setOnFetch(true)
             needToCreateNew(id_tree,svg_id)
@@ -242,7 +242,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const createNewLayer = (needed_informations:ReturnType<typeof needSetInformations>,id_tree) => {        
 
         let {name,field,collectionName} = needed_informations
-
+        
         const searchReferenceData = () => {
             return processogramApi.getOneReference(field,{
                 name:name,

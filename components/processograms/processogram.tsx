@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react'
 
 import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
-import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
+import { getElementByLayerSufix,getFixedSufixAndLayerName, getReadableInformations } from '@/utils/processogram';
 import update from 'immutability-helper'
 import ContextMenuContext from '@/context/context-menu'
 import Router from 'next/router'
@@ -30,9 +30,7 @@ const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-// const MARGIN_LIMIT_X = 0
-
-// const MARGIN_LIMIT_Y = 0
+const mouseOverDelay = 150
 
 const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram) => {
 
@@ -72,9 +70,36 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
 
     const margin = data_entry?0:400
 
+    const mouseOverTimer = useRef(null)
+
     useEffect(() => {
         setLevelZeroInfo(containerInfo())
     },[])
+
+    useEffect(()=>{          
+        if((svgRef.current) && (choosen === svgRef.current.id)){
+            if(mouseOverOn){              
+                let sufix =  mouseOverOn.split('--')[1]
+                sufix = sufix.replace(/(-| )\d+/g,'')
+                let name = mouseOverOn.split('--')[0].replace('_',' ')
+                let fake_to = {
+                    x:0,
+                    y:0,
+                    scale:0,
+                    name,
+                    sufix,
+                    id:mouseOverOn
+                }
+                setHistory(update(history,{
+                    [level+1]:{$set:fake_to}
+                }))
+            }else{                
+                setHistory(update(history,{
+                    $unset:[level+1]
+                }))
+            }            
+        }
+    },[mouseOverOn])
 
     useEffect(()=>{
         if(levelZeroInfo){
@@ -111,11 +136,6 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
             document.onclick = null
         }
     },[level])
-
-    // useEffect(()=>{
-        
-            
-    // },[svgRef.current])
 
     useEffect(()=>{
         if(hasHistory()){       
@@ -357,7 +377,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
             name:layer_name,
             sufix:fixed_sufix,
             id:element.id
-        }
+        }        
         let value = filterTweenLiteTo(to)
         TweenLite.to(svgRef.current,value).duration(1)
         setLevel(next_level)
@@ -514,23 +534,39 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
     }
 
     const mouseOver = (event:any) => {
-        let {target} = event        
-        let elementOnMouseOver = getElementByLayerSufix(target,LEVELS[level])
-        if(!contextMenu.open){
-            if(elementOnMouseOver){
-                if(idFromCurrentFocusedElement){
-                    if(checkIfParentHasChild(idFromCurrentFocusedElement,elementOnMouseOver.id)){
-                        setMouseOverOn(elementOnMouseOver.id)
+        if(svgRef.current){            
+            if( choosen===null || (choosen===svgRef.current.id)){
+                clearTimeout(mouseOverTimer.current)
+                let {target} = event        
+                let elementOnMouseOver = getElementByLayerSufix(target,LEVELS[level])
+                if(!contextMenu.open){
+                    if(elementOnMouseOver){
+                        if(idFromCurrentFocusedElement){
+                            if(checkIfParentHasChild(idFromCurrentFocusedElement,elementOnMouseOver.id)){
+                                setMouseOverOn(elementOnMouseOver.id)
+                            }else{
+                                mouseOverTimer.current = setTimeout(() => {                                    
+                                    setMouseOverOn('')    
+                                }, mouseOverDelay);                                
+                            }
+                        }else{
+                            setMouseOverOn(elementOnMouseOver.id)
+                        }
                     }else{
-                        setMouseOverOn('')
+                        mouseOverTimer.current = setTimeout(() => {                            
+                            setMouseOverOn('')    
+                        }, mouseOverDelay);         
                     }
-                }else{
-                    setMouseOverOn(elementOnMouseOver.id)
-                }
-            }else{
-                setMouseOverOn('')        
+                }        
             }
         }        
+    }
+
+    const mouseOut = () => {
+        clearTimeout(mouseOverTimer.current)
+        mouseOverTimer.current = setTimeout(() => {                            
+            setMouseOverOn('')    
+        }, mouseOverDelay); 
     }
 
     return (
@@ -549,7 +585,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
                     onClick={svgOnClick}
                     onContextMenu={OpenContextMenu}                   
                     onMouseOver={mouseOver}
-                    onMouseOut={()=>setMouseOverOn('')}                    
+                    onMouseOut={mouseOut}                  
                 />                    
             </Container>
         </>
