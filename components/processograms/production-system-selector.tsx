@@ -54,7 +54,9 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
     useEffect(() => {
         if(Object.keys(history).length > 0){
             let {target,id_tree,svg_id} = currentState(history)            
-            onChange?.(target,id_tree,svg_id)
+            onChange?.(target,id_tree,svg_id)            
+        }else{
+            onChange?.(null,null,null)
         }
     },[history])
 

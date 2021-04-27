@@ -77,7 +77,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
     },[])
 
     useEffect(()=>{          
-        if((svgRef.current) && (choosen === svgRef.current.id)){
+        if((choosen===null )|| ((svgRef.current) && (choosen === svgRef.current.id))){
             if(mouseOverOn){              
                 let sufix =  mouseOverOn.split('--')[1]
                 sufix = sufix.replace(/(-| )\d+/g,'')
@@ -93,7 +93,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
                 setHistory(update(history,{
                     [level+1]:{$set:fake_to}
                 }))
-            }else{                
+            }else{           
+                console.log('unset')     
                 setHistory(update(history,{
                     $unset:[level+1]
                 }))
