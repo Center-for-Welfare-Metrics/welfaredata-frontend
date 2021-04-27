@@ -10,6 +10,9 @@ import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import CustomContext from '@/context/custom-global-styles';
 
 import { TweenLite, gsap } from 'gsap'
+
+import { useDetectClickOutside } from 'react-detect-click-outside';
+
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
@@ -54,7 +57,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
     } = useContext(ProcessogramContext)    
 
     const [parentScrollY,setParentScrollY] = useState(0)
-
+    
     const svgRef = useRef(null)
 
     const containerRef = useRef<HTMLElement>(null)
@@ -86,7 +89,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
             setFirstLoad(true)
             setScrollY()
             if(imChoosen(choosen)){   
-                levelZeroSelec(info)
+                levelZeroSelect(info)
             }else{
                 hideContainer(info)
             }
@@ -101,11 +104,18 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
 
     useEffect(()=>{
         if(level>0){
-            document.onclick = toPreviousLevel
+            document.onclick = () => { 
+                toPreviousLevel()
+            }
         }else{
             document.onclick = null
         }
     },[level])
+
+    // useEffect(()=>{
+        
+            
+    // },[svgRef.current])
 
     useEffect(()=>{
         if(hasHistory()){       
@@ -280,10 +290,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         return new_move
     }
 
-    const levelZeroSelec = ({top,left,width}) => {
+    const levelZeroSelect = ({top,left,width}) => {
         const initialSetup = () => {
             setLevel(1)
-            setIDFromCurrentFocusedElement(svgRef.current.id)            
+            setIDFromCurrentFocusedElement(svgRef.current.id)               
             let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
             setHistory(update(history,{
                 [1]:{$set:{
@@ -365,7 +375,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         }
     }
 
-    const selected = (event:Event) => {
+    const selected = (event:Event) => {        
         if(level <5){
             event.stopPropagation()
             clickComeFrom(event.target,{
@@ -383,9 +393,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         let previous_level = level-1
 
         const backToPreviousLevel = () => {
-            let to = filterTweenLiteTo(history[previous_level])
+            let to = filterTweenLiteTo(history[previous_level])                    
             setIDFromCurrentFocusedElement(history[previous_level].id)
-            TweenLite.to(svgRef.current,to).duration(1)
+            let target = document.getElementById(choosen)
+            TweenLite.to(target,to).duration(1)
             setHistory(update(history,{
                 $unset:[level]
             }))
@@ -490,7 +501,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         })
     }
 
-    const svgOnClick = (event:Event) => {
+    const svgOnClick = (event:Event) => {        
         choosen?selected(event):choosenProcessogram(event)
     }
 
