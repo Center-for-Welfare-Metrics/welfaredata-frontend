@@ -30,7 +30,7 @@ const LEVELS = ['--ps','--lf','--ph','--ci','-last-']
 
 const innerLevels = ['','lf','ph','ci']
 
-const mouseOverDelay = 150
+const mouseOverDelay = 50
 
 const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram) => {
 
@@ -93,8 +93,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
                 setHistory(update(history,{
                     [level+1]:{$set:fake_to}
                 }))
-            }else{           
-                console.log('unset')     
+            }else{                                
                 setHistory(update(history,{
                     $unset:[level+1]
                 }))
