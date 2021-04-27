@@ -12,7 +12,7 @@ const BasicTab = () => {
             [name]:value
         })
     }   
-    // mudança qualquer 
+    
     const handleLocalChange = (event:any) => {
         let { value,name } = event.target
         handleLocalInputChange({

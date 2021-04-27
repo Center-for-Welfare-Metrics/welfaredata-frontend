@@ -192,8 +192,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             setCurrentFieldReference(field)
         }else{
             setCurrentFieldReference(null)
-        }        
-        console.log(currentInformations)
+        }                
         if(!currentInformations && id_tree){            
             setOnFetch(true)
             needToCreateNew(id_tree,svg_id)
