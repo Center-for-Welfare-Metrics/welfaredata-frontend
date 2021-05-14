@@ -348,7 +348,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                             <NoProductionSystemSelected>
                                 <Title>{voca.capitalize(specie)}</Title>
                                 <SubTitle>
-                                    Choose a Production System To Begin
+                                    Choose a Production System To Begin 
                                 </SubTitle>
                             </NoProductionSystemSelected>
                         )
