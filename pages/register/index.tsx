@@ -81,14 +81,14 @@ const RegisterPage = () => {
     )
 }
 
-// export default onlyGuest(RegisterPage)
+export default onlyGuest(RegisterPage)
 
-const Unamed = () => <h1 style={{color:'red',textAlign:'center',opacity:0.2}}>
-    What are you doing here? <br></br>
-    Go back to the magic of processograms!
-    <p style={{color:'black'}}>
-        AND WAIT FOR NEWS...
-    </p>
-</h1>
+// const Unamed = () => <h1 style={{color:'red',textAlign:'center',opacity:0.2}}>
+//     What are you doing here? <br></br>
+//     Go back to the magic of processograms!
+//     <p style={{color:'black'}}>
+//         AND WAIT FOR NEWS...
+//     </p>
+// </h1>
 
-export default Unamed
+// export default Unamed

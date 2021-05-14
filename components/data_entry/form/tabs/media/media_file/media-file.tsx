@@ -1,11 +1,10 @@
 import ContextMenu from '@/context/context-menu'
-import DataEntryContext, { IDataEntryFormInformations, IMedia } from '@/context/data-entry'
+import { IMedia } from '@/context/data-entry'
 import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 import { useContext, useState } from 'react'
 import FullScreenView from './full-screen-view'
 import { Image, FullImage,Video,Thumb,Container,DialogMiniImage,DialogMiniThumb, DialogVideo } from './media-file-styled'
 import Dialog from '@/components/common/dialog/dialog'
-import toast from 'react-hot-toast'
 
 export interface IMediaFile {
     media:IMedia

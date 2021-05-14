@@ -13,7 +13,7 @@ const DataEntryForm = () => {
     const {currentFieldReference,tab,setTab,onFetch,currentInformations} = useContext(DataEntryContext)
 
     useEffect(()=>{        
-        if(!TABS[currentFieldReference].includes(tab)){
+        if(!TABS[currentFieldReference]?.includes(tab)){
             setTab('description')
         }
         
@@ -45,7 +45,7 @@ const DataEntryForm = () => {
             </Body>
             <Tabs>
                 {
-                    TABS[currentFieldReference].map((tab_reference) => 
+                    TABS[currentFieldReference]?.map((tab_reference) => 
                     <Tab onClick={()=>setTab(tab_reference)} active={tab===tab_reference} key={tab_reference}>
                         {voca.capitalize(tab_reference)}
                     </Tab>)

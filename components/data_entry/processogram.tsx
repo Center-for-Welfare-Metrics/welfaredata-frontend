@@ -10,6 +10,7 @@ import processogramApi from '@/api/processogram'
 import { needSetInformations } from '@/utils/processogram'
 
 import lodash from 'lodash'
+import toast from 'react-hot-toast'
 
 interface IProcessogramDataEntry {
     specie:SpeciesTypes
@@ -30,6 +31,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const [idTree,setIdTree] = useState<any>(null)
 
     const [processograms,setProcessograms] = useState<any[]>([])
+    
+    const [firstLoad,setFirstLoad] = useState(false)
 
     const [tab,setTab] = useState<TabTypes>('description')
 
@@ -39,12 +42,27 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const timer = useRef(null)
 
+    useEffect(() => {
+        processogramApi.all()
+        .then(({data})=>{
+            setFirstLoad(true)
+            setProcessograms(data)
+        }).catch((error) => {
+            console.log(error)
+            setFirstLoad(true)
+            toast.error('Operation error. Try later.')
+        })
+    },[])
+
     useEffect(()=>{
         if(!idTree){
-            processogramApi.all()
-            .then(({data})=>{
-                setProcessograms(data)
-            })
+            // processogramApi.all()
+            // .then(({data})=>{
+            //     setProcessograms(data)
+            // }).catch((error) => {
+            //     console.log(error)
+            //     toast.error('Operation error. Try later.')
+            // })
         }        
     },[idTree])
 
@@ -83,7 +101,10 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             if(callback){
                 callback()
             }
-        }) 
+        }).catch((error) => {
+            console.log(error)
+            toast.error('Operation error. Try later.')
+        })
     }
 
     const updateReferenceDataWithDelay = (value : any,callback=null) => {
@@ -92,7 +113,10 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             let reference : ICommonDataEntry = currentInformations[currentFieldReference]  
             processogramApi.updateReference(currentFieldReference,reference._id,value).then(() => {                               
                 refreshProcessogram()
-            }) 
+            }).catch((error) => {
+                console.log(error)
+                toast.error('Operation error. Try later.')
+            })
         }, 500);          
     }
 
@@ -124,6 +148,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             },currentProductionSystem._id)
             .then(({data}) => {
                 refreshProcessograms(idTree._id,data)
+            }).catch((error) => {
+                console.log(error)
+                toast.error('Operation error. Try later.')
             })
         },500)
     }
@@ -135,6 +162,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         },idTree._id)
         .then(({data}) => {
             refreshProcessograms(idTree._id,data)
+        }).catch((error) => {
+            console.log(error)
+            toast.error('Operation error. Try later.')
         }) 
     } 
 
@@ -144,6 +174,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             processogramApi.getOne(idTree._id)
             .then(({data}) => {                            
                 refreshProcessograms(idTree._id,data)
+            }).catch((error) => {
+                console.log(error)
+                toast.error('Operation error. Try later.')
             }) 
         }, 500);            
     }
@@ -153,7 +186,10 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             processogramApi.getOne(idTree._id)
             .then(({data}) => {            
                 refreshProcessograms(idTree._id,data)
-            })  
+            }).catch((error) => {
+                console.log(error)
+                toast.error('Operation error. Try later.')
+            }) 
         }
     }
 
@@ -210,32 +246,38 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
 
     const createNewProcessogram = (needed_informations:ReturnType<typeof needSetInformations>) => {
+        // clearTimeout(timer.current)
+        // timer.current = setTimeout(() => {
+            if(!onFetch){
+                let {name,field} = needed_informations
+                const searchReferenceData = () => {
+                    return processogramApi.getOneReference(field,{
+                        name:name,
+                        specie:specie
+                    })
+                }
 
-        let {name,field} = needed_informations
+                const createProcessogram = ({data}) => {
+                    return processogramApi.create({
+                        productionSystem:data._id,
+                        specie
+                    })
+                }
 
-        const searchReferenceData = () => {
-            return processogramApi.getOneReference(field,{
-                name:name,
-                specie:specie
-            })
-        }
-
-        const createProcessogram = ({data}) => {
-            return processogramApi.create({
-                productionSystem:data._id,
-                specie
-            })
-        }
-
-        searchReferenceData()
-        .then(createProcessogram)
-        .then(({data}) => {  
-            setOnFetch(false)
-            setProcessograms(update(processograms,{
-                $push:[data]
-            }))            
-            setCurrentInformations(data)
-        })
+                searchReferenceData()
+                .then(createProcessogram)
+                .then(({data}) => {  
+                    setOnFetch(false)
+                    setProcessograms(update(processograms,{
+                        $push:[data]
+                    }))            
+                    setCurrentInformations(data)
+                }).catch((error) => {
+                    console.log(error)
+                    toast.error('Operation error. Try later.')
+                })
+            }
+        // }, 500);        
     }
 
     const createNewLayer = (needed_informations:ReturnType<typeof needSetInformations>,id_tree) => {        
@@ -257,16 +299,28 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             },id_tree._id)
         }
 
-        searchReferenceData()
-        .then(createLayer)
-        .then(({data}) => {    
-            setOnFetch(false)        
-            refreshProcessograms(id_tree._id,data)            
-            setModificationsCount(modificationsCount+1)
+        searchReferenceData()        
+        .then((e) => {
+            createLayer(e)
+            .then(({data}) => {
+                setOnFetch(false)        
+                refreshProcessograms(id_tree._id,data)            
+                setModificationsCount(modificationsCount+1)
+            }).catch((error) => {
+                setOnFetch(false) 
+                console.log(error)
+                toast.error('Operation error. Try later.')
+            })
+        }).catch((error)=>{
+            setOnFetch(false) 
+            console.log(error)
+            toast.error(`"${name}" not found`)
         })
+        
     }
 
     return (
+        firstLoad &&
         <DataEntryContext.Provider value={contextValues}>
             <Container>            
                 <ProcessogramSpace ref={containerRef}>
