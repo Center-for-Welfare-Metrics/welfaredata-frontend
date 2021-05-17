@@ -56,13 +56,16 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     useEffect(()=>{
         if(!idTree){
-            // processogramApi.all()
-            // .then(({data})=>{
-            //     setProcessograms(data)
-            // }).catch((error) => {
-            //     console.log(error)
-            //     toast.error('Operation error. Try later.')
-            // })
+            setOnFetch(true)
+            processogramApi.all()
+            .then(({data})=>{
+                setOnFetch(false)
+                setProcessograms(data)
+            }).catch((error) => {
+                setOnFetch(false)
+                console.log(error)
+                toast.error('Operation error. Try later.')
+            })
         }        
     },[idTree])
 
