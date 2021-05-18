@@ -11,8 +11,6 @@ import CustomContext from '@/context/custom-global-styles';
 
 import { TweenLite, gsap } from 'gsap'
 
-import { useDetectClickOutside } from 'react-detect-click-outside';
-
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
@@ -20,6 +18,8 @@ interface IProcessogram {
     specie:SpeciesTypes
     parent?:HTMLElement
     data_entry:boolean
+    fullPageTrigger?():void
+    cantClick?:boolean
 }
 interface ILevelZeroInfo {
     top?:number
@@ -32,7 +32,7 @@ const innerLevels = ['','lf','ph','ci']
 
 const mouseOverDelay = 50
 
-const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger,cantClick}:IProcessogram) => {
 
     const {
         choosen,
@@ -64,6 +64,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
 
     const [firstLoad,setFirstLoad] = useState(false)        
 
+    const [clickLevel,setClickLevel] = useState<number>(null)
+
     const { setContextMenu,contextMenu } = useContext(ContextMenuContext)
 
     const {setNeedFixedBody} = useContext(CustomContext)
@@ -71,6 +73,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
     const margin = data_entry?0:400
 
     const mouseOverTimer = useRef(null)
+
+
 
     useEffect(() => {
         setLevelZeroInfo(containerInfo())
@@ -387,7 +391,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
     }
 
     const toNextLevel = (target:EventTarget,sufix:string) => {
-        if(level<=3){
+        if(level<=3){            
             let element = getElementByLayerSufix(target,sufix)
             if(element){  
                 zoomOnElement(element,sufix)
@@ -424,6 +428,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         }
 
         const backToFullPage = () => {
+            fullPageTrigger?.()
             setChoosen(null)
             setIDFromCurrentFocusedElement('')
             setContextMenu({
@@ -443,7 +448,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
 
     const choosenProcessogram = (event:Event) => {
         event.stopPropagation()
-        setChoosen(svgRef.current.id)
+        setChoosen(svgRef.current.id)        
     }
 
     const clickComeFrom = (element:any,{inside,outside}) => {
@@ -567,7 +572,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
         mouseOverTimer.current = setTimeout(() => {                            
             setMouseOverOn('')    
         }, mouseOverDelay); 
-    }
+    }    
 
     return (
         <>
@@ -582,10 +587,11 @@ const Processogram = ({productionSystem,specie,parent,data_entry}:IProcessogram)
                     level={LEVELS[level]}
                     innerRef={svgRef} 
                     src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
-                    onClick={svgOnClick}
+                    onClick={cantClick?null:svgOnClick}
                     onContextMenu={OpenContextMenu}                   
                     onMouseOver={mouseOver}
-                    onMouseOut={mouseOut}                  
+                    onMouseOut={mouseOut}
+                    cantclick={cantClick}                  
                 />                    
             </Container>
         </>

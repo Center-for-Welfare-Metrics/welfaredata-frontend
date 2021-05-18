@@ -72,5 +72,5 @@ export const Container = styled.div`
 `
 
 export const Svg = styled(SVG)`
-    
+    cursor:${({cantclick})=>cantclick?'not-allowed':'default'};    
 `

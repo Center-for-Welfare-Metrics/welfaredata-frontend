@@ -40,41 +40,22 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [onFetch,setOnFetch] = useState(false)
 
+    const [clickLevel,setClickLevel] = useState<number>(null)
+
+    const [cantClick,setCantClick] = useState<boolean>(false)
+
     const timer = useRef(null)
 
     useEffect(() => {
-        processogramApi.all()
-        .then(({data})=>{
-            setFirstLoad(true)
-            setProcessograms(data)
-        }).catch((error) => {
-            console.log(error)
-            setFirstLoad(true)
-            toast.error('Operation error. Try later.')
-        })
+        fetchAll()
     },[])
 
-    useEffect(()=>{
-        if(!idTree){
-            setOnFetch(true)
-            processogramApi.all()
-            .then(({data})=>{
-                setOnFetch(false)
-                setProcessograms(data)
-            }).catch((error) => {
-                setOnFetch(false)
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            })
-        }        
-    },[idTree])
-
-    useEffect(()=> {       
-        if(currentInformations !== undefined){            
+    useEffect(()=> {             
+        if(currentInformations !== undefined){           
             if(lodash.keys(currentInformations).includes('productionSystem')){
                 setCurrentProductionSystem(currentInformations)
             }            
-        }else{            
+        }else{              
             setCurrentProductionSystem(null)
         }
     },[currentInformations])
@@ -85,10 +66,22 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }
     },[containerRef.current])
 
+    const fetchAll = (callback=null) => {
+        processogramApi.all()
+        .then(({data})=>{
+            setFirstLoad(true)
+            setProcessograms(data)
+            callback?.()
+        }).catch((error) => {
+            console.log(error)
+            setFirstLoad(true)
+            toast.error('Operation error. Try later.')
+        })
+    }
+
     const refreshProcessograms = (_id,updated_processogram) => {        
-        let indexOf = processograms.findIndex(x => x._id === _id)
-         
-        if(indexOf>=0){
+        let indexOf = processograms.findIndex(x => x._id === _id)         
+        if(indexOf>=0){            
             setProcessograms(update(processograms,{                
                 [indexOf]:{$merge:updated_processogram}
             }))
@@ -220,7 +213,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         onFetch,
         setOnFetch,
         handleLocalInputChange,
-        idTree
+        idTree,
+        clickLevel,
+        setClickLevel        
     }
 
     const onChange = (currentInformations,id_tree,svg_id) => {           
@@ -322,6 +317,13 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         
     }
 
+    const fullPageTrigger = () => {
+        setCantClick(true)
+        fetchAll(()=>{
+            setCantClick(false)
+        })
+    }
+
     return (
         firstLoad &&
         <DataEntryContext.Provider value={contextValues}>
@@ -336,7 +338,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                         processograms={processograms}                        
                         setTarget={setCurrentInformations}
                         triggerToSetFetchData={modificationsCount}
-                        data_entry={true}
+                        data_entry={true}       
+                        fullPageTrigger={fullPageTrigger}
+                        cantClick={cantClick}             
                     />
                 }
                 </ProcessogramSpace>

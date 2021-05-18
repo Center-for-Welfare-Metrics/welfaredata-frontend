@@ -17,6 +17,8 @@ interface IProcessogramsHomePage {
     setTarget?(target:any):void,
     triggerToSetFetchData?:any,
     data_entry:boolean
+    fullPageTrigger?():void
+    cantClick?:boolean
 }
 
 const translateBySufix = {
@@ -32,7 +34,7 @@ const fieldNameBySufix = {
     ci:'circumstance'
 }
 
-const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget,triggerToSetFetchData,data_entry}:IProcessogramsHomePage) => {
+const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarget,triggerToSetFetchData,data_entry,fullPageTrigger,cantClick}:IProcessogramsHomePage) => {
     const [choosen,setChoosen] = useState(null)
 
     const [shareLink,setShareLink] = useState('')
@@ -199,7 +201,15 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
             </Title>            
             {
                 SPECIES[specie].map((productionSystem) => (
-                    <Processogram data_entry={data_entry} parent={parent} key={productionSystem} specie={specie} productionSystem={productionSystem}/>
+                    <Processogram 
+                        data_entry={data_entry} 
+                        parent={parent} 
+                        key={productionSystem} 
+                        specie={specie} 
+                        productionSystem={productionSystem}
+                        fullPageTrigger={fullPageTrigger}
+                        cantClick={cantClick}
+                    />
                 ))
             }     
         </ProcessogramContext.Provider>       

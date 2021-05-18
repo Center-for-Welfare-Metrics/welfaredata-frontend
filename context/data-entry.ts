@@ -41,6 +41,8 @@ export interface IDataEntryContext {
     setTab(tab:TabTypes):void,
     handleLocalInputChange(value:any,withDelay?:boolean):void,
     idTree:any
+    clickLevel:number
+    setClickLevel(clickLevel:number):void
 }
 
 const DataEntryContext = createContext<IDataEntryContext>(null)
