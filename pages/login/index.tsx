@@ -33,13 +33,14 @@ const LoginPage = () => {
                 setUser(response.data)
             })
             .catch(({response})=>{
+                setOnFetch(false)
                 if(response){
                     setError(response.data)
                 }
             })
         })
 
-        validation.fails(()=>{
+        validation.fails(()=>{            
             setError(validation.errors.errors)
         })
     }
