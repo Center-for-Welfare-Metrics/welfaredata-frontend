@@ -591,7 +591,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                     onContextMenu={OpenContextMenu}                   
                     onMouseOver={mouseOver}
                     onMouseOut={mouseOut}
-                    cantclick={cantClick}                  
+                    cantclick={cantClick?1:0}                  
                 />                    
             </Container>
         </>

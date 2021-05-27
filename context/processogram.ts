@@ -24,6 +24,7 @@ export interface IProcessogramContext {
     setLevel(level:number):void,
     onContext:string,
     setOnContext(onContext:string):void
+    setChoosenProductionSystem?():void
 }
 
 

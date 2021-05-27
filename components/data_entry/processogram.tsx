@@ -50,13 +50,11 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         fetchAll()
     },[])
 
-    useEffect(()=> {             
+    useEffect(()=> {                   
         if(currentInformations !== undefined){           
             if(lodash.keys(currentInformations).includes('productionSystem')){
                 setCurrentProductionSystem(currentInformations)
             }            
-        }else{              
-            setCurrentProductionSystem(null)
         }
     },[currentInformations])
 
@@ -244,77 +242,74 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
 
     const createNewProcessogram = (needed_informations:ReturnType<typeof needSetInformations>) => {
-        // clearTimeout(timer.current)
-        // timer.current = setTimeout(() => {
-            if(!onFetch){
-                let {name,field} = needed_informations
-                const searchReferenceData = () => {
-                    return processogramApi.getOneReference(field,{
-                        name:name,
-                        specie:specie
-                    })
-                }
-
-                const createProcessogram = ({data}) => {
-                    return processogramApi.create({
-                        productionSystem:data._id,
-                        specie
-                    })
-                }
-
-                searchReferenceData()
-                .then(createProcessogram)
-                .then(({data}) => {  
-                    setOnFetch(false)
-                    setProcessograms(update(processograms,{
-                        $push:[data]
-                    }))            
-                    setCurrentInformations(data)
-                }).catch((error) => {
-                    console.log(error)
-                    toast.error('Operation error. Try later.')
+        if(!onFetch){
+            let {name,field} = needed_informations
+            const searchReferenceData = () => {
+                return processogramApi.getOneReference(field,{
+                    name:name,
+                    specie:specie
                 })
             }
-        // }, 500);        
-    }
 
-    const createNewLayer = (needed_informations:ReturnType<typeof needSetInformations>,id_tree) => {        
+            const createProcessogram = ({data}) => {
+                return processogramApi.create({
+                    productionSystem:data._id,
+                    specie
+                })
+            }
 
-        let {name,field,collectionName} = needed_informations
-        
-        const searchReferenceData = () => {
-            return processogramApi.getOneReference(field,{
-                name:name,
-                specie:specie
-            })
-        }
-
-        const createLayer = ({data}) => {
-            return processogramApi.newLayer({
-                id_tree:{...id_tree,_id:undefined},
-                object:{[field]:data._id},
-                pushTo:collectionName
-            },id_tree._id)
-        }
-
-        searchReferenceData()        
-        .then((e) => {
-            createLayer(e)
-            .then(({data}) => {
-                setOnFetch(false)        
-                refreshProcessograms(id_tree._id,data)            
-                setModificationsCount(modificationsCount+1)
+            searchReferenceData()
+            .then(createProcessogram)
+            .then(({data}) => {  
+                setOnFetch(false)
+                setProcessograms(update(processograms,{
+                    $push:[data]
+                }))            
+                setCurrentInformations(data)
             }).catch((error) => {
-                setOnFetch(false) 
                 console.log(error)
                 toast.error('Operation error. Try later.')
             })
-        }).catch((error)=>{
-            setOnFetch(false) 
-            console.log(error)
-            toast.error(`"${name}" not found`)
-        })
-        
+        }
+    }
+
+    const createNewLayer = (needed_informations:ReturnType<typeof needSetInformations>,id_tree) => {        
+        if(!onFetch){
+            let {name,field,collectionName} = needed_informations
+            
+            const searchReferenceData = () => {
+                return processogramApi.getOneReference(field,{
+                    name:name,
+                    specie:specie
+                })
+            }
+
+            const createLayer = ({data}) => {
+                return processogramApi.newLayer({
+                    id_tree:{...id_tree,_id:undefined},
+                    object:{[field]:data._id},
+                    pushTo:collectionName
+                },id_tree._id)
+            }
+
+            searchReferenceData()        
+            .then((e) => {
+                createLayer(e)
+                .then(({data}) => {
+                    setOnFetch(false)        
+                    refreshProcessograms(id_tree._id,data)            
+                    setModificationsCount(modificationsCount+1)
+                }).catch((error) => {
+                    setOnFetch(false) 
+                    console.log(error)
+                    toast.error('Operation error. Try later.')
+                })
+            }).catch((error)=>{
+                setOnFetch(false) 
+                console.log(error)
+                toast.error(`"${name}" not found`)
+            })
+        }
     }
 
     const fullPageTrigger = () => {
