@@ -1,5 +1,22 @@
 import styled from 'styled-components'
 
+import Loader from "react-loader-spinner";
+
+export const CustomLoader = styled(Loader)`
+    
+`
+
+export const LoaderContainer = styled.div`
+    color:${({theme}) => theme.colors.blue};
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%); 
+    position:absolute;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+`
+
 export const NoProductionSystemSelected = styled.div`
 
 `

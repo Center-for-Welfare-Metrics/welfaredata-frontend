@@ -62,9 +62,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const [levelZeroInfo,setLevelZeroInfo] = useState<ILevelZeroInfo>(null)
 
-    const [firstLoad,setFirstLoad] = useState(false)        
-
-    const [clickLevel,setClickLevel] = useState<number>(null)
+    const [firstLoad,setFirstLoad] = useState(false)            
 
     const { setContextMenu,contextMenu } = useContext(ContextMenuContext)
 
@@ -246,8 +244,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     }
 
     const screenInfo = () => {
-        let {innerWidth,innerHeight} =  window        
+        let {innerWidth,innerHeight} =  window  
+
         let width,height,top,left = null
+
         if(parent){
             width = parent.getBoundingClientRect().width
             height = parent.getBoundingClientRect().height
@@ -265,9 +265,15 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const elementInfo = (element:HTMLElement) => {
         let {width,left,height,top} = element.getBoundingClientRect()
+
+        let scale = currentScale()
+
+        let middleX = ((left) + (width/2))
+        let middleY = ((top) + (height/2))
+
         return {
-            middleX:((left) + (width/2)),
-            middleY:((top) + (height/2)),
+            middleX:middleX,
+            middleY:middleY,
             width:width,
             height:height
         }
@@ -292,14 +298,20 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const scaleElement = (element:HTMLElement) => {
         let elInfo = elementInfo(element)
+        
         let srInfo = withLimits(screenInfo())
+
         let scale_value = (srInfo.width/elInfo.width)
+        
         let element_future_height = (scale_value*elInfo.height)
         if(element_future_height > srInfo.height){
             scale_value = (srInfo.height/elInfo.height)
+        }                        
+        let current_scale = currentScale()
+        if(current_scale < 2){
+            current_scale-=1
         }
-        scale_value += currentScale()
-        return scale_value
+        return scale_value + current_scale
     }
 
     const moveX = (element,scale) => {
@@ -323,7 +335,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                 [1]:{$set:{
                     x:0,
                     y:0,
-                    scale:0,
+                    scale:1,
                     name:layer_name,
                     sufix:fixed_sufix,
                     id:svgRef.current.id
@@ -373,7 +385,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         let move_x = moveX(element,scale)
         let move_y = moveY(element,scale)
         let next_level = level+1
-        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(sufix,element)
+        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(sufix,element)        
         let to = {
             x:move_x,
             y:move_y,

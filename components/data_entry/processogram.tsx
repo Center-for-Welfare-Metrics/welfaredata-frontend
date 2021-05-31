@@ -2,13 +2,23 @@ import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormIn
 import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
 import ProductionSystemSelector from '../processograms/production-system-selector'
-import { Container,FormSpace,ProcessogramSpace,Title,SubTitle,NoProductionSystemSelected } from './processogram-styled'
+
+import { 
+    Container,
+    FormSpace,
+    ProcessogramSpace,
+    Title,SubTitle,
+    NoProductionSystemSelected,
+    CustomLoader,
+    LoaderContainer
+} from './processogram-styled'
+
 import voca from 'voca'
 import DataEntryForm from './form/data-entry-form'
 import update from 'immutability-helper'
 import processogramApi from '@/api/processogram'
 import { needSetInformations } from '@/utils/processogram'
-
+import theme from 'theme/schema.json'
 import lodash from 'lodash'
 import toast from 'react-hot-toast'
 
@@ -70,11 +80,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             setFirstLoad(true)
             setProcessograms(data)
             callback?.()
-        }).catch((error) => {
-            console.log(error)
-            setFirstLoad(true)
-            toast.error('Operation error. Try later.')
-        })
+        }).catch(CommonErrorHandler)
     }
 
     const refreshProcessograms = (_id,updated_processogram) => {        
@@ -95,10 +101,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             if(callback){
                 callback()
             }
-        }).catch((error) => {
-            console.log(error)
-            toast.error('Operation error. Try later.')
-        })
+        }).catch(CommonErrorHandler)
     }
 
     const updateReferenceDataWithDelay = (value : any,callback=null) => {
@@ -107,10 +110,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             let reference : ICommonDataEntry = currentInformations[currentFieldReference]  
             processogramApi.updateReference(currentFieldReference,reference._id,value).then(() => {                               
                 refreshProcessogram()
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            })
+            }).catch(CommonErrorHandler)
         }, 500);          
     }
 
@@ -133,6 +133,17 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         
     }
 
+    const CommonErrorHandler = (error) => {
+        setOnFetch(false)
+        let error_string = 'Operation error. Try later. '
+        if(error.response){
+            error_string += `\nCode: ${error.response.status}`
+        }else{
+            error_string = 'Server not running. Try Later'
+        }
+        toast.error(error_string)
+    }
+
     const updateProcessogramWithDelay = (value:any) => {
         clearTimeout(timer.current)
         timer.current = setTimeout(()=>{
@@ -142,10 +153,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             },currentProductionSystem._id)
             .then(({data}) => {
                 refreshProcessograms(idTree._id,data)
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            })
+            }).catch(CommonErrorHandler)
         },500)
     }
 
@@ -156,10 +164,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         },idTree._id)
         .then(({data}) => {
             refreshProcessograms(idTree._id,data)
-        }).catch((error) => {
-            console.log(error)
-            toast.error('Operation error. Try later.')
-        }) 
+        }).catch(CommonErrorHandler) 
     } 
 
     const refreshProcessogramWithDelay = () => {
@@ -168,10 +173,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             processogramApi.getOne(idTree._id)
             .then(({data}) => {                            
                 refreshProcessograms(idTree._id,data)
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            }) 
+            }).catch(CommonErrorHandler) 
         }, 500);            
     }
     
@@ -180,10 +182,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             processogramApi.getOne(idTree._id)
             .then(({data}) => {            
                 refreshProcessograms(idTree._id,data)
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            }) 
+            }).catch(CommonErrorHandler) 
         }
     }
 
@@ -266,10 +265,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                     $push:[data]
                 }))            
                 setCurrentInformations(data)
-            }).catch((error) => {
-                console.log(error)
-                toast.error('Operation error. Try later.')
-            })
+            }).catch(CommonErrorHandler)
         }
     }
 
@@ -299,29 +295,24 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                     setOnFetch(false)        
                     refreshProcessograms(id_tree._id,data)            
                     setModificationsCount(modificationsCount+1)
-                }).catch((error) => {
-                    setOnFetch(false) 
-                    console.log(error)
-                    toast.error('Operation error. Try later.')
-                })
+                }).catch(CommonErrorHandler)
             }).catch((error)=>{
-                setOnFetch(false) 
-                console.log(error)
+                setOnFetch(false)                 
                 toast.error(`"${name}" not found`)
             })
         }
     }
 
     const fullPageTrigger = () => {
-        setCantClick(true)
+        setCantClick(true)        
         fetchAll(()=>{
             setCantClick(false)
         })
     }
 
     return (
-        firstLoad &&
-        <DataEntryContext.Provider value={contextValues}>
+        firstLoad?
+        (<DataEntryContext.Provider value={contextValues}>
             <Container>            
                 <ProcessogramSpace ref={containerRef}>
                 {
@@ -357,7 +348,19 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                     }
                 </FormSpace>
             </Container>
-        </DataEntryContext.Provider>
+        </DataEntryContext.Provider>)
+        :
+        (
+            <LoaderContainer>
+                <h1>Working</h1>
+                <CustomLoader 
+                    color={theme.default.colors.blue}
+                    type='ThreeDots'
+                    height={100}
+                    width={250} 
+                />
+            </LoaderContainer>
+        )
     )
 }
 
