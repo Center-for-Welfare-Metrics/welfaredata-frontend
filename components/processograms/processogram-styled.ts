@@ -70,7 +70,19 @@ export const Container = styled.div`
             transition:stroke-opacity ${time};
         }
         `
-    )}    
+    )}
+    @media(max-width:800px){
+        width:90%;
+        svg{
+            margin-top:3rem;
+        }
+        ${({focusedlayer}) => css`
+            [id=${focusedlayer}]{
+                stroke-opacity:1;
+                transition:stroke-opacity ${time};
+            }
+        `}
+    } 
 `
 
 export const Svg = styled(SVG)`
