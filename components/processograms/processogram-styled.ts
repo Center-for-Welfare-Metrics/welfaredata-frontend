@@ -4,17 +4,13 @@ import SVG from 'react-inlinesvg'
 
 const time = '500ms'
 
-export const Container = styled.div`
-    margin-bottom:5rem;
+export const Container = styled.div`    
     width:60%;
-    margin:0 auto 5rem auto;
-    /* transition:width ${time}; */
-    overflow:visible;
-    ${({first}) => first && css`
-        svg{
-            margin-top:10rem;
-        }
-    `}
+    margin:0 auto 0 auto;
+    svg{
+        margin-top:5rem;
+    }
+    overflow:visible;    
     ${({mouseover,focusedlayer}) => (
         mouseover==='' && css`
             svg{

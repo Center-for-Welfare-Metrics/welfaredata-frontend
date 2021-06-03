@@ -89,6 +89,7 @@ function MyApp({ Component, pageProps }) {
   return (firstLoad && themeLoaded) &&
     <ThemeProvider theme={selectedTheme}>
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
