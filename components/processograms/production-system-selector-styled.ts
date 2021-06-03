@@ -13,7 +13,7 @@ export const CommonTitle = styled.div`
 
 export const GreatTitle = styled(CommonTitle)`
     position:fixed;
-    font-size:${({theme})=>theme.fontSize.extraLarge};   
+    font-size:${({theme})=>theme.fontSize.normal};  
     left:50%;
     top:5rem;
     transform: translateX(-50%);
@@ -21,7 +21,7 @@ export const GreatTitle = styled(CommonTitle)`
 
 export const Title = styled(CommonTitle)`
     position:${({top}) => top?'absolute':'fixed'};
-    font-size:${({theme})=>theme.fontSize.large};         
+    font-size:${({theme})=>theme.fontSize.normal};         
     top:${({top}) => top?`${top}px`:'10rem'};
     left:${({left}) => left?`${left}px`:'20%'};
     transform: translateY(-100%);
