@@ -31,7 +31,7 @@ export const GlobalStyles = createGlobalStyle`
         width:100%;
         height: 100%;
         font-family: 'Titillium Web', sans-serif;
-        position:${({needFixedBody})=>needFixedBody?'fixed':'relative'};
+        /* position:${({needFixedBody})=>needFixedBody?'fixed':'relative'}; */
     }
     div,textarea{
         ${scrollBar('blue','.25rem')}
@@ -59,8 +59,8 @@ export const GlobalStyles = createGlobalStyle`
 
 
     @media screen and (max-width:1300px){
-        html{
+        /* html{
             zoom:.75;
-        }
+        } */
     }
 `

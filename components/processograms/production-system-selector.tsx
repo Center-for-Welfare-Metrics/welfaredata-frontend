@@ -8,6 +8,7 @@ import { SPECIES } from "@/utils/consts"
 import { TweenLite, gsap } from 'gsap'
 import { Title,GreatTitle } from './production-system-selector-styled'
 import { capitalize } from "lodash"
+import Head from "next/head"
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogramsHomePage {
@@ -234,7 +235,6 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     return (                
         <ProcessogramContext.Provider value={processogramContextValues}>
-            
             <GreatTitle choosen={choosen?1:0}>
             {                
                 subtitles?.layerName || 'Specie'

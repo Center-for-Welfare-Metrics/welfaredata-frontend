@@ -20,7 +20,7 @@ export const FormSpace = styled.div`
 
 export const ProcessogramSpace = styled.div`        
     width:60%;
-    height:800px;   
+    height:80vh;   
     overflow:auto;
     position:relative;
 `
