@@ -7,6 +7,7 @@ import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
 import { TweenLite, gsap } from 'gsap'
 import { Title,GreatTitle } from './production-system-selector-styled'
+import { capitalize } from "lodash"
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogramsHomePage {
@@ -236,7 +237,7 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
             
             <GreatTitle choosen={choosen?1:0}>
             {                
-                subtitles?.layerName
+                subtitles?.layerName || 'Specie'
             }
             </GreatTitle>
 
@@ -244,7 +245,7 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
                 !onZoom &&
                 <Title top={subtitles?.top} left={subtitles?.left} >
                     {
-                        subtitles?.name
+                        subtitles?.name || capitalize(specie)
                     }
                 </Title>
             }

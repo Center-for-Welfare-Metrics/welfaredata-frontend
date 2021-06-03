@@ -115,8 +115,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             setLevelZeroInfo(info)
             setFirstLoad(true)
             setScrollY()
-            if(imChoosen(choosen)){   
-                console.log(info)
+            if(imChoosen(choosen)){                   
                 levelZeroSelect(info)
             }else{
                 hideContainer(info)
@@ -260,7 +259,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                 zIndex:'99',
                 translateX:'-50%',
                 translateY:'-50%',
-            }).duration(0.5)
+            }).duration(0.7)
         }
 
         initialSetup()

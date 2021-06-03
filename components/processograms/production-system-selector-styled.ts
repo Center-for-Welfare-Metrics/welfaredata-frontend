@@ -20,10 +20,10 @@ export const GreatTitle = styled(CommonTitle)`
 `
 
 export const Title = styled(CommonTitle)`
-    position:absolute;
+    position:${({top}) => top?'absolute':'fixed'};
     font-size:${({theme})=>theme.fontSize.large};         
-    top:${({top}) => `${top}px`};
-    left:${({left}) => `${left}px`};
+    top:${({top}) => top?`${top}px`:'10rem'};
+    left:${({left}) => left?`${left}px`:'20%'};
     transform: translateY(-100%);
 `
 

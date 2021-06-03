@@ -8,7 +8,7 @@ export const Container = styled.div`
     margin-bottom:5rem;
     width:60%;
     margin:0 auto 5rem auto;
-    transition:width ${time};
+    /* transition:width ${time}; */
     overflow:visible;
     ${({first}) => first && css`
         svg{
