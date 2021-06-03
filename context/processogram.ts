@@ -25,6 +25,8 @@ export interface IProcessogramContext {
     onContext:string,
     setOnContext(onContext:string):void
     setChoosenProductionSystem?():void
+    onZoom:boolean
+    setOnZoom(onZoom:boolean):void
 }
 
 

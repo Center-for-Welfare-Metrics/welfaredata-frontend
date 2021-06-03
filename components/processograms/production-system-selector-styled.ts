@@ -1,28 +1,30 @@
 import { transparentize } from 'polished'
-import styled from 'styled-components'
+import styled , {css} from 'styled-components'
 
 export const CommonTitle = styled.div`
-    color:${({theme})=>theme.colors.blue};    
-    position:fixed;
-    padding:0 1rem 0 1rem;
+    color:${({theme})=>theme.colors.blue};        
+    padding:0;
     background-color:${({theme})=> transparentize(0.3,theme.colors.black) };
-    backdrop-filter:blur(5px);
-    border-radius:1rem;
-    position:fixed;
+    /* backdrop-filter:blur(5px); */
+    border-radius:1rem;    
     z-index:400;
 `
 
 
 export const GreatTitle = styled(CommonTitle)`
+    position:fixed;
     font-size:${({theme})=>theme.fontSize.extraLarge};   
-    top:3rem;
     left:50%;
-    transform:translateX(-50%);
+    top:5rem;
+    transform: translateX(-50%);
 `
 
 export const Title = styled(CommonTitle)`
+    position:absolute;
     font-size:${({theme})=>theme.fontSize.large};         
-    top:8rem;
+    top:${({top}) => `${top}px`};
+    left:${({left}) => `${left}px`};
+    transform: translateY(-100%);
 `
 
 

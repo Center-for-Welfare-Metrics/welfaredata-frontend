@@ -31,7 +31,7 @@ const BasicTab = () => {
                 rows={4}            
             />
             <FormInput 
-                value={ currentInformations.description || '' }
+                value={ currentInformations?.description || ' ' }
                 onChange={handleLocalChange}
                 label='Specific'
                 name='description'

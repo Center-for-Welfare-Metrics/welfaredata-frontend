@@ -12,7 +12,7 @@ gsap.registerPlugin(TweenLite)
 interface IProcessogramsHomePage {
     specie:SpeciesTypes,
     processograms:any[],
-    parent?:HTMLElement,
+    parent:HTMLElement,
     onChange?(currentInformations:any,id_tree:any,svg_id:string):void
     setTarget?(target:any):void,
     triggerToSetFetchData?:any,
@@ -53,6 +53,10 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     const [onContext,setOnContext] = useState('')
 
+    const [subtitles,setSubtitles] = useState<any>(null)
+
+    const [onZoom,setOnZoom] = useState(false)
+
     useEffect(() => {
         if(Object.keys(history).length > 0){
             let {target,id_tree,svg_id} = currentState(history)            
@@ -91,16 +95,12 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     useEffect(()=>{
         if(choosen){
-            if(parent){
-                TweenLite.to(parent,{height:parent.getBoundingClientRect().height,overflow:'hidden'}).duration(0)
-            }       
+            TweenLite.to(parent,{overflow:'hidden'}).duration(0)
         }else{
             if(firstLoad){
                 onChange?.(null,null,null)
-                Router.push({query:{specie}})
-                if(parent){
-                    TweenLite.to(parent,{overflow:'auto'}).duration(0)
-                }
+                Router.push({query:{specie}})                
+                TweenLite.to(parent,{overflow:'auto'}).delay(1).duration(0)         
             }else{ 
                 setFirstLoad(true)
             }
@@ -170,40 +170,91 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
         level,
         setLevel,
         onContext,
-        setOnContext        
+        setOnContext,
+        onZoom,
+        setOnZoom
     }
 
-    const titleGenerator = () => {
+
+    const focusedElementPosition = (id) => {
+        try {
+            let findIn : any = document
+            if(choosen){
+                findIn = document.getElementById(choosen)
+            }        
+            let element = findIn.querySelector(`#${id}`)
+            if(element === null){
+                element = document.getElementById(id)
+            }
+            let { top,left,width } = element.getBoundingClientRect()                     
+            let parentRect = parent.getBoundingClientRect()
+            top -= parentRect.top
+            left -= parentRect.left
+            return {
+                top:top + parent.scrollTop,
+                left,
+                width
+            }
+        } catch (error) {
+            return {
+                top:0,
+                left:0,
+                width:0
+            }
+        }        
+    }
+    
+
+    useEffect(()=>{
         let greatTitle = null
+        let position = null
         if(idFromCurrentFocusedElement){
+            position = focusedElementPosition(idFromCurrentFocusedElement)
             greatTitle = getReadableInformations(idFromCurrentFocusedElement)
+            setSubtitles({...greatTitle,...position})    
         }
         if(mouseOverOn){
+            position = focusedElementPosition(mouseOverOn)
             greatTitle = getReadableInformations(mouseOverOn)
+            setSubtitles({...greatTitle,...position})  
         }
         if(onContext){
+            position = focusedElementPosition(onContext)
             greatTitle = getReadableInformations(onContext)
+            setSubtitles({...greatTitle,...position})  
+        }        
+        if(greatTitle && position){
+                      
+        }else{
+            setSubtitles(null)
         }
-        return greatTitle
-    }
+    },[idFromCurrentFocusedElement,mouseOverOn,onContext,onZoom])
+
 
     return (                
         <ProcessogramContext.Provider value={processogramContextValues}>
-            <GreatTitle>
-            {
-                titleGenerator()?.layerName
+            
+            <GreatTitle choosen={choosen?1:0}>
+            {                
+                subtitles?.layerName
             }
             </GreatTitle>
-            <Title>
+
             {
-                titleGenerator()?.name
+                !onZoom &&
+                <Title top={subtitles?.top} left={subtitles?.left} >
+                    {
+                        subtitles?.name
+                    }
+                </Title>
             }
-            </Title>            
+                        
             {
-                SPECIES[specie].map((productionSystem) => (
+                SPECIES[specie].map((productionSystem,index) => (
                     <Processogram 
+                        index={index}
                         data_entry={data_entry} 
-                        parent={parent} 
+                        parent={parent}
                         key={productionSystem} 
                         specie={specie} 
                         productionSystem={productionSystem}

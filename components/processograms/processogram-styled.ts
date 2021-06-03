@@ -6,9 +6,15 @@ const time = '500ms'
 
 export const Container = styled.div`
     margin-bottom:5rem;
-    width:100%;
+    width:60%;
+    margin:0 auto 5rem auto;
     transition:width ${time};
     overflow:visible;
+    ${({first}) => first && css`
+        svg{
+            margin-top:10rem;
+        }
+    `}
     ${({mouseover,focusedlayer}) => (
         mouseover==='' && css`
             svg{
@@ -68,9 +74,9 @@ export const Container = styled.div`
             transition:stroke-opacity ${time};
         }
         `
-    )}
+    )}    
 `
 
 export const Svg = styled(SVG)`
-    cursor:${({cantclick})=>cantclick?'not-allowed':'default'};    
+    cursor:${({cantclick})=>cantclick?'not-allowed':'default'};
 `

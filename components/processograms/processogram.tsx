@@ -16,10 +16,11 @@ gsap.registerPlugin(TweenLite)
 interface IProcessogram {
     productionSystem:ProductionSystemTypes,
     specie:SpeciesTypes
-    parent?:HTMLElement
+    parent:HTMLElement
     data_entry:boolean
     fullPageTrigger?():void
     cantClick?:boolean
+    index:number
 }
 interface ILevelZeroInfo {
     top?:number
@@ -32,7 +33,7 @@ const innerLevels = ['','lf','ph','ci']
 
 const mouseOverDelay = 50
 
-const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger,cantClick}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger,cantClick,index}:IProcessogram) => {
 
     const {
         choosen,
@@ -51,7 +52,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         level,
         setLevel,        
         setOnContext,
-        onContext
+        onContext,
+        setOnZoom
     } = useContext(ProcessogramContext)    
 
     const [parentScrollY,setParentScrollY] = useState(0)
@@ -64,9 +66,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const [firstLoad,setFirstLoad] = useState(false)            
 
-    const { setContextMenu,contextMenu } = useContext(ContextMenuContext)
-
-    const {setNeedFixedBody} = useContext(CustomContext)
+    const { setContextMenu,contextMenu } = useContext(ContextMenuContext)    
 
     const margin = data_entry?0:400
 
@@ -105,24 +105,23 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     useEffect(()=>{
         if(levelZeroInfo){
-            TweenLite.to(containerRef.current,{width:levelZeroInfo.width}).duration(0)
+            // TweenLite.to(containerRef.current,{width:levelZeroInfo.width}).duration(0)
         }
     },[levelZeroInfo])
 
     useEffect(()=>{
         if(choosen){
-            let info = containerInfo()
+            let info = containerInfo()            
             setLevelZeroInfo(info)
             setFirstLoad(true)
             setScrollY()
             if(imChoosen(choosen)){   
+                console.log(info)
                 levelZeroSelect(info)
             }else{
                 hideContainer(info)
-            }
-            setNeedFixedBody(true)
-        }else{
-            setNeedFixedBody(false)
+            }            
+        }else{            
             if(firstLoad){
                 moveContainerToDefaultPosition()
             }
@@ -157,10 +156,13 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         }
     },[contextMenu])
 
-    const setScrollY = () => {
-        let targetY = parent?.scrollTop || window.scrollY
-        
-        setParentScrollY(targetY)
+    const containerInfo = () => {
+        let {top,left,width} = containerRef.current.getBoundingClientRect()
+        return {top,left,width}
+    }
+
+    const setScrollY = () => {        
+        setParentScrollY(parent.scrollTop)
     }
 
     const cameFromSharedLink = () => {
@@ -199,9 +201,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             return TweenLite.to(containerRef.current,{position:'static'}).duration(0)
         }
 
-        const setPageOriginalScrollY = () => {
-            let target = parent || window
-            target.scrollTo(0,parentScrollY)
+        const setPageOriginalScrollY = () => {            
+            parent.scrollTo(0,parentScrollY)
         }
 
         backContainerToOriginalWidthAndAxisPosition()
@@ -210,15 +211,15 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         .then(setPageOriginalScrollY)
     }
 
-    const hideContainer = ({top,left,width}) => {
+    const fixContainerPositionAxis = ({top,left}) => {             
+        return TweenLite.to(containerRef.current,{top,left}).duration(0)
+    }
 
-        const fixContainerPositionAxis = () => {
-            return TweenLite.to(containerRef.current,{top,left}).duration(0)
-        }
+    const changePositionAttr = () => {
+        return TweenLite.to(containerRef.current,{position:data_entry?'absolute':'fixed'}).duration(0)
+    }
 
-        const changePositionAttr = () => {
-            return TweenLite.to(containerRef.current,{position:'absolute'}).duration(0)
-        }
+    const hideContainer = ({top,left,width}) => {        
         
         const fadeOut = () => {
             return TweenLite.to(containerRef.current,{opacity:0})
@@ -228,12 +229,46 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             TweenLite.to(containerRef.current,{display:'none'})
         }
 
-        fixContainerPositionAxis()
+        fixContainerPositionAxis({top,left})
         .then(changePositionAttr)
         .then(fadeOut)
         .then(setDisplayToNone)
     }
     
+    const levelZeroSelect = ({top,left,width}) => {
+        const initialSetup = () => {
+            setLevel(1)
+            setIDFromCurrentFocusedElement(svgRef.current.id)               
+            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
+            setHistory(update(history,{
+                [1]:{$set:{
+                    x:0,
+                    y:0,
+                    scale:1,
+                    name:layer_name,
+                    sufix:fixed_sufix,
+                    id:svgRef.current.id
+                }}
+            }))
+        }
+
+        const transformContainerToFocus = () => {
+            TweenLite.to(containerRef.current,{
+                width:withLimits(screenInfo()).width,
+                top:'50%',
+                left:'50%',                
+                zIndex:'99',
+                translateX:'-50%',
+                translateY:'-50%',
+            }).duration(0.5)
+        }
+
+        initialSetup()
+        
+        fixContainerPositionAxis({top,left})
+        .then(changePositionAttr)
+        .then(transformContainerToFocus)
+    }
 
     const withLimits = (screenInfo) => {
         return {
@@ -243,30 +278,21 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         }
     }
 
-    const screenInfo = () => {
-        let {innerWidth,innerHeight} =  window  
+    const screenInfo = () => {        
 
-        let width,height,top,left = null
+        let {width,height,top,left} = parent.getBoundingClientRect()
 
-        if(parent){
-            width = parent.getBoundingClientRect().width
-            height = parent.getBoundingClientRect().height
-            top = parent.getBoundingClientRect().top
-            left = parent.getBoundingClientRect().left            
-        }
         
         return {
-            width:(width || innerWidth),
-            height:(height || innerHeight),
-            middleX:((width || innerWidth)/2) + (left || 0),
-            middleY:((height || innerHeight)/2) + (top || 0)
+            width,
+            height,
+            middleX:((width)/2) + (left || 0),
+            middleY:((height)/2) + (top || 0)
         }
     }
 
     const elementInfo = (element:HTMLElement) => {
-        let {width,left,height,top} = element.getBoundingClientRect()
-
-        let scale = currentScale()
+        let {width,left,height,top} = element.getBoundingClientRect()        
 
         let middleX = ((left) + (width/2))
         let middleY = ((top) + (height/2))
@@ -277,11 +303,6 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             width:width,
             height:height
         }
-    }
-
-    const containerInfo = () => {
-        let {top,left,width} = containerRef.current.getBoundingClientRect()
-        return {top,left,width}
     }
 
     const currentScale = () => {
@@ -326,49 +347,6 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         return new_move
     }
 
-    const levelZeroSelect = ({top,left,width}) => {
-        const initialSetup = () => {
-            setLevel(1)
-            setIDFromCurrentFocusedElement(svgRef.current.id)               
-            let {layer_name,fixed_sufix} = getFixedSufixAndLayerName('--ps',svgRef.current)
-            setHistory(update(history,{
-                [1]:{$set:{
-                    x:0,
-                    y:0,
-                    scale:1,
-                    name:layer_name,
-                    sufix:fixed_sufix,
-                    id:svgRef.current.id
-                }}
-            }))
-        }
-
-        const fixContainerPositionAxis = () => {
-            return TweenLite.to(containerRef.current,{top,left}).duration(0)
-        }
-
-        const changePositionAttr = () => {
-            return TweenLite.to(containerRef.current,{position:'absolute'}).duration(0)
-        }
-
-        const transformContainerToFocus = () => {
-            TweenLite.to(containerRef.current,{
-                width:withLimits(screenInfo()).width,
-                top:'50%',
-                left:'50%',                
-                zIndex:'99',
-                translateX:'-50%',
-                translateY:'-50%',
-            }).duration(0.5)
-        }
-
-        initialSetup()
-        
-        fixContainerPositionAxis()
-        .then(changePositionAttr)
-        .then(transformContainerToFocus)
-    }
-
     const filterTweenLiteTo = (to) => {
         let value = JSON.parse(JSON.stringify(to))
         let scale = value.scale === 0?1:value.scale
@@ -395,15 +373,23 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             id:element.id
         }        
         let value = filterTweenLiteTo(to)
-        TweenLite.to(svgRef.current,value).duration(1)
+        TweenLite.to(svgRef.current,value).duration(0.7)
         setLevel(next_level)
         setHistory(update(history,{
             [next_level]:{$set:to}
         }))        
     }
 
+    const ZOOMING = () => {
+        setOnZoom(true)
+        setTimeout(() => {
+            setOnZoom(false)
+        }, 700);
+    }
+
     const toNextLevel = (target:EventTarget,sufix:string) => {
-        if(level<=3){            
+        if(level<=3){
+            ZOOMING()            
             let element = getElementByLayerSufix(target,sufix)
             if(element){  
                 zoomOnElement(element,sufix)
@@ -412,7 +398,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     }
 
     const selected = (event:Event) => {        
-        if(level <5){
+        if(level <5){            
             event.stopPropagation()
             clickComeFrom(event.target,{
                 inside:()=>{
@@ -421,7 +407,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                 outside:()=>{
                     toPreviousLevel()
                 }
-            })
+            })            
         }
     }
 
@@ -432,7 +418,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             let to = filterTweenLiteTo(history[previous_level])                    
             setIDFromCurrentFocusedElement(history[previous_level].id)
             let target = document.getElementById(choosen)
-            TweenLite.to(target,to).duration(1)
+            TweenLite.to(target,to).duration(0.7)
             setHistory(update(history,{
                 $unset:[level]
             }))
@@ -453,14 +439,17 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
         if(level>1 && level <=4){
             backToPreviousLevel()
+            ZOOMING()
         }else if(level==1){
             backToFullPage()
+            ZOOMING()
         }
     }
 
     const choosenProcessogram = (event:Event) => {
-        event.stopPropagation()
+        event.stopPropagation()    
         setChoosen(svgRef.current.id)        
+        ZOOMING()
     }
 
     const clickComeFrom = (element:any,{inside,outside}) => {
@@ -477,7 +466,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             }else{
                 inside()
             }
-        }
+        }        
     }
 
     const OpenContextMenu = (event:MouseEvent) => {
@@ -538,14 +527,14 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         })
     }
 
-    const svgOnClick = (event:Event) => {        
+    const svgOnClick = (event:Event) => {           
         choosen?selected(event):choosenProcessogram(event)
     }
 
     const checkIfParentHasChild = (parentId,childId) => {
-        let parent = containerRef.current.querySelector(`#${parentId}`)
-        if(parent){
-            return parent.querySelector(`#${childId}`) !== null            
+        let parentH = containerRef.current.querySelector(`#${parentId}`)
+        if(parentH){
+            return parentH.querySelector(`#${childId}`) !== null            
         }
         return false
     }
@@ -586,27 +575,27 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         }, mouseOverDelay); 
     }    
 
-    return (
-        <>
-            <Container 
-                level={LEVELS[level]}  
-                ref={containerRef}
-                mouseover={mouseOverOn}
-                focusedlayer={idFromCurrentFocusedElement}
-                oncontext={onContext}
-            >
-                <Svg 
-                    level={LEVELS[level]}
-                    innerRef={svgRef} 
-                    src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
-                    onClick={cantClick?null:svgOnClick}
-                    onContextMenu={OpenContextMenu}                   
-                    onMouseOver={mouseOver}
-                    onMouseOut={mouseOut}
-                    cantclick={cantClick?1:0}                  
-                />                    
-            </Container>
-        </>
+    return (        
+        <Container 
+            level={LEVELS[level]}  
+            ref={containerRef}
+            mouseover={mouseOverOn}
+            focusedlayer={idFromCurrentFocusedElement}
+            oncontext={onContext}
+            first={index===0}
+            choosen={choosen?1:0}
+        >
+            <Svg 
+                level={LEVELS[level]}
+                innerRef={svgRef} 
+                src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                    
+                onClick={cantClick?null:svgOnClick}
+                onContextMenu={OpenContextMenu}                   
+                onMouseOver={mouseOver}
+                onMouseOut={mouseOut}
+                cantclick={cantClick?1:0}                  
+            />                    
+        </Container>        
     )
 }
 

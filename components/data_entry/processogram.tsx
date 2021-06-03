@@ -2,15 +2,13 @@ import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormIn
 import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
 import ProductionSystemSelector from '../processograms/production-system-selector'
-
+import Loader from "react-loader-spinner";
 import { 
     Container,
     FormSpace,
     ProcessogramSpace,
     Title,SubTitle,
-    NoProductionSystemSelected,
-    CustomLoader,
-    LoaderContainer
+    NoProductionSystemSelected    
 } from './processogram-styled'
 
 import voca from 'voca'
@@ -21,6 +19,7 @@ import { needSetInformations } from '@/utils/processogram'
 import theme from 'theme/schema.json'
 import lodash from 'lodash'
 import toast from 'react-hot-toast'
+import { LoaderContainer } from '../miscellaneous/loaders';
 
 interface IProcessogramDataEntry {
     specie:SpeciesTypes
@@ -353,7 +352,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         (
             <LoaderContainer>
                 <h1>Working</h1>
-                <CustomLoader 
+                <Loader 
                     color={theme.default.colors.blue}
                     type='ThreeDots'
                     height={100}
