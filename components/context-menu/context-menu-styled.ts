@@ -1,11 +1,11 @@
-import styled from 'styled-components'
+import styled , {css} from 'styled-components'
 import {transparentize,lighten} from 'polished'
 import Loader from "react-loader-spinner";
 
 
 export const Container = styled.div`
     position:absolute;
-    opacity:0;
+    opacity:0;    
     width:${({type})=>type==='options'?'fit-content':'20rem'};
     border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.blue}`};
     border-radius:1rem;
@@ -23,7 +23,8 @@ export const FullBackground = styled.div`
 `
 
 export const Body = styled.div`
-    height:25rem;
+    height:25rem;    
+    min-height:25rem;
     color:${({theme}) => theme.colors.white};
     overflow-y:auto;
     padding:0 .5rem 0 .5rem;
@@ -44,6 +45,7 @@ export const Body = styled.div`
 
 export const AttentionBody = styled(Body)`
     height:fit-content;
+    min-height:unset;
 `
 
 export const CustomLoader = styled(Loader)`

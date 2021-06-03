@@ -59,7 +59,8 @@ const ProcessogramMenu = () => {
         )
         :
         (
-            <>  <span title='Share'>
+            <>  
+                <span title='Share'>
                     <CopyToClipboard 
                         text={contextMenu.shareUrl || ''}
                         onCopy={()=>setCopied(copied+1)}
