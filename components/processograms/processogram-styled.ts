@@ -5,7 +5,7 @@ import SVG from 'react-inlinesvg'
 const time = '500ms'
 
 export const Container = styled.div`    
-    width:60%;
+    width:${(dataentry) => dataentry?'90%':'60%'};
     margin:0 auto 0 auto;
     svg{
         margin-top:5rem;

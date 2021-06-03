@@ -582,6 +582,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             oncontext={onContext}
             first={index===0}
             choosen={choosen?1:0}
+            dataentry={data_entry}
         >
             <Svg 
                 level={LEVELS[level]}
