@@ -2,12 +2,11 @@ import { useContext, useEffect, useRef, useState } from 'react'
 
 import { Container,Svg } from './processogram-styled'
 import ProcessogramContext from '@/context/processogram'
-import { getElementByLayerSufix,getFixedSufixAndLayerName, getReadableInformations } from '@/utils/processogram';
+import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/processogram';
 import update from 'immutability-helper'
 import ContextMenuContext from '@/context/context-menu'
 import Router from 'next/router'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
-import CustomContext from '@/context/custom-global-styles';
 
 import { TweenLite, gsap } from 'gsap'
 
@@ -68,7 +67,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const { setContextMenu,contextMenu } = useContext(ContextMenuContext)    
 
-    const margin = data_entry?0:400
+    const margin = data_entry?0:0.1
 
     const mouseOverTimer = useRef(null)
 
@@ -272,8 +271,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     const withLimits = (screenInfo) => {
         return {
             ...screenInfo,
-            width:screenInfo.width - margin,
-            height:screenInfo.height - margin,
+            width:screenInfo.width - screenInfo.width*margin,
+            height:screenInfo.height - screenInfo.height*margin,
         }
     }
 
