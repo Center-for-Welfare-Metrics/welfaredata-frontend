@@ -1,4 +1,4 @@
-import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader,ShareIcon} from './processogram-menu-styled'
+import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader,ShareIcon, Container} from './processogram-menu-styled'
 
 import { SvgPath } from '@/utils/assets_path'
 import { useContext, useEffect, useState } from 'react'
@@ -59,7 +59,7 @@ const ProcessogramMenu = () => {
         )
         :
         (
-            <>  
+            <Container>  
                 <span title='Share'>
                     <CopyToClipboard 
                         text={contextMenu.shareUrl || ''}
@@ -78,10 +78,10 @@ const ProcessogramMenu = () => {
                     )
                     :
                     (
-                        <>
+                        <div>
                             No informations. <br/>
                             Name on svg: {contextMenu.svg?.name}
-                        </>
+                        </div>
                     )
                 }            
                 <Footer>
@@ -93,7 +93,7 @@ const ProcessogramMenu = () => {
                         ))
                     }                    
                 </Footer>
-            </>
+            </Container>
         )
         
     )

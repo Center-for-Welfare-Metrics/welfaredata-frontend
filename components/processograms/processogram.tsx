@@ -6,7 +6,7 @@ import { getElementByLayerSufix,getFixedSufixAndLayerName } from '@/utils/proces
 import update from 'immutability-helper'
 import ContextMenuContext from '@/context/context-menu'
 import Router from 'next/router'
-import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
+import { ContextMenuPosition, ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 
 import { TweenLite, gsap } from 'gsap'
 
@@ -52,7 +52,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         setLevel,        
         setOnContext,
         onContext,
-        setOnZoom
+        setOnZoom,
+        isMobile
     } = useContext(ProcessogramContext)    
 
     const [parentScrollY,setParentScrollY] = useState(0)
@@ -65,16 +66,16 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const [firstLoad,setFirstLoad] = useState(false)            
 
-    const { setContextMenu,contextMenu } = useContext(ContextMenuContext)    
+    const { setContextMenu,contextMenu } = useContext(ContextMenuContext)        
 
-    const margin = data_entry?0:0.1
+    const margin = data_entry?0.05:0.15
 
     const mouseOverTimer = useRef(null)
 
 
 
     useEffect(() => {
-        setLevelZeroInfo(containerInfo())
+        setLevelZeroInfo(containerInfo())        
     },[])
 
     useEffect(()=>{          
@@ -142,7 +143,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             if(processogramTreeFromQuery){
                 cameFromSharedLink()
                 Router.push({query:{specie}})
-            }
+            }            
         }
     },[history])
 
@@ -378,7 +379,20 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         }))        
     }
 
-    const ZOOMING = () => {
+    const ZOOMING_IS_RUNNING = (element) => {
+        if(isMobile){
+            console.log('xeteuba')
+            if(element){
+                console.log(element)
+                continueWithValidContextMenuOpen(element,null,null,'fixed-on-screen')
+            }else{
+                setContextMenu({
+                    open:false,
+                    position: 'mouse-oriented',
+                    type:'none'
+                })
+            }
+        }
         setOnZoom(true)
         setTimeout(() => {
             setOnZoom(false)
@@ -386,10 +400,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     }
 
     const toNextLevel = (target:EventTarget,sufix:string) => {
-        if(level<=3){
-            ZOOMING()            
+        if(level<=3){                        
             let element = getElementByLayerSufix(target,sufix)
             if(element){  
+                ZOOMING_IS_RUNNING(element)
                 zoomOnElement(element,sufix)
             }
         }
@@ -429,25 +443,35 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             setIDFromCurrentFocusedElement('')
             setContextMenu({
                 open:false,
-                type:'none'
+                type:'none',
+                position:'mouse-oriented'
             })
             setLevel(previous_level)
             setHistory({})
         }
 
+        let element
+
+        if(previous_level == 1){
+            element = document.getElementById(history[previous_level].id)
+        }else if(previous_level > 1){
+            element = svgRef.current.querySelector(`#${history[previous_level].id}`)
+        }        
+
         if(level>1 && level <=4){
             backToPreviousLevel()
-            ZOOMING()
+            ZOOMING_IS_RUNNING(element)
         }else if(level==1){
             backToFullPage()
-            ZOOMING()
+            ZOOMING_IS_RUNNING(element)
         }
     }
 
     const choosenProcessogram = (event:Event) => {
         event.stopPropagation()    
-        setChoosen(svgRef.current.id)        
-        ZOOMING()
+        setChoosen(svgRef.current.id)
+        let element =  getElementByLayerSufix(document.getElementById(svgRef.current.id),'--ps')      
+        ZOOMING_IS_RUNNING(element)
     }
 
     const clickComeFrom = (element:any,{inside,outside}) => {
@@ -499,8 +523,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             }
         }
     }
-
-    const continueWithValidContextMenuOpen = (element,clientX,clientY) => {
+    
+    const continueWithValidContextMenuOpen = (element,clientX,clientY,position:ContextMenuPosition = 'mouse-oriented') => {
         let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
                 
         let {target} = currentState({
@@ -511,6 +535,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                 id:element.id
             }
         })
+
         let svg = {name:layer_name,id:element.id}
         
         setContextMenu({
@@ -521,7 +546,8 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             svg,
             type:'processogram',
             specie:specie,
-            shareUrl:shareLink
+            shareUrl:shareLink,
+            position:position
         })
     }
 

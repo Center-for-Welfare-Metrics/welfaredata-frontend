@@ -15,11 +15,12 @@ gsap.registerPlugin(TweenLite)
 
 
 interface IContextMenuComponent{
+    isOpen:boolean
     onClose(event:Event):void
 }
 
 const ContextMenu = ({
-    onClose
+    onClose,isOpen
 }:IContextMenuComponent) => {
 
     const containerRef = useRef<HTMLElement>(null) 
@@ -63,8 +64,14 @@ const ContextMenu = ({
     }
 
     const openContextMenu = () => {
-        const setAxisPosition = () => {
-            return TweenLite.to(containerRef.current,{left:contextMenu.x,top:contextMenu.y}).duration(0)
+        const setAxisPosition = (fixed=false) => {
+            return TweenLite.to(containerRef.current,
+                {
+                    left:fixed?0:contextMenu.x,
+                    top:fixed?'unset':contextMenu.y,
+                    bottom:fixed?0:'unset'
+                }
+            ).duration(0)
         }
 
         const checkIfContextMenuIsOverFlowingScreen = () => {
@@ -91,9 +98,14 @@ const ContextMenu = ({
             return TweenLite.to(containerRef.current,{opacity:1}).duration(0)
         }
 
-        setAxisPosition()
-        .then(checkIfContextMenuIsOverFlowingScreen)
-        .then(turnContextMenuVisible)
+        if(contextMenu.position === 'fixed-on-screen'){
+            setAxisPosition(true)
+            .then(turnContextMenuVisible)            
+        }else if(contextMenu.position === 'mouse-oriented'){
+            setAxisPosition()
+            .then(checkIfContextMenuIsOverFlowingScreen)
+            .then(turnContextMenuVisible)
+        }
     }
 
     const innerContextMenu = (e:Event) => {
@@ -111,8 +123,8 @@ const ContextMenu = ({
 
     return (
         <>
-            <FullBackground onContextMenu={innerContextMenu} onClick={onClose} />
-            <Container type={contextMenu.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>                
+            <FullBackground open={isOpen} onContextMenu={innerContextMenu} onClick={onClose} />
+            <Container open={isOpen} type={contextMenu.type} onContextMenu={innerContextMenu} onClick={innerOnClick} ref={containerRef}>                
                 {
                     contextMenu.type === 'processogram' && 
                     <ProcessogramMenu />

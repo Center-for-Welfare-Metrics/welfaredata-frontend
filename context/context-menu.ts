@@ -1,4 +1,4 @@
-import { CommonIconsTypes, SpeciesTypes } from "@/utils/enum_types";
+import { CommonIconsTypes, ContextMenuPosition, SpeciesTypes } from "@/utils/enum_types";
 import { createContext } from "react";
 import { ICommonDataEntry } from "./data-entry";
 
@@ -18,6 +18,7 @@ export interface IContextMenu {
     svg?:any
     optionTarget?:any
     type:'options' | 'processogram' | 'none'
+    position: ContextMenuPosition
     specie?:SpeciesTypes
     shareUrl?:string
 }

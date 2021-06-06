@@ -59,6 +59,12 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     const [onZoom,setOnZoom] = useState(false)
 
+    const [isMobile,setIsMobile] = useState(false)
+
+    useEffect(() => {        
+        setIsMobile(window.matchMedia('(max-width:800px)').matches)
+    },[])
+
     useEffect(() => {
         if(Object.keys(history).length > 0){
             let {target,id_tree,svg_id} = currentState(history)            
@@ -174,7 +180,9 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
         onContext,
         setOnContext,
         onZoom,
-        setOnZoom
+        setOnZoom,
+        isMobile,
+        setIsMobile
     }
 
 

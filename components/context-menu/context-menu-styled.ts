@@ -5,13 +5,19 @@ import Loader from "react-loader-spinner";
 
 export const Container = styled.div`
     position:absolute;
-    opacity:0;    
+    opacity:${({open})=>open?1:0}; 
+    transition: opacity 500ms;
     width:${({type})=>type==='options'?'fit-content':'20rem'};
     border:${({theme})=>`${theme.borderSize.medium} solid ${theme.colors.blue}`};
     border-radius:1rem;
     background-color:${({theme})=>transparentize(0.3,theme.colors.black)};
     z-index:500;
     backdrop-filter:blur(5px);
+    display: ${({open})=>open?'block':'none'};
+    @media(max-width:800px){
+        border:none;
+        width: 100%;
+    }
 `
 
 export const FullBackground = styled.div`
@@ -20,11 +26,14 @@ export const FullBackground = styled.div`
     width:100%;
     height:100%;
     z-index:499;
+    display: ${({open})=>open?'block':'none'};
+    @media(max-width:800px){
+        display:none;
+    }
 `
 
 export const Body = styled.div`
-    height:25rem;    
-    min-height:25rem;
+    height:25rem;        
     color:${({theme}) => theme.colors.white};
     overflow-y:auto;
     padding:0 .5rem 0 .5rem;
@@ -33,12 +42,12 @@ export const Body = styled.div`
         width: .25rem;
     }
     ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors.pink};
+        background-color: ${({theme})=>theme.colors.blue};
         transition: background-color 500ms;
         border-radius:2rem;
     }
     ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors.pink)};
+        background-color: ${({theme})=> lighten(0.1,theme.colors.blue)};
         transition: background-color 500ms;
     }
 `

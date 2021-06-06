@@ -3,18 +3,35 @@ import {lighten} from 'polished'
 import Loader from "react-loader-spinner"
 import ShareOutlined from '@material-ui/icons/ShareOutlined'
 
+export const Container = styled.div`
+    display:flex;
+    flex-direction:column;
+    @media(max-width:800px){
+        flex-direction:row;
+        height:13.5rem;
+    }
+`
+
 export const ShareIcon = styled(ShareOutlined)`
     position:absolute;
     right:.5rem;
     top:.5rem;
     color:${({theme})=>theme.colors.blue};
     cursor: pointer;
+    @media(max-width:800px){
+        right:3.5rem;
+    }
 `
 
 export const Footer = styled.div`
     border-top:5px solid ${({theme})=>theme.colors.blue};
     display:flex;
     height:fit-content;
+    @media(max-width:800px){
+        flex-direction:column;
+        border:none;
+        height:13.5rem;
+    }
 `
 
 
@@ -22,6 +39,9 @@ export const ButtonNavigator = styled.div`
     padding:.5rem .5rem 0 .5rem;
     border:none;
     cursor: pointer;
+    @media(max-width:800px){
+        padding:0;
+    }
 `
 
 
@@ -34,6 +54,10 @@ export const ButtonIcon = styled.img`
         transition:filter 500ms;
     }
     transition:filter 500ms;
+    @media(max-width:800px){
+        width:3rem;
+        height:100%;
+    }
 `
 
 export const Description = styled.div`
@@ -46,7 +70,7 @@ export const Title = styled.div`
 `
 
 export const Body = styled.div`
-    height:25rem;
+    height:25rem;    
     color:${({theme}) => theme.colors.white};
     overflow-y:auto;
     padding:0 .5rem 0 .5rem;
@@ -60,8 +84,12 @@ export const Body = styled.div`
         border-radius:2rem;
     }
     ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors.pink)};
+        background-color: ${({theme})=> lighten(0.1,theme.colors.blue)};
         transition: background-color 500ms;
+    }
+    @media(max-width:800px){
+        height:13.5rem;
+        width:100%;
     }
 `
 export const CustomLoader = styled(Loader)`

@@ -17,6 +17,9 @@ export const GreatTitle = styled(CommonTitle)`
     left:50%;
     top:5rem;
     transform: translateX(-50%);
+    @media(max-width:800px){
+        top:2rem;
+    }
 `
 
 export const Title = styled(CommonTitle)`

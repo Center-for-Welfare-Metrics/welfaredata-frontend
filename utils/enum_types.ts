@@ -17,3 +17,6 @@ export type TabTypes = 'description' | 'sources' | 'quality assessment' | 'media
 export type FieldReferenceTypes = 'productionSystem' | 'lifeFate' | 'phase' | 'circumstance'
 
 export type CommonIconsTypes = string | 'push-pin' | 'eliminar' | 'exclamation-button' | 'upload-to-cloud'
+
+
+export type ContextMenuPosition = 'mouse-oriented' | 'fixed-on-screen'

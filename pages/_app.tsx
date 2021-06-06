@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
   const { theme, themeLoaded } = useTheme()
   const [selectedTheme, setSelectedTheme] = useState(theme)
 
-  const [contextMenu, setContextMenu] = useState<IContextMenu>({ open: false, x: 0, y: 0, type: 'none' })
+  const [contextMenu, setContextMenu] = useState<IContextMenu>({ open: false, x: 0, y: 0, type: 'none',position:'mouse-oriented'})
 
   const [loading,setLoading] = useState(false)
 
@@ -50,7 +50,8 @@ function MyApp({ Component, pageProps }) {
       open: true,
       x: clientX,
       y: clientY + window.scrollY,
-      type: 'none'
+      type: 'none',
+      position:'mouse-oriented'
     })
   }
 
@@ -58,7 +59,8 @@ function MyApp({ Component, pageProps }) {
     event.stopPropagation()
     setContextMenu({
       open: false,
-      type: 'none'
+      type: 'none',
+      position:'mouse-oriented'
     })
   }
 
@@ -100,7 +102,7 @@ function MyApp({ Component, pageProps }) {
           <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }} />
           <ContextMenuContext.Provider value={contextMenuValues}>
             <Component {...pageProps} />
-            {contextMenu.open && <ContextMenu onClose={closeCustomContextMenu} />}
+            <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />
           </ContextMenuContext.Provider>
         </UserContext.Provider>
       </CustomGlobalStyles.Provider>

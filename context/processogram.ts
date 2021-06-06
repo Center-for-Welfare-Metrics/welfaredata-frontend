@@ -27,6 +27,8 @@ export interface IProcessogramContext {
     setChoosenProductionSystem?():void
     onZoom:boolean
     setOnZoom(onZoom:boolean):void
+    isMobile:boolean
+    setIsMobile(isMobile:boolean)
 }
 
 
