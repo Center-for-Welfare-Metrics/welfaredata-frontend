@@ -118,30 +118,32 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
     const currentState = (history:any) => {
         let lastObject : any = {}
         let id_tree : any = {}
-        let svg_id = null
+        let svg_id = null        
         try {
             Object.keys(history).forEach((level) => {
                 let currentHistory = history[level]
                 svg_id = currentHistory.id
-                if(currentHistory.sufix === 'ps'){
-                    lastObject = processograms.find(x => x.productionSystem?.name.toLowerCase() === currentHistory.name.toLowerCase())    
-                    id_tree._id = lastObject._id                              
+                if(currentHistory.sufix === 'ps'){  
+                    let helper = processograms.find(x => x.productionSystem?.name.toLowerCase() === currentHistory.name.toLowerCase())                                          
+                    if(helper){
+                        lastObject = helper
+                    }
+                    id_tree._id = helper._id                              
                 }else{
                     let childrensName = translateBySufix[currentHistory.sufix]     
                     let fieldName = fieldNameBySufix[currentHistory.sufix]
-                    lastObject = lastObject[childrensName].find(x => x[fieldName]?.name.toLowerCase() === currentHistory.name.toLowerCase())
+                    let helper = lastObject[childrensName].find(x => x[fieldName]?.name.toLowerCase() === currentHistory.name.toLowerCase())                    
+                    if(helper){                        
+                        lastObject = helper
+                    }
                     let fullPathChildrenName = translateBySufix[currentHistory.sufix]
-                    id_tree[fullPathChildrenName] = lastObject._id
+                    id_tree[fullPathChildrenName] = helper._id
                 }
             })
-        } catch (error) {
-            return {
-                target:undefined,
-                id_tree,
-                svg_id
-            }
+        } catch (error) {              
+           
         }
-
+        // console.log(lastObject)
         return {
             target:lastObject,
             id_tree:id_tree,

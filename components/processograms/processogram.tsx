@@ -379,12 +379,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         }))        
     }
 
-    const ZOOMING_IS_RUNNING = (element) => {
-        if(isMobile){
-            console.log('xeteuba')
-            if(element){
-                console.log(element)
-                continueWithValidContextMenuOpen(element,null,null,'fixed-on-screen')
+    const ZOOMING_IS_RUNNING = (element,sufix) => {
+        if(isMobile){            
+            if(element){                                              
+                continueWithValidContextMenuOpen(element,null,null,'fixed-on-screen',sufix)
             }else{
                 setContextMenu({
                     open:false,
@@ -403,7 +401,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         if(level<=3){                        
             let element = getElementByLayerSufix(target,sufix)
             if(element){  
-                ZOOMING_IS_RUNNING(element)
+                ZOOMING_IS_RUNNING(element,sufix)
                 zoomOnElement(element,sufix)
             }
         }
@@ -450,20 +448,20 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             setHistory({})
         }
 
-        let element
-
+        let element = null
+        
         if(previous_level == 1){
             element = document.getElementById(history[previous_level].id)
-        }else if(previous_level > 1){
-            element = svgRef.current.querySelector(`#${history[previous_level].id}`)
-        }        
+        }else if(previous_level > 1){                        
+            element = containerRef.current.querySelector(`#${history[previous_level].id}`)
+        }                        
 
         if(level>1 && level <=4){
+            ZOOMING_IS_RUNNING(element,LEVELS[previous_level-1])
             backToPreviousLevel()
-            ZOOMING_IS_RUNNING(element)
         }else if(level==1){
+            ZOOMING_IS_RUNNING(null,null)
             backToFullPage()
-            ZOOMING_IS_RUNNING(element)
         }
     }
 
@@ -471,7 +469,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
         event.stopPropagation()    
         setChoosen(svgRef.current.id)
         let element =  getElementByLayerSufix(document.getElementById(svgRef.current.id),'--ps')      
-        ZOOMING_IS_RUNNING(element)
+        ZOOMING_IS_RUNNING(element,'--ps')
     }
 
     const clickComeFrom = (element:any,{inside,outside}) => {
@@ -494,50 +492,71 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     const OpenContextMenu = (event:MouseEvent) => {
         event.preventDefault()
         event.stopPropagation()
-        let element = null
-        let {clientX,clientY} = event
+        let element,sufix,target = null
+        let {clientX,clientY} = event        
         if(level<(LEVELS.length-1)){
-            let {target} = event
-            element = getElementByLayerSufix(target,LEVELS[level])
+            target = event.target
+            sufix = LEVELS[level]            
         }else{
-            let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
-            element = getElementByLayerSufix(target,LEVELS[level-1])
+            target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
+            sufix = LEVELS[level-1]            
         }
+        element = getElementByLayerSufix(target,sufix)
         if(element){
             if(idFromCurrentFocusedElement && level<(LEVELS.length-1)){
                 if(checkIfParentHasChild(idFromCurrentFocusedElement,element.id)){
-                    continueWithValidContextMenuOpen(element,clientX,clientY)    
+                    continueWithValidContextMenuOpen(element,clientX,clientY,'mouse-oriented',sufix)
                 }else{
-                    let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
+                    target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
                     element = getElementByLayerSufix(target,LEVELS[level-1])
-                    continueWithValidContextMenuOpen(element,clientX,clientY)    
+                    continueWithValidContextMenuOpen(element,clientX,clientY,'mouse-oriented',LEVELS[level-1])
                 }
             }else{
-                continueWithValidContextMenuOpen(element,clientX,clientY)
+                continueWithValidContextMenuOpen(element,clientX,clientY,'mouse-oriented',sufix)
             }
         }else{
             if(idFromCurrentFocusedElement){
                 let target = containerRef.current.querySelector(`#${idFromCurrentFocusedElement}`)
                 element = getElementByLayerSufix(target,LEVELS[level-1])
-                continueWithValidContextMenuOpen(element,clientX,clientY)    
+                continueWithValidContextMenuOpen(element,clientX,clientY,'mouse-oriented',LEVELS[level-1])    
             }
         }
     }
     
-    const continueWithValidContextMenuOpen = (element,clientX,clientY,position:ContextMenuPosition = 'mouse-oriented') => {
-        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(LEVELS[level],element)
-                
-        let {target} = currentState({
-            ...history,
-            [level+1]:{
-                name:layer_name,
-                sufix:fixed_sufix,
-                id:element.id
-            }
-        })
+    const continueWithValidContextMenuOpen = (element,clientX,clientY,position:ContextMenuPosition = 'mouse-oriented',sufix) => {
+        let {layer_name,fixed_sufix} = getFixedSufixAndLayerName(sufix,element)
 
-        let svg = {name:layer_name,id:element.id}
-        
+        console.log(layer_name)
+        console.log('--------')
+        console.log(sufix)
+        console.log(history)
+
+        let formHistory = null
+
+        if(isMobile){
+            formHistory = {
+                ...history,
+                [level+1]:{
+                    name:layer_name,
+                    sufix:fixed_sufix,
+                    id:element.id
+                }
+            }
+        }else{
+            formHistory = {
+                ...history,
+                [level+1]:{
+                    name:layer_name,
+                    sufix:fixed_sufix,
+                    id:element.id
+                }
+            }
+        }
+
+        let {target} = currentState(formHistory)
+
+        let svg = {name:layer_name,id:element.id}        
+
         setContextMenu({
             open:true,
             x:clientX,
