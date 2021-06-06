@@ -29,8 +29,9 @@ export const Footer = styled.div`
     height:fit-content;
     @media(max-width:800px){
         flex-direction:column;
+        justify-content:center;
         border:none;
-        height:13.5rem;
+        height:14rem;
     }
 `
 
@@ -90,6 +91,7 @@ export const Body = styled.div`
     @media(max-width:800px){
         height:13.5rem;
         width:100%;
+        padding-bottom:.5rem;
     }
 `
 export const CustomLoader = styled(Loader)`
