@@ -26,6 +26,7 @@ const RoleCard = ({role,onClick,onDelete}:IRoleCard) => {
             type:'options',
             x:clientX,
             y:clientY,
+            position: 'mouse-oriented',
             options:[
                 {
                     text:'Open',
