@@ -41,7 +41,8 @@ const MediaFile = ({media,isLocal,deleteMedia,deleteLocalMedia,disabledContext}:
                 }],
                 x:event.clientX,
                 y:event.clientY,
-                optionTarget:media            
+                optionTarget:media,
+                position:'mouse-oriented'
             })
         }
     }

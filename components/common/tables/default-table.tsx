@@ -34,7 +34,8 @@ const DefaultTable = ({data,columns,rowClick,options}:IDefaultTable) => {
             x:clientX,
             y:clientY,
             options:options,
-            optionTarget:row
+            optionTarget:row,
+            position:'mouse-oriented'
         })
     }
 
