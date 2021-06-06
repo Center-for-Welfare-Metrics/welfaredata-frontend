@@ -251,7 +251,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             }))
         }
 
-        const transformContainerToFocus = () => {
+        const transformContainerToFocus = () => {            
             TweenLite.to(containerRef.current,{
                 width:withLimits(screenInfo()).width,
                 top:'50%',
@@ -337,12 +337,18 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     const moveX = (element,scale) => {
         let move = currentX() + ((screenInfo().middleX - elementInfo(element).middleX))
         let new_move = (scale*move)/(currentScale() || 1)
+
         return new_move
     }
 
     const moveY = (element,scale) => {
         let move = currentY() + ((screenInfo().middleY - elementInfo(element).middleY))
         let new_move = (scale*move)/(currentScale() || 1)
+
+        if(isMobile){
+            new_move -= (new_move*0.25)
+        }
+
         return new_move
     }
 
