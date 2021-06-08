@@ -63,6 +63,7 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
 
     useEffect(() => {        
         setIsMobile(window.matchMedia('(max-width:800px)').matches)
+        window.matchMedia('(max-width:800px)').addEventListener('change',(ev)=>setIsMobile(ev.matches))
     },[])
 
     useEffect(() => {
@@ -243,8 +244,8 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
     },[idFromCurrentFocusedElement,mouseOverOn,onContext,onZoom])
 
 
-    return (                
-        <ProcessogramContext.Provider value={processogramContextValues}>
+    return (               
+        <ProcessogramContext.Provider value={processogramContextValues}>            
             <GreatTitle choosen={choosen?1:0}>
             {                
                 subtitles?.layerName || 'Specie'
@@ -273,7 +274,7 @@ const ProductionSystemSelector = ({specie,parent,onChange,processograms,setTarge
                         cantClick={cantClick}
                     />
                 ))
-            }     
+            }              
         </ProcessogramContext.Provider>       
     )
 }

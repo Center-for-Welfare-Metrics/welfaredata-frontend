@@ -1,4 +1,4 @@
-import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader,ShareIcon, Container} from './processogram-menu-styled'
+import { Footer,ButtonNavigator,ButtonIcon ,CustomLoader,ShareIcon, Container,Empty} from './processogram-menu-styled'
 
 import { SvgPath } from '@/utils/assets_path'
 import { useContext, useEffect, useState } from 'react'
@@ -74,6 +74,10 @@ const ProcessogramMenu = () => {
                         <>
                             {tab==='home' && <Home />}
                             {tab==='media' && <Media />}
+                            {
+                                (tab!=='home' && tab!=='media') && 
+                                <Empty />
+                            }
                         </>
                     )
                     :
@@ -88,7 +92,12 @@ const ProcessogramMenu = () => {
                     {
                         map_buttons_navigation.map((button_navigator) => (
                             <ButtonNavigator key={button_navigator.title}>
-                                <ButtonIcon active={tab===button_navigator.key} onClick={()=>setTab(button_navigator.key)} src={button_navigator.src} title={button_navigator.title} />
+                                <ButtonIcon 
+                                    active={tab===button_navigator.key} 
+                                    onClick={()=>setTab(button_navigator.key)} 
+                                    src={button_navigator.src} 
+                                    title={button_navigator.title} 
+                                />
                             </ButtonNavigator>
                         ))
                     }                    

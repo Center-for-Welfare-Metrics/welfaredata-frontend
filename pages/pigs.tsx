@@ -30,7 +30,7 @@ const PublicPigsPage = () => {
                 (
                     <ProductionSystemSelector 
                         parent={containerRef.current} 
-                        data_entry={false} 
+                        data_entry={false}                        
                         processograms={processograms}  
                         specie='pig' 
                     />
@@ -47,7 +47,7 @@ const PublicPigsPage = () => {
                         />
                     </LoaderContainer>
                 )
-            }                
+            }              
         </Container>        
     )
 }

@@ -68,7 +68,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const { setContextMenu,contextMenu } = useContext(ContextMenuContext)        
 
-    const margin = data_entry?0.05:0.15
+    const margin = data_entry?0.05:0.3
 
     const mouseOverTimer = useRef(null)
 
@@ -215,7 +215,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
     }
 
     const changePositionAttr = () => {
-        return TweenLite.to(containerRef.current,{position:data_entry?'absolute':'fixed'}).duration(0)
+        return TweenLite.to(containerRef.current,{position:(data_entry || isMobile)?'absolute':'fixed'}).duration(0)
     }
 
     const hideContainer = ({top,left,width}) => {        
@@ -258,7 +258,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
                 left:'50%',                
                 zIndex:'99',
                 translateX:'-50%',
-                translateY:'-50%',
+                translateY:'-50%'                
             }).duration(0.7)
         }
 
@@ -343,10 +343,10 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
 
     const moveY = (element,scale) => {
         let move = currentY() + ((screenInfo().middleY - elementInfo(element).middleY))
-        let new_move = (scale*move)/(currentScale() || 1)
+        let new_move = (scale*move)/(currentScale() || 1)        
 
         if(isMobile){
-            new_move -= (new_move*0.25)
+            new_move -= (new_move*0.3)
         }
 
         return new_move
@@ -634,6 +634,7 @@ const Processogram = ({productionSystem,specie,parent,data_entry,fullPageTrigger
             first={index===0}
             choosen={choosen?1:0}
             dataentry={data_entry?1:0}
+            ismobile={isMobile}
         >
             <Svg 
                 level={LEVELS[level]}

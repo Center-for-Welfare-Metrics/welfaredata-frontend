@@ -22,4 +22,7 @@ export const Container = styled.div`
     overflow:auto;    
     position:relative;  
     ${scrollBar('gray')};
+    @media(max-width:800px){
+        height:60vh;
+    }
 `

@@ -3,12 +3,22 @@ import {lighten} from 'polished'
 import Loader from "react-loader-spinner"
 import ShareOutlined from '@material-ui/icons/ShareOutlined'
 
+export const Empty = styled.div`
+    height:25rem;
+    @media(max-width:800px){
+        height: 40vh;
+        width: 100%;
+    }
+`
+
 export const Container = styled.div`
     display:flex;
     flex-direction:column;
     @media(max-width:800px){
         flex-direction:row;
-        height:13.5rem;
+        height:40vh;
+        min-height:40vh;
+        width:100%;
     }
 `
 
@@ -65,7 +75,6 @@ export const Description = styled.div`
     margin-top:.5rem;
 `
 
-
 export const Title = styled.div`
     text-align:center;
 `
@@ -89,7 +98,7 @@ export const Body = styled.div`
         transition: background-color 500ms;
     }
     @media(max-width:800px){
-        height:13.5rem;
+        height:40vh;
         width:100%;
         padding-bottom:.5rem;
     }
