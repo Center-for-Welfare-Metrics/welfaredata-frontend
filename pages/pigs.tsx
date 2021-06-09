@@ -1,6 +1,5 @@
-import DefaultLayout from "@/components/layouts"
 import ProductionSystemSelector from "@/components/processograms/production-system-selector"
-import {Container} from "@/components/layouts/default-processogram-page-styled"
+import { Container } from "@/components/layouts/default-processogram-page-styled"
 import { useEffect, useRef, useState } from "react"
 import theme from 'theme/schema.json'
 import processogramApi from '@/api/processogram'
@@ -24,14 +23,11 @@ const PublicPigsPage = () => {
     },[])
 
     return (                            
-        <Container full={true} ref={containerRef}>
+        <Container ref={containerRef}>
             {
                 firstLoad?
                 (
-                    <ProductionSystemSelector 
-                        parent={containerRef.current} 
-                        data_entry={false}                        
-                        processograms={processograms}  
+                    <ProductionSystemSelector   
                         specie='pig' 
                     />
                 )

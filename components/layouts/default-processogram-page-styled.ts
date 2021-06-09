@@ -18,11 +18,8 @@ const scrollBar = (color,size='.5rem') => css`
 `
 
 export const Container = styled.div`
-    height:${({full}) => full?'100vh':'90vh'};
-    overflow:auto;    
-    position:relative;  
-    ${scrollBar('gray')};
+    
     @media(max-width:800px){
-        height:60vh;
+        
     }
 `
