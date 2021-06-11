@@ -1,7 +1,7 @@
 import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormInformations } from '@/context/data-entry'
 import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
-import ProductionSystemSelector from '../processograms/production-system-selector'
+import ProductionSystemSelector from '../processograms/processogram-list'
 import Loader from "react-loader-spinner";
 import { 
     Container,
@@ -317,15 +317,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                 {
                     loaded &&
                     <ProductionSystemSelector 
-                        specie={specie}
-                        parent={containerRef.current}
-                        onChange={onChange}
-                        processograms={processograms}                        
-                        setTarget={setCurrentInformations}
-                        triggerToSetFetchData={modificationsCount}
-                        data_entry={true}       
-                        fullPageTrigger={fullPageTrigger}
-                        cantClick={cantClick}             
+                        specie={specie}                                     
                     />
                 }
                 </ProcessogramSpace>

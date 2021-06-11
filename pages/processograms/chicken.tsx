@@ -1,6 +1,6 @@
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
-import ProductionSystemSelector from "@/components/processograms/production-system-selector"
+import ProductionSystemSelector from "@/components/processograms/processogram-list"
 import {Container} from "@/components/layouts/default-processogram-page-styled"
 import { useEffect, useRef, useState } from "react"
 import theme from 'theme/schema.json'
@@ -31,12 +31,9 @@ const LayingHensPage = () => {
             {
                 firstLoad?
                 (
-                    <ProductionSystemSelector 
-                    parent={containerRef.current}
-                    data_entry={false} 
-                    processograms={processograms} 
-                    specie='chicken' 
-                />
+                    <ProductionSystemSelector                     
+                        specie='chicken'
+                    />
                 )
                 :
                 (

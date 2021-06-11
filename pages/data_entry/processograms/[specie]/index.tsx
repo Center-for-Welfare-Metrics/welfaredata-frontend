@@ -1,7 +1,6 @@
 import ProcessogramDataEntry from "@/components/data_entry/processogram"
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
-import ProductionSystemSelector from "@/components/processograms/production-system-selector"
 import { SpeciesTypes } from "@/utils/enum_types"
 import Router from 'next/router'
 import { useEffect, useState } from "react"
