@@ -4,12 +4,12 @@ export const NoProductionSystemSelected = styled.div`
 
 `
 
-export const SubTitle = styled.h2`
+export const SubTitle = styled.h4`
     color:${({theme})=>theme.colors.blue};
     text-align:center;
 `
 
-export const Title = styled.h1`
+export const Title = styled.h3`
     color:${({theme})=>theme.colors.blue};
     text-align:center;
 `
