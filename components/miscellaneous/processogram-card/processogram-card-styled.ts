@@ -3,7 +3,7 @@ import SVG from 'react-inlinesvg'
 
 export const Title = styled.div`
     color:${({theme}) => theme.colors.blue};
-    font-size:${({theme}) => theme.fontSize.extraVeryLarge};
+    font-size:${({theme}) => theme.fontSize.normal};
     z-index:2;
     text-align:center;
     font-weight:bold;
