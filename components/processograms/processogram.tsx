@@ -1,10 +1,11 @@
 import { SvgContainer } from './processogram-styled'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import { TweenLite, gsap } from 'gsap'
-import ProcessogramContext from '@/context/processogram'
+import ProcessogramContext, { IParentDimensions, IProcessogramContext } from '@/context/processogram'
 import { getElementSizeInformations } from '@/utils/processogram'
-import { MouseEvent as MS , useContext, useEffect, useRef } from 'react';
-import SVG from 'react-inlinesvg'
+import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
+import SVG, { Props as SVGProps } from 'react-inlinesvg';
+import React from 'react'
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
@@ -12,9 +13,13 @@ interface IProcessogram {
     specie:SpeciesTypes
 }
 
+const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
+    <SVG innerRef={ref} {...props} />
+  ));
+
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
 
-    const {setOnHover,setCurrentProcessogram,currentProcessogram} = useContext(ProcessogramContext)
+    const {setOnHover,setCurrentProcessogram,currentProcessogram,parentDimensions} = useContext(ProcessogramContext)
     
     const svgRef = useRef<SVGElement>(null)
 
@@ -27,6 +32,18 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             }
         }
     },[currentProcessogram])
+
+    useEffect(()=>{
+        if(svgRef.current){
+            if(parentDimensions){
+                let {top,left,width,height} = getElementSizeInformations(svgRef.current)
+                TweenLite.to(svgRef.current,{
+                    width:(parentDimensions.width*0.9),
+                    height:(parentDimensions.height*0.9)
+                }).duration(0)
+            }
+        }
+    },[parentDimensions])
 
     const mouseEnter = (event:MS<SVGElement,MouseEvent>) => {
         let id = event.currentTarget.id
@@ -55,22 +72,17 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         ).duration(0)
     }
 
-    const brigToFocus = () => {
-        let {top,left,width,height} = getElementSizeInformations(svgRef.current)
+    const brigToFocus = () => {    
+        let { width,height } = parentDimensions
         stuckPosition().then(() => {
-            TweenLite.fromTo(svgRef.current,{
-                top,
-                left,
-                width,
-                height
-            },{
+            TweenLite.to(svgRef.current,{
                 top:'50%',
                 left:'50%',
-                translateY:'-50%',
                 translateX:'-50%',
-                width:width*1.2,
-                height:height*1.2
-            }).duration(0.5)
+                translateY:'-50%',
+                width:(width*0.9),
+                height:(height*0.9)
+            })
         })
     }
 
@@ -82,8 +94,8 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     return (      
         <SvgContainer>
-            <SVG
-                innerRef={svgRef}
+            <ProcessogramSVG
+                ref={svgRef}
                 onClick={ProcessogramClick}      
                 onMouseEnter={mouseEnter}
                 onMouseLeave={mouseLeave}

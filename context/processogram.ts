@@ -1,12 +1,24 @@
 import { createContext } from "react";
 
+export interface IProcessogram{
+    name:string
+    description:string
+}
 
+export interface IParentDimensions {
+    width:number
+    height:number
+    top:number
+    left:number
+}
 
 export interface IProcessogramContext {
     onHover:string
     setOnHover(onHover:string):void
-    currentProcessogram:any
-    setCurrentProcessogram(currentProcessogram:any):void
+    currentProcessogram:string
+    setCurrentProcessogram(currentProcessogram:string):void
+    parentDimensions:IParentDimensions
+    setParentDimensions(parentDimensions:any):void
 }
 
 

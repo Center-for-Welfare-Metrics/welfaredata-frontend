@@ -21,9 +21,10 @@ const scrollBar = (color,size='.5rem') => css`
 
 
 export const Container = styled.div`
-    padding:0 10% 0 10%;
-    height: 100vh;
+    padding:0 10% 0 10%;    
+    height:100vh;
     overflow-y: auto;
+    position:relative;
     ${({hover}) => hover?css`
         svg{
             transition:stroke-opacity ${time};
