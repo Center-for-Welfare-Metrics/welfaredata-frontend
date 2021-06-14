@@ -15,7 +15,6 @@ import voca from 'voca'
 import DataEntryForm from './form/data-entry-form'
 import update from 'immutability-helper'
 import processogramApi from '@/api/processogram'
-import { needSetInformations } from '@/utils/processogram'
 import theme from 'theme/schema.json'
 import lodash from 'lodash'
 import toast from 'react-hot-toast'
@@ -214,93 +213,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         setClickLevel        
     }
 
-    const onChange = (currentInformations,id_tree,svg_id) => {           
-        setIdTree(id_tree)        
-        setCurrentInformations(currentInformations)     
-        if(svg_id){
-            let { field } = needSetInformations(svg_id)
-            setCurrentFieldReference(field)
-        }else{
-            setCurrentFieldReference(null)
-        }                
-        if(!currentInformations && id_tree){            
-            setOnFetch(true)
-            needToCreateNew(id_tree,svg_id)
-        }
-    }
-
-    const needToCreateNew = (id_tree,svg_id) => {     
-        let needed_informations = needSetInformations(svg_id)
-        if(Object.keys(id_tree).length > 0){            
-            createNewLayer(needed_informations,id_tree)
-        }else{
-            createNewProcessogram(needed_informations)
-        }
-    }
-
-
-    const createNewProcessogram = (needed_informations:ReturnType<typeof needSetInformations>) => {
-        if(!onFetch){
-            let {name,field} = needed_informations
-            const searchReferenceData = () => {
-                return processogramApi.getOneReference(field,{
-                    name:name,
-                    specie:specie
-                })
-            }
-
-            const createProcessogram = ({data}) => {
-                return processogramApi.create({
-                    productionSystem:data._id,
-                    specie
-                })
-            }
-
-            searchReferenceData()
-            .then(createProcessogram)
-            .then(({data}) => {  
-                setOnFetch(false)
-                setProcessograms(update(processograms,{
-                    $push:[data]
-                }))            
-                setCurrentInformations(data)
-            }).catch(CommonErrorHandler)
-        }
-    }
-
-    const createNewLayer = (needed_informations:ReturnType<typeof needSetInformations>,id_tree) => {        
-        if(!onFetch){
-            let {name,field,collectionName} = needed_informations
-            
-            const searchReferenceData = () => {
-                return processogramApi.getOneReference(field,{
-                    name:name,
-                    specie:specie
-                })
-            }
-
-            const createLayer = ({data}) => {
-                return processogramApi.newLayer({
-                    id_tree:{...id_tree,_id:undefined},
-                    object:{[field]:data._id},
-                    pushTo:collectionName
-                },id_tree._id)
-            }
-
-            searchReferenceData()        
-            .then((e) => {
-                createLayer(e)
-                .then(({data}) => {
-                    setOnFetch(false)        
-                    refreshProcessograms(id_tree._id,data)            
-                    setModificationsCount(modificationsCount+1)
-                }).catch(CommonErrorHandler)
-            }).catch((error)=>{
-                setOnFetch(false)                 
-                toast.error(`"${name}" not found`)
-            })
-        }
-    }
+    
 
     const fullPageTrigger = () => {
         setCantClick(true)        
