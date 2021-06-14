@@ -5,6 +5,8 @@ import { createContext } from "react";
 export interface IProcessogramContext {
     onHover:string
     setOnHover(onHover:string):void
+    currentProcessogram:any
+    setCurrentProcessogram(currentProcessogram:any):void
 }
 
 

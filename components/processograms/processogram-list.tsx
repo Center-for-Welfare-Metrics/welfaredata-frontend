@@ -7,7 +7,7 @@ import { Container } from './processogram-list-styled'
 import { TweenLite, gsap } from 'gsap'
 import { useState } from "react"
 
-import ProcessogramContext from '@/context/processogram'
+import ProcessogramContext, {IProcessogramContext} from '@/context/processogram'
 
 gsap.registerPlugin(TweenLite)
 
@@ -20,11 +20,13 @@ const ProcessogramList = ({specie}:IProcessogramList) => {
     
     const [onHover,setOnHover] = useState<string>(null)
 
-    const contextValue = {onHover,setOnHover}
+    const [currentProcessogram,setCurrentProcessogram] = useState(null)
+
+    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram}
 
     return (   
         <ProcessogramContext.Provider value={contextValue}>
-            <Container hover={onHover}>
+            <Container hover={onHover} current={currentProcessogram}>
                 {
                     SPECIES[specie].map((productionSystem,index) => (
                         <Processogram

@@ -4,7 +4,6 @@ import { Container,AttentionBody,FullBackground  } from './context-menu-styled'
 import { Options, Option,OptionText,OptionIcon } from './context-menu-options-styled'
 
 import { TweenLite, gsap } from 'gsap'
-import { needSetInformations } from '@/utils/processogram'
 import processogramApi from '@/api/processogram'
 
 import ProcessogramMenu from '@/components/context-menu/processogram-menu/processogram-menu'
@@ -32,17 +31,17 @@ const ContextMenu = ({
             openContextMenu()
             if(!contextMenu.document){
                 if(contextMenu.type === 'processogram'){
-                    let {field,name} = needSetInformations(contextMenu.svg?.id)
-                    setLoading(true)
-                    processogramApi.getOneReference(field,{
-                        name:name,
-                        specie:contextMenu.specie
-                    }).then(({data}) => {
-                        setLoading(false)
-                        setTemporary(data)
-                    }).catch(()=>{
-                        setLoading(false)
-                    })
+                    // let {field,name} = needSetInformations(contextMenu.svg?.id)
+                    // setLoading(true)
+                    // processogramApi.getOneReference(field,{
+                    //     name:name,
+                    //     specie:contextMenu.specie
+                    // }).then(({data}) => {
+                    //     setLoading(false)
+                    //     setTemporary(data)
+                    // }).catch(()=>{
+                    //     setLoading(false)
+                    // })
                 }   
             }
         }

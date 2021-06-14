@@ -5,28 +5,28 @@ import { Body } from '../processogram-menu-styled'
 import ContextMenuContext from '@/context/context-menu'
 import { useContext } from 'react'
 
-import { needSetInformations,showLocalInformations,showOnScreen, showReferenceInformation } from '@/utils/processogram'
+// import { needSetInformations,showLocalInformations,showOnScreen, showReferenceInformation } from '@/utils/processogram'
 
 const Home = () => {
 
     const {contextMenu,temporary} = useContext(ContextMenuContext)
 
     const getPossibleFieldReference = () => {
-        let {field} = needSetInformations(contextMenu.svg?.id)
+        // let {field} = needSetInformations(contextMenu.svg?.id)
 
-        return field
+        // return field
     }
 
     return (
         <Body>            
-            <Title>
+            {/* <Title>
                 {voca.capitalize(showOnScreen('name',(contextMenu.document || temporary),getPossibleFieldReference()))}                
             </Title>
             <Description>
                 {showReferenceInformation('description',(contextMenu.document || temporary),getPossibleFieldReference())}
                 <br />
                 {showLocalInformations(contextMenu.document || temporary,'description')}                        
-            </Description>                                    
+            </Description>                                     */}
         </Body>
     )
 }

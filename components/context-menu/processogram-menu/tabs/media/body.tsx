@@ -1,7 +1,7 @@
 import ContextMenu from '@/context/context-menu'
 import { useContext, useEffect, useState } from 'react'
 import { Body } from '../../processogram-menu-styled'
-import { needSetInformations, showOnScreen } from '@/utils/processogram'
+// import { needSetInformations, showOnScreen } from '@/utils/processogram'
 import { IMedia } from '@/context/data-entry'
 import { Container,Title } from './body-styled'
 import Thumb from './thumb'
@@ -17,16 +17,16 @@ const Media = () => {
     const [medias,setMedias] = useState<IMedia[]>([])
 
     const getPossibleFieldReference = () => {
-        let {field} = needSetInformations(contextMenu.svg?.id)
+        // let {field} = needSetInformations(contextMenu.svg?.id)
 
-        return field
+        // return field
     }
 
     
 
     useEffect(()=>{       
         if(contextMenu.document){                               
-            setMedias([...contextMenu.document[getPossibleFieldReference()].medias,...contextMenu.document?.medias])
+            // setMedias([...contextMenu.document[getPossibleFieldReference()].medias,...contextMenu.document?.medias])
         }else{
             setMedias(temporary.medias)
         }
@@ -35,7 +35,7 @@ const Media = () => {
     return (
         <Body>
             <Title>
-                { voca.capitalize(showOnScreen('name',(contextMenu.document || temporary),getPossibleFieldReference())) }
+                {/* { voca.capitalize(showOnScreen('name',(contextMenu.document || temporary),getPossibleFieldReference())) } */}
             </Title>
             <Container>
                 {
