@@ -23,9 +23,11 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     
     const svgRef = useRef<SVGElement>(null)
 
+    const imOnFocus = () => currentProcessogram === svgRef.current.id
+
     useEffect(()=>{
         if(currentProcessogram){
-            if(currentProcessogram === svgRef.current.id){
+            if(imOnFocus()){
                 brigToFocus()
             }else{
                 hidden()
@@ -34,14 +36,18 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     },[currentProcessogram])
 
     useEffect(()=>{
-        if(svgRef.current){
-            if(parentDimensions){
-                let {top,left,width,height} = getElementSizeInformations(svgRef.current)
+        if(svgRef.current && parentDimensions && currentProcessogram){             
+            if(imOnFocus()){           
                 TweenLite.to(svgRef.current,{
                     width:(parentDimensions.width*0.9),
-                    height:(parentDimensions.height*0.9)
+                    // height:(parentDimensions.height*0.9)
                 }).duration(0)
-            }
+            }else{
+                TweenLite.to(svgRef.current,{
+                    width:(parentDimensions.width*0.8),
+                    // height:(parentDimensions.height*0.8)
+                }).duration(0)
+            }            
         }
     },[parentDimensions])
 
@@ -65,8 +71,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             {
                 top,
                 left,
-                width,
-                height,
+                width,                
                 position:'absolute'
             }
         ).duration(0)
@@ -80,8 +85,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 left:'50%',
                 translateX:'-50%',
                 translateY:'-50%',
-                width:(width*0.9),
-                height:(height*0.9)
+                width:(width*0.9)                
             })
         })
     }

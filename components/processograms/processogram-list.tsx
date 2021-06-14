@@ -43,7 +43,7 @@ const ProcessogramList = ({specie}:IProcessogramList) => {
 
     useEffect(()=>{
         if(currentProcessogram){
-            // TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)
+            TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)
         }
     },[currentProcessogram])
 
