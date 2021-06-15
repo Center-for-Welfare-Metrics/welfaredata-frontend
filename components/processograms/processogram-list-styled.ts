@@ -25,7 +25,7 @@ export const Container = styled.div`
     height:100vh;
     overflow-y: auto;
     position:relative;
-    ${({hover}) => hover?css`
+    ${({current,hover}) => (current === null) && hover?css`
         svg{
             transition:stroke-opacity ${time};
             stroke-opacity: .5;
@@ -41,15 +41,6 @@ export const Container = styled.div`
             stroke-opacity: 1;
         }
     `    
-    }
-    ${({current}) => current && css`
-        svg{
-            transition:opacity ${time};
-            opacity: 0;
-        }
-        svg#${current}{            
-            opacity: 1;            
-        }
-    `}
+    }    
     ${scrollBar('gray')};
 `
