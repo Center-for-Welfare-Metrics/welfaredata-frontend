@@ -33,7 +33,9 @@ const ProcessogramList = ({specie}:IProcessogramList) => {
     useEffect(()=>{
         const resizeEvent = () => {            
             let {width,height,top,left} = containerRef.current.getBoundingClientRect()
-            setParentDimensions({width,height,top,left})
+            let middleX = left + (width/2)
+            let middleY = top + (height/2)
+            setParentDimensions({width,height,top,left,middleX,middleY})
         }
         resizeEvent()
         window.addEventListener('resize',resizeEvent)

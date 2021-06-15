@@ -35,12 +35,7 @@ export const Container = styled.div`
             stroke-opacity: 1;
         }
     `:
-    css`
-        svg{
-            transition:stroke-opacity ${time};
-            stroke-opacity: 1;
-        }
-    `    
+    ``    
     }    
     ${scrollBar('gray')};
 `

@@ -25,9 +25,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     
     const [level,setLevel] = useState(0)
 
-    const [innerHover,setInnerHover] = useState(null)
+    const [innerHover,setInnerHover] = useState<string>(null)
 
-    const svgRef = useRef<SVGElement>(null)
+    const [innerCurrent,setInnerCurrent] = useState<string>(null)
+
+    const [isMoving,setIsMoving] = useState(false)
+
+    const svgRef = useRef<SVGElement>(null)    
 
     const imOnFocus = () => currentProcessogram === svgRef.current?.id
 
@@ -73,8 +77,35 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             setCurrentProcessogram(id)
             setLevel(1)
         }else{
-            event.stopPropagation()
+            if(imOnFocus() && innerHover){
+                InnerClick()
+            }            
         }
+    }
+
+    const InnerClick = () => {
+        let element = svgRef.current.querySelector(`#${innerHover}`)
+        if(element){
+            toNextLevel(element)
+        }
+    }
+
+    const toNextLevel = (element:Element) => {
+        let elementInfos = getElementSizeInformations(element)
+        let svgInfos = getElementSizeInformations(svgRef.current)
+
+        let moveX = parentDimensions.middleX - elementInfos.middleX
+        let moveY = parentDimensions.middleY - elementInfos.middleY
+        setInnerCurrent(element.id)
+        setIsMoving(true)
+        setLevel(level+1)
+        TweenLite.to(svgRef.current,{
+            left:svgInfos.left + moveX,
+            top:svgInfos.top + moveY,
+            translateX:'0',
+            translateY:'0'
+        }).duration(0.5)
+        .then(()=>setIsMoving(false))
     }
 
     const stuckPosition = (position='fixed') => {
@@ -92,13 +123,15 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const brigToFocus = () => {    
         let { width } = parentDimensions
         stuckPosition('absolute').then(() => {
+            setIsMoving(true)
             TweenLite.to(svgRef.current,{
                 top:'50%',
                 left:'50%',
                 translateX:'-50%',
                 translateY:'-50%',
                 width:(width*0.9)                
-            })
+            }).duration(0.5)
+            .then(()=>setIsMoving(false))
         })
     }
 
@@ -122,7 +155,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     }
 
     return (      
-        <SvgContainer level={level} innerlevel={LEVELS[level]} current={currentProcessogram} hover={innerHover}>
+        <SvgContainer 
+            level={level}
+            equalLevel={LEVELS[level-1] || null}
+            innerlevel={LEVELS[level]}
+            current={innerCurrent || currentProcessogram}
+            hover={innerHover}
+        >
             <ProcessogramSVG
                 ref={svgRef}
                 onClick={ProcessogramClick}      

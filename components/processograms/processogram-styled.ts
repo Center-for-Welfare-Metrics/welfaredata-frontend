@@ -7,24 +7,24 @@ export const SvgContainer = styled.div`
     svg{
         height:auto;
     }
-    ${({innerlevel,hover,level}) => level>0 && css`
+    ${({innerlevel,hover,level,current,equalLevel}) => level > 0 && css`
+        [id*=${innerlevel}]{
+            transition: stroke-opacity 500ms;
+        }
+        [id*=${equalLevel}]{            
+            stroke-opacity:.5;            
+        }        
         ${
             hover?css`
-                [id*=${innerlevel}]{
-                    transition:stroke-opacity 500ms;
-                    stroke-opacity:.5;
-                }
-                #${hover}{
-                    transition:stroke-opacity 500ms;
+                #${current} #${hover}{                    
                     stroke-opacity: 1;
                 }
             `
             :
-            css`
-                [id*=${innerlevel}]{
-                    transition:stroke-opacity 500ms;
-                    stroke-opacity:1;
-                }
+            css`              
+                #${current}{                    
+                    stroke-opacity: 1;
+                }                
             `
         }
     `}

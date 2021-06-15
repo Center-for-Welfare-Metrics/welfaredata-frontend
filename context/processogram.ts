@@ -10,6 +10,8 @@ export interface IParentDimensions {
     height:number
     top:number
     left:number
+    middleX:number
+    middleY:number
 }
 
 export interface IProcessogramContext {
