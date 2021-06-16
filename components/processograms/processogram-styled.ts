@@ -8,11 +8,11 @@ export const SvgContainer = styled.div`
         height:auto;
     }
     ${({innerlevel,hover,level,current,equalLevel}) => level > 0 && css`
-        [id*=${innerlevel}]{
+        [id*=${innerlevel}]{            
             transition: stroke-opacity 500ms;
         }
         [id*=${equalLevel}]{            
-            stroke-opacity:.5;            
+            stroke-opacity:.4;                    
         }        
         ${
             hover?css`

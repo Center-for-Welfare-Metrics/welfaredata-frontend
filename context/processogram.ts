@@ -5,7 +5,7 @@ export interface IProcessogram{
     description:string
 }
 
-export interface IParentDimensions {
+export interface IDimensions {
     width:number
     height:number
     top:number
@@ -19,7 +19,7 @@ export interface IProcessogramContext {
     setOnHover(onHover:string):void
     currentProcessogram:string
     setCurrentProcessogram(currentProcessogram:string):void
-    parentDimensions:IParentDimensions
+    parentDimensions:IDimensions
     setParentDimensions(parentDimensions:any):void
 }
 

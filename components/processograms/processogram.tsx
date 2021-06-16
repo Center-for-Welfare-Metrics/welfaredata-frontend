@@ -1,7 +1,7 @@
 import { SvgContainer } from './processogram-styled'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import { TweenLite, gsap } from 'gsap'
-import ProcessogramContext, { IParentDimensions, IProcessogramContext } from '@/context/processogram'
+import ProcessogramContext, { IDimensions, IProcessogramContext } from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
@@ -31,7 +31,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const [isMoving,setIsMoving] = useState(false)
 
-    const svgRef = useRef<SVGElement>(null)    
+    const svgRef = useRef<SVGElement>(null)   
 
     const imOnFocus = () => currentProcessogram === svgRef.current?.id
 
@@ -90,23 +90,42 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     }
 
-    const toNextLevel = (element:Element) => {
-        let elementInfos = getElementSizeInformations(element)
-        let svgInfos = getElementSizeInformations(svgRef.current)
+    const getMoveVariables = (elementDimensions:IDimensions) => {
+        let parentWidth = parentDimensions.width
+        
+        let maxElementWidth = parentWidth*0.9           
 
-        let moveX = parentDimensions.middleX - elementInfos.middleX
-        let moveY = parentDimensions.middleY - elementInfos.middleY
+        let scale = maxElementWidth/elementDimensions.width
+
+        let moveX = (parentDimensions.middleX - elementDimensions.middleX) * scale
+        let moveY = (parentDimensions.middleY - elementDimensions.middleY) * scale
+        
+        return {
+            moveX,
+            moveY,
+            scale            
+        }
+    }
+
+    const toNextLevel = (element:Element) => {
+        let elementDimensions = getElementSizeInformations(element)
+        let svgInfos = getElementSizeInformations(svgRef.current)
+        
+        let {moveX,moveY,scale} = getMoveVariables(elementDimensions)
+
         setInnerCurrent(element.id)
         setIsMoving(true)
         setLevel(level+1)
+
         TweenLite.to(svgRef.current,{
             left:svgInfos.left + moveX,
             top:svgInfos.top + moveY,
+            scale: scale,
             translateX:'0',
             translateY:'0'
         }).duration(0.5)
         .then(()=>setIsMoving(false))
-    }
+    }    
 
     const stuckPosition = (position='fixed') => {
         let {top,left,width} = getElementSizeInformations(svgRef.current)

@@ -1,13 +1,13 @@
-import { IParentDimensions } from '@/context/processogram'
+import { IDimensions } from '@/context/processogram'
 import voca from 'voca'
 
 
 
 
 
-export const getElementSizeInformations = (element:Element) : IParentDimensions => {
+export const getElementSizeInformations = (element:Element) : IDimensions => {
     let rect = element.getBoundingClientRect()
-
+    
     let middleX = rect.left + (rect.width/2)
     let middleY = rect.top + (rect.height/2)
 
