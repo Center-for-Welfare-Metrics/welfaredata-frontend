@@ -12,6 +12,8 @@ export interface IDimensions {
     left:number
     middleX:number
     middleY:number
+    x:number
+    y:number
 }
 
 export interface IProcessogramContext {

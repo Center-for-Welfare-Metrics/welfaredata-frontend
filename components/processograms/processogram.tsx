@@ -31,7 +31,9 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const [isMoving,setIsMoving] = useState(false)
 
-    const svgRef = useRef<SVGElement>(null)   
+    const [scaleValue,setScaleValue] = useState(0)
+
+    const svgRef = useRef<SVGElement>(null)       
 
     const imOnFocus = () => currentProcessogram === svgRef.current?.id
 
@@ -90,16 +92,45 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     }
 
-    const getMoveVariables = (elementDimensions:IDimensions) => {
+    const getScale = (elementWidth,elementHeight) => {
         let parentWidth = parentDimensions.width
-        
-        let maxElementWidth = parentWidth*0.9           
 
-        let scale = maxElementWidth/elementDimensions.width
+        let maxElementWidth = parentWidth*0.9
+              
+        let scale = (maxElementWidth/elementWidth)                
+        console.log(scale,elementWidth)
+        return scale
+    }
 
-        let moveX = (parentDimensions.middleX - elementDimensions.middleX) * scale
-        let moveY = (parentDimensions.middleY - elementDimensions.middleY) * scale
+    const getX = (scale,elementMiddleX) => {
         
+        let parentMiddleX = parentDimensions.middleX
+
+        let svgInfos = getElementSizeInformations(svgRef.current)
+        
+        let move = svgInfos.left + ((parentMiddleX - elementMiddleX)*scale)
+                      
+        return move
+    }
+
+    const getY = (scale,elementMiddleY) => {
+
+        let parentMiddleY = parentDimensions.middleY
+
+        let svgInfos = getElementSizeInformations(svgRef.current)
+
+        let move = svgInfos.top + ((parentMiddleY - elementMiddleY)*scale)
+
+        return move
+    }
+
+    const getMoveVariables = (elementDimensions:IDimensions) => {                
+        let scale = getScale(elementDimensions.width,elementDimensions.height)
+
+        let moveX = getX(scale,elementDimensions.middleX)
+
+        let moveY = getY(scale,elementDimensions.middleY)        
+
         return {
             moveX,
             moveY,
@@ -109,18 +140,20 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const toNextLevel = (element:Element) => {
         let elementDimensions = getElementSizeInformations(element)
-        let svgInfos = getElementSizeInformations(svgRef.current)
         
-        let {moveX,moveY,scale} = getMoveVariables(elementDimensions)
+        console.log(element)
+
+        let {moveX,moveY,scale} = getMoveVariables(elementDimensions)        
 
         setInnerCurrent(element.id)
         setIsMoving(true)
         setLevel(level+1)
+        setScaleValue(scale)
 
         TweenLite.to(svgRef.current,{
-            left:svgInfos.left + moveX,
-            top:svgInfos.top + moveY,
-            scale: scale,
+            top:moveY,
+            left:moveX,
+            scale:scale+scaleValue,
             translateX:'0',
             translateY:'0'
         }).duration(0.5)
