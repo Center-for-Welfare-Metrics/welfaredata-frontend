@@ -27,18 +27,18 @@ export const Container = styled.div`
     position:relative;
     ${({current,hover}) => (current === null) && hover?css`
         svg{
-            transition:stroke-opacity ${time};
-            stroke-opacity: .5;
+            transition:opacity ${time};
+            opacity: .5;
         }
         svg#${hover}{
-            transition:stroke-opacity ${time};
-            stroke-opacity: 1;
+            transition:opacity ${time};
+            opacity: 1;
         }
     `:
     current === null && css`
     svg{
-        transition:stroke-opacity ${time};
-        stroke-opacity: 1;
+        transition:opacity ${time};
+        opacity: 1;
     }
 `    
     }        
