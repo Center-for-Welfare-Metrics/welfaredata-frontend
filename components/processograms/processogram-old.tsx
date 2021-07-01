@@ -6,7 +6,6 @@ import { getElementSizeInformations, getRightTargetID } from '@/utils/processogr
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
 import React from 'react'
-
 gsap.registerPlugin(TweenLite)
 
 interface IProcessogram {
@@ -21,9 +20,13 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
 interface ImainState {
+    top:number
+    left:number
+    scale:number
     neverLoaded?:true
     level:number
-    viewBox?:string
+    matrix:string
+    width:string
 }
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
@@ -31,8 +34,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const {setOnHover,setCurrentProcessogram,currentProcessogram,parentDimensions} = useContext(ProcessogramContext)    
 
     const [mainState,setMainState] = useState<ImainState>({
+        top:0,
+        left:0,
+        scale:1,
+        width:'80%',
         neverLoaded:true,
-        level:0        
+        level:0,
+        matrix:null
     })
 
     const [innerHover,setInnerHover] = useState<string>(null)
@@ -40,6 +48,8 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const [innerCurrent,setInnerCurrent] = useState<string>(null)
 
     const [isMoving,setIsMoving] = useState(false)
+
+    const matrix = new DOMMatrix()
 
     const svgRef = useRef<SVGElement>(null)
 
@@ -49,13 +59,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     useEffect(()=>{        
         if(!mainState.neverLoaded){
-            if(mainState.viewBox){
-                TweenLite.to(svgRef.current,{
-                    attr:{
-                        viewBox:mainState.viewBox
-                    }
-                }).duration(0.5)
-            }
+            setIsMoving(true)
+            TweenLite.to(svgRef.current,{
+                top:mainState.top,
+                left:mainState.left,
+                width:mainState.width
+            }).duration(0.5)
+            .then(()=>setIsMoving(false))
         }
     },[mainState])
 
@@ -63,30 +73,26 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         if(currentProcessogram){    
             stuckPosition()
             if(imOnFocus()){                
-                focusOnMe()
+                focus()
             }else{
-                hiddeMe()
-            }
+                // hidden()
+            }     
         }
-    },[currentProcessogram])    
+    },[currentProcessogram])   
 
-    const focusOnMe = () => {
-        setMainState({level:1})
-        setIsMoving(true)
-        TweenLite.to(ref.current,{
-            width:'90%',
-            top:'50%',
-            left:'50%',
-            translateX:'-50%',
-            translateY:'-50%'
-        }).duration(0.5).then(()=>setIsMoving(false))
-    }
-
-    const hiddeMe = () => {
-        TweenLite.to(ref.current,{
-            zIndex:-99
-        }).duration(0)
-    }
+    useEffect(()=>{
+        if(svgRef.current && parentDimensions && currentProcessogram){             
+            if(imOnFocus()){           
+                TweenLite.to(svgRef.current,{
+                    width:(parentDimensions.width*0.8),                    
+                }).duration(0)
+            }else{
+                TweenLite.to(svgRef.current,{
+                    width:(parentDimensions.width*0.8),                    
+                }).duration(0)
+            }            
+        }
+    },[parentDimensions])
 
     const mouseEnter = (event:MS<SVGElement,MouseEvent>) => {
         let id = event.currentTarget.id
@@ -117,16 +123,73 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             toNextLevel(element)
         }
     }
+
+    const getScale = (elementWidth,elementHeight) => {
+        let parentWidth = parentDimensions.width
+
+        let maxElementWidth = parentWidth
+        
+        let scale = (maxElementWidth/elementWidth)                
+        
+        return scale
+    }
+
+    const getX = (new_scale,elementMiddleX) => {
     
+        let parentMiddleX = parentDimensions.middleX
 
-    const toNextLevel = (element:any) => {  
-        let bbox = element.getBBox()
+        let svgInfos = getElementSizeInformations(svgRef.current)        
 
-        let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+        let move = svgInfos.left + ((parentMiddleX - elementMiddleX)*mainState.scale)
+    
+        // let new_move = (new_scale*move)
+        
+        return move
+    }
 
+    const getY = (new_scale,elementMiddleY) => {
+
+        let parentMiddleY = parentDimensions.middleY
+
+        let svgInfos = getElementSizeInformations(svgRef.current)        
+
+        let move = svgInfos.top + (parentMiddleY - elementMiddleY)
+
+        // let new_move = (new_scale*move)
+
+        return move
+    }
+
+    const getMoveVariables = (elementDimensions:IDimensions) => {                
+        let scale = getScale(elementDimensions.width,elementDimensions.height)
+
+        let moveX = getX(scale,elementDimensions.middleX)
+
+        let moveY = getY(scale,elementDimensions.middleY)        
+        
+        matrix.preMultiplySelf(new DOMMatrix()
+        .translateSelf(elementDimensions.middleX, elementDimensions.middleY)
+        .scaleSelf(scale, scale))
+
+        return {
+            moveX,
+            moveY,
+            scale,
+            matrix:matrix.toString()   
+        }
+    }
+
+    const toNextLevel = (element:Element) => {        
+        let elementDimensions = getElementSizeInformations(element)            
+        let {moveX,moveY,scale,matrix} = getMoveVariables(elementDimensions)                
+        setInnerCurrent(element.id)        
         setMainState({
+            top:moveY,
+            left:moveX,
+            width:'100%',
             level:mainState.level+1,
-            viewBox
+            matrix,
+            scale            
         })
     }    
 
@@ -136,10 +199,18 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             {
                 top,
                 left,                              
-                position:'absolute'                
+                position:'absolute'
             }
         ).duration(0)
-    }
+    } 
+
+    // const focus = () => {
+    //     toNextLevel(svgRef.current)
+    // }
+
+    // const hidden = () => {        
+    //     TweenLite.to(svgRef.current,{opacity:0,zIndex:'-99'}).duration(0.5)             
+    // }
 
     const mouseMove = (event:MS<SVGElement,MouseEvent>) => {
         if(imOnFocus()){            
@@ -155,8 +226,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     }
 
     return (      
-        <SvgContainer
-            selected={currentProcessogram}
+        <SvgContainer 
             level={mainState.level}
             equallevel={LEVELS[mainState.level-1] || null}
             innerlevel={LEVELS[mainState.level]}
@@ -173,7 +243,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 onMouseMove={mouseMove}      
                 src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
             />
-            <span style={{position:'absolute'}}>O</span>
         </SvgContainer>
     )
 }

@@ -2,16 +2,28 @@ import styled, {css} from 'styled-components'
 
 
 
-export const SvgContainer = styled.div`
-    margin:5% 0 5% 0;
+export const SvgContainer = styled.div`    
     svg{
         height:auto;
+        margin:5% 0 5% 0;
+        transition:opacity 500ms;   
+        overflow:visible;   
     }
-    ${({innerlevel,hover,level,current,equalLevel}) => level > 0 && css`
+    :first-child{
+        svg{
+            margin-top:10%;
+        }
+    }
+    :last-child{
+        svg{
+            margin-bottom:10%;
+        }
+    }
+    ${({innerlevel,hover,level,current,equallevel}) => level > 0 && css`
         [id*=${innerlevel}]{            
             transition: stroke-opacity 500ms;
         }
-        [id*=${equalLevel}]{            
+        [id*=${equallevel}]{            
             stroke-opacity:.4;                    
         }        
         ${
@@ -28,4 +40,11 @@ export const SvgContainer = styled.div`
             `
         }
     `}
+    
+    ${({selected}) => selected && `
+        svg:not(#${selected}){
+            opacity:0;
+            transition:opacity 500ms;            
+        }
+    `}    
 `
