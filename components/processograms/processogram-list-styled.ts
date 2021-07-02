@@ -21,7 +21,10 @@ const scrollBar = (color,size='.5rem') => css`
 
 
 export const Container = styled.div`    
-    height:100vh;
+    height:100vh;    
+    svg{
+        max-height:80vh;
+    }
     overflow-y: auto;
     position:relative;
     display:flex;

@@ -4,8 +4,7 @@ import styled, {css} from 'styled-components'
 
 export const SvgContainer = styled.div`    
     svg{
-        height:auto;
-        max-height:80vh;
+        height:auto;        
         margin:5% 0 5% 0;
         transition:opacity 500ms;   
         overflow:visible;   
@@ -42,15 +41,15 @@ export const SvgContainer = styled.div`
         }
     `}
     
-    ${({selected}) => selected && `
+    ${({selected}) => selected && css`
         svg:not(#${selected}){
-            opacity:0;
+            opacity:0.3;
             transition:opacity 500ms;            
         }
     `}
 
     @media(max-width:800px){
-        ${({current}) => `
+        ${({current}) => css`
             #${current}{
                 stroke-opacity:1;
             }

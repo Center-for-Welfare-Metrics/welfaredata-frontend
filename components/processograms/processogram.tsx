@@ -47,6 +47,30 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const ref = useRef<HTMLDivElement>(null)
 
+    useEffect(()=>{        
+        if(!mainState.neverLoaded){         
+            if(mainState.level > 0){
+                document.onclick = clickOut
+            }else{
+                document.onclick = null
+            }
+            if(mainState.viewBox){
+                moveFigure()
+            }
+        }
+    },[mainState])
+
+    useEffect(()=>{
+        if(currentProcessogram){    
+            stuckPosition()
+            if(imOnFocus()){                
+                focusOnMe()
+            }else{
+                hiddeMe()
+            }
+        }
+    },[currentProcessogram]) 
+
     const imOnFocus = () => currentProcessogram === svgRef.current?.id        
 
     const getParent = () => {        
@@ -85,33 +109,9 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 
             }
         }
-    }
+    }   
 
-    useEffect(()=>{        
-        if(!mainState.neverLoaded){         
-            if(mainState.level > 0){
-                document.onclick = clickOut
-            }else{
-                document.onclick = null
-            }
-            if(mainState.viewBox){
-                moveFigure()
-            }
-        }
-    },[mainState])
-
-    useEffect(()=>{
-        if(currentProcessogram){    
-            stuckPosition()
-            if(imOnFocus()){                
-                focusOnMe()
-            }else{
-                hiddeMe()
-            }
-        }
-    },[currentProcessogram])    
-
-    const clickWasInside = (elementClicked:EventTarget) => {
+    const targetIsInside = (elementClicked:EventTarget) => {
         let currentElement = innerCurrent?
         svgRef.current.querySelector(`#${innerCurrent}`)
         :
@@ -135,7 +135,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         setMainState({level:1})
         setIsMoving(true)
         TweenLite.to(ref.current,{
-            width:'90%',
+            width:'80%',
             top:'50%',
             left:'50%',
             translateX:'-50%',
@@ -167,7 +167,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             setCurrentProcessogram(id)           
         }else{
             if(imOnFocus()){   
-                if(clickWasInside(event.target)){
+                if(targetIsInside(event.target)){
                     event.stopPropagation()
                     InnerClick()
                 }
@@ -207,15 +207,23 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         ).duration(0)
     }
 
+    useEffect(()=>{
+        console.log(innerHover)
+    },[innerHover])
+
     const mouseMove = (event:MS<SVGElement,MouseEvent>) => {
         if(imOnFocus()){            
-            let right_target_id = getRightTargetID({
-                element:event.target,
-                level:LEVELS[mainState.level],
-                current:currentProcessogram
-            })
-            if(innerHover!==right_target_id){
-                setInnerHover(right_target_id)
+            if(targetIsInside(event.target)){
+                let right_target_id = getRightTargetID({
+                    element:event.target,
+                    level:LEVELS[mainState.level],
+                    current:currentProcessogram
+                })
+                if(innerHover!==right_target_id){                
+                    setInnerHover(right_target_id)
+                }
+            }else{
+                setInnerHover(null)
             }
         }
     }
