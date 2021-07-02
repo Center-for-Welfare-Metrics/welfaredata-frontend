@@ -5,6 +5,7 @@ import styled, {css} from 'styled-components'
 export const SvgContainer = styled.div`    
     svg{
         height:auto;
+        max-height:80vh;
         margin:5% 0 5% 0;
         transition:opacity 500ms;   
         overflow:visible;   
@@ -46,5 +47,13 @@ export const SvgContainer = styled.div`
             opacity:0;
             transition:opacity 500ms;            
         }
-    `}    
+    `}
+
+    @media(max-width:800px){
+        ${({current}) => `
+            #${current}{
+                stroke-opacity:1;
+            }
+        `}
+    }
 `

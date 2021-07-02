@@ -10,7 +10,9 @@ export type ProductionSystemTypes = 'conventional cages' |
 'european intensive' | 
 'outdoor semi-intensive' | 
 'furnished cages' |
-'single tier'
+'single tier' |
+'multi tier' |
+'free range'
 
 export type TabTypes = 'description' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
 

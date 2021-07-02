@@ -24,6 +24,8 @@ interface ImainState {
     neverLoaded?:true
     level:number
     viewBox?:string
+    focused?:string
+    parent?:any
 }
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
@@ -32,7 +34,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const [mainState,setMainState] = useState<ImainState>({
         neverLoaded:true,
-        level:0        
+        level:0               
     })
 
     const [innerHover,setInnerHover] = useState<string>(null)
@@ -45,16 +47,55 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const ref = useRef<HTMLDivElement>(null)
 
-    const imOnFocus = () => currentProcessogram === svgRef.current?.id    
+    const imOnFocus = () => currentProcessogram === svgRef.current?.id        
+
+    const getParent = () => {        
+        if(innerCurrent){
+            let node = svgRef.current.querySelector(`#${innerCurrent}`)
+            let levelBefore = LEVELS[mainState.level-2]
+            while(node!==svgRef.current){
+                node = node.parentElement                
+                if(node.id.includes(levelBefore)){
+                    break
+                }
+            }
+            return node
+        }else{
+            return null
+        }
+    }
+
+    const clickOut = () => {
+        let parent = getParent() as any
+        if(mainState.level>1){
+            if(parent){
+                let bbox = parent.getBBox()
+
+                let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+
+                setMainState({
+                    level:mainState.level-1,
+                    viewBox            
+                })
+                if(parent.id.includes('--ps')){
+                    setInnerCurrent(null)
+                }else{
+                    setInnerCurrent(parent.id)
+                }
+                
+            }
+        }
+    }
 
     useEffect(()=>{        
-        if(!mainState.neverLoaded){
+        if(!mainState.neverLoaded){         
+            if(mainState.level > 0){
+                document.onclick = clickOut
+            }else{
+                document.onclick = null
+            }
             if(mainState.viewBox){
-                TweenLite.to(svgRef.current,{
-                    attr:{
-                        viewBox:mainState.viewBox
-                    }
-                }).duration(0.5)
+                moveFigure()
             }
         }
     },[mainState])
@@ -70,6 +111,26 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     },[currentProcessogram])    
 
+    const clickWasInside = (elementClicked:EventTarget) => {
+        let currentElement = innerCurrent?
+        svgRef.current.querySelector(`#${innerCurrent}`)
+        :
+        svgRef.current
+        
+        return currentElement.contains(elementClicked as Node)
+    }
+
+    const moveFigure = () => {
+        setIsMoving(true)
+        TweenLite.to(svgRef.current,{
+            attr:{
+                viewBox:mainState.viewBox
+            },
+            ease:'power1.inOut'
+        }).duration(0.5)
+        .then(()=>setIsMoving(false))
+    }
+
     const focusOnMe = () => {
         setMainState({level:1})
         setIsMoving(true)
@@ -79,7 +140,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             left:'50%',
             translateX:'-50%',
             translateY:'-50%'
-        }).duration(0.5).then(()=>setIsMoving(false))
+        }).duration(0.5).then(()=>setIsMoving(false))        
     }
 
     const hiddeMe = () => {
@@ -105,8 +166,11 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             let id = event.currentTarget.id
             setCurrentProcessogram(id)           
         }else{
-            if(imOnFocus()){
-                InnerClick()
+            if(imOnFocus()){   
+                if(clickWasInside(event.target)){
+                    event.stopPropagation()
+                    InnerClick()
+                }
             }
         }      
     }
@@ -126,8 +190,9 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
         setMainState({
             level:mainState.level+1,
-            viewBox
+            viewBox            
         })
+
         setInnerCurrent(element.id)
     }    
 

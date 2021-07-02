@@ -4,7 +4,7 @@ export const RESOURCES : ResourcesTypes[]  = ['processograms','users','privilege
 
 export const PIG : ProductionSystemTypes[] = ['conventional intensive','european intensive','enhanced intensive','outdoor semi-intensive']
 
-export const CHICKEN : ProductionSystemTypes[] = ['conventional cages']
+export const CHICKEN : ProductionSystemTypes[] = ['conventional cages','single tier','multi tier','free range']
 
 export const SPECIES = {
     pig:PIG,
