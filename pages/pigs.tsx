@@ -5,6 +5,7 @@ import theme from 'theme/schema.json'
 import processogramApi from '@/api/processogram'
 import { LoaderContainer } from "@/components/miscellaneous/loaders"
 import Loader from "react-loader-spinner"
+import toast from "react-hot-toast"
 
 const PublicPigsPage = () => {
 
@@ -18,6 +19,10 @@ const PublicPigsPage = () => {
         processogramApi.all()
         .then(({data}) => {
             setProcessograms(data)
+            setFirstLoad(true)
+        })
+        .catch((error) => {
+            toast.error('Something Wrong. Some elements may not work.')
             setFirstLoad(true)
         })
     },[])

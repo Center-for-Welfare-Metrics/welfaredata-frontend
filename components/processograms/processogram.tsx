@@ -128,6 +128,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             level:mainState.level+1,
             viewBox
         })
+        setInnerCurrent(element.id)
     }    
 
     const stuckPosition = () => {
