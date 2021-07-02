@@ -1,7 +1,7 @@
 import { SvgContainer } from './processogram-styled'
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import { TweenLite, gsap } from 'gsap'
-import ProcessogramContext, { IDimensions, IProcessogramContext } from '@/context/processogram'
+import ProcessogramContext from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
@@ -30,7 +30,9 @@ interface ImainState {
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
 
-    const {setOnHover,setCurrentProcessogram,currentProcessogram,parentDimensions} = useContext(ProcessogramContext)    
+    const {setOnHover,setCurrentProcessogram,currentProcessogram} = useContext(ProcessogramContext)    
+
+    const [initialAxis,setInitialAxis] = useState({x:0,y:0})
 
     const [mainState,setMainState] = useState<ImainState>({
         neverLoaded:true,
@@ -41,7 +43,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const [innerCurrent,setInnerCurrent] = useState<string>(null)
 
-    const [isMoving,setIsMoving] = useState(false)
+    const [isMoving,setIsMoving] = useState(false)    
 
     const svgRef = useRef<SVGElement>(null)
 
@@ -53,23 +55,40 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 document.onclick = clickOut
             }else{
                 document.onclick = null
+                originalPosition()                
             }
             if(mainState.viewBox){
                 moveFigure()
             }
         }
     },[mainState])
-
+    
     useEffect(()=>{
         if(currentProcessogram){    
-            stuckPosition()
+            fixFigureOnScreen()
             if(imOnFocus()){                
                 focusOnMe()
             }else{
-                hiddeMe()
+                hideMe()
             }
+        }else{
+            if(ref.current){
+                TweenLite.to(ref.current,{position:'static',zIndex:1}).duration(0)
+                setInnerCurrent(null)
+            }                                    
         }
-    },[currentProcessogram]) 
+    },[currentProcessogram])
+
+    const originalPosition = () => {
+        TweenLite.to(ref.current,{
+            top:initialAxis.y,
+            left:initialAxis.x,                
+            translateX:'0',
+            translateY:'0'
+        }).duration(0.5).then(()=>{
+            setCurrentProcessogram(null)
+        })
+    }
 
     const imOnFocus = () => currentProcessogram === svgRef.current?.id        
 
@@ -94,9 +113,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         if(mainState.level>1){
             if(parent){
                 let bbox = parent.getBBox()
-
                 let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
-
                 setMainState({
                     level:mainState.level-1,
                     viewBox            
@@ -105,9 +122,12 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                     setInnerCurrent(null)
                 }else{
                     setInnerCurrent(parent.id)
-                }
-                
+                }                
             }
+        }else if(mainState.level === 1){            
+            setMainState({
+                level:0                
+            })
         }
     }   
 
@@ -143,7 +163,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }).duration(0.5).then(()=>setIsMoving(false))        
     }
 
-    const hiddeMe = () => {
+    const hideMe = () => {
         TweenLite.to(ref.current,{
             zIndex:-99
         }).duration(0)
@@ -196,8 +216,9 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         setInnerCurrent(element.id)
     }    
 
-    const stuckPosition = () => {
+    const fixFigureOnScreen = () => {
         let {top,left} = getElementSizeInformations(ref.current)
+        setInitialAxis({x:left,y:top})
         return TweenLite.to(ref.current,
             {
                 top,
@@ -206,10 +227,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             }
         ).duration(0)
     }
-
-    useEffect(()=>{
-        console.log(innerHover)
-    },[innerHover])
 
     const mouseMove = (event:MS<SVGElement,MouseEvent>) => {
         if(imOnFocus()){            
@@ -246,8 +263,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 onMouseLeave={mouseLeave}
                 onMouseMove={mouseMove}      
                 src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
-            />
-            <span style={{position:'absolute'}}>O</span>
+            />            
         </SvgContainer>
     )
 }

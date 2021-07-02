@@ -1,6 +1,8 @@
 import styled, {css} from 'styled-components'
 
-
+export const Title = styled.div`
+    
+`
 
 export const SvgContainer = styled.div`    
     svg{
@@ -43,7 +45,7 @@ export const SvgContainer = styled.div`
     
     ${({selected}) => selected && css`
         svg:not(#${selected}){
-            opacity:0.3;
+            opacity:0;
             transition:opacity 500ms;            
         }
     `}

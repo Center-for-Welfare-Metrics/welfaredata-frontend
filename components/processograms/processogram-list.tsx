@@ -13,54 +13,49 @@ gsap.registerPlugin(TweenLite)
 
 export interface IProcessogramList {
     specie:SpeciesTypes
+    collection:any[]
 }
 
 
-const ProcessogramList = ({specie}:IProcessogramList) => {
+const ProcessogramList = ({specie,collection}:IProcessogramList) => {
     
-    const containerRef = useRef<HTMLDivElement>(null)
-
-    const [parentDimensions,setParentDimensions] = useState<any>(null)
+    const containerRef = useRef<HTMLDivElement>(null)    
 
     const [onHover,setOnHover] = useState<string>(null)
 
     const [currentProcessogram,setCurrentProcessogram] = useState<string>(null)
 
-    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,parentDimensions,setParentDimensions}
+    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram}
 
-    
-
-    useEffect(()=>{
-        const resizeEvent = () => {            
-            let {width,height,top,left,x,y} = containerRef.current.getBoundingClientRect()
-            let middleX = left + (width/2)
-            let middleY = top + (height/2)
-            setParentDimensions({width,height,top,left,middleX,middleY,x,y})
-        }
-        resizeEvent()
-        window.addEventListener('resize',resizeEvent)
-
-        return () => window.removeEventListener('resize',resizeEvent)
-    },[])
+    const [scrollTop,setScrollTop] = useState(0)
 
     useEffect(()=>{
         if(currentProcessogram){
-            TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)
+            console.log(collection)
+            setScrollTop(containerRef.current.scrollTop)
+            TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)            
+        }else{
+            if(containerRef.current){                
+                TweenLite.to(containerRef.current,{overflow:'auto'}).duration(0)
+                .then(()=>{
+                    containerRef.current.scrollTo(0,scrollTop)
+                })                
+            }
         }
     },[currentProcessogram])
 
     return (   
         <ProcessogramContext.Provider value={contextValue}>            
-            <Container ref={containerRef} hover={onHover} current={currentProcessogram}>
+            <Container ref={containerRef} hover={onHover} current={currentProcessogram}>                
                 {
-                    SPECIES[specie].map((productionSystem,index) => (
+                    SPECIES[specie].map((productionSystem) => (
                         <Processogram
                             key={productionSystem}
                             specie={specie}
                             productionSystem={productionSystem}
                         />
                     ))
-                }              
+                }                       
             </Container> 
         </ProcessogramContext.Provider>      
     )
