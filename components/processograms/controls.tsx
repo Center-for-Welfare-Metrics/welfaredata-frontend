@@ -18,12 +18,16 @@ const ProcessogramControls = ({
         document.onkeydown = handleKeyDown
     },[])
 
-    const handleKeyDown = (event:KeyboardEvent) => {       
-        if(event.key==='ArrowLeft'){
-            toPreviousSibling(event)
-        }else if(event.key==='ArrowRight'){
-            toNextSibling(event)
+    const handleKeyDown = (event:KeyboardEvent) => {
+        const Action = {
+            ArrowLeft:toPreviousSibling,
+            ArrowRight:toNextSibling
         }
+        try {
+            Action[event.key](event)
+        } catch (error) {
+            
+        }        
     }
 
     const toPreviousSibling = (event:Event) => {

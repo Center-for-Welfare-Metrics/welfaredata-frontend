@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { TweenLite, gsap } from 'gsap'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
@@ -7,8 +6,7 @@ import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import ProcessogramContext from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 
-import { SvgContainer, ToRight, ToLeft } from './processogram-styled'
-import { useLayoutEffect } from 'react';
+import { SvgContainer} from './processogram-styled'
 import ProcessogramControls from './controls';
 import { getElementViewBox } from './processogram-helpers';
 
@@ -238,7 +236,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             toNextLevel(element)
         }
     }
-    
 
     const toNextLevel = (element:any) => {  
         let bbox = element.getBBox()
@@ -252,8 +249,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             innerCurrent:element.id           
         })        
     }    
-    
-    
 
     const fixFigureOnScreen = () => {
         let {top,left} = getElementSizeInformations(ref.current)
