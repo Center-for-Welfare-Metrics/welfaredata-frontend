@@ -13,7 +13,10 @@ export const Arrow = styled.div`
     }
     top:50%;
     cursor: pointer;
-    z-index:100;      
+    z-index:100;
+    @media(max-width:800px){
+        display:none;
+    }      
 `
 
 export const ToRight = styled(Arrow)`

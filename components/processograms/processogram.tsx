@@ -2,10 +2,10 @@ import React from 'react'
 import { TweenLite, gsap } from 'gsap'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
+
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import ProcessogramContext from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
-
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/processogram-hud';
 import { getElementViewBox } from './processogram-helpers';
@@ -56,8 +56,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     }
 
     const removeDocumentTriggers = () => {
-        document.onclick = null
-        document.onkeydown = null
+        document.onclick = null        
     }
 
     useEffect(()=>{        

@@ -6,16 +6,41 @@ import { getElementViewBox } from '../processogram-helpers'
 import SVG from 'react-inlinesvg'
 import { useContext } from 'react'
 import HudContext from '@/context/hud-context'
-
+import { useState } from 'react'
 
 const ProcessogramControls = () => {
 
-    const { element,onChange } = useContext(HudContext)    
+    const { element,onChange } = useContext(HudContext)        
+
+    let initial_touch_position_x = 0 
 
     useEffect(()=>{        
         document.onkeydown = handleKeyDown
+        document.ontouchstart = touchStart
+        document.ontouchend = touchEnd
+        return () => {
+            document.ontouchstart = null
+            document.ontouchend = null
+        }
     },[])
 
+    const touchStart = (event:TouchEvent) => {
+        initial_touch_position_x = event.changedTouches[0].clientX
+    }
+
+    const touchEnd = (event:TouchEvent) => {
+        let final_touch_position_x = event.changedTouches[0].clientX
+        let drag_size = final_touch_position_x - initial_touch_position_x
+        
+        if(Math.abs(drag_size)>50){            
+            if(drag_size>0){
+                toPreviousSibling(event)
+            }else{
+                toNextSibling(event)                
+            }
+        }
+    }
+    
     const handleKeyDown = (event:KeyboardEvent) => {
         const Action = {
             ArrowLeft:toPreviousSibling,
