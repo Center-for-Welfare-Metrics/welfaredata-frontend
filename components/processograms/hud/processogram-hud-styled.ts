@@ -8,5 +8,7 @@ let fade = keyframes`
 
 export const Container = styled.div`
     position:absolute;
-    animation: ${fade} 500ms;    
+    >*{
+        animation: ${fade} 500ms;
+    }
 `

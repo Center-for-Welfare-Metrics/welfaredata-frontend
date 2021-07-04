@@ -44,8 +44,6 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [tab,setTab] = useState<TabTypes>('description')
 
-    const [modificationsCount,setModificationsCount] = useState(0)
-
     const [onFetch,setOnFetch] = useState(false)
 
     const [clickLevel,setClickLevel] = useState<number>(null)
