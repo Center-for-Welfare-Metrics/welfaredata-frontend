@@ -30,8 +30,7 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
     const [scrollTop,setScrollTop] = useState(0)
 
     useEffect(()=>{
-        if(currentProcessogram){
-            console.log(collection)
+        if(currentProcessogram){            
             setScrollTop(containerRef.current.scrollTop)
             TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)            
         }else{

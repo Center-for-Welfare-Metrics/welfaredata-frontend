@@ -1,11 +1,16 @@
-import { SvgContainer } from './processogram-styled'
-import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
+
+import React from 'react'
 import { TweenLite, gsap } from 'gsap'
-import ProcessogramContext from '@/context/processogram'
-import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
-import React from 'react'
+import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
+import ProcessogramContext from '@/context/processogram'
+import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
+
+import { SvgContainer, ToRight, ToLeft } from './processogram-styled'
+import { useLayoutEffect } from 'react';
+import ProcessogramControls from './controls';
+import { getElementViewBox } from './processogram-helpers';
 
 gsap.registerPlugin(TweenLite)
 
@@ -23,9 +28,9 @@ const LEVELS = ['--ps','--lf','--ph','--ci']
 interface ImainState {
     neverLoaded?:true
     level:number
-    viewBox?:string
-    focused?:string
-    parent?:any
+    viewBox:string    
+    parent:any
+    innerCurrent:string
 }
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
@@ -36,12 +41,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const [mainState,setMainState] = useState<ImainState>({
         neverLoaded:true,
-        level:0               
+        level:0,
+        parent:null,
+        innerCurrent:null,
+        viewBox:null              
     })
 
-    const [innerHover,setInnerHover] = useState<string>(null)
-
-    const [innerCurrent,setInnerCurrent] = useState<string>(null)
+    const [innerHover,setInnerHover] = useState<string>(null)    
 
     const [isMoving,setIsMoving] = useState(false)    
 
@@ -49,12 +55,21 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     const ref = useRef<HTMLDivElement>(null)
 
+    const applyDocumentTriggers = () => {
+        document.onclick = clickOut        
+    }
+
+    const removeDocumentTriggers = () => {
+        document.onclick = null
+        document.onkeydown = null
+    }
+
     useEffect(()=>{        
         if(!mainState.neverLoaded){         
-            if(mainState.level > 0){
-                document.onclick = clickOut
+            if(mainState.level > 0){                
+                applyDocumentTriggers()                
             }else{
-                document.onclick = null
+                removeDocumentTriggers()
                 originalPosition()                
             }
             if(mainState.viewBox){
@@ -74,27 +89,39 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }else{
             if(ref.current){
                 TweenLite.to(ref.current,{position:'static',zIndex:1}).duration(0)
-                setInnerCurrent(null)
+                setMainState({
+                    innerCurrent:null,
+                    level:0,
+                    parent:null,
+                    viewBox:null                   
+                })
             }                                    
         }
     },[currentProcessogram])
 
+    const getCurrentDomElement = () => mainState.innerCurrent?svgRef.current.querySelector(`#${mainState.innerCurrent}`):svgRef.current    
+
     const originalPosition = () => {
-        TweenLite.to(ref.current,{
-            top:initialAxis.y,
-            left:initialAxis.x,                
-            translateX:'0',
-            translateY:'0'
-        }).duration(0.5).then(()=>{
-            setCurrentProcessogram(null)
-        })
+        if(ref.current && svgRef.current){
+            TweenLite.to(ref.current,{
+                top:initialAxis.y,
+                left:initialAxis.x,                
+                translateX:'0',
+                translateY:'0'
+            }).duration(0.5).then(()=>{
+                setCurrentProcessogram(null)
+            })
+            TweenLite.set(svgRef.current,{
+                clearProps:'margin'
+            }).duration(0.5)
+        }
     }
 
     const imOnFocus = () => currentProcessogram === svgRef.current?.id        
 
     const getParent = () => {        
-        if(innerCurrent){
-            let node = svgRef.current.querySelector(`#${innerCurrent}`)
+        if(mainState.innerCurrent){
+            let node = svgRef.current.querySelector(`#${mainState.innerCurrent}`)
             let levelBefore = LEVELS[mainState.level-2]
             while(node!==svgRef.current){
                 node = node.parentElement                
@@ -111,29 +138,33 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const clickOut = () => {
         let parent = getParent() as any
         if(mainState.level>1){
-            if(parent){
-                let bbox = parent.getBBox()
-                let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+            if(parent){                
+                let viewBox = getElementViewBox(parent)
+                let inner_current = null 
+                if(!parent.id.includes('--ps')){
+                    inner_current = parent.id
+                }
                 setMainState({
+                    ...mainState,
                     level:mainState.level-1,
-                    viewBox            
-                })
-                if(parent.id.includes('--ps')){
-                    setInnerCurrent(null)
-                }else{
-                    setInnerCurrent(parent.id)
-                }                
+                    viewBox,
+                    innerCurrent:inner_current          
+                })            
             }
         }else if(mainState.level === 1){            
             setMainState({
-                level:0                
+                level:0,
+                parent:null,
+                innerCurrent:null,
+                viewBox:null,
+                               
             })
         }
-    }   
+    }       
 
     const targetIsInside = (elementClicked:EventTarget) => {
-        let currentElement = innerCurrent?
-        svgRef.current.querySelector(`#${innerCurrent}`)
+        let currentElement = mainState.innerCurrent?
+        svgRef.current.querySelector(`#${mainState.innerCurrent}`)
         :
         svgRef.current
         
@@ -147,12 +178,15 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 viewBox:mainState.viewBox
             },
             ease:'power1.inOut'
-        }).duration(0.5)
+        }).duration(0.7)
         .then(()=>setIsMoving(false))
     }
 
     const focusOnMe = () => {
-        setMainState({level:1})
+        setMainState({
+            ...mainState,
+            level:1,            
+        })
         setIsMoving(true)
         TweenLite.to(ref.current,{
             width:'80%',
@@ -160,7 +194,10 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
             left:'50%',
             translateX:'-50%',
             translateY:'-50%'
-        }).duration(0.5).then(()=>setIsMoving(false))        
+        }).duration(0.5).then(()=>setIsMoving(false))
+        TweenLite.to(svgRef.current,{
+            margin:0
+        }).duration(0.5)  
     }
 
     const hideMe = () => {
@@ -209,12 +246,14 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
 
         setMainState({
+            ...mainState,
             level:mainState.level+1,
-            viewBox            
-        })
-
-        setInnerCurrent(element.id)
+            viewBox,
+            innerCurrent:element.id           
+        })        
     }    
+    
+    
 
     const fixFigureOnScreen = () => {
         let {top,left} = getElementSizeInformations(ref.current)
@@ -226,7 +265,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 position:'absolute'                
             }
         ).duration(0)
-    }
+    }  
 
     const mouseMove = (event:MS<SVGElement,MouseEvent>) => {
         if(imOnFocus()){            
@@ -243,28 +282,37 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 setInnerHover(null)
             }
         }
-    }
+    }        
 
-    return (      
-        <SvgContainer
-            selected={currentProcessogram}
-            level={mainState.level}
-            equallevel={LEVELS[mainState.level-1] || null}
-            innerlevel={LEVELS[mainState.level]}
-            current={innerCurrent || currentProcessogram}
-            hover={innerHover}
-            ref={ref}
-            style={{width:'80%'}}
-        >
-            <ProcessogramSVG                
-                ref={svgRef}
-                onClick={ProcessogramClick}      
-                onMouseEnter={mouseEnter}
-                onMouseLeave={mouseLeave}
-                onMouseMove={mouseMove}      
-                src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
-            />            
-        </SvgContainer>
+    return (
+        <>      
+            <SvgContainer
+                selected={currentProcessogram}
+                level={mainState.level}
+                equallevel={LEVELS[mainState.level-1] || null}
+                innerlevel={LEVELS[mainState.level]}
+                current={mainState.innerCurrent || currentProcessogram}
+                hover={innerHover}
+                ref={ref}
+                style={{width:'80%'}}
+            >
+                <ProcessogramSVG                
+                    ref={svgRef}
+                    onClick={ProcessogramClick}      
+                    onMouseEnter={mouseEnter}
+                    onMouseLeave={mouseLeave}
+                    onMouseMove={mouseMove}      
+                    src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
+                />                        
+            </SvgContainer>
+            { 
+                (imOnFocus() && !isMoving && mainState.level === 3) &&                            
+                <ProcessogramControls 
+                    element={getCurrentDomElement()}
+                    onChange={(change)=>setMainState({...mainState,...change})}
+                />                
+            }
+        </>
     )
 }
 

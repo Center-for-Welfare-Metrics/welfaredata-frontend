@@ -1,7 +1,26 @@
-import styled, {css} from 'styled-components'
+import styled, {css,keyframes} from 'styled-components'
 
-export const Title = styled.div`
+let fade = keyframes`
+    0%{opacity:0}
+    100{opacity:1}
+`
+
+export const Arrow = styled.div`
+    position:fixed;
+    color:white;
+    font-size:4rem;       
     
+    animation: ${fade} 500ms;
+    cursor: pointer;
+    z-index:100;
+`
+
+export const ToRight = styled(Arrow)`
+    transform:translate(10%,-50%);
+`
+
+export const ToLeft = styled(Arrow)`
+    transform:translate(-110%,-50%);
 `
 
 export const SvgContainer = styled.div`    
