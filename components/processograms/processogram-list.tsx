@@ -25,15 +25,20 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [currentProcessogram,setCurrentProcessogram] = useState<string>(null)
 
-    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram}
+    const [focusedFigure,setFocusedFigure] = useState<string>(null)
+
+    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,focusedFigure,setFocusedFigure}
 
     const [scrollTop,setScrollTop] = useState(0)
+
 
     useEffect(()=>{
         if(currentProcessogram){            
             setScrollTop(containerRef.current.scrollTop)
+            setFocusedFigure(currentProcessogram)
             TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)            
         }else{
+            setFocusedFigure(null)
             if(containerRef.current){                
                 TweenLite.to(containerRef.current,{overflow:'auto'}).duration(0)
                 .then(()=>{

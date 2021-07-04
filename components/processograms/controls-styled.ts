@@ -7,21 +7,25 @@ let fade = keyframes`
 
 export const Arrow = styled.div`
     position:absolute;
-    color:white;
-    font-size:4rem;       
+    svg{
+        path{
+            fill:white !important;
+        }        
+        width:3rem; 
+    }
     top:50%;
     animation: ${fade} 500ms;
     cursor: pointer;
-    z-index:100;
+    z-index:100;      
 `
 
 export const ToRight = styled(Arrow)`
-    transform: translate(110%,-50%);
+    transform: translate(120%,-50%);
     right:0;
 `
 
 export const ToLeft = styled(Arrow)`
-    transform: translate(-110%,-50%);
+    transform: translate(-120%,-50%) rotate(180deg);
     left:0;
 `
 

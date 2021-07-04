@@ -33,7 +33,7 @@ interface ImainState {
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
 
-    const {setOnHover,setCurrentProcessogram,currentProcessogram} = useContext(ProcessogramContext)    
+    const {onHover,setOnHover,setCurrentProcessogram,currentProcessogram,setFocusedFigure} = useContext(ProcessogramContext)    
 
     const [initialAxis,setInitialAxis] = useState({x:0,y:0})
 
@@ -43,9 +43,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         parent:null,
         innerCurrent:null,
         viewBox:null              
-    })
-
-    const [innerHover,setInnerHover] = useState<string>(null)    
+    })      
 
     const [isMoving,setIsMoving] = useState(false)    
 
@@ -64,7 +62,12 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
 
     useEffect(()=>{        
         if(!mainState.neverLoaded){         
-            if(mainState.level > 0){                
+            if(mainState.level > 0){
+                if(mainState.innerCurrent){
+                    setFocusedFigure(mainState.innerCurrent)
+                }else{
+                    setFocusedFigure(currentProcessogram)
+                }
                 applyDocumentTriggers()                
             }else{
                 removeDocumentTriggers()
@@ -212,13 +215,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const mouseLeave = (event:MS<SVGElement,MouseEvent>) => {
         setOnHover(null)
         if(imOnFocus()){
-            setInnerHover(null)
+            setOnHover(null)
         }
     }
 
     const ProcessogramClick = (event:MS<SVGElement,MouseEvent>) => {
         if(currentProcessogram === null){
-            let id = event.currentTarget.id
+            let id = svgRef.current.id
             setCurrentProcessogram(id)           
         }else{
             if(imOnFocus()){   
@@ -231,7 +234,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     }
 
     const InnerClick = () => {
-        let element = svgRef.current.querySelector(`#${innerHover}`)
+        let element = svgRef.current.querySelector(`#${onHover}`)
         if(element){
             toNextLevel(element)
         }
@@ -270,11 +273,11 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                     level:LEVELS[mainState.level],
                     current:currentProcessogram
                 })
-                if(innerHover!==right_target_id){                
-                    setInnerHover(right_target_id)
+                if(onHover!==right_target_id){
+                    setOnHover(right_target_id)                                  
                 }
-            }else{
-                setInnerHover(null)
+            }else{                
+                setOnHover(null)
             }
         }
     }        
@@ -287,7 +290,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 equallevel={LEVELS[mainState.level-1] || null}
                 innerlevel={LEVELS[mainState.level]}
                 current={mainState.innerCurrent || currentProcessogram}
-                hover={innerHover}
+                hover={onHover}
                 ref={ref}
                 style={{width:'80%'}}
             >

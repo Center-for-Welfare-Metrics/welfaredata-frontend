@@ -9,7 +9,9 @@ export interface IProcessogramContext {
     onHover:string
     setOnHover(onHover:string):void
     currentProcessogram:string
-    setCurrentProcessogram(currentProcessogram:string):void      
+    setCurrentProcessogram(currentProcessogram:string):void
+    focusedFigure:string
+    setFocusedFigure(currentProcessogram:string):void
 }
 
 
