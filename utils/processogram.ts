@@ -1,11 +1,19 @@
-import { IDimensions } from '@/context/processogram'
 import voca from 'voca'
 
 
 
+export const normalizeElementNameByGivingID = (id:string) => {
+
+    id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
+
+    id = id.replace(/_/g,' ')
+
+    return voca.titleCase(id)
+
+}
 
 
-export const getElementSizeInformations = (element:Element) : IDimensions => {
+export const getElementSizeInformations = (element:Element) => {
     let rect = element.getBoundingClientRect()
     
     let middleX = rect.left + (rect.width/2)

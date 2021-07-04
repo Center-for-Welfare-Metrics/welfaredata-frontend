@@ -7,7 +7,7 @@ import ProcessogramContext from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 
 import { SvgContainer} from './processogram-styled'
-import ProcessogramControls from './controls';
+import ProcessogramHud from './hud/processogram-hud';
 import { getElementViewBox } from './processogram-helpers';
 
 gsap.registerPlugin(TweenLite)
@@ -111,6 +111,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 translateY:'0'
             }).duration(0.5).then(()=>{
                 setCurrentProcessogram(null)
+                setIsMoving(false)
             })
             TweenLite.set(svgRef.current,{
                 clearProps:'margin'
@@ -145,6 +146,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 if(!parent.id.includes('--ps')){
                     inner_current = parent.id
                 }
+                setIsMoving(true)
                 setMainState({
                     ...mainState,
                     level:mainState.level-1,
@@ -152,13 +154,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                     innerCurrent:inner_current          
                 })            
             }
-        }else if(mainState.level === 1){            
+        }else if(mainState.level === 1){  
+            setIsMoving(true)
             setMainState({
                 level:0,
                 parent:null,
                 innerCurrent:null,
-                viewBox:null,
-                               
+                viewBox:null,                               
             })
         }
     }       
@@ -172,8 +174,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         return currentElement.contains(elementClicked as Node)
     }
 
-    const moveFigure = () => {
-        setIsMoving(true)
+    const moveFigure = () => {        
         TweenLite.to(svgRef.current,{
             attr:{
                 viewBox:mainState.viewBox
@@ -241,10 +242,9 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     }
 
     const toNextLevel = (element:any) => {  
+        setIsMoving(true)
         let bbox = element.getBBox()
-
         let viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
-
         setMainState({
             ...mainState,
             level:mainState.level+1,
@@ -282,6 +282,11 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     }        
 
+    const handleHudChange = (change) => {
+        setIsMoving(true)
+        setMainState({...mainState,...change})
+    }
+
     return (
         <>      
             <SvgContainer
@@ -304,10 +309,11 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 />                        
             </SvgContainer>
             { 
-                (imOnFocus() && !isMoving && mainState.level === 3) &&                            
-                <ProcessogramControls 
+                (imOnFocus() && !isMoving && mainState.level >= 0) &&                            
+                <ProcessogramHud 
                     element={getCurrentDomElement()}
-                    onChange={(change)=>setMainState({...mainState,...change})}
+                    onChange={handleHudChange}
+                    level={mainState.level}
                 />                
             }
         </>

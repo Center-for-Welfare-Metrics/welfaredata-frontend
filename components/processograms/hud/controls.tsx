@@ -1,20 +1,16 @@
 import { SvgPath } from '@/utils/assets_path'
 import { useEffect } from 'react'
 import { Container,ToLeft,ToRight } from './controls-styled'
-import { getElementViewBox } from './processogram-helpers'
+import { getElementViewBox } from '../processogram-helpers'
 
 import SVG from 'react-inlinesvg'
-interface IProcessogramControls{
-    element:Element
-    onChange(change):void
-}
+import { useContext } from 'react'
+import HudContext from '@/context/hud-context'
 
-const ProcessogramControls = ({
-    element,
-    onChange,
-}:IProcessogramControls) => {
 
-    const elementRect = element.getBoundingClientRect()
+const ProcessogramControls = () => {
+
+    const { element,onChange } = useContext(HudContext)    
 
     useEffect(()=>{        
         document.onkeydown = handleKeyDown
@@ -69,11 +65,7 @@ const ProcessogramControls = ({
     }
 
     return (
-        <Container style={{
-            top:elementRect.top,
-            width:elementRect.width,
-            height:elementRect.height,
-        }}>
+        <>
              {getNextSiblingFrom(element) && 
                 <ToRight  onClick={toNextSibling}>
                     <SVG 
@@ -82,7 +74,6 @@ const ProcessogramControls = ({
                 </ToRight>
                 
             }
-
             {getPreviousSiblingFrom(element) && 
             <ToLeft  onClick={toPreviousSibling}>
                 <SVG
@@ -90,7 +81,7 @@ const ProcessogramControls = ({
                 />
             </ToLeft>    
             }
-        </Container>
+        </>
     )
 }
 

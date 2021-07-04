@@ -1,20 +1,17 @@
-import styled, {css,keyframes} from 'styled-components'
+import styled from 'styled-components'
 
-let fade = keyframes`
-    0%{opacity:0}
-    100{opacity:1}
-`
+
 
 export const Arrow = styled.div`
     position:absolute;
     svg{
         path{
-            fill:white !important;
+            fill:${({theme}) => theme.colors.blue} !important;
         }        
         width:3rem; 
+        z-index:100;
     }
     top:50%;
-    animation: ${fade} 500ms;
     cursor: pointer;
     z-index:100;      
 `
