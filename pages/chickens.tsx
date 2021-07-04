@@ -34,6 +34,7 @@ const PublicChickensPage = () => {
                 (
                     <ProductionSystemSelector   
                         specie='chicken'
+                        collection={processograms}
                     />
                 )
                 :

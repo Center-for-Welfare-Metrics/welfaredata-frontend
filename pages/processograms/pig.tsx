@@ -31,7 +31,8 @@ const PigPage = () => {
                     firstLoad?
                     (
                         <ProductionSystemSelector                               
-                            specie='pig' 
+                            specie='pig'
+                            collection={processograms} 
                         />
                     )
                     :

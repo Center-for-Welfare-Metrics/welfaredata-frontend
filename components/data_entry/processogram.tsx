@@ -230,7 +230,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                 {
                     loaded &&
                     <ProductionSystemSelector 
-                        specie={specie}                                     
+                        specie={specie}
+                        collection={processograms}
                     />
                 }
                 </ProcessogramSpace>

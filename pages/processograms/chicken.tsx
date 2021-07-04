@@ -33,6 +33,7 @@ const LayingHensPage = () => {
                 (
                     <ProductionSystemSelector                     
                         specie='chicken'
+                        collection={processograms}
                     />
                 )
                 :
