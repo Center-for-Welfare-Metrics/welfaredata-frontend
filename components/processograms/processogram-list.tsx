@@ -31,6 +31,11 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [scrollTop,setScrollTop] = useState(0)
 
+    const [stack,setStack] = useState([])
+
+    useEffect(()=>{
+        console.log(collection)
+    },[collection])
 
     useEffect(()=>{
         if(currentProcessogram){            

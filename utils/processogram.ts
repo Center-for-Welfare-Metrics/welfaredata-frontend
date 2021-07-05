@@ -1,9 +1,12 @@
 import voca from 'voca'
 
 
+export const getCollectionInformationsByStack = (collection:any[],stack:string[]) => {
+    
+}
+
 
 export const normalizeElementNameByGivingID = (id:string) => {
-
     id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
 
     id = id.replace(/_/g,' ')

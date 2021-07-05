@@ -32,7 +32,8 @@ const ProcessogramControls = () => {
         let final_touch_position_x = event.changedTouches[0].clientX
         let drag_size = final_touch_position_x - initial_touch_position_x
         
-        if(Math.abs(drag_size)>50){            
+        if(Math.abs(drag_size)>50){   
+            event.stopPropagation()         
             if(drag_size>0){
                 toPreviousSibling(event)
             }else{
