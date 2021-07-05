@@ -12,7 +12,6 @@ export const normalizeElementNameByGivingID = (id:string) => {
     id = id.replace(/_/g,' ')
 
     return voca.titleCase(id)
-
 }
 
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { TweenLite, gsap } from 'gsap'
 import { MouseEvent as MS , useContext, useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
+import update from 'immutability-helper'
 
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import ProcessogramContext from '@/context/processogram'
@@ -33,7 +34,7 @@ interface ImainState {
 
 const Processogram = ({productionSystem,specie}:IProcessogram) => {   
 
-    const {onHover,setOnHover,setCurrentProcessogram,currentProcessogram,setFocusedFigure} = useContext(ProcessogramContext)    
+    const {onHover,setOnHover,setCurrentProcessogram,currentProcessogram,setFocusedFigure,focusedFigure} = useContext(ProcessogramContext)    
 
     const [initialAxis,setInitialAxis] = useState({x:0,y:0})
 
@@ -58,6 +59,20 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const removeDocumentTriggers = () => {
         document.onclick = null        
     }
+
+    const [stack,setStack] = useState([])
+
+    useEffect(()=>{
+        if(focusedFigure){
+            if(imOnFocus()){
+                updateStack()                
+            }
+        }
+    },[focusedFigure])
+
+    useEffect(()=>{
+        console.log(stack)
+    },[stack])
 
     useEffect(()=>{        
         if(!mainState.neverLoaded){         
@@ -100,6 +115,16 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     },[currentProcessogram])
 
     const getCurrentDomElement = () => mainState.innerCurrent?svgRef.current.querySelector(`#${mainState.innerCurrent}`):svgRef.current    
+
+    const updateStack = () => {
+
+        // const 
+
+        console.log(mainState.level)
+        setStack(update(stack,{
+            $push:[focusedFigure]
+        }))
+    }
 
     const originalPosition = () => {
         if(ref.current && svgRef.current){

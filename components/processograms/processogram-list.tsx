@@ -1,13 +1,11 @@
+import { useEffect, useRef, useState } from "react"
+import { TweenLite, gsap } from 'gsap'
+
 import Processogram from "@/components/processograms/processogram"
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
-
 import { Container } from './processogram-list-styled'
-
-import { TweenLite, gsap } from 'gsap'
-import { useEffect, useRef, useState } from "react"
-
-import ProcessogramContext, {IProcessogram, IProcessogramContext} from '@/context/processogram'
+import ProcessogramContext, {IProcessogramContext} from '@/context/processogram'
 
 gsap.registerPlugin(TweenLite)
 
@@ -30,12 +28,6 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
     const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,focusedFigure,setFocusedFigure}
 
     const [scrollTop,setScrollTop] = useState(0)
-
-    const [stack,setStack] = useState([])
-
-    useEffect(()=>{
-        console.log(collection)
-    },[collection])
 
     useEffect(()=>{
         if(currentProcessogram){            
