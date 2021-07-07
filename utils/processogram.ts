@@ -1,8 +1,49 @@
 import voca from 'voca'
 
+export interface ICoolFormat {
+    levelName:'Circumstance'|'Phase'|'Life Fate'|'Production System'|string,
+    elementName:string
+    level:number
+    domID:string
+}
+
+export const translateStackToCoolFormat  = (stack:string[]) => {
+    let cool_json : ICoolFormat[] = []
+    stack.forEach((id,index) => {
+        cool_json.push({
+            levelName:getLevelNameByGivingID(id),
+            elementName:normalizeElementNameByGivingID(id),
+            level:index+1,
+            domID:id
+        })        
+    })
+    return cool_json
+}
 
 export const getCollectionInformationsByStack = (collection:any[],stack:string[]) => {
     
+}
+
+
+
+export const getLevelNameByGivingID = (id:string) => {
+    let map_keys = {
+        '--ps':'Production System',
+        '--lf':'Life Fate',
+        '--ph':'Phase',
+        '--ci':'Circumstance'
+    }
+
+    let keys = Object.keys(map_keys)
+
+    for(let index in keys){
+        let key = keys[index]
+
+        if(id.includes(key)){
+            return map_keys[key]
+        }
+    }
+    return null
 }
 
 

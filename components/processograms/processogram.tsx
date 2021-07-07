@@ -6,7 +6,7 @@ import update from 'immutability-helper'
 
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import ProcessogramContext from '@/context/processogram'
-import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
+import { getCollectionInformationsByStack, getElementSizeInformations, getLevelNameByGivingID, getRightTargetID, translateStackToCoolFormat } from '@/utils/processogram'
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/processogram-hud';
 import { getElementViewBox } from './processogram-helpers';
@@ -70,10 +70,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     },[focusedFigure])
 
-    useEffect(()=>{
-        console.log(stack)
-    },[stack])
-
     useEffect(()=>{        
         if(!mainState.neverLoaded){         
             if(mainState.level > 0){
@@ -117,14 +113,32 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
     const getCurrentDomElement = () => mainState.innerCurrent?svgRef.current.querySelector(`#${mainState.innerCurrent}`):svgRef.current    
 
     const updateStack = () => {
-
-        // const 
-
-        console.log(mainState.level)
-        setStack(update(stack,{
-            $push:[focusedFigure]
-        }))
+        let level = mainState.level
+        let stack_lenght = stack.length
+        
+        
+        if(level>stack_lenght){
+            setStack(update(stack,{
+                $push:[focusedFigure]
+            }))
+        }else if(level<stack_lenght){  
+            let newa = update(stack,{
+                $splice:[[ stack_lenght -(stack_lenght-level),stack_lenght-level]]
+            })
+            console.log(newa)          
+            setStack(newa)
+        }else if(level===stack_lenght){
+            setStack(update(stack,{
+                [stack_lenght-1]:{
+                    $set:focusedFigure
+                }
+            }))
+        }
     }
+
+    useEffect(()=>{
+        console.log(stack)
+    },[stack])
 
     const originalPosition = () => {
         if(ref.current && svgRef.current){
@@ -338,6 +352,7 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                     element={getCurrentDomElement()}
                     onChange={handleHudChange}
                     level={mainState.level}
+                    stackCoolFormat={translateStackToCoolFormat(stack)}
                 />                
             }
         </>

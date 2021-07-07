@@ -15,16 +15,29 @@ const NavBar = () => {
             <NavItems>
                 {
                     NavMap.map((nav_item) => (
-                        <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
-                            {nav_item.childrens}
-                        </NavItem>
+                        nav_item.auth?
+                        (
+                            user && <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
+                                {nav_item.childrens}
+                            </NavItem>
+                        )
+                        :
+                        (
+                            <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
+                                {nav_item.childrens}
+                            </NavItem>
+                        )
+                        
                     ))
                 }
             </NavItems>
-            <UserSection>
-                <UserName>user: {user.name.split(' ')[0]}</UserName>
-                <LogOut onClick={logOut}>logout</LogOut>
-            </UserSection>
+            
+            {
+                user && <UserSection>
+                    <UserName>user: {user.name.split(' ')[0]}</UserName>
+                    <LogOut onClick={logOut}>logout</LogOut>
+                </UserSection>
+            }
         </Containter>
     )
 }

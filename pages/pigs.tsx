@@ -6,6 +6,7 @@ import processogramApi from '@/api/processogram'
 import { LoaderContainer } from "@/components/miscellaneous/loaders"
 import Loader from "react-loader-spinner"
 import toast from "react-hot-toast"
+import DefaultLayout from "@/components/layouts"
 
 const PublicPigsPage = () => {
 
@@ -27,7 +28,7 @@ const PublicPigsPage = () => {
         })
     },[])
 
-    return (                            
+    return (            
         <Container ref={containerRef}>
             {
                 firstLoad?

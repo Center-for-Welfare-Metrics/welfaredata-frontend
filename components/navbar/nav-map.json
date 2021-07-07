@@ -2,24 +2,15 @@
     {
         "name":"data entry",
         "prefix":"/data_entry",
+        "auth":true,
         "childrens":[
             {
-                "name":"processograms",
-                "href":"/processograms"
-            }
-        ]
-    },
-    {
-        "name":"processing",
-        "prefix":"/processing",
-        "childrens":[
-            {
-                "name":"repors",
-                "href":"/reports"
+                "name":"pig",
+                "href":"/pig"
             },
             {
-                "name":"extraction",
-                "href":"/extraction"
+                "name":"laying hens",
+                "href":"/chicken"
             }
         ]
     },
@@ -40,6 +31,7 @@
     {
         "name":"admin",
         "prefix":"/admin",
+        "auth":true,
         "childrens":[
             {
                 "name":"users and privileges",
