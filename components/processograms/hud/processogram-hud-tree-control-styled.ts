@@ -11,8 +11,7 @@ export const TreeItem = styled.div`
    width: fit-content;
    ${({active}) => active?
    css`
-        font-weight:bold;
-        text-decoration:underline;
+        font-weight:bold;        
         cursor:default;
    `
     :
@@ -21,15 +20,17 @@ export const TreeItem = styled.div`
             transform: scale(1.05);
         }
         cursor: pointer;
-    `
-}
+    `    
+    }
+    animation:${fade} 500ms;
 `
 
 export const Container = styled.div`        
     position:absolute;
-    top:2rem;
-    left:1rem;
-    z-index:100;
-    background-color: ${({theme}) => transparentize(0.3,theme.colors.black)};
-    animation: ${fade} 500ms;
+    top:0rem;
+    left:0rem;
+    padding:.5rem;
+    padding-top:.25rem;
+    z-index:100;    
+    background: linear-gradient(165deg,rgba(0,0,0,1) 10%,rgba(0,0,0,.9) 20%,rgba(0,0,0,.8) 30%,rgba(0,0,0,.7) 40%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.4) 60%,rgba(0,0,0,.2) 70%,rgba(0,0,0,0) 80%,rgba(0,0,0,0) 90%,rgba(0,0,0,0) 100%);
 `

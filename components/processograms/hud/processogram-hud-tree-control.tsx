@@ -1,16 +1,24 @@
 import HudContext from '@/context/hud-context'
 import ProcessogramContext from '@/context/processogram'
-import { normalizeElementNameByGivingID } from '@/utils/processogram'
+import { useEffect } from 'react'
+import { useState } from 'react'
 import { useContext } from 'react'
 import { getElementViewBox } from '../processogram-helpers'
-import { Container,TreeItem } from './processogram-hud-legends-styled'
-
+import { Container,TreeItem } from './processogram-hud-tree-control-styled'
 
 
 const ProcessogramHudTreeControl = () => {
 
     const { element,stackCoolFormat,onChange } = useContext(HudContext)
     const { currentProcessogram } = useContext(ProcessogramContext)
+
+    const [localCoolStack,setLocalCoolStack] = useState(stackCoolFormat)
+
+    useEffect(()=>{
+        // setTimeout(() => {
+            setLocalCoolStack(stackCoolFormat)
+        // }, 500);        
+    },[stackCoolFormat])
 
     const onTreeItemClick = ({domID,level}) => (event:Event) => {
         event.stopPropagation()
@@ -34,14 +42,14 @@ const ProcessogramHudTreeControl = () => {
     return(
         <Container>
             {
-                stackCoolFormat.map(({domID,level,levelName,elementName}) => (
+                localCoolStack.map(({domID,level,levelName,elementName},index) => (
                     <TreeItem 
                         style={{
                             marginLeft:`${(level-1)*2}rem`,
                         }} 
                         key={domID}
                         active={element.id===domID}
-                        onClick={onTreeItemClick({domID,level})}
+                        onClick={onTreeItemClick({domID,level})}                        
                     > 
                         {levelName} : {elementName} 
                     </TreeItem>

@@ -343,12 +343,13 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
                 />                        
             </SvgContainer>
             { 
-                (imOnFocus() && !isMoving && mainState.level >= 0) &&                            
+                (imOnFocus() && mainState.level >= 0) &&                            
                 <ProcessogramHud 
                     element={getCurrentDomElement()}
                     onChange={handleHudChange}
                     level={mainState.level}
                     stackCoolFormat={translateStackToCoolFormat(stack)}
+                    isMoving={isMoving}
                 />                
             }
         </>

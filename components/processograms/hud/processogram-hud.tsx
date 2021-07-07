@@ -8,14 +8,16 @@ interface IProcessogramHud{
     element:Element
     onChange(change):void
     level:number
-    stackCoolFormat:ICoolFormat[]
+    stackCoolFormat:ICoolFormat[],
+    isMoving:boolean
 }
 
 const ProcessogramHud = ({
     element,
     onChange,
     level,
-    stackCoolFormat
+    stackCoolFormat,
+    isMoving
 }:IProcessogramHud) => {
 
     const elementRect = element.getBoundingClientRect()
@@ -24,13 +26,16 @@ const ProcessogramHud = ({
 
     return (
         <HudContext.Provider value={{element,onChange,stackCoolFormat}}>
-            <Container style={{
-                top:elementRect.top,
-                width:elementRect.width,
-                height:elementRect.height,
-            }}>
-                {level>=3 && <ProcessogramControls />}                
-            </Container>
+            {
+                !isMoving &&
+                <Container style={{
+                    top:elementRect.top,
+                    width:elementRect.width,
+                    height:elementRect.height,
+                }}>
+                    {level>=3 && <ProcessogramControls />}                
+                </Container>
+            }
             <ProcessogramHudTreeControl />
         </HudContext.Provider>
     )
