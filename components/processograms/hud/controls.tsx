@@ -7,6 +7,7 @@ import SVG from 'react-inlinesvg'
 import { useContext } from 'react'
 import HudContext from '@/context/hud-context'
 import { useState } from 'react'
+import { normalizeElementNameByGivingID } from '@/utils/processogram'
 
 const ProcessogramControls = () => {
 
@@ -81,13 +82,23 @@ const ProcessogramControls = () => {
     const getPreviousSiblingFrom = (element:Element) => {
         let previous_sibling = element.nextElementSibling as any
 
+        let siblingElementName = normalizeElementNameByGivingID(previous_sibling?.id)
+        let elementName = normalizeElementNameByGivingID(element.id)
+
+        if(siblingElementName===elementName) return getNextSiblingFrom(previous_sibling)
+
         return previous_sibling
     }
 
     const getNextSiblingFrom = (element:Element) => {
-        let previous_sibling = element.previousElementSibling as any
+        let next_sibling = element.previousElementSibling as any
 
-        return previous_sibling
+        let siblingElementName = normalizeElementNameByGivingID(next_sibling?.id)
+        let elementName = normalizeElementNameByGivingID(element.id)
+
+        if(siblingElementName===elementName) return getNextSiblingFrom(next_sibling)
+
+        return next_sibling
     }
 
     return (

@@ -48,11 +48,15 @@ export const getLevelNameByGivingID = (id:string) => {
 
 
 export const normalizeElementNameByGivingID = (id:string) => {
-    id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
+    if(id){
+        id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
 
-    id = id.replace(/_/g,' ')
+        id = id.replace(/_/g,' ')
 
-    return voca.titleCase(id)
+        return voca.titleCase(id)
+    }else{
+        return null
+    }
 }
 
 
