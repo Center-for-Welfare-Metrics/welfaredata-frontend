@@ -29,9 +29,9 @@ const ProcessogramHud = ({
                 width:elementRect.width,
                 height:elementRect.height,
             }}>
-                {level>=3 && <ProcessogramControls />}
-                <ProcessogramHudTreeControl />
+                {level>=3 && <ProcessogramControls />}                
             </Container>
+            <ProcessogramHudTreeControl />
         </HudContext.Provider>
     )
 }

@@ -136,10 +136,6 @@ const Processogram = ({productionSystem,specie}:IProcessogram) => {
         }
     }
 
-    useEffect(()=>{
-        console.log(stack)
-    },[stack])
-
     const originalPosition = () => {
         if(ref.current && svgRef.current){
             TweenLite.to(ref.current,{
