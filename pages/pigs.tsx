@@ -8,49 +8,34 @@ import Loader from "react-loader-spinner"
 import toast from "react-hot-toast"
 import DefaultLayout from "@/components/layouts"
 
-const PublicPigsPage = () => {
+const PublicPigsPage = ({data}) => {
 
-    const [processograms,setProcessograms] = useState<any>([])
+    const [processograms,setProcessograms] = useState<any[]>(data)
 
-    const [firstLoad,setFirstLoad] = useState(false)
+    const [firstLoad,setFirstLoad] = useState(false)    
 
-    useEffect(()=>{
-        processogramApi.all()
-        .then(({data}) => {
-            setProcessograms(data)
-            setFirstLoad(true)
-        })
-        .catch((error) => {
-            toast.error('Something Wrong. Some elements may not work.')
-            setFirstLoad(true)
-        })
-    },[])
+    console.log(data)
 
     return (            
         <Container>
-            {
-                firstLoad?
-                (
-                    <ProductionSystemSelector   
-                        specie='pig' 
-                        collection={processograms}
-                    />
-                )
-                :
-                (
-                    <LoaderContainer>
-                        <h1>Working</h1>
-                        <Loader 
-                            color={theme.default.colors.blue}
-                            type='ThreeDots'
-                            height={100}
-                            width={250} 
-                        />
-                    </LoaderContainer>
-                )
+            {                
+                <ProductionSystemSelector   
+                    specie='pig' 
+                    collection={processograms}
+                />                
             }              
         </Container>        
     )
 }
+
+export async function getStaticProps(context) {
+    let data = await (await processogramApi.all()).data
+    return {
+      props: {
+          data
+      },
+      revalidate:(15*60)
+    }
+  }
 
 export default PublicPigsPage
