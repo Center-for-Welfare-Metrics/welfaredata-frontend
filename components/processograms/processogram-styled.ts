@@ -1,21 +1,24 @@
 import styled, {css} from 'styled-components'
 
-export const SvgContainer = styled.div`    
-    svg{
-        height:auto;        
-        margin:5% 0 5% 0;
-        transition:opacity 500ms;   
-        overflow:visible;   
-    }
+export const SvgContainer = styled.div`
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    padding:2.5% 0 2.5% 0;
+    width:80%;    
+    z-index: 77;
+    margin:auto;
     :first-child{
-        svg{
-            margin-top:10%;
-        }
+        padding-top:5%;
     }
     :last-child{
-        svg{
-            margin-bottom:10%;
-        }
+        padding-bottom:5%;
+    }
+    svg{
+        height:auto;            
+        transition:opacity 500ms;   
+        overflow:visible; 
+        z-index:77;       
     }
     ${({innerlevel,hover,level,current,equallevel}) => level > 0 && css`
         [id*=${innerlevel}]{            
@@ -37,14 +40,7 @@ export const SvgContainer = styled.div`
                 }                
             `
         }
-    `}
-    
-    ${({selected}) => selected && css`
-        svg:not(#${selected}){
-            opacity:0;
-            transition:opacity 500ms;            
-        }
-    `}
+    `}    
 
     @media(max-width:800px){
         ${({current}) => css`

@@ -105,8 +105,7 @@ function MyApp({ Component, pageProps }) {
             <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />
           </ContextMenuContext.Provider>
         </UserContext.Provider>
-      </CustomGlobalStyles.Provider>
-      <div style={{ position: 'fixed', bottom: 0, right: 0, opacity: '.2' }}>Icons made by <a href="https://www.flaticon.com/authors/monkik" title="monkik">monkik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      </CustomGlobalStyles.Provider>      
     </ThemeProvider>
 
 }

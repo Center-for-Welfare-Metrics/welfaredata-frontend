@@ -23,6 +23,7 @@ export const TreeItem = styled.div`
     `    
     }
     animation:${fade} 500ms;
+    line-height:1.2rem;
 `
 
 export const Container = styled.div`        

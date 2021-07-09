@@ -1,4 +1,5 @@
 import voca from 'voca'
+import lodash from 'lodash'
 
 export interface ICoolFormat {
     levelName:'Circumstance'|'Phase'|'Life Fate'|'Production System'|string,
@@ -17,14 +18,98 @@ export const translateStackToCoolFormat  = (stack:string[]) => {
             domID:id
         })        
     })
+
     return cool_json
 }
 
-export const getCollectionInformationsByStack = (collection:any[],stack:string[]) => {
+const transformToContent = (item,stack_length:number) => {
+    if(!item) return null
+    try {
+        let keys = {
+            1:'productionSystem',
+            2:'lifeFate',
+            3:'phase',
+            4:'circumstance'
+        }
     
+        let childrenName = keys[stack_length]        
+        let children_content = item[childrenName]
+        let new_children_content = {}
+        Object.keys(children_content).forEach((key) => {
+            new_children_content[`ref_${key}`] = children_content[key]
+        })        
+    
+        return {...item,...new_children_content,[childrenName]:undefined}
+    } catch (error) {
+        console.log(error)
+        return null
+    }
 }
 
+const findProductionSystem = (item:ICoolFormat,collection) => {
+    let finded = lodash.find(collection,{
+        productionSystem:{
+            name:voca.lowerCase(item.elementName)
+        }
+    })    
+    return finded
+}
 
+const findLifeFate = (item:ICoolFormat,collection) => {
+    let finded = lodash.find(collection.lifefates,{
+        lifeFate:{
+            name:voca.lowerCase(item.elementName)
+        }
+    })    
+    return finded
+}
+
+const findPhase = (item:ICoolFormat,collection) => {
+    let finded = lodash.find(collection.phases,{
+        phase:{
+            name:voca.lowerCase(item.elementName)
+        }
+    })    
+    return finded
+}
+
+const findCircumstance = (item:ICoolFormat,collection) => {
+    let finded = lodash.find(collection.circumstances,{
+        circumstance:{
+            name:voca.lowerCase(item.elementName)
+        }
+    })    
+    return finded
+}
+
+const find = (item:ICoolFormat,collection) => {
+    if(!item) return null
+    
+    let levels = {
+        1:findProductionSystem,
+        2:findLifeFate,
+        3:findPhase,
+        4:findCircumstance
+    }
+
+    return levels[item.level](item,collection)
+}
+
+export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collection:any[]) => {
+    if(stack.length>0){
+        let target = collection
+        for(let index in stack){
+            let item = stack[index]
+            let finded = find(item,target)
+            if(finded){
+                target = finded
+            }
+        }
+        return transformToContent(target,stack.length)
+    }
+    
+    return null
+}
 
 export const getLevelNameByGivingID = (id:string) => {
     let map_keys = {

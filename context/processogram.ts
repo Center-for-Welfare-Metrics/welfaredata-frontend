@@ -12,6 +12,7 @@ export interface IProcessogramContext {
     setCurrentProcessogram(currentProcessogram:string):void
     focusedFigure:string
     setFocusedFigure(currentProcessogram:string):void
+    collection:any[]
 }
 
 

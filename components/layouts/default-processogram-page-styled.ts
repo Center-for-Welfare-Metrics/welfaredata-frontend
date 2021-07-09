@@ -18,8 +18,9 @@ const scrollBar = (color,size='.5rem') => css`
 `
 
 export const Container = styled.div`
-    
-    @media(max-width:800px){
-        
-    }
+    height:100%;
+    width:100%;
+    display:flex;    
+    flex-direction:column;
+    justify-content:center;    
 `

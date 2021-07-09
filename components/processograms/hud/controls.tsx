@@ -1,15 +1,14 @@
 import { SvgPath } from '@/utils/assets_path'
 import { useEffect } from 'react'
-import { Container,ToLeft,ToRight } from './controls-styled'
+import { ToLeft,ToRight } from './controls-styled'
 import { getElementViewBox } from '../processogram-helpers'
 
 import SVG from 'react-inlinesvg'
 import { useContext } from 'react'
 import HudContext from '@/context/hud-context'
-import { useState } from 'react'
 import { normalizeElementNameByGivingID } from '@/utils/processogram'
 
-const ProcessogramControls = () => {
+const HudControls = () => {
 
     const { element,onChange } = useContext(HudContext)        
 
@@ -123,4 +122,4 @@ const ProcessogramControls = () => {
 }
 
 
-export default ProcessogramControls
+export default HudControls

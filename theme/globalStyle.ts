@@ -18,6 +18,9 @@ const scrollBar = (color,size='.5rem') => css`
 `
 
 export const GlobalStyles = createGlobalStyle`
+    #__next{
+        height:100%;
+    }
     html{
         width:100%;
         height:100%;

@@ -4,7 +4,7 @@ import { TweenLite, gsap } from 'gsap'
 import Processogram from "@/components/processograms/processogram"
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
-import { Container } from './processogram-list-styled'
+import { Container, SubContainer } from './processogram-list-styled'
 import ProcessogramContext, {IProcessogramContext} from '@/context/processogram'
 
 gsap.registerPlugin(TweenLite)
@@ -25,38 +25,39 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [focusedFigure,setFocusedFigure] = useState<string>(null)
 
-    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,focusedFigure,setFocusedFigure}
+    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,focusedFigure,setFocusedFigure,collection}
 
     const [scrollTop,setScrollTop] = useState(0)
 
     useEffect(()=>{
         if(currentProcessogram){            
             setScrollTop(containerRef.current.scrollTop)
-            setFocusedFigure(currentProcessogram)
-            TweenLite.to(containerRef.current,{overflow:'hidden'}).duration(0)            
+            TweenLite.to(containerRef.current,{overflow:'hidden'})
+            setFocusedFigure(currentProcessogram)                     
         }else{
-            setFocusedFigure(null)
-            if(containerRef.current){                
-                TweenLite.to(containerRef.current,{overflow:'auto'}).duration(0)
-                .then(()=>{
-                    containerRef.current.scrollTo(0,scrollTop)
-                })                
-            }
+            setFocusedFigure(null)            
+            // setTimeout(() => {
+            //     containerRef.current.scrollTop = scrollTop    
+            // }, 1000);
+            TweenLite.to(containerRef.current,{overflow:'auto'})
         }
     },[currentProcessogram])
 
     return (   
         <ProcessogramContext.Provider value={contextValue}>            
-            <Container ref={containerRef} hover={onHover} current={currentProcessogram}>                
-                {
-                    SPECIES[specie].map((productionSystem) => (
-                        <Processogram
-                            key={productionSystem}
-                            specie={specie}
-                            productionSystem={productionSystem}
-                        />
-                    ))
-                }                       
+            <Container ref={containerRef} hover={onHover} current={currentProcessogram}>
+                <SubContainer>
+                    {
+                        SPECIES[specie].map((productionSystem) => (
+                            <Processogram
+                                key={productionSystem}
+                                specie={specie}
+                                productionSystem={productionSystem}
+                                gambiarraRef={{ref:containerRef.current,scrollTop:scrollTop}}
+                            />
+                        ))
+                    }
+                </SubContainer>                                      
             </Container> 
         </ProcessogramContext.Provider>      
     )

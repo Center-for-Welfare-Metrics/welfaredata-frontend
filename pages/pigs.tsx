@@ -12,8 +12,6 @@ const PublicPigsPage = () => {
 
     const [processograms,setProcessograms] = useState<any>([])
 
-    const containerRef = useRef(null)
-
     const [firstLoad,setFirstLoad] = useState(false)
 
     useEffect(()=>{
@@ -29,7 +27,7 @@ const PublicPigsPage = () => {
     },[])
 
     return (            
-        <Container ref={containerRef}>
+        <Container>
             {
                 firstLoad?
                 (

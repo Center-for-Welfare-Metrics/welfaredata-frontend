@@ -19,17 +19,15 @@ const scrollBar = (color,size='.5rem') => css`
 `
 
 
+export const SubContainer = styled.div`
+    
+`
 
-export const Container = styled.div`    
-    height:100vh;    
-    svg{
-        max-height:80vh;
-    }
-    overflow-y: auto;
+export const Container = styled.div`
     position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    overflow:auto;           
+    height: 100%;
+    width: 100%;
     ${({current,hover}) => (current === null) && hover?css`
         svg{
             transition:opacity ${time};
@@ -45,6 +43,6 @@ export const Container = styled.div`
             transition:opacity ${time};
             opacity: 1;
         }
-    `}        
-    ${scrollBar('gray')};
+    `}    
+    ${scrollBar('gray')}
 `
