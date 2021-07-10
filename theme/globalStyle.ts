@@ -21,6 +21,11 @@ export const GlobalStyles = createGlobalStyle`
     #__next{
         height:100%;
     }
+
+    *{
+        margin:0;
+    }
+
     html{
         width:100%;
         height:100%;
@@ -29,12 +34,10 @@ export const GlobalStyles = createGlobalStyle`
         ${scrollBar('gray')}
     }
     body{
-        background-color: ${({theme}) => theme.colors.black};
-        margin:0;
+        background-color: ${({theme}) => theme.colors.black};        
         width:100%;
         height: 100%;
-        font-family: 'Titillium Web', sans-serif;
-        /* position:${({needFixedBody})=>needFixedBody?'fixed':'relative'}; */
+        font-family: 'Titillium Web', sans-serif;         
     }
     div,textarea{
         ${scrollBar('blue','.25rem')}
@@ -59,11 +62,4 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     /* --------------------- hack | gambiarra ---------------- */
-
-
-    @media screen and (max-width:1300px){
-        /* html{
-            zoom:.75;
-        } */
-    }
 `

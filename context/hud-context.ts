@@ -1,11 +1,12 @@
 import { ICoolFormat } from "@/utils/processogram";
 import { createContext } from "react";
+import { ImainStateChange } from "./processogram";
 
 
 
 export interface IHudContext {
     element:Element,    
-    onChange(changes:any):void,
+    onChange(changes:ImainStateChange):void,
     stackCoolFormat:ICoolFormat[]
 }
 

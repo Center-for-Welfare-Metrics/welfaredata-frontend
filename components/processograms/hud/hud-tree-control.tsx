@@ -10,24 +10,23 @@ import { Container,TreeItem } from './hud-tree-control-styled'
 const HudTreeControl = () => {
 
     const { element,stackCoolFormat,onChange } = useContext(HudContext)
-    const { currentProcessogram } = useContext(ProcessogramContext)
 
     const onTreeItemClick = ({domID,level}) => (event:Event) => {
         event.stopPropagation()
         if(element.id!==domID){
-            let svg = document.getElementById(currentProcessogram)
+            let svg = document.getElementById(stackCoolFormat[0].domID)
             
-            let element_to_focus = level>1?svg.querySelector(`#${domID}`):svg
+            let element_to_focus = level>0?svg.querySelector(`#${domID}`):svg
 
-            let innerCurrent = level>1?domID:null
+            let currentDomID = level>0?domID:null
 
             let viewBox = getElementViewBox(element_to_focus)
-
+            
             onChange({
                 viewBox,
-                innerCurrent,
-                level
-            })   
+                currentDomID,
+                level                
+            })
         }     
     }
 
@@ -37,7 +36,7 @@ const HudTreeControl = () => {
                 stackCoolFormat.map(({domID,level,levelName,elementName},index) => (
                     <TreeItem 
                         style={{
-                            marginLeft:`${(level-1)*2}rem`,
+                            marginLeft:`${(level)*2}rem`,
                         }} 
                         key={domID}
                         active={element.id===domID}

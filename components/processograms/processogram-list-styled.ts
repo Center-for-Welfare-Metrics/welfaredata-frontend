@@ -20,15 +20,17 @@ const scrollBar = (color,size='.5rem') => css`
 
 
 export const SubContainer = styled.div`
-    
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;    
 `
 
 export const Container = styled.div`
     position:relative;
     overflow:auto;           
     height: 100%;
-    width: 100%;
-    ${({current,hover}) => (current === null) && hover?css`
+    width: 100%;            
+    ${({current,hover}) => (current === null) && hover && css`
         svg{
             transition:opacity ${time};
             opacity: .5;
@@ -37,12 +39,14 @@ export const Container = styled.div`
             transition:opacity ${time};
             opacity: 1;
         }
-    `:
-        current === null && css`
-        svg{
-            transition:opacity ${time};
-            opacity: 1;
-        }
     `}    
+    ${({current}) => current!==null && css`                
+        svg[id*='--ps']:not(#${current}){
+            transition:opacity ${time};
+            opacity: 0.1;
+            z-index:-1;
+            display:none;
+        }
+    `}
     ${scrollBar('gray')}
 `

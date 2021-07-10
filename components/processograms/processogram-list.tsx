@@ -5,7 +5,7 @@ import Processogram from "@/components/processograms/processogram"
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
 import { Container, SubContainer } from './processogram-list-styled'
-import ProcessogramContext, {IProcessogramContext} from '@/context/processogram'
+import ProcessogramContext, {ImainState, IProcessogramContext} from '@/context/processogram'
 
 gsap.registerPlugin(TweenLite)
 
@@ -15,37 +15,20 @@ export interface IProcessogramList {
 }
 
 
+
 const ProcessogramList = ({specie,collection}:IProcessogramList) => {
     
     const containerRef = useRef<HTMLDivElement>(null)    
 
     const [onHover,setOnHover] = useState<string>(null)
 
-    const [currentProcessogram,setCurrentProcessogram] = useState<string>(null)
+    const [productionSystemSelected,setProductionSystemSelected] = useState(null)
 
-    const [focusedFigure,setFocusedFigure] = useState<string>(null)
-
-    const contextValue : IProcessogramContext = {onHover,setOnHover,currentProcessogram,setCurrentProcessogram,focusedFigure,setFocusedFigure,collection}
-
-    const [scrollTop,setScrollTop] = useState(0)
-
-    useEffect(()=>{
-        if(currentProcessogram){            
-            setScrollTop(containerRef.current.scrollTop)
-            TweenLite.to(containerRef.current,{overflow:'hidden'})
-            setFocusedFigure(currentProcessogram)                     
-        }else{
-            setFocusedFigure(null)            
-            // setTimeout(() => {
-            //     containerRef.current.scrollTop = scrollTop    
-            // }, 1000);
-            TweenLite.to(containerRef.current,{overflow:'auto'})
-        }
-    },[currentProcessogram])
+    const contextValue : IProcessogramContext = {collection}
 
     return (   
         <ProcessogramContext.Provider value={contextValue}>            
-            <Container ref={containerRef} hover={onHover} current={currentProcessogram}>
+            <Container ref={containerRef} hover={onHover} current={productionSystemSelected}>
                 <SubContainer>
                     {
                         SPECIES[specie].map((productionSystem) => (
@@ -53,7 +36,8 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                                 key={productionSystem}
                                 specie={specie}
                                 productionSystem={productionSystem}
-                                gambiarraRef={{ref:containerRef.current,scrollTop:scrollTop}}
+                                hoverChange={setOnHover}
+                                onSelect={setProductionSystemSelected}
                             />
                         ))
                     }

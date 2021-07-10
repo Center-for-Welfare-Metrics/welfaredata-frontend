@@ -61,7 +61,7 @@ const HudControls = () => {
             let viewBox = getElementViewBox(previous_sibling)
             onChange({
                 viewBox,
-                innerCurrent:previous_sibling.id
+                currentDomID:previous_sibling.id
             })            
         }        
     }
@@ -73,7 +73,7 @@ const HudControls = () => {
             let viewBox = getElementViewBox(next_sibling)  
             onChange({
                 viewBox,
-                innerCurrent:next_sibling.id
+                currentDomID:next_sibling.id
             })        
         }
     }

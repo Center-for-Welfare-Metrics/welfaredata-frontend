@@ -5,13 +5,19 @@ export interface IProcessogram{
     description:string
 }
 
+export interface ImainState {    
+    level:number
+    viewBox:string
+    currentDomID:string
+}
+
+export interface ImainStateChange {
+    level?:number
+    viewBox?:string
+    currentDomID:string
+}
+
 export interface IProcessogramContext {
-    onHover:string
-    setOnHover(onHover:string):void
-    currentProcessogram:string
-    setCurrentProcessogram(currentProcessogram:string):void
-    focusedFigure:string
-    setFocusedFigure(currentProcessogram:string):void
     collection:any[]
 }
 

@@ -9,7 +9,6 @@ import ContextMenuContext, { IContextMenu } from '@/context/context-menu'
 import authApi from '@/api/auth'
 import ContextMenu from '@/components/context-menu/context-menu'
 import { Toaster } from 'react-hot-toast';
-import CustomGlobalStyles, { ICustomGlobalStyles } from '@/context/custom-global-styles'
 
 function MyApp({ Component, pageProps }) {
 
@@ -24,10 +23,6 @@ function MyApp({ Component, pageProps }) {
   const [loading,setLoading] = useState(false)
 
   const [temporary,setTemporary] = useState<any>(null)
-
-  const [needFixedBody, setNeedFixedBody] = useState(false)
-
-  const customGlobalStyles: ICustomGlobalStyles = { needFixedBody, setNeedFixedBody }
 
   const contextMenuValues = { contextMenu, setContextMenu,loading,setLoading,temporary,setTemporary}
 
@@ -96,8 +91,8 @@ function MyApp({ Component, pageProps }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
       </Head>
-      <CustomGlobalStyles.Provider value={customGlobalStyles}>
-        <GlobalStyles needFixedBody={needFixedBody} />
+      
+        <GlobalStyles/>
         <UserContext.Provider value={userValue}>
           <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }} />
           <ContextMenuContext.Provider value={contextMenuValues}>
@@ -105,7 +100,7 @@ function MyApp({ Component, pageProps }) {
             <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />
           </ContextMenuContext.Provider>
         </UserContext.Provider>
-      </CustomGlobalStyles.Provider>      
+          
     </ThemeProvider>
 
 }
