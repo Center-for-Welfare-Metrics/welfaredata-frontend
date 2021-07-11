@@ -6,7 +6,8 @@ export const SvgContainer = styled.div`
     justify-content: center;
     width:100%;
     height:100%;        
-    z-index: 77;       
+    z-index: 77;   
+    overscroll-behavior-y: contain;    
     svg{        
         height:auto;            
         transition:opacity 500ms;   
