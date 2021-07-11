@@ -77,7 +77,8 @@ function useGesture(trigger:gesture_types[]){
             if(abs_drag_size_y>50){
                 event.stopPropagation()         
                 if(drag_size_y>0){              
-                    if(trigger.includes('to-down')){  
+                    if(trigger.includes('to-down')){
+                        event.preventDefault()  
                         setGesture({
                             gesture:'to-down',
                             target:event
