@@ -61,13 +61,17 @@ const HudInterativeMenu = () => {
         }
     }
 
-    
+    const DescriptionTouchStart = (event) => {
+        if(event.target.scrollTop > 0){
+            event.stopPropagation()
+        }        
+    }
 
     return (
         content !== null &&
         <Container ref={ref} onClick={onClick} state={state}>            
             <Title>{ voca.titleCase(content.ref_name)}</Title>
-            <Description>               
+            <Description onTouchStart={DescriptionTouchStart}>               
                     {content.ref_description + (content.description || '')}                
             </Description>            
         </Container>        
