@@ -10,6 +10,7 @@ gsap.registerPlugin(TweenLite)
 import {Container,Title,Description} from './interative-menu-styled'
 import { useRef } from 'react'
 import voca from 'voca'
+import useGesture from '@/utils/gestures'
 
 const HudInterativeMenu = () => {
 
@@ -23,14 +24,26 @@ const HudInterativeMenu = () => {
 
     const ref = useRef<HTMLDivElement>(null)
 
+    const gesture = useGesture(['to-up','to-down'])
+
+    useEffect(()=>{
+        if(gesture){
+            if(gesture.gesture === 'to-up'){
+                setState('full')
+            }else if(gesture.gesture === 'to-down'){
+                setState('minimized')
+            }
+        }
+    },[gesture])  
+
     useEffect(()=>{        
         setContent(getCollectionInformationsByCoolFormat(stackCoolFormat,collection))
-    },[stackCoolFormat])   
+    },[stackCoolFormat])
 
     useEffect(()=>{
         if(ref.current){
             if(state==='minimized'){
-                TweenLite.to(ref.current,{width:'100%',translateY:'85%'}).duration(.5)
+                TweenLite.to(ref.current,{width:'100%',translateY:'80%'}).duration(.5)
             }else if(state==='hide'){
                 TweenLite.to(ref.current,{width:'5rem'}).duration(.5)
             }else if(state==='full'){

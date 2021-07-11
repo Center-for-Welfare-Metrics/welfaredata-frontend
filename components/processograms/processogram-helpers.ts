@@ -3,8 +3,7 @@ export const getElementViewBox = element => {
     if(height >= width){ 
         let ratio = height/width       
         x -= (width*ratio)/2
-        width += (width*ratio)
-        console.log(ratio)
+        width += (width*ratio)        
     }
     let viewBox = `${x} ${y} ${(width)} ${height}`    
     return viewBox
