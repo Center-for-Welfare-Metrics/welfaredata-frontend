@@ -13,16 +13,15 @@ function useGesture(trigger:gesture_types[]){
     let initial_touch_position_y = -1
 
     useEffect(()=>{
-        window.addEventListener('touchstart',touchStart,{passive:false})
-        window.addEventListener('touchend', touchEnd)
+        window.addEventListener('touchstart',touchStart)
+        window.addEventListener('touchend', touchEnd,{passive:false})
         return () => {
             window.removeEventListener('touchstart',touchStart)
             window.removeEventListener('touchend',touchEnd)
         }
     },[])
 
-    function touchStart(event:TouchEvent){
-        event.preventDefault()
+    function touchStart(event:TouchEvent){        
         initial_touch_position_x = event.changedTouches[0].clientX
         initial_touch_position_y = event.changedTouches[0].clientY
     }
@@ -78,7 +77,8 @@ function useGesture(trigger:gesture_types[]){
             if(abs_drag_size_y>50){
                 event.stopPropagation()         
                 if(drag_size_y>0){              
-                    if(trigger.includes('to-down')){                        
+                    if(trigger.includes('to-down')){  
+                        event.preventDefault()                      
                         setGesture({
                             gesture:'to-down',
                             target:event
