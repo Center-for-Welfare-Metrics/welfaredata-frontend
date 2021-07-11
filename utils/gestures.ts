@@ -13,7 +13,7 @@ function useGesture(trigger:gesture_types[]){
     let initial_touch_position_y = -1
 
     useEffect(()=>{
-        window.addEventListener('touchstart',touchStart)
+        window.addEventListener('touchstart',touchStart,{passive:false})
         window.addEventListener('touchend', touchEnd)
         return () => {
             window.removeEventListener('touchstart',touchStart)
@@ -22,6 +22,7 @@ function useGesture(trigger:gesture_types[]){
     },[])
 
     function touchStart(event:TouchEvent){
+        event.preventDefault()
         initial_touch_position_x = event.changedTouches[0].clientX
         initial_touch_position_y = event.changedTouches[0].clientY
     }
@@ -84,7 +85,7 @@ function useGesture(trigger:gesture_types[]){
                         })
                     }
                 }else{                
-                    if(trigger.includes('to-up')){
+                    if(trigger.includes('to-up')){                        
                         setGesture({
                             gesture:'to-up',
                             target:event
