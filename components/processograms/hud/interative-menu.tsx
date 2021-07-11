@@ -30,7 +30,7 @@ const HudInterativeMenu = () => {
     useEffect(()=>{
         if(ref.current){
             if(state==='minimized'){
-                TweenLite.to(ref.current,{width:'100%',translateY:'90%'}).duration(.5)
+                TweenLite.to(ref.current,{width:'100%',translateY:'85%'}).duration(.5)
             }else if(state==='hide'){
                 TweenLite.to(ref.current,{width:'5rem'}).duration(.5)
             }else if(state==='full'){
@@ -38,12 +38,6 @@ const HudInterativeMenu = () => {
             }
         }
     },[state])
-
-    useEffect(()=>{
-
-        console.log(content)
-
-    },[content])
 
     const onClick = (event:Event) => {   
         event.stopPropagation()
@@ -57,7 +51,7 @@ const HudInterativeMenu = () => {
     
 
     return (
-        content &&
+        content !== null &&
         <Container ref={ref} onClick={onClick} state={state}>            
             <Title>{ voca.titleCase(content.ref_name)}</Title>
             <Description>               

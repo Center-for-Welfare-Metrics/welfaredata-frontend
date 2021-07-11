@@ -120,8 +120,11 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
         
             return {...item,...new_children_content,[childrenName]:undefined}
         } catch (error) {
-            console.log(error)
-            return null
+            // console.log(error)            
+            return {
+                ref_name:'No information found',
+                ref_description:'Soon you will be able to add new informations'
+            }
         }
     }
 

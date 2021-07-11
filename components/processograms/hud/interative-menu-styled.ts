@@ -12,16 +12,16 @@ export const Description = styled.div`
 
 const anim = keyframes`
     0%{transform:translateY(100%);}
-    100%{transform:translateY(90%);}
+    100%{transform:translateY(85%);}
 `
 
 export const Container = styled.div`
     position:absolute;
     bottom:0;    
     right:0;
-    transform:translateY(90%);
+    transform:translateY(85%);
     width:100%;
-    height:20rem;    
+    height:15rem;    
     background-color:${({theme}) => transparentize(0.4,theme.colors.black)};
     backdrop-filter:blur(2px);
     z-index:99;

@@ -47,6 +47,13 @@ export const Container = styled.div`
             z-index:-1;
             display:none;
         }
+
+        @media(max-width:500px){
+            svg#${current}{
+                margin-bottom:50%;
+            }
+        }
+        
     `}
     ${scrollBar('gray')}
 `
