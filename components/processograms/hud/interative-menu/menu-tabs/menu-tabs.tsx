@@ -62,7 +62,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
                     />
                 }
                 {
-                    tab==='media' && <MediaTab />
+                    tab==='media' && <MediaTab medias={content.medias} />
                 }
             </Body>
         </Container>

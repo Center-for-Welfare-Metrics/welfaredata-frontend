@@ -26,11 +26,19 @@ export const translateStackToCoolFormat  = (stack:string[]) => {
         return []
     }    
 }
-
+export interface IMedia {
+    _id:string
+    originalName:string
+    url:string
+    size:number
+    type:string
+    name?:string
+    descripition?:string
+}
 export interface IContentInformation {
     createdAt?:Date
     description?:string
-    medias?: any[]
+    medias?: IMedia[]
     ref__id?: string
     ref_createdAt?: Date
     ref_description?: string

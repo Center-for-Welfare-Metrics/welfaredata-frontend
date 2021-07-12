@@ -6,7 +6,7 @@ import { DefaultEventComportamentOnContextMenuOpen } from '@/utils/context-menu'
 interface IFullScreenView {
     children?:React.ReactNode,
     onClose(evt?:Event):void,
-    onContextMenu(evt:MouseEvent):void
+    onContextMenu?(evt:MouseEvent):void
 }
 
 const FullScreenView = ({children,onClose,onContextMenu}:IFullScreenView) => {
