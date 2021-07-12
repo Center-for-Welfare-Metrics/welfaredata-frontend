@@ -14,7 +14,7 @@ function useGesture(trigger:gesture_types[]){
 
     useEffect(()=>{
         window.addEventListener('touchstart',touchStart)
-        window.addEventListener('touchend', touchEnd,{passive:false})
+        window.addEventListener('touchend', touchEnd)
         return () => {
             window.removeEventListener('touchstart',touchStart)
             window.removeEventListener('touchend',touchEnd)
@@ -77,8 +77,7 @@ function useGesture(trigger:gesture_types[]){
             if(abs_drag_size_y>50){
                 event.stopPropagation()         
                 if(drag_size_y>0){              
-                    if(trigger.includes('to-down')){  
-                        event.preventDefault()                      
+                    if(trigger.includes('to-down')){                                        
                         setGesture({
                             gesture:'to-down',
                             target:event

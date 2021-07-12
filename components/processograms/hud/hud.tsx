@@ -6,7 +6,7 @@ import HudTreeControl from './hud-tree-control'
 import { Container } from './hud-styled'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import HudInterativeMenu from './interative-menu'
+import HudInterativeMenu from './interative-menu/interative-menu'
 import { ImainState } from '@/context/processogram'
 
 interface IProcessogramHud{

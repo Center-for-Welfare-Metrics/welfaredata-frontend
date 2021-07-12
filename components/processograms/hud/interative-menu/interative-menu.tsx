@@ -5,12 +5,13 @@ import { IContentInformation, getCollectionInformationsByCoolFormat } from "@/ut
 import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
-import { TweenLite, gsap } from 'gsap'
-gsap.registerPlugin(TweenLite)
-import {Container,Title,Description} from './interative-menu-styled'
+
+import {Container} from './interative-menu-styled'
 import { useRef } from 'react'
-import voca from 'voca'
 import useGesture from '@/utils/gestures'
+import MenuTabs from './menu-tabs/menu-tabs'
+
+export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
 const HudInterativeMenu = () => {
 
@@ -20,9 +21,7 @@ const HudInterativeMenu = () => {
 
     const [content,setContent] = useState<IContentInformation>(null)
 
-    const [state,setState] = useState<'minimized'|'full'|'hide'>('minimized')
-
-    const ref = useRef<HTMLDivElement>(null)
+    const [state,setState] = useState<IInterativeMenuState>('minimized')    
 
     const gesture = useGesture(['to-up','to-down'])
 
@@ -40,17 +39,6 @@ const HudInterativeMenu = () => {
         setContent(getCollectionInformationsByCoolFormat(stackCoolFormat,collection))
     },[stackCoolFormat])
 
-    useEffect(()=>{
-        if(ref.current){
-            if(state==='minimized'){
-                TweenLite.to(ref.current,{width:'100%',translateY:'80%'}).duration(.5)
-            }else if(state==='hide'){
-                TweenLite.to(ref.current,{width:'5rem'}).duration(.5)
-            }else if(state==='full'){
-                TweenLite.to(ref.current,{width:'100%',translateY:0}).duration(.5)
-            }
-        }
-    },[state])
 
     const onClick = (event:Event) => {   
         event.stopPropagation()
@@ -61,19 +49,12 @@ const HudInterativeMenu = () => {
         }
     }
 
-    const DescriptionTouchStart = (event) => {
-        if(event.target.scrollTop > 0){
-            event.stopPropagation()
-        }        
-    }
+    
 
     return (
         content !== null &&
-        <Container ref={ref} onClick={onClick} state={state}>            
-            <Title>{ voca.titleCase(content.ref_name)}</Title>
-            <Description onTouchStart={DescriptionTouchStart}>               
-                    {content.ref_description + (content.description || '')}                
-            </Description>            
+        <Container onClick={onClick} state={state}>
+            <MenuTabs state={state} content={content} />
         </Container>        
     )
     
