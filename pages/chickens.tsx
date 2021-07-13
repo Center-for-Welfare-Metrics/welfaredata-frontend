@@ -29,7 +29,7 @@ const PublicChickensPage = () => {
 
     return (                            
         <Container ref={containerRef}>
-            {
+            {/* {
                 firstLoad?
                 (
                     <ProductionSystemSelector   
@@ -49,7 +49,7 @@ const PublicChickensPage = () => {
                         />
                     </LoaderContainer>
                 )
-            }              
+            }               */}
         </Container>        
     )
 }

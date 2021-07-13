@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
 
-import {Container} from './interative-menu-styled'
+import { Container,Minimize } from './interative-menu-styled'
 import { useRef } from 'react'
 import useGesture from '@/utils/gestures'
 import MenuTabs from './menu-tabs/menu-tabs'
@@ -55,6 +55,7 @@ const HudInterativeMenu = () => {
         content !== null &&
         <Container onClick={onClick} state={state}>
             <MenuTabs state={state} content={content} />
+            <Minimize state={state} />
         </Container>        
     )
     

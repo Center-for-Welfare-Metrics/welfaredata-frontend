@@ -7,9 +7,9 @@ export const SvgContainer = styled.div`
     width:100%;
     height:100%;        
     z-index: 77;        
-    svg{        
+    > svg{        
         height:auto;            
-        transition:opacity 500ms;   
+        transition:opacity 500ms,stroke-opacity 500ms;   
         overflow:visible; 
         z-index:77;
         width:80%;
@@ -20,32 +20,35 @@ export const SvgContainer = styled.div`
         display:block;       
     }
     :first-child{
-        svg{
+        > svg{
             margin-top:5%;
         }
     }
     :last-child{
-        svg{
+        > svg{
             margin-bottom:5%;
         }
     }
     ${
         ({level}) => level !== undefined && css`
-            ${({childrens,hover,siblings,level}) => hover?css`
-                svg{
+            ${({childrens,hover,siblings,level,current}) => hover?css`
+                > svg{
                     stroke-opacity:.5;                    
                 }
-                svg #${hover}{
+                #${current} #${hover}{
                     stroke-opacity:1;
+                    transition:stroke-opacity 500ms;
                 }
                 `
                 :
                 css`
-                    svg{
+                    > svg{
                         stroke-opacity:.5;
+                        transition:stroke-opacity 500ms;
                     }
-                    [id*=${siblings}]{
+                    #${current} [id*=${childrens}]{
                         stroke-opacity:1;
+                        transition:stroke-opacity 500ms;
                     }
                 `    
             }

@@ -239,7 +239,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
         <>   
             <SvgContainer                
                 level={mainState?.level}
-                current={mainState?.currentDomID}
+                current={mainState?.currentDomID || svgRef.current?.id}
                 siblings={LEVELS[mainState?.level] || null}
                 childrens={LEVELS[mainState?.level+1] || null}                
                 hover={onHover}

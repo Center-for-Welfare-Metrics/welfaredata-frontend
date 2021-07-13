@@ -1,6 +1,21 @@
 import { transparentize } from 'polished'
 import styled , {keyframes} from 'styled-components'
 
+
+export const Minimize = styled.div`
+    width:1rem;
+    transition:height 500ms;
+    height:${({state}) => state==='full'?'0rem':'1rem'};
+    border:2px solid ${({theme}) => theme.colors.blue};
+    border-radius:.25rem;
+    position:absolute;
+    top:1rem;
+    right:1rem;
+    cursor: pointer;
+`
+
+
+
 const anim = keyframes`
     from {transform:translateY(100%)}
     to {transform:translateY(0)}

@@ -46,17 +46,17 @@ function useGesture(trigger:gesture_types[]){
             let drag_size_x = final_touch_position_x - initial_touch_position_x  
             let abs_drag_size_x = Math.abs(drag_size_x)
 
-            if(abs_drag_size_x>50){               
+            if(abs_drag_size_x>100){               
                 event.stopPropagation()         
                 if(drag_size_x>0){              
-                    if(trigger.includes('to-left')){  
+                    if(trigger.includes('to-left')){                          
                         setGesture({
                             gesture:'to-left',
                             target:event
                         })
                     }
                 }else{                
-                    if(trigger.includes('to-right')){
+                    if(trigger.includes('to-right')){                          
                         setGesture({
                             gesture:'to-right',
                             target:event
@@ -77,14 +77,16 @@ function useGesture(trigger:gesture_types[]){
             if(abs_drag_size_y>50){
                 event.stopPropagation()         
                 if(drag_size_y>0){              
-                    if(trigger.includes('to-down')){                                        
+                    if(trigger.includes('to-down')){  
+                        event.stopPropagation()                                        
                         setGesture({
                             gesture:'to-down',
                             target:event
                         })
                     }
                 }else{                
-                    if(trigger.includes('to-up')){                        
+                    if(trigger.includes('to-up')){      
+                        event.stopPropagation()
                         setGesture({
                             gesture:'to-up',
                             target:event
