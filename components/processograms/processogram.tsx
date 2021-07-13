@@ -38,12 +38,24 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
 
     const [onHover,setOnHover] = useState<string>(null)
 
+    const onResize = () => {        
+        let element = getCurrentDomElement()
+        let newViewBox = getElementViewBox(element)
+        setMainState({
+            ...mainState,
+            viewBox:newViewBox
+        })
+    }
+
     const applyDocumentTriggers = () => {
         document.onclick = clickOut        
+        window.onresize = onResize
     }
 
     const removeDocumentTriggers = () => {
-        document.onclick = null        
+        document.onclick = null     
+        document.onresize = null   
+        window.onresize = null
     }
 
     const [stack,setStack] = useState<string[]>([])
@@ -226,9 +238,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
             viewBox,
             currentDomID:element.id                     
         })        
-    }    
-
-           
+    }           
 
     const handleHudChange = (change:ImainStateChange) => {
         setIsMoving(true)
