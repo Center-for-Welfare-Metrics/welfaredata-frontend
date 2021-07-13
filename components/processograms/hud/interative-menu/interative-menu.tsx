@@ -7,9 +7,10 @@ import { useState } from "react"
 import { useContext } from "react"
 
 import { Container,Minimize } from './interative-menu-styled'
-import { useRef } from 'react'
+import Svg from 'react-inlinesvg'
 import useGesture from '@/utils/gestures'
 import MenuTabs from './menu-tabs/menu-tabs'
+import { SvgPath } from '@/utils/assets_path'
 
 export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
@@ -55,7 +56,11 @@ const HudInterativeMenu = () => {
         content !== null &&
         <Container onClick={onClick} state={state}>
             <MenuTabs state={state} content={content} />
-            <Minimize state={state} />
+            <Minimize state={state}>
+                <Svg 
+                    src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
+                />
+            </Minimize>
         </Container>        
     )
     

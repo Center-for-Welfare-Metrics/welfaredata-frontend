@@ -3,15 +3,20 @@ import styled , {keyframes} from 'styled-components'
 
 
 export const Minimize = styled.div`
-    width:1rem;
+    width:1.25rem;
     transition:height 500ms;
-    height:${({state}) => state==='full'?'0rem':'1rem'};
+    height:${({state}) => state==='full'?'0rem':'1.25rem'};
     border:2px solid ${({theme}) => theme.colors.blue};
     border-radius:.25rem;
     position:absolute;
     top:1rem;
     right:1rem;
     cursor: pointer;
+    svg{
+        width:100%;
+        height:100%;
+        stroke:${({theme}) => theme.colors.blue};
+    }
 `
 
 
