@@ -123,11 +123,13 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
         let parent = getParent() as any
         if(mainState.level>0){
             if(parent){                
-                let viewBox = getElementViewBox(parent)
+                let isInner = false                
                 let inner_current = null 
                 if(!parent.id.includes('--ps')){
                     inner_current = parent.id
+                    isInner = true
                 }                
+                let viewBox = getElementViewBox(parent,isInner)
                 setMainState({
                     ...mainState,
                     level:mainState.level-1,
@@ -232,8 +234,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
     }
 
     const toNextLevel = (element:any) => {  
-        setIsMoving(true)        
-        let viewBox = getElementViewBox(element)
+        setIsMoving(true)                        
+        let viewBox = getElementViewBox(element,true)
         setMainState({
             ...mainState,
             level:mainState.level+1,
