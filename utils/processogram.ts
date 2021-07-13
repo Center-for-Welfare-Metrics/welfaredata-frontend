@@ -152,6 +152,7 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
 }
 
 export const getLevelNameByGivingID = (id:string) => {
+    if(!id) return null
     let map_keys = {
         '--ps':'Production System',
         '--lf':'Life Fate',

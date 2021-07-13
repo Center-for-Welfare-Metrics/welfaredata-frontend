@@ -32,6 +32,7 @@ export const Container = styled.div`
     right:0;
     width:100%;
     height:fit-content;
+    max-height:100vh;
     background-color:${({theme}) => transparentize(0.3,theme.colors.black)};
     backdrop-filter:blur(2px);
     z-index:99;
@@ -43,5 +44,5 @@ export const Container = styled.div`
     box-sizing: border-box; 
     padding:1rem;
     max-width:500px;
-    animation: ${anim} 500ms;    
+    animation: ${anim} 500ms;
 `

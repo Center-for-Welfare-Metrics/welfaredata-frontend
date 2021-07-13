@@ -38,13 +38,15 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
 
     const [onHover,setOnHover] = useState<string>(null)
 
-    const onResize = () => {        
-        let element = getCurrentDomElement()
-        let newViewBox = getElementViewBox(element)
-        setMainState({
-            ...mainState,
-            viewBox:newViewBox
-        })
+    const onResize = () => {
+        if(mainState.currentDomID){
+            let element = getCurrentDomElement()
+            let newViewBox = getElementViewBox(element)            
+            setMainState({
+                ...mainState,
+                viewBox:newViewBox
+            })
+        }
     }
 
     const applyDocumentTriggers = () => {
