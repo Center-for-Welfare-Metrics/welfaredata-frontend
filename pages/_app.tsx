@@ -9,6 +9,7 @@ import ContextMenuContext, { IContextMenu } from '@/context/context-menu'
 import authApi from '@/api/auth'
 import ContextMenu from '@/components/context-menu/context-menu'
 import { Toaster } from 'react-hot-toast';
+import 'react-image-gallery/styles/css/image-gallery.css'
 
 function MyApp({ Component, pageProps }) {
 
@@ -98,9 +99,8 @@ function MyApp({ Component, pageProps }) {
           <ContextMenuContext.Provider value={contextMenuValues}>
             <Component {...pageProps} />
             <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />
-          </ContextMenuContext.Provider>
-        </UserContext.Provider>
-          
+          </ContextMenuContext.Provider>          
+        </UserContext.Provider>          
     </ThemeProvider>
 
 }

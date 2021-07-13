@@ -4935,6 +4935,11 @@ react-hot-toast@^1.0.2:
   dependencies:
     goober "^2.0.15"
 
+react-image-gallery@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-image-gallery/-/react-image-gallery-1.2.4.tgz#bf12b7ff8b03a019ce8a9c6652a7f8e94480bb1c"
+  integrity sha512-M9iNjYHm1f8C55PQd3EBv5I6wF6FbjV9sIlMtjJwTVAR7ryJwd5/9m7b/k9/029uYNPIL4kF8shY7mn9IMUvHQ==
+
 react-inlinesvg@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-2.2.2.tgz#b43ac35ed9d0b6f60274b93049a5d091fd4384b6"

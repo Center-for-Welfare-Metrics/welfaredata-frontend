@@ -27,16 +27,17 @@ export const TabIcon = styled.div`
 
 export const TabIconsContainer = styled.div`
     display:flex;
+    width:fit-content;
 `
 
 let body_state = {
     minimized:css`
         margin-top:0;
-        height:0;
+        height:0;        
     `,
     full:css`
         margin-top:.5rem;
-        height:14.5rem;
+        height:14.5rem;        
     `,
     hide:css`
         margin-top:0;
@@ -47,7 +48,7 @@ let body_state = {
 export const Body = styled.div`
     margin-top:.5rem;
     overflow:auto;
-    transition: height 500ms,margin-top 500ms;    
+    transition: height 500ms,margin-top 500ms,width 500ms;
 `
 
 export const Container = styled.div`

@@ -262,8 +262,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
                         isMoving={isMoving}
                     />                
                 }                                     
-            </SvgContainer>  
-              
+            </SvgContainer>              
         </>                  
     )
 }

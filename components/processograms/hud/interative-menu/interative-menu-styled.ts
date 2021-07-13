@@ -9,10 +9,10 @@ const anim = keyframes`
 export const Container = styled.div`
     position:absolute;
     bottom:0;    
-    right:0;    
+    right:0;
     width:100%;
     height:fit-content;
-    background-color:${({theme}) => transparentize(0.4,theme.colors.black)};
+    background-color:${({theme}) => transparentize(0.3,theme.colors.black)};
     backdrop-filter:blur(2px);
     z-index:99;
     border-top-right-radius:1rem;
@@ -23,5 +23,5 @@ export const Container = styled.div`
     box-sizing: border-box; 
     padding:1rem;
     max-width:500px;
-    animation: ${anim} 500ms;
+    animation: ${anim} 500ms;    
 `

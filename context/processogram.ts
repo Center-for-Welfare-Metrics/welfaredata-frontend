@@ -1,3 +1,4 @@
+import { IMedia } from "@/utils/processogram";
 import { createContext } from "react";
 
 export interface IProcessogram{
@@ -17,8 +18,14 @@ export interface ImainStateChange {
     currentDomID:string
 }
 
+export interface IMediaViewer{
+    medias:IMedia[]
+    index:number
+}
 export interface IProcessogramContext {
-    collection:any[]
+    collection:any[],
+    mediasViewer:IMediaViewer
+    setMediasViewer(mediasViewer:IMediaViewer):void
 }
 
 
