@@ -33,7 +33,7 @@ const arbitraryZoomLevelByPercentageSize = (percentage_size:number) => {
 
     let size_reference = 0.5    
 
-    if((percentage_size < 50) && (percentage_size > size_reference)){
+    if((percentage_size < 40) && (percentage_size > size_reference)){
         value = 0.2
     }else if(percentage_size <= size_reference){
         value = 1
