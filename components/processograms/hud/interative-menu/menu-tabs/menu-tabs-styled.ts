@@ -40,7 +40,10 @@ let body_state = {
         height:14.5rem; 
         @media(min-width:300px){
             height:11.5rem;
-        }       
+        }
+        @media(min-width:1200px){
+            height:20rem;
+        }
     `,
     hide:css`
         margin-top:0;

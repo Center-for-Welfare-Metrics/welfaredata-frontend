@@ -16,7 +16,7 @@ export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
 const HudInterativeMenu = () => {
 
-    const {stackCoolFormat} = useContext(HudContext)
+    const { stackCoolFormat } = useContext(HudContext)
 
     const { collection } = useContext(ProcessogramContext)
 
@@ -43,25 +43,29 @@ const HudInterativeMenu = () => {
 
     const onClick = (event:Event) => {   
         event.stopPropagation()
+        let userSelection = window.getSelection().toString()
+        
         if(state==='minimized'){    
             setState('full')
         }else{
-            setState('minimized')
-        }
+            if(userSelection.length ===0){
+                setState('minimized')
+            }
+        }        
     }
 
     
 
     return (
         content !== null &&
-        <Container onClick={onClick} state={state}>
+        <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
             <MenuTabs state={state} content={content} />
             <Minimize state={state}>
                 <Svg 
                     src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
                 />
             </Minimize>
-        </Container>        
+        </Container>       
     )
     
 }
