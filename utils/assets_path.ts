@@ -2,7 +2,7 @@ import { CommonIconsTypes, ProductionSystemTypes, SpeciesTypes } from "./enum_ty
 
 export interface ISvgPath {
     file_name: CommonIconsTypes
-    folder:'avatars'|'education'|'icons'|'minimal-icons'|'zoo'
+    folder:'icons'|'minimal-icons'|'zoo'
 }
 
 export const SvgPath = ({file_name,folder}:ISvgPath) => (
