@@ -187,8 +187,7 @@ export const normalizeElementNameByGivingID = (id:string) => {
 
 
 export const getElementSizeInformations = (element:Element) => {
-    let rect = element.getBoundingClientRect()
-    
+    let rect = element.getBoundingClientRect()    
     let middleX = rect.left + (rect.width/2)
     let middleY = rect.top + (rect.height/2)
 

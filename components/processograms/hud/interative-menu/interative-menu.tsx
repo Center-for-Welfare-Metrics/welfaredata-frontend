@@ -25,6 +25,8 @@ const HudInterativeMenu = () => {
 
     const [state,setState] = useState<IInterativeMenuState>('minimized')    
 
+    const [renderTime,setRenderTime] = useState(false)
+
     const gesture = useGesture(['to-up','to-down'])
 
     useEffect(()=>{
@@ -43,9 +45,12 @@ const HudInterativeMenu = () => {
 
     useEffect(()=>{        
         window.addEventListener('keydown', handleKeyDown)
+        setTimeout(() => {
+            setRenderTime(true)
+        }, 500);
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
-        }
+        }        
     },[])
     
 
@@ -77,7 +82,7 @@ const HudInterativeMenu = () => {
     
 
     return (
-        content !== null &&
+        renderTime && content !== null &&
         <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
             <MenuTabs state={state} content={content} />
             <Minimize state={state}>

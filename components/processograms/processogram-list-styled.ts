@@ -48,11 +48,11 @@ export const Container = styled.div`
             display:none;
         } */
 
-        @media(max-width:500px){
+        /* @media(max-width:500px){
             svg#${current}{
                 margin-bottom:50%;
             }
-        }
+        } */
         
     `}
     ${scrollBar('gray')}

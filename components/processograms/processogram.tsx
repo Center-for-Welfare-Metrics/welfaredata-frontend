@@ -7,7 +7,7 @@ import update from 'immutability-helper'
 
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import { ImainState, ImainStateChange } from '@/context/processogram'
-import { getRightTargetID } from '@/utils/processogram'
+import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/hud';
 import { getElementViewBox } from './processogram-helpers';
@@ -48,10 +48,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             }
         }else{
             if(svgRef.current){
-                TweenLite.to(ref.current,{
-                    position:'static'
-                }).duration(0)
-                TweenLite.to(svgRef.current,{opacity:1,clearProps:'opacity',display:'block'}).duration(0.5)
+                TweenLite.to(svgRef.current,{position:'static',opacity:1,display:'block',clearProps:'opacity,margin',translateX:'0',translateY:'0'}).duration(0.5)
             }
         }
     },[productionSystemSelected])
@@ -64,11 +61,24 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     }
 
     const focusOnMe = () => {
-        TweenLite.to(ref.current,{
+        let { top,left } = getElementSizeInformations(svgRef.current)
+        
+        TweenLite.to(svgRef.current,{
             position:'absolute',
-            top:0,
-            left:0
-        }).delay(0.5).duration(0)
+            top,
+            left,
+            margin:'0'
+        }).delay(.5)
+        .duration(0)
+        .then(() => {
+            TweenLite.to(svgRef.current,{
+                top:'50%',
+                left:'50%',
+                translateX:'-50%',
+                translateY:'-50%'
+            })
+        })
+
     }
 
     const onResize = () => {
