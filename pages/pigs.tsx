@@ -4,7 +4,7 @@ import processogramApi from '@/api/processogram'
 
 const PublicPigsPage = ({data}) => {
     
-    
+    console.log(data)
     return (            
         <Container>
             {                
