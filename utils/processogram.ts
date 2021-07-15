@@ -211,3 +211,36 @@ export const getRightTargetID = ({element,level,current}) => {
         return null
     }     
 }
+
+
+export const getPreviousSiblingFrom = (element:Element) => {
+    let previous_sibling = element.nextElementSibling as any
+
+    let siblingElementName = normalizeElementNameByGivingID(previous_sibling?.id)
+    let elementName = normalizeElementNameByGivingID(element.id)
+
+    if(siblingElementName===elementName) return getNextSiblingFrom(previous_sibling)
+
+    if(previous_sibling===null){
+        return element.parentElement.childNodes[0]
+    }
+
+    return previous_sibling
+}
+
+export const getNextSiblingFrom = (element:Element) => {
+    let next_sibling = element.previousElementSibling as any
+
+    let siblingElementName = normalizeElementNameByGivingID(next_sibling?.id)
+    let elementName = normalizeElementNameByGivingID(element.id)
+
+    if(siblingElementName===elementName) return getNextSiblingFrom(next_sibling)        
+    
+    if(next_sibling===null){
+        let child_length = element.parentElement.childNodes.length
+
+        return element.parentElement.childNodes[child_length-1]
+    }
+
+    return next_sibling
+}

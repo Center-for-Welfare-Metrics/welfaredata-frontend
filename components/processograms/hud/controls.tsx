@@ -6,9 +6,8 @@ import { getElementViewBox } from '../processogram-helpers'
 import SVG from 'react-inlinesvg'
 import { useContext } from 'react'
 import HudContext from '@/context/hud-context'
-import { normalizeElementNameByGivingID } from '@/utils/processogram'
+import { getNextSiblingFrom, getPreviousSiblingFrom } from '@/utils/processogram'
 import useGesture from '@/utils/gestures'
-
 
 
 const HudControls = () => {
@@ -17,9 +16,9 @@ const HudControls = () => {
 
     
     useEffect(()=>{        
-        document.onkeydown = handleKeyDown
+        window.addEventListener('keydown', handleKeyDown)
         return () => {
-            document.onkeydown = null
+            window.removeEventListener('keydown', handleKeyDown)
         }
     },[])
     
@@ -69,28 +68,6 @@ const HudControls = () => {
                 currentDomID:next_sibling.id
             })        
         }
-    }
-
-    const getPreviousSiblingFrom = (element:Element) => {
-        let previous_sibling = element.nextElementSibling as any
-
-        let siblingElementName = normalizeElementNameByGivingID(previous_sibling?.id)
-        let elementName = normalizeElementNameByGivingID(element.id)
-
-        if(siblingElementName===elementName) return getNextSiblingFrom(previous_sibling)
-
-        return previous_sibling
-    }
-
-    const getNextSiblingFrom = (element:Element) => {
-        let next_sibling = element.previousElementSibling as any
-
-        let siblingElementName = normalizeElementNameByGivingID(next_sibling?.id)
-        let elementName = normalizeElementNameByGivingID(element.id)
-
-        if(siblingElementName===elementName) return getNextSiblingFrom(next_sibling)
-
-        return next_sibling
     }
 
     return (

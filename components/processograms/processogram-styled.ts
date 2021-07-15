@@ -30,29 +30,43 @@ export const SvgContainer = styled.div`
         }
     }
     ${
-        ({level}) => level !== undefined && css`
-            ${({childrens,hover,siblings,level,current}) => hover?css`
-                > svg{
-                    stroke-opacity:.5;                    
-                }
-                #${current} #${hover}{
-                    stroke-opacity:1;
-                    transition:stroke-opacity 500ms;
-                }
-                `
-                :
+        ({level}) => level !== undefined && (
+            level<3?
                 css`
+                ${({childrens,hover,current}) => hover?css`
                     > svg{
-                        stroke-opacity:.5;
-                        transition:stroke-opacity 500ms;
+                        stroke-opacity:.5;                    
                     }
-                    #${current} [id*=${childrens}]{
+                    #${current} #${hover}{
                         stroke-opacity:1;
                         transition:stroke-opacity 500ms;
                     }
-                `    
-            }
-        `
+                    `
+                    :
+                    css`
+                        > svg{
+                            stroke-opacity:.5;
+                            transition:stroke-opacity 500ms;
+                        }
+                        #${current} [id*=${childrens}]{
+                            stroke-opacity:1;
+                            transition:stroke-opacity 500ms;
+                        }
+                    `    
+                }
+            `
+            :
+            css`
+                > svg{
+                    stroke-opacity:.5;
+                }
+
+                #${({current})=>current}{
+                    stroke-opacity:1;
+                    transition:stroke-opacity 500ms;
+                }
+            `
+        )
     }    
 
     @media(max-width:800px){

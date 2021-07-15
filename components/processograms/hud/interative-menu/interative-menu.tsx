@@ -11,6 +11,7 @@ import Svg from 'react-inlinesvg'
 import useGesture from '@/utils/gestures'
 import MenuTabs from './menu-tabs/menu-tabs'
 import { SvgPath } from '@/utils/assets_path'
+import { CollectionsBookmarkTwoTone } from '@material-ui/icons'
 
 export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
@@ -40,6 +41,25 @@ const HudInterativeMenu = () => {
         setContent(getCollectionInformationsByCoolFormat(stackCoolFormat,collection))
     },[stackCoolFormat])
 
+    useEffect(()=>{        
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    },[])
+    
+
+    const handleKeyDown = (event:KeyboardEvent) => {        
+        const Action = {
+            ArrowUp:()=>setState('full'),
+            ArrowDown:()=>setState('minimized')
+        }
+        try {
+            Action[event.key](event)
+        } catch (error) {
+            
+        }        
+    }    
 
     const onClick = (event:Event) => {   
         event.stopPropagation()
