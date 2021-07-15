@@ -15,7 +15,7 @@ interface IMenutabs{
     state:IInterativeMenuState
 }
 
-const TabIcons = ({TabIconClick,tab}) => {
+const TabIcons = ({TabIconClick,tab,hasMedia}) => {
 
     return (
         <TabIconsContainer>
@@ -27,7 +27,7 @@ const TabIcons = ({TabIconClick,tab}) => {
                         })}
                     />
                 </TabIcon>
-                <TabIcon active={tab==='media'} onClick={TabIconClick('media')}>
+                { hasMedia && <TabIcon active={tab==='media'} onClick={TabIconClick('media')}>
                     <Svg 
                         src={
                             SvgPath({
@@ -36,7 +36,7 @@ const TabIcons = ({TabIconClick,tab}) => {
                             })
                         }
                     />
-                </TabIcon>
+                </TabIcon>}
         </TabIconsContainer>
     )
 }
@@ -60,9 +60,18 @@ const MenuTabs = ({content,state}:IMenutabs) => {
         }
     }
 
+    const mediasCount = () => {
+        let ref = (content.ref_medias || [])
+        let local = (content.medias || [])
+        let total = [...ref,...local]
+
+
+        return total.length
+    }
+
     return (
         <Container state={state}>
-            <TabIconsMemo tab={tab} TabIconClick={TabIconClick} />            
+            <TabIconsMemo hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
             <Body onTouchStart={BodyTouchStart}>
                 {
                     tab==='description' && <DescriptionTab 

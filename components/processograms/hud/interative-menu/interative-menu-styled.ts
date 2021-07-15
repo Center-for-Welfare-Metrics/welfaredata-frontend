@@ -22,8 +22,8 @@ export const Minimize = styled.div`
 
 
 const anim = keyframes`
-    from {transform:translateY(100%)}
-    to {transform:translateY(0)}
+    0% {transform:translateY(100%)}
+    100% {transform:translateY(0)}
 `
 
 export const Container = styled.div`
@@ -45,4 +45,5 @@ export const Container = styled.div`
     padding:1rem;
     max-width:500px;
     animation: ${anim} 500ms;
+    animation-timing-function: ease-in-out;    
 `

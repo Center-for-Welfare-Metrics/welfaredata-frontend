@@ -14,10 +14,11 @@ import { getElementViewBox } from './processogram-helpers';
 
 
 interface IProcessogram {
-    productionSystem:ProductionSystemTypes,
-    specie:SpeciesTypes,
+    productionSystem:ProductionSystemTypes
+    specie:SpeciesTypes
     hoverChange(hover):void
     onSelect(id:string):void
+    productionSystemSelected:string
 }
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
@@ -26,7 +27,7 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected}:IProcessogram) => {
 
     const [isMoving,setIsMoving] = useState(false)    
 
@@ -37,6 +38,38 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
     const ref = useRef<HTMLDivElement>(null)
 
     const [onHover,setOnHover] = useState<string>(null)
+
+    useEffect(()=>{
+        if(productionSystemSelected){                           
+            if(mainState){
+                focusOnMe()
+            }else{
+                fadeOutMe()
+            }
+        }else{
+            if(svgRef.current){
+                TweenLite.to(ref.current,{
+                    position:'static'
+                }).duration(0)
+                TweenLite.to(svgRef.current,{opacity:1,clearProps:'opacity',display:'block'}).duration(0.5)
+            }
+        }
+    },[productionSystemSelected])
+
+    const fadeOutMe = () => {
+        TweenLite.to(svgRef.current,{opacity:0}).duration(0.5)
+        .then(()=>{
+            TweenLite.to(svgRef.current,{display:'none'}).duration(0)
+        })
+    }
+
+    const focusOnMe = () => {
+        TweenLite.to(ref.current,{
+            position:'absolute',
+            top:0,
+            left:0
+        }).delay(0.5).duration(0)
+    }
 
     const onResize = () => {
         if(mainState.currentDomID){
@@ -66,9 +99,6 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
         if(mainState){                                          
             updateStack()
             applyDocumentTriggers()
-            if(mainState.level === 0){
-                focusOnMe()
-            }
             if(mainState.viewBox){
                 moveFigure()
             }                             
@@ -163,15 +193,6 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect}:IProcessogr
             ease:'power1.inOut'
         }).duration(0.7)
         .then(()=>setIsMoving(false))
-    }
-
-    const focusOnMe = () => {        
-        TweenLite.to(ref.current,{
-            position:'absolute',
-            top:'0',
-            left:'0',
-            overflow:'hidden'           
-        }).duration(0)
     }
 
     const originalPosition = () => {

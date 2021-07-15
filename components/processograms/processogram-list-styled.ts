@@ -32,21 +32,21 @@ export const Container = styled.div`
     width: 100%;            
     ${({current,hover}) => (current === null) && hover && css`
         svg{
-            transition:opacity ${time};
+            /* transition:opacity ${time}; */
             opacity: .5;
         }
         svg#${hover}{
-            transition:opacity ${time};
+            /* transition:opacity ${time}; */
             opacity: 1;
         }
     `}    
     ${({current}) => current!==null && css`                
-        svg[id*='--ps']:not(#${current}){
+        /* svg[id*='--ps']:not(#${current}){
             transition:opacity ${time};
             opacity: 0.1;
             z-index:-1;
             display:none;
-        }
+        } */
 
         @media(max-width:500px){
             svg#${current}{

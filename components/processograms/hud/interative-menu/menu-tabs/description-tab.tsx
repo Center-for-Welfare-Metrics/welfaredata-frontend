@@ -14,7 +14,7 @@ const DescriptionTab = ({ref_name,ref_description,description}:IDescriptionTab) 
         <Container>
             <Title>{ voca.titleCase(ref_name)}</Title>
             <Description>               
-                    {ref_description + (description || '')}                
+                    {(ref_description || '') + (description || '')}                
             </Description>
         </Container>
     )

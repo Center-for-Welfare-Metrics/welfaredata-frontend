@@ -9,7 +9,7 @@ export const SvgContainer = styled.div`
     z-index: 77;        
     > svg{        
         height:auto;            
-        transition:opacity 500ms,stroke-opacity 500ms;   
+        transition:stroke-opacity 500ms;
         overflow:visible; 
         z-index:77;
         width:80%;
