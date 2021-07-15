@@ -43,6 +43,7 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                                 hoverChange={setOnHover}
                                 onSelect={setProductionSystemSelected}
                                 productionSystemSelected={productionSystemSelected}
+                                listContainerRef={containerRef.current}
                             />
                         ))
                     }

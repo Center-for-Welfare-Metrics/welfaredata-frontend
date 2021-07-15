@@ -19,6 +19,7 @@ interface IProcessogram {
     hoverChange(hover):void
     onSelect(id:string):void
     productionSystemSelected:string
+    listContainerRef:any
 }
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
@@ -27,7 +28,7 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef}:IProcessogram) => {
 
     const [isMoving,setIsMoving] = useState(false)    
 
@@ -39,6 +40,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const [onHover,setOnHover] = useState<string>(null)
 
+    const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})
+
     useEffect(()=>{
         if(productionSystemSelected){                           
             if(mainState){
@@ -47,11 +50,42 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 fadeOutMe()
             }
         }else{
-            if(svgRef.current){
-                TweenLite.to(svgRef.current,{position:'static',opacity:1,display:'block',clearProps:'opacity,margin',translateX:'0',translateY:'0'}).duration(0.5)
+            if(svgRef.current){                
+                originalPosition()
             }
         }
     },[productionSystemSelected])
+
+    const originalPosition = () => {
+        let isHidden = svgRef.current.style.display === 'none'
+        if(isHidden){
+            TweenLite.to(svgRef.current,{
+                display:'block'
+            }).delay(.5)
+            .then(() => {                    
+                TweenLite.to(svgRef.current,{
+                    opacity:1,
+                    clearProps:'opacity'
+                }).duration(.5)
+            })
+        }else{            
+            TweenLite.to(svgRef.current,{
+                top:topLeft.top,
+                left:topLeft.left,
+                translateY:'0',
+                translateX:'0'
+            }).duration(0.5)
+            .then(()=>{            
+                TweenLite.to(svgRef.current,{
+                    position:'static',
+                    clearProps:'opacity,margin',
+                }).duration(0.01)
+                .then(()=>{
+                    listContainerRef.scrollTo(0,topLeft.scrollTop)                    
+                })
+            })            
+        }        
+    }
 
     const fadeOutMe = () => {
         TweenLite.to(svgRef.current,{opacity:0}).duration(0.5)
@@ -62,7 +96,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const focusOnMe = () => {
         let { top,left } = getElementSizeInformations(svgRef.current)
-        
+        let scrollTop = listContainerRef.scrollTop
+        setTopLeft({top,left,scrollTop})
         TweenLite.to(svgRef.current,{
             position:'absolute',
             top,
@@ -78,7 +113,6 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 translateY:'-50%'
             })
         })
-
     }
 
     const onResize = () => {
@@ -113,8 +147,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 moveFigure()
             }                             
         }else{
-            setStack([])
-            originalPosition()
+            setStack([])            
         }                  
     },[mainState])
 
@@ -203,12 +236,6 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             ease:'power1.inOut'
         }).duration(0.7)
         .then(()=>setIsMoving(false))
-    }
-
-    const originalPosition = () => {
-        if(ref.current){
-            TweenLite.to(ref.current,{position:'static',overflow:'auto'}).duration(0)
-        }
     }
 
     const mouseLeave = (event:MS<SVGElement,MouseEvent>) => {

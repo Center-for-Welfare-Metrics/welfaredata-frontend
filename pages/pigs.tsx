@@ -3,8 +3,6 @@ import { Container } from "@/components/layouts/default-processogram-page-styled
 import processogramApi from '@/api/processogram'
 
 const PublicPigsPage = ({data}) => {
-    
-    console.log(data)
     return (            
         <Container>
             {                
