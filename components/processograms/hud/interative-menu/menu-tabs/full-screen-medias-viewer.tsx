@@ -13,7 +13,7 @@ const FullScreenMediasViewer = () => {
     }
 
     return(        
-        <Container onClick={clickOut}>
+        <Container onClick={clickOut} onContextMenu={(e)=>e.stopPropagation()}>
             <div style={{maxWidth:'80vw',margin:'auto'}} onClick={(e)=>e.stopPropagation()}>
                 <ImageGallery items={mediasViewer.medias.map((media)=> ({
                         original:media.url,
@@ -21,7 +21,7 @@ const FullScreenMediasViewer = () => {
                         originalTitle:media.originalName
                     }) )} 
                     showPlayButton={false}
-                    stopPropagation={true}
+                    // stopPropagation={true}
                     showBullets={true}
                     startIndex={mediasViewer.index}
                 />

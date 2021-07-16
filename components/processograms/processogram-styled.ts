@@ -86,8 +86,4 @@ export const SvgContainer = styled.div`
         }
     }
 
-
-
-
-
 `
