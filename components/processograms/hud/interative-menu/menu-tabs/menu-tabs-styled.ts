@@ -3,20 +3,23 @@ import styled, {css} from 'styled-components'
 
 
 
-let tabicon_state = {
-    minimized:'2rem',
-    full:'3rem',
-    hide:'0'
-}
-
 export const TabIcon = styled.div`
     margin-right:1rem;
     padding-bottom:.5rem;
     cursor:pointer;
     svg{
         transition:width 500ms,height 500ms;
-        width:3rem;
-        height:3rem;
+        ${({state}) => state==='full'?
+            css`
+                width:3rem;
+                height:3rem;
+            `
+            :
+            css`
+                width:2rem;
+                height:2rem;
+            `    
+        }        
         path{
             fill:${({theme})=> darken(0.2,theme.colors.blue)};
             transition:fill 500ms;
@@ -42,6 +45,25 @@ export const TabIcon = styled.div`
     `}
     outline:none;
 `
+
+
+export const TabIconSizeFix = styled(TabIcon)`
+    svg{
+        transition:width 500ms,height 500ms;
+        ${({state}) => state==='full'?
+            css`
+                width:2.8rem;
+                height:2.8rem;
+            `
+            :
+            css`
+                width:1.8rem;
+                height:1.8rem;
+            `    
+        }      
+    }
+`
+
 
 export const TabIconsContainer = styled.div`
     display:flex;
@@ -78,15 +100,5 @@ export const Body = styled.div`
 export const Container = styled.div`
     ${Body}{
         ${({state}) => body_state[state]}
-    }
-    ${TabIcon}{
-        ${({state}) => state === 'minimized' && css`
-            border-bottom:1px solid transparent;
-            padding-bottom:0;
-        ` }
-        svg{
-            width:${({state}) => tabicon_state[state]};
-            height:${({state}) => tabicon_state[state]};
-        }
     }
 `

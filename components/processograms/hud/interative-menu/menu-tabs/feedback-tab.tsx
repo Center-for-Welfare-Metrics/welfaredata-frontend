@@ -5,21 +5,33 @@ import { FormEvent } from 'react'
 import { Container,FeedBackForm,ButtonContainer } from './feedback-tab-styled'
 import feedback from '@/api/feedback'
 import toast from 'react-hot-toast'
+import { useContext } from 'react'
+import HudContext from '@/context/hud-context'
+import { generateFormatedLog } from '@/components/processograms/processogram-helpers'
 
 const FeedbackTab = () => {
+
+    const { stackCoolFormat } = useContext(HudContext)
 
     const [detailed,setDetailed] = useState('')
 
     const [short,setShort] = useState('')
 
+    const [email,setEmail] = useState('')
+
     const [load,setLoad] = useState(false)
 
     const submitForm = (event:FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+
+        let path_log = generateFormatedLog(stackCoolFormat)
+
+        let real_description = `Email: ${email || 'Not Provided'}<br/><br/>${detailed?`-------- description --------<br/>${detailed}<br/><br/><br/><br/>`:''}-------- path --------<br/>${path_log}`
+
         setLoad(true)
         feedback.addFeedBack({
             title:short,
-            description:detailed
+            description:real_description
         })
         .then(() => {
             setShort('')
@@ -49,8 +61,8 @@ const FeedbackTab = () => {
                         label='Email (optional)'                        
                         type='email'      
                         autoFocus 
-                        // value={short}                          
-                        // onChange={(e)=>setShort(e.target.value)}
+                        value={email}                          
+                        onChange={(e)=>setEmail(e.target.value)}
                     />
                     <FormInput
                         customStyle={{paddingBottom:'0'}}

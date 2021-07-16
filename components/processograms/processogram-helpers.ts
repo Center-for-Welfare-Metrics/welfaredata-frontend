@@ -1,3 +1,5 @@
+import { ICoolFormat } from "@/utils/processogram"
+
 const getSvgParentByGivenChildren : any = (children:Element) => {
     let element_aux = children
     let limit = 0
@@ -81,4 +83,31 @@ export const getElementViewBox = (element,isInner=false) => {
         console.log('Dear dev...' + error)
         return null        
     }    
+}
+
+
+
+export const generateFormatedLog = (stack:ICoolFormat[]) => {
+    try {
+        let string_log = '**Specie -> Pig**'
+
+        let spaces = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+
+        stack.forEach((item) => {        
+            let level = item.level+1
+            console.log(stack[50].domID)
+            string_log += '<br/>'
+
+            for(let index = 0;index<level;index++){
+                string_log+=spaces
+            }
+
+            string_log += `**${item.levelName} -> ${item.elementName}** | ${item.domID}`
+        })
+        
+        return string_log
+    } catch (error) {        
+        return `Failed trying to generate path<br/><br/>Error: ${error}`
+    }
+    
 }

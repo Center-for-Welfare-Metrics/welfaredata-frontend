@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { IContentInformation } from "@/utils/processogram"
-import { Container, TabIconsContainer, TabIcon,Body} from './menu-tabs-styled'
+import { Container, TabIconsContainer, TabIcon,Body, TabIconSizeFix} from './menu-tabs-styled'
 import DescriptionTab from "./description-tab"
 
 import Svg from 'react-inlinesvg'
@@ -14,20 +14,20 @@ type tabOptions = 'description' | 'media'|'feedback'
 
 
 
-const TabIcons = ({TabIconClick,tab,hasMedia}) => {
+const TabIcons = ({TabIconClick,tab,hasMedia,state}) => {
 
     return (
         <TabIconsContainer>
-            <TabIcon active={tab==='description'} onClick={TabIconClick('description')}>
+            <TabIconSizeFix state={state} active={tab==='description'} onClick={TabIconClick('description')}>
                 <Svg 
                     src={SvgPath({
                         folder:'icons',
                         file_name:'text'
                     })}
                 />
-            </TabIcon>
+            </TabIconSizeFix>
             { hasMedia && 
-                <TabIcon active={tab==='media'} onClick={TabIconClick('media')}>
+                <TabIcon state={state} active={tab==='media'} onClick={TabIconClick('media')}>
                     <Svg 
                         src={
                             SvgPath({
@@ -38,7 +38,7 @@ const TabIcons = ({TabIconClick,tab,hasMedia}) => {
                     />
                 </TabIcon>
             }
-            <TabIcon active={tab==='feedback'} onClick={TabIconClick('feedback')}>
+            <TabIcon state={state} active={tab==='feedback'} onClick={TabIconClick('feedback')}>
                 <Svg 
                     src={
                         SvgPath({
@@ -97,7 +97,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
 
     return (
         <Container state={state}>
-            <TabIconsMemo hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
+            <TabIconsMemo state={state} hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
             <Body onClick={(e)=>e.stopPropagation()} onTouchStart={BodyTouchStart}>
                 {
                     tab==='description' && <DescriptionTab 
