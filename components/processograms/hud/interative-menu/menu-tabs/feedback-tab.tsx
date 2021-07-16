@@ -22,11 +22,15 @@ const FeedbackTab = () => {
             description:detailed
         })
         .then(() => {
-            toast.success('Thank you so much for taking the time to send this!')
-        })
-        .finally(() => {
             setShort('')
             setDetailed('')
+            toast.success(<div onClick={(e)=>e.stopPropagation()}>Thank you so much for taking the time to send this!</div>)
+        })
+        .catch(() => {                
+            toast.error(<div onClick={(e)=>e.stopPropagation()}>I'm sorry but I could not receive your feedback. Please send me later :)</div>)
+        })
+        .finally(() => {
+            
             setLoad(false)
         })
     }
@@ -42,9 +46,9 @@ const FeedbackTab = () => {
                         customStyle={{paddingBottom:'0'}}
                         onClick={(e)=>e.stopPropagation()}
                         name='email'
-                        label='Email (optional)'
-                        required
-                        type='email'       
+                        label='Email (optional)'                        
+                        type='email'      
+                        autoFocus 
                         // value={short}                          
                         // onChange={(e)=>setShort(e.target.value)}
                     />
@@ -56,6 +60,7 @@ const FeedbackTab = () => {
                         required         
                         value={short}                          
                         onChange={(e)=>setShort(e.target.value)}
+                        autoComplete="off"
                     />
                     <FormInput                        
                         onClick={(e)=>e.stopPropagation()}
@@ -66,7 +71,7 @@ const FeedbackTab = () => {
                         onChange={(e)=>setDetailed(e.target.value)}                      
                     />
                     <ButtonContainer>
-                        <PrimaryButton style={{marginTop:'0'}} load={load} onClick={(e)=>e.stopPropagation()} type="submit">Send</PrimaryButton>
+                        <PrimaryButton disabled={load===true} style={{marginTop:'0'}} load={load} onClick={(e)=>e.stopPropagation()} type="submit">Send</PrimaryButton>
                     </ButtonContainer>
                 </form>
             </FeedBackForm>

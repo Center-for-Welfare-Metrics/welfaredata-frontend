@@ -39,8 +39,10 @@ function MyApp({ Component, pageProps }) {
 
   const userValue: IUserContext = { user, setUser, logOut }
 
-  const handleCustomContextMenu = (event: MouseEvent) => {
+  const handleCustomContextMenu = (event: MouseEvent) => {    
     event.preventDefault()
+    let selection = window.getSelection()
+    console.log(selection)
     let { clientX, clientY } = event
     setContextMenu({
       open: true,
@@ -95,7 +97,7 @@ function MyApp({ Component, pageProps }) {
       
         <GlobalStyles/>
         <UserContext.Provider value={userValue}>
-          <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }} />
+          <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }}  />
           <ContextMenuContext.Provider value={contextMenuValues}>
             <Component {...pageProps} />
             <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />

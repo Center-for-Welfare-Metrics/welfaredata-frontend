@@ -1,9 +1,11 @@
-import styled from 'styled-components'
+import styled , {keyframes} from 'styled-components'
 
 import TextareaAutosize from 'react-textarea-autosize';
+import { lighten } from 'polished';
 
 
 const globalColor = (theme) => theme.colors.white
+
 
 export const LabeledInput = styled.input`
     padding:.5rem 0 .5rem 0;
@@ -14,6 +16,9 @@ export const LabeledInput = styled.input`
     outline: none;
     :disabled{
         cursor:not-allowed;
+    }
+    :focus{
+        border-bottom:1px solid ${({theme})=> lighten(0.3,theme.colors.blue)};        
     }
     font-size:${({theme})=>theme.fontSize.normal};
 `
