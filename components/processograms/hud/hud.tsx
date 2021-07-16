@@ -15,6 +15,7 @@ interface IProcessogramHud{
     level:number
     stack:string[],
     isMoving:boolean
+    shareString:string
 }
 
 const ProcessogramHud = ({
@@ -22,7 +23,8 @@ const ProcessogramHud = ({
     onChange,
     level,
     stack,
-    isMoving
+    isMoving,
+    shareString
 }:IProcessogramHud) => {
 
     const elementRect = element.getBoundingClientRect()
@@ -34,7 +36,7 @@ const ProcessogramHud = ({
     },[stack])
 
     return (
-        <HudContext.Provider value={{element,onChange,stackCoolFormat}}>
+        <HudContext.Provider value={{element,onChange,stackCoolFormat,shareString}}>
             {
                 !isMoving &&
                 <Container style={{

@@ -8,6 +8,7 @@ export interface IHudContext {
     element:Element,    
     onChange(changes:ImainStateChange):void,
     stackCoolFormat:ICoolFormat[]
+    shareString:string
 }
 
 const HudContext = createContext<IHudContext>(null)

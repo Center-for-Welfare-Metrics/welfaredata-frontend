@@ -1,4 +1,4 @@
-import { lighten } from 'polished'
+import { lighten, transparentize } from 'polished'
 import styled , {css} from 'styled-components'
 const time = '500ms'
 
@@ -17,7 +17,15 @@ const scrollBar = (color,size='.5rem') => css`
         transition: background-color 500ms;
     }
 `
-
+export const OverlapingMaster = styled.div`
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:999;
+    background-color:  ${transparentize(0.8,'black')};
+`
 
 export const SubContainer = styled.div`
     display:flex;

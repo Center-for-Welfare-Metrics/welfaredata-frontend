@@ -11,7 +11,7 @@ import { getElementSizeInformations, getRightTargetID } from '@/utils/processogr
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/hud';
 import { getElementViewBox } from './processogram-helpers';
-
+import { useRouter } from 'next/router'
 
 interface IProcessogram {
     productionSystem:ProductionSystemTypes
@@ -42,6 +42,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})
 
+    const [shareString,setShareString] = useState('')
+
     useEffect(()=>{
         if(productionSystemSelected){                           
             if(mainState){
@@ -55,6 +57,29 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             }
         }
     },[productionSystemSelected])
+
+    const router = useRouter()
+
+    useEffect(() => {
+        if(mainState){            
+            
+            if(router.query.s){
+                let share = router.query.s as string
+                getFromShareLink(share)
+                router.query.s = null
+                window.history.replaceState(null, '', '/pigs')
+            }else{
+                let x = window.location.href+`?s=${productionSystemSelected}`
+                // let x = window.location.href+`?s=${productionSystemSelected}|${mainState.level}|${mainState.currentDomID||'x'}`   
+                            
+                setShareString(x)
+            }
+        }        
+    },[mainState])
+
+    const getFromShareLink = (share:string) => {
+        console.log(share)
+    }
 
     const originalPosition = () => {
         let isHidden = svgRef.current.style.display === 'none'
@@ -331,6 +356,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                         level={mainState.level}
                         stack={stack}
                         isMoving={isMoving}
+                        shareString={shareString}
                     />                
                 }                                     
             </SvgContainer>              

@@ -37,10 +37,10 @@ const ProcessogramMenu = () => {
 
     const [tab,setTab] = useState('home')
     
-    const [copied,setCopied] = useState(0)
-
     const {contextMenu,temporary,loading} = useContext(ContextMenu)
-
+    
+    
+    const [copied,setCopied] = useState(0)
     useEffect(()=>{
         if(copied){
             toast.success('Copied!')

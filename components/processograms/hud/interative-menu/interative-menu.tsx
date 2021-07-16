@@ -6,18 +6,19 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
 
-import { Container,Minimize } from './interative-menu-styled'
+import { Container,Minimize,Share} from './interative-menu-styled'
 import Svg from 'react-inlinesvg'
 import useGesture from '@/utils/gestures'
 import MenuTabs from './menu-tabs/menu-tabs'
 import { SvgPath } from '@/utils/assets_path'
-import { CollectionsBookmarkTwoTone } from '@material-ui/icons'
+import toast from 'react-hot-toast'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
 const HudInterativeMenu = () => {
 
-    const { stackCoolFormat } = useContext(HudContext)
+    const { stackCoolFormat,shareString } = useContext(HudContext)
 
     const { collection } = useContext(ProcessogramContext)
 
@@ -79,6 +80,13 @@ const HudInterativeMenu = () => {
         }        
     }
 
+    const [copied,setCopied] = useState(0)
+
+    useEffect(()=>{
+        if(copied){
+            toast.success('Link Copied! Share with your friends!')
+        }
+    },[copied])
     
 
     return (
@@ -90,6 +98,12 @@ const HudInterativeMenu = () => {
                     src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
                 />
             </Minimize>
+            <CopyToClipboard 
+                text={shareString || ''}
+                onCopy={()=>{setCopied(copied+1)}}                
+            >
+                <Share />
+            </CopyToClipboard>
         </Container>       
     )
     

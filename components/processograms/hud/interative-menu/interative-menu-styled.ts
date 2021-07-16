@@ -1,6 +1,19 @@
 import { transparentize } from 'polished'
 import styled , {keyframes} from 'styled-components'
 
+import ShareOutlined from '@material-ui/icons/ShareOutlined'
+
+
+export const Share = styled(ShareOutlined)`
+    position:absolute;
+    top:1rem;
+    right:4rem;
+    height:2rem;
+    width:2rem;
+    cursor:pointer;
+    color:${({theme}) => theme.colors.blue} !important;
+        
+`
 
 export const Minimize = styled.div`
     width:1.25rem;
@@ -45,5 +58,6 @@ export const Container = styled.div`
     padding:1rem;
     max-width:500px;
     animation: ${anim} 500ms;
-    animation-timing-function: ease-in-out;    
+    animation-timing-function: ease-in-out;  
+    cursor: ${({state}) => state==='full'?'unset':'pointer'};
 `
