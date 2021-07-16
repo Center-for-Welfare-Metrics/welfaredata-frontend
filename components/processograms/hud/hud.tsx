@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import HudContext from '@/context/hud-context'
 import { getLevelNameByGivingID, ICoolFormat, normalizeElementNameByGivingID, translateStackToCoolFormat } from '@/utils/processogram'
 import HudControls from './controls'
@@ -35,26 +35,31 @@ const ProcessogramHud = ({
 
     const [stackCoolFormat,setStackCoolFormat] = useState<ICoolFormat[]>([])    
 
+    const delay = useRef(null)
+
     useEffect(()=>{
         setStackCoolFormat(translateStackToCoolFormat(stack))        
     },[stack])
 
     useEffect(()=>{        
-        if(onHover){
-            if(level<3){
-                let x : ICoolFormat = {
-                    domID:onHover,
-                    elementName:normalizeElementNameByGivingID(onHover),
-                    levelName:getLevelNameByGivingID(onHover),
-                    level:level+1
+        clearTimeout(delay.current)
+        delay.current = setTimeout(() => {
+            if(onHover){
+                if(level<3){
+                    let x : ICoolFormat = {
+                        domID:onHover,
+                        elementName:normalizeElementNameByGivingID(onHover),
+                        levelName:getLevelNameByGivingID(onHover),
+                        level:level+1
+                    }
+                    setStackCoolFormat(update(stackCoolFormat,{
+                        [level+1]:{$set:x}
+                    }))
                 }
-                setStackCoolFormat(update(stackCoolFormat,{
-                    [level+1]:{$set:x}
-                }))
+            }else{
+                setStackCoolFormat(translateStackToCoolFormat(stack))  
             }
-        }else{
-            setStackCoolFormat(translateStackToCoolFormat(stack))  
-        }
+        }, 100);
     },[onHover])
 
     return (
