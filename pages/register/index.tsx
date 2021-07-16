@@ -4,6 +4,8 @@ import auth from "@/api/auth"
 import { useContext, useEffect, useState } from "react"
 import UserContext from "@/context/user"
 
+import ErrorPage from 'next/error'
+
 import CheckPasswordStrength from 'check-password-strength'
 import { opacify } from "polished"
 
@@ -81,14 +83,8 @@ const RegisterPage = () => {
     )
 }
 
-export default onlyGuest(RegisterPage)
+// export default onlyGuest(RegisterPage)
 
-// const Unamed = () => <h1 style={{color:'red',textAlign:'center',opacity:0.2}}>
-//     What are you doing here? <br></br>
-//     Go back to the magic of processograms!
-//     <p style={{color:'black'}}>
-//         AND WAIT FOR NEWS...
-//     </p>
-// </h1>
+const Unamed = () => <ErrorPage statusCode={404} />
 
-// export default Unamed
+export default Unamed

@@ -10,9 +10,7 @@ import Loader from "react-loader-spinner"
 
 const PigPage = () => {
 
-    const [processograms,setProcessograms] = useState<any>([])
-
-    const containerRef = useRef(null)
+    const [processograms,setProcessograms] = useState<any>([])    
 
     const [firstLoad,setFirstLoad] = useState(false)
 
@@ -26,7 +24,7 @@ const PigPage = () => {
 
     return (        
         <DefaultLayout>            
-            <Container ref={containerRef}>
+            <Container>
                 {
                     firstLoad?
                     (
