@@ -56,7 +56,7 @@ export const Container = styled.div`
     color:white;
     box-sizing: border-box; 
     padding:1rem;
-    max-width:500px;
+    max-width:540px;
     animation: ${anim} 500ms;
     animation-timing-function: ease-in-out;  
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
