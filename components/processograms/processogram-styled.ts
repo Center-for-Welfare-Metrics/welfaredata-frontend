@@ -36,7 +36,7 @@ export const SvgContainer = styled.div`
                 css`
                 ${({childrens,hover,current}) => hover?css`
                     > svg{
-                        stroke-opacity:.5;                    
+                        stroke-opacity:.35;                    
                     }
                     #${current} #${hover}{
                         stroke-opacity:1;
@@ -46,7 +46,7 @@ export const SvgContainer = styled.div`
                     :
                     css`
                         > svg{
-                            stroke-opacity:.5;
+                            stroke-opacity:.35;
                             transition:stroke-opacity 500ms;
                         }
                         #${current} [id*=${childrens}]{
@@ -59,7 +59,7 @@ export const SvgContainer = styled.div`
             :
             css`
                 > svg{
-                    stroke-opacity:.5;
+                    stroke-opacity:.35;
                 }
 
                 #${({current})=>current}{
@@ -76,7 +76,7 @@ export const SvgContainer = styled.div`
             css`                
                 ${hover && css`
                     svg #${hover}{
-                        stroke-opacity:.5;
+                        stroke-opacity:.35;
                     }
                 `}
                 svg #${current}{
