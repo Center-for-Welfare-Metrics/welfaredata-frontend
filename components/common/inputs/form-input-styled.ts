@@ -2,7 +2,7 @@ import { lighten, transparentize } from 'polished'
 import styled,{css} from 'styled-components'
 
 export const Container = styled.div`
-    padding:2rem;
+    padding:2rem 0 2rem 0;
     position: relative;
     display:flex;
     flex-direction: column;
@@ -21,17 +21,9 @@ export const Icon = styled.i`
 export const Label = styled.label`
     color:${({theme})=>transparentize(0.5,theme.colors.blue)};
     position:absolute;
-    top:50%;
-    left:2.2rem;  
-    transform: translateY(-50%);
-    transition: all 500ms;
-    z-index:-1;
     white-space: nowrap;
-    ${({ focus,theme }) => focus && css`
-        top:1rem;
-        left:2rem;
-        transform: translate(0,0);
-        transition: all 500ms;
+    ${({theme }) => css`
+        top:1rem;        
         z-index:auto;
         font-size:${theme.fontSize.small};
         color:${({theme})=>theme.colors.blue};

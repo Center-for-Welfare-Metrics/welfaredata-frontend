@@ -8,12 +8,16 @@ let tabicon_state = {
     hide:'0'
 }
 export const TabIcon = styled.div`
-    margin-right:.5rem;
+    margin-right:1rem;
     padding-bottom:.5rem;
     cursor:pointer;
     svg{
         transition:width 500ms;
         width:3rem;
+        height:3rem;
+        path{
+            fill:${({theme})=>theme.colors.blue};
+        }
         margin:0 !important;        
     }
     transition:border-bottom 500ms,padding-bottom 500ms;
@@ -37,12 +41,12 @@ let body_state = {
     `,
     full:css`
         margin-top:.5rem;
-        height:14.5rem; 
-        @media(min-width:300px){
+        height:15.5rem; 
+        /* @media(min-width:300px){
             height:11.5rem;
-        }
+        } */
         @media(min-width:1200px){
-            height:20rem;
+            height:22rem;
         }
     `,
     hide:css`
@@ -67,7 +71,8 @@ export const Container = styled.div`
             padding-bottom:0;
         ` }
         svg{
-            width:${({state}) => tabicon_state[state]};            
+            width:${({state}) => tabicon_state[state]};
+            height:${({state}) => tabicon_state[state]};
         }
     }
 `

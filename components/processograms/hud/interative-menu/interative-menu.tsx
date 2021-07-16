@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
 
-import { Container,Minimize,Share} from './interative-menu-styled'
+import { Container,Minimize,Share,CopyTo} from './interative-menu-styled'
 import Svg from 'react-inlinesvg'
 import useGesture from '@/utils/gestures'
 import MenuTabs from './menu-tabs/menu-tabs'
@@ -98,12 +98,14 @@ const HudInterativeMenu = () => {
                     src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
                 />
             </Minimize>
-            <CopyToClipboard 
-                text={shareString || ''}
-                onCopy={()=>{setCopied(copied+1)}}                
-            >
-                <Share />
-            </CopyToClipboard>
+            <CopyTo onClick={(e)=>e.stopPropagation()}>
+                <CopyToClipboard 
+                    text={shareString || ''}
+                    onCopy={()=>{setCopied(copied+1)}}                
+                >
+                    <Share />
+                </CopyToClipboard>
+            </CopyTo>
         </Container>       
     )
     

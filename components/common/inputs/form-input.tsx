@@ -64,6 +64,8 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         value={value}
                         disabled={disabled}
                         {...rest}
+                        minRows={2}
+                        maxRows={3}
                     />
                 )
                 :

@@ -9,7 +9,8 @@ import { IInterativeMenuState } from "../interative-menu"
 import MediaTab from "./media-tab"
 import React from "react"
 import { useEffect } from "react"
-type tabOptions = 'description' | 'media'
+import FeedbackTab from "./feedback-tab"
+type tabOptions = 'description' | 'media'|'feedback'
 
 interface IMenutabs{
     content:IContentInformation
@@ -21,23 +22,35 @@ const TabIcons = ({TabIconClick,tab,hasMedia}) => {
     return (
         <TabIconsContainer>
             <TabIcon active={tab==='description'} onClick={TabIconClick('description')}>
-                    <Svg 
-                        src={SvgPath({
-                            folder:'icons',
-                            file_name:'pencil'
-                        })}
-                    />
-                </TabIcon>
-                { hasMedia && <TabIcon active={tab==='media'} onClick={TabIconClick('media')}>
+                <Svg 
+                    src={SvgPath({
+                        folder:'icons',
+                        file_name:'text'
+                    })}
+                />
+            </TabIcon>
+            { hasMedia && 
+                <TabIcon active={tab==='media'} onClick={TabIconClick('media')}>
                     <Svg 
                         src={
                             SvgPath({
                                 folder:'icons',
-                                file_name:'media'
+                                file_name:'media-outline'
                             })
                         }
                     />
-                </TabIcon>}
+                </TabIcon>
+            }
+            <TabIcon active={tab==='feedback'} onClick={TabIconClick('feedback')}>
+                <Svg 
+                    src={
+                        SvgPath({
+                            folder:'icons',
+                            file_name:'feedback'
+                        })
+                    }
+                />
+            </TabIcon>
         </TabIconsContainer>
     )
 }
@@ -49,8 +62,10 @@ const MenuTabs = ({content,state}:IMenutabs) => {
     const [tab,setTab] = useState<tabOptions>('description')
 
     useEffect(()=>{
-        if(mediasCount()===0){
-            setTab('description')
+        if(tab==='media'){
+            if(mediasCount()===0){
+                setTab('description')
+            }
         }
     },[content])
 
@@ -79,7 +94,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
     return (
         <Container state={state}>
             <TabIconsMemo hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
-            <Body onTouchStart={BodyTouchStart}>
+            <Body onClick={(e)=>e.stopPropagation()} onTouchStart={BodyTouchStart}>
                 {
                     tab==='description' && <DescriptionTab 
                         ref_description={content.ref_description}
@@ -89,6 +104,9 @@ const MenuTabs = ({content,state}:IMenutabs) => {
                 }
                 {
                     tab==='media' && <MediaTab ref_medias={content.ref_medias || []} medias={content.medias || []} />
+                }
+                {
+                    tab==='feedback' && <FeedbackTab />
                 }
             </Body>
         </Container>
