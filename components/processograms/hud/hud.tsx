@@ -41,25 +41,27 @@ const ProcessogramHud = ({
         setStackCoolFormat(translateStackToCoolFormat(stack))        
     },[stack])
 
-    useEffect(()=>{        
-        clearTimeout(delay.current)
-        delay.current = setTimeout(() => {
-            if(onHover){
-                if(level<3){
-                    let x : ICoolFormat = {
-                        domID:onHover,
-                        elementName:normalizeElementNameByGivingID(onHover),
-                        levelName:getLevelNameByGivingID(onHover),
-                        level:level+1
+    useEffect(()=>{
+        if(stack.length>0){       
+            clearTimeout(delay.current)
+            delay.current = setTimeout(() => {
+                if(onHover){
+                    if(level<3){
+                        let x : ICoolFormat = {
+                            domID:onHover,
+                            elementName:normalizeElementNameByGivingID(onHover),
+                            levelName:getLevelNameByGivingID(onHover),
+                            level:level+1
+                        }
+                        setStackCoolFormat(update(stackCoolFormat,{
+                            [level+1]:{$set:x}
+                        }))
                     }
-                    setStackCoolFormat(update(stackCoolFormat,{
-                        [level+1]:{$set:x}
-                    }))
+                }else{
+                    setStackCoolFormat(translateStackToCoolFormat(stack))  
                 }
-            }else{
-                setStackCoolFormat(translateStackToCoolFormat(stack))  
-            }
-        }, 100);
+            }, 100);
+        }
     },[onHover])
 
     return (
