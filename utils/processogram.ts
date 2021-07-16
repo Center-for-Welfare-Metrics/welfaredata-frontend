@@ -152,34 +152,47 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
 }
 
 export const getLevelNameByGivingID = (id:string) => {
+
     if(!id) return null
-    let map_keys = {
-        '--ps':'Production System',
-        '--lf':'Life Fate',
-        '--ph':'Phase',
-        '--ci':'Circumstance'
-    }
 
-    let keys = Object.keys(map_keys)
-
-    for(let index in keys){
-        let key = keys[index]
-
-        if(id.includes(key)){
-            return map_keys[key]
+    try {
+        let map_keys = {
+            '--ps':'Production System',
+            '--lf':'Life Fate',
+            '--ph':'Phase',
+            '--ci':'Circumstance'
         }
-    }
+    
+        let keys = Object.keys(map_keys)
+    
+        for(let index in keys){
+            let key = keys[index]
+    
+            if(id.includes(key)){
+                return map_keys[key]
+            }
+        }
+    } catch (error) {
+        return null
+        console.log(error)
+    }    
+
     return null
 }
 
 
 export const normalizeElementNameByGivingID = (id:string) => {
     if(id){
-        id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
+        try {
+            id = id.replace(/--lf|--ps|--ph|--ci|-\d+/g,'')
 
-        id = id.replace(/_/g,' ')
+            id = id.replace(/_/g,' ')
 
-        return voca.titleCase(id)
+            return voca.titleCase(id)
+        } catch (error) {
+            console.log(error)
+            return null
+        }        
     }else{
         return null
     }

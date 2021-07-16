@@ -8,6 +8,7 @@ import { SvgPath } from "@/utils/assets_path"
 import { IInterativeMenuState } from "../interative-menu"
 import MediaTab from "./media-tab"
 import React from "react"
+import { useEffect } from "react"
 type tabOptions = 'description' | 'media'
 
 interface IMenutabs{
@@ -46,6 +47,12 @@ const TabIconsMemo = React.memo(TabIcons)
 const MenuTabs = ({content,state}:IMenutabs) => {
 
     const [tab,setTab] = useState<tabOptions>('description')
+
+    useEffect(()=>{
+        if(mediasCount()===0){
+            setTab('description')
+        }
+    },[content])
 
     const BodyTouchStart = (event) => {        
         if(event.currentTarget.scrollTop > 0){

@@ -1,6 +1,6 @@
 import React from 'react'
 import HudContext from '@/context/hud-context'
-import { ICoolFormat, translateStackToCoolFormat } from '@/utils/processogram'
+import { getLevelNameByGivingID, ICoolFormat, normalizeElementNameByGivingID, translateStackToCoolFormat } from '@/utils/processogram'
 import HudControls from './controls'
 import HudTreeControl from './hud-tree-control'
 import { Container } from './hud-styled'
@@ -9,6 +9,8 @@ import { useState } from 'react'
 import HudInterativeMenu from './interative-menu/interative-menu'
 import { ImainState } from '@/context/processogram'
 
+import update from 'immutability-helper'
+
 interface IProcessogramHud{
     element:Element
     onChange(change:ImainState):void
@@ -16,6 +18,7 @@ interface IProcessogramHud{
     stack:string[],
     isMoving:boolean
     shareString:string
+    onHover:string
 }
 
 const ProcessogramHud = ({
@@ -24,7 +27,8 @@ const ProcessogramHud = ({
     level,
     stack,
     isMoving,
-    shareString
+    shareString,
+    onHover
 }:IProcessogramHud) => {
 
     const elementRect = element.getBoundingClientRect()
@@ -34,6 +38,24 @@ const ProcessogramHud = ({
     useEffect(()=>{
         setStackCoolFormat(translateStackToCoolFormat(stack))        
     },[stack])
+
+    useEffect(()=>{        
+        if(onHover){
+            if(level<3){
+                let x : ICoolFormat = {
+                    domID:onHover,
+                    elementName:normalizeElementNameByGivingID(onHover),
+                    levelName:getLevelNameByGivingID(onHover),
+                    level:level+1
+                }
+                setStackCoolFormat(update(stackCoolFormat,{
+                    [level+1]:{$set:x}
+                }))
+            }
+        }else{
+            setStackCoolFormat(translateStackToCoolFormat(stack))  
+        }
+    },[onHover])
 
     return (
         <HudContext.Provider value={{element,onChange,stackCoolFormat,shareString}}>

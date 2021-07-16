@@ -69,8 +69,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 router.query.s = null
                 window.history.replaceState(null, '', '/pigs')
             }else{
-                let x = window.location.href+`?s=${productionSystemSelected}`                   
-                            
+                let x = window.location.href+`?s=${productionSystemSelected}`                                               
                 setShareString(x)
             }
         }        
@@ -356,6 +355,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                         stack={stack}
                         isMoving={isMoving}
                         shareString={shareString}
+                        onHover={onHover}
                     />                
                 }                                     
             </SvgContainer>              
