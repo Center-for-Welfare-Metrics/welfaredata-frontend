@@ -1,3 +1,4 @@
+import { lighten } from 'polished'
 import styled, {css} from 'styled-components'
 
 
@@ -7,24 +8,29 @@ let tabicon_state = {
     full:'3rem',
     hide:'0'
 }
+
 export const TabIcon = styled.div`
     margin-right:1rem;
     padding-bottom:.5rem;
     cursor:pointer;
     svg{
-        transition:width 500ms;
+        transition:width 500ms,height 500ms;
         width:3rem;
         height:3rem;
         path{
             fill:${({theme})=>theme.colors.blue};
+            transition:fill 500ms;
         }
         margin:0 !important;        
     }
-    transition:border-bottom 500ms,padding-bottom 500ms;
-    border-bottom:1px solid transparent;
+    transition:padding-bottom 500ms;
     ${({active,theme}) => active && css`
-        box-sizing: border-box;        
-        border-bottom:1px solid ${theme.colors.blue};
+        svg{
+            path{
+                fill:${({theme})=> lighten(0.2,theme.colors.blue)};
+                transition:fill 500ms;
+            }
+        }
     `}
     outline:none;
 `

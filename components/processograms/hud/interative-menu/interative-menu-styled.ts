@@ -65,7 +65,7 @@ export const Container = styled.div`
     border-top-left-radius:1rem;    
     border:2px solid ${({theme}) => theme.colors.blue};
     border-bottom:none;
-    color:${(({theme})=> transparentize(0.2,'white'))};
+    color:${(({theme})=> theme.colors.blue)};
     box-sizing: border-box; 
     padding:1rem;
     max-width:540px;

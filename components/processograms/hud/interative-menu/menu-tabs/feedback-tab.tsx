@@ -33,12 +33,23 @@ const FeedbackTab = () => {
 
     return(
         <Container>
-            <div>
+            <div style={{marginBottom:'1rem'}}>
                 Want to leave some feedback? Please use the fields below to enter a short description, and optionally a more detailed explanation
             </div>
             <FeedBackForm>
                 <form method="post" onSubmit={submitForm}>
                     <FormInput
+                        customStyle={{paddingBottom:'0'}}
+                        onClick={(e)=>e.stopPropagation()}
+                        name='email'
+                        label='Email (optional)'
+                        required
+                        type='email'       
+                        // value={short}                          
+                        // onChange={(e)=>setShort(e.target.value)}
+                    />
+                    <FormInput
+                        customStyle={{paddingBottom:'0'}}
                         onClick={(e)=>e.stopPropagation()}
                         name='short_description'
                         label='Short Description *'
@@ -46,16 +57,16 @@ const FeedbackTab = () => {
                         value={short}                          
                         onChange={(e)=>setShort(e.target.value)}
                     />
-                    <FormInput
+                    <FormInput                        
                         onClick={(e)=>e.stopPropagation()}
                         name='detailed_description'
-                        label='Detailed Description'    
+                        label='Detailed Description (optional)'    
                         multiline={true}  
                         value={detailed}                          
                         onChange={(e)=>setDetailed(e.target.value)}                      
                     />
                     <ButtonContainer>
-                        <PrimaryButton load={load} onClick={(e)=>e.stopPropagation()} type="submit">Send</PrimaryButton>
+                        <PrimaryButton style={{marginTop:'0'}} load={load} onClick={(e)=>e.stopPropagation()} type="submit">Send</PrimaryButton>
                     </ButtonContainer>
                 </form>
             </FeedBackForm>

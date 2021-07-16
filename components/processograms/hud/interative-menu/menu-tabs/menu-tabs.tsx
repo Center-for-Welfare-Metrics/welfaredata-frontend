@@ -12,10 +12,7 @@ import { useEffect } from "react"
 import FeedbackTab from "./feedback-tab"
 type tabOptions = 'description' | 'media'|'feedback'
 
-interface IMenutabs{
-    content:IContentInformation
-    state:IInterativeMenuState
-}
+
 
 const TabIcons = ({TabIconClick,tab,hasMedia}) => {
 
@@ -57,6 +54,11 @@ const TabIcons = ({TabIconClick,tab,hasMedia}) => {
 
 const TabIconsMemo = React.memo(TabIcons)
 
+interface IMenutabs{
+    content:IContentInformation
+    state:IInterativeMenuState
+}
+
 const MenuTabs = ({content,state}:IMenutabs) => {
 
     const [tab,setTab] = useState<tabOptions>('description')
@@ -79,6 +81,8 @@ const MenuTabs = ({content,state}:IMenutabs) => {
         if(state==='full'){
             event.stopPropagation()
             setTab(tab)
+        }else if(state==='minimized'){
+            setTab(tab)
         }
     }
 
@@ -100,6 +104,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
                         ref_description={content.ref_description}
                         ref_name={content.ref_name}
                         description={content.description}
+                        levelName={content.levelName}
                     />
                 }
                 {

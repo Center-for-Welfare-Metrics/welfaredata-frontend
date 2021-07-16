@@ -51,6 +51,7 @@ export interface IContentInformation {
     specie?: string
     updatedAt?: Date    
     _id?: string
+    levelName:string
 }
 
 export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collection:any[]) => {
@@ -109,6 +110,13 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
         
     }
 
+    const convert_keys = {
+        productionSystem:'production system',
+        lifeFate:'life fate',
+        phase:'phase',
+        circumstance:'circumstance'
+    }
+
     const transformToContent = (item,stack_length:number) => {
         if(!item) return null
         try {
@@ -125,13 +133,14 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
             Object.keys(children_content).forEach((key) => {
                 new_children_content[`ref_${key}`] = children_content[key]
             })        
-        
-            return {...item,...new_children_content,[childrenName]:undefined}
+            
+            return {...item,...new_children_content,[childrenName]:undefined,levelName:convert_keys[childrenName]}
         } catch (error) {
             // console.log(error)            
             return {
-                ref_name:'No information found',
-                ref_description:'Soon you will be able to add new informations'
+                ref_name:'',
+                ref_description:'Information not available yet. Select the feedback tab if you want to leave a suggestion',
+                noinformation:true
             }
         }
     }

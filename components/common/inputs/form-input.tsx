@@ -14,6 +14,7 @@ export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     multiline?:boolean
     disabled?:boolean
     defaultValue?:any
+    customStyle?:any
 }
 
 const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement>> = (
@@ -27,12 +28,13 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
         value,
         disabled=false,
         defaultValue=null,
+        customStyle,
         ...rest
     }
 ) => {
 
     return (
-        <Container>
+        <Container style={customStyle}>
             <Label htmlFor={name}>{label}</Label>
             {
                 multiline?
@@ -44,8 +46,6 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         value={value}
                         disabled={disabled}
                         {...rest}
-                        minRows={2}
-                        maxRows={3}
                     />
                 )
                 :
