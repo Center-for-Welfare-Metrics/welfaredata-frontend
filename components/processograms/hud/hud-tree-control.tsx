@@ -13,7 +13,7 @@ const HudTreeControl = () => {
 
     const onTreeItemClick = ({domID,level}) => (event:Event) => {
         event.stopPropagation()
-        if(element.id!==domID){
+        if(element.id!==domID && domID){            
             let svg = document.getElementById(stackCoolFormat[0].domID)
             
             let element_to_focus = level>0?svg.querySelector(`#${domID}`):svg

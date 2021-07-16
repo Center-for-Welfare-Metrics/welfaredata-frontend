@@ -48,32 +48,37 @@ const isVerticalOriented = ratio => ratio >= 1
 
 const isHorizontalOriented = ratio => ratio < 1
 
-export const getElementViewBox = (element,isInner=false) => {
-    let {x,y,width,height} = element.getBBox()
+export const getElementViewBox = (element,isInner=false) => {    
+    try {
+        let {x,y,width,height} = element.getBBox()
 
-    let percentage_size = getElementPercentageSizeRelativeToSvgParent(element)        
-    let screen_ratio = window.innerHeight/window.innerWidth
+        let percentage_size = getElementPercentageSizeRelativeToSvgParent(element)        
+        let screen_ratio = window.innerHeight/window.innerWidth
 
-    let element_ratio = height/width    
+        let element_ratio = height/width    
 
-    let ratio = (Math.abs(screen_ratio - element_ratio)*2)
-    
-    if(isHorizontalOriented(screen_ratio) && isVerticalOriented(element_ratio)){                 
-        x -= (width*ratio)/2
-        width += (width*ratio)        
-    }else if(isVerticalOriented(screen_ratio) && isVerticalOriented(element_ratio)){
-        x -= (width*ratio)/2
-        width += (width*ratio)
-    }
+        let ratio = (Math.abs(screen_ratio - element_ratio)*2)
+        
+        if(isHorizontalOriented(screen_ratio) && isVerticalOriented(element_ratio)){                 
+            x -= (width*ratio)/2
+            width += (width*ratio)        
+        }else if(isVerticalOriented(screen_ratio) && isVerticalOriented(element_ratio)){
+            x -= (width*ratio)/2
+            width += (width*ratio)
+        }
 
-    let arbitrary_variable_to_regule_zoom_level = arbitraryZoomLevelByPercentageSize(percentage_size)    
+        let arbitrary_variable_to_regule_zoom_level = arbitraryZoomLevelByPercentageSize(percentage_size)    
 
-    if(arbitrary_variable_to_regule_zoom_level > 0){
-        x -= (width*arbitrary_variable_to_regule_zoom_level)/2
-        width+= (width*arbitrary_variable_to_regule_zoom_level)
-    }
+        if(arbitrary_variable_to_regule_zoom_level > 0){
+            x -= (width*arbitrary_variable_to_regule_zoom_level)/2
+            width+= (width*arbitrary_variable_to_regule_zoom_level)
+        }
 
-    let viewBox = `${x} ${y} ${(width)} ${height}`
+        let viewBox = `${x} ${y} ${(width)} ${height}`
 
-    return viewBox
+        return viewBox
+    } catch (error) {
+        console.log('Dear dev...' + error)
+        return null        
+    }    
 }

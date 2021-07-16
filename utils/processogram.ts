@@ -221,7 +221,9 @@ export const getPreviousSiblingFrom = (element:Element) => {
     if(siblingElementName===elementName) return getNextSiblingFrom(previous_sibling)
 
     if(previous_sibling===null){
-        return element.parentElement.childNodes[0]
+        if(element.id.includes('--ci')){
+            return element.parentElement.childNodes[0]
+        }
     }
 
     return previous_sibling
@@ -236,9 +238,11 @@ export const getNextSiblingFrom = (element:Element) => {
     if(siblingElementName===elementName) return getNextSiblingFrom(next_sibling)        
     
     if(next_sibling===null){
-        let child_length = element.parentElement.childNodes.length
-
-        return element.parentElement.childNodes[child_length-1]
+        if(element.id.includes('--ci')){
+            let child_length = element.parentElement.childNodes.length
+            let el = element.parentElement.childNodes[child_length-1]        
+            return el
+        }
     }
 
     return next_sibling

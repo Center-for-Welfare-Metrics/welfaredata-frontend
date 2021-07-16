@@ -69,8 +69,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 router.query.s = null
                 window.history.replaceState(null, '', '/pigs')
             }else{
-                let x = window.location.href+`?s=${productionSystemSelected}`
-                // let x = window.location.href+`?s=${productionSystemSelected}|${mainState.level}|${mainState.currentDomID||'x'}`   
+                let x = window.location.href+`?s=${productionSystemSelected}`                   
                             
                 setShareString(x)
             }

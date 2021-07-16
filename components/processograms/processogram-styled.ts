@@ -18,6 +18,7 @@ export const SvgContainer = styled.div`
         margin-bottom:2.5%;
         opacity:1;
         display:block;       
+        min-height:5rem;
     }
     :first-child{
         > svg{
