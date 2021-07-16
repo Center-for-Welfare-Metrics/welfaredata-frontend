@@ -25,6 +25,8 @@ const getElementPercentageSizeRelativeToSvgParent = (element) => {
 
     let percentage_size : number = (element_area*100)/svg_area
 
+    // console.log(percentage_size)
+
     return percentage_size    
 }
 
@@ -42,6 +44,10 @@ const arbitraryZoomLevelByPercentageSize = (percentage_size:number) => {
     return value
 }
 
+const isVerticalOriented = ratio => ratio >= 1
+
+const isHorizontalOriented = ratio => ratio < 1
+
 export const getElementViewBox = (element,isInner=false) => {
     let {x,y,width,height} = element.getBBox()
 
@@ -51,10 +57,13 @@ export const getElementViewBox = (element,isInner=false) => {
     let element_ratio = height/width    
 
     let ratio = (Math.abs(screen_ratio - element_ratio)*2)
-
-    if(screen_ratio < 1 && element_ratio >= 1){                 
+    
+    if(isHorizontalOriented(screen_ratio) && isVerticalOriented(element_ratio)){                 
         x -= (width*ratio)/2
         width += (width*ratio)        
+    }else if(isVerticalOriented(screen_ratio) && isVerticalOriented(element_ratio)){
+        x -= (width*ratio)/2
+        width += (width*ratio)
     }
 
     let arbitrary_variable_to_regule_zoom_level = arbitraryZoomLevelByPercentageSize(percentage_size)    
