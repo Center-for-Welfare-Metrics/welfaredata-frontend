@@ -95,7 +95,7 @@ export const generateFormatedLog = (stack:ICoolFormat[]) => {
 
         stack.forEach((item) => {        
             let level = item.level+1
-            console.log(stack[50].domID)
+            
             string_log += '<br/>'
 
             for(let index = 0;index<level;index++){
