@@ -5,9 +5,8 @@ export const SvgContainer = styled.div`
     flex-direction:column;
     justify-content: center;
     width:100%;
-    height:100%;        
-    z-index: 77;        
-    > svg{        
+    height:100%;           
+    >svg{        
         height:auto;            
         transition:stroke-opacity 500ms;
         overflow:visible; 
@@ -19,6 +18,7 @@ export const SvgContainer = styled.div`
         opacity:1;
         display:block;       
         min-height:5rem;
+        z-index: 77;
     }
     :first-child{
         > svg{
@@ -85,5 +85,4 @@ export const SvgContainer = styled.div`
             `
         }
     }
-
 `

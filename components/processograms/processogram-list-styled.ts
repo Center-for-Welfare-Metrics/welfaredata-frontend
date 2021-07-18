@@ -30,7 +30,8 @@ export const OverlapingMaster = styled.div`
 export const SubContainer = styled.div`
     display:flex;
     flex-direction:column;
-    justify-content:space-around;    
+    justify-content:space-between;
+    height:100%;    
 `
 
 export const Container = styled.div`

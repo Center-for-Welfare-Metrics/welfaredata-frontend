@@ -12,8 +12,8 @@ export const Container = styled.div`
     top:40%;
     left:50%;
     transform:translate(-50%,-50%);
-    box-shadow: 15px 17px 20px -5px ${({theme})=>transparentize(0.4,theme.colors.deep_blue)};
-    padding-bottom:1.5rem;
+    box-shadow: 15px 17px 20px -5px ${({theme})=>transparentize(0.4,theme.colors.deep_blue)};    
+    padding:1rem;
 `
 
 

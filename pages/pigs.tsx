@@ -15,9 +15,7 @@ const PublicPigsPage = ({data}) => {
     )
 }
 
-
 export default PublicPigsPage
-
 
 export async function getStaticProps(context) {
     let data = await (await processogramApi.all()).data
