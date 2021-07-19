@@ -11,10 +11,11 @@ import { generateFormatedLog } from '@/components/processograms/processogram-hel
 import * as EmailValidator from 'email-validator';
 
 import { Container,FeedBackForm,ButtonContainer,CheckContainer,CheckButton } from './feedback-tab-styled'
+import { InterativeMenuContext } from '../interative-menu'
 
 const FeedbackTab = () => {
 
-    const { stackCoolFormat } = useContext(HudContext)
+    const { stackCoolFormat } = useContext(InterativeMenuContext)
 
     const [detailed,setDetailed] = useState('')
 

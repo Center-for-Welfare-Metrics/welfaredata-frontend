@@ -1,13 +1,15 @@
 import ProductionSystemSelector from "@/components/processograms/processogram-list"
 import { Container } from "@/components/layouts/default-processogram-page-styled"
 import processogramApi from '@/api/processogram'
+import specieApi from '@/api/specie'
 
-const PublicPigsPage = ({data}) => {
+const PublicPigsPage = ({data,specie}) => {    
+
     return (            
         <Container>
             {                
                 <ProductionSystemSelector   
-                    specie='pig' 
+                    specie={specie}
                     collection={data}
                 />                
             }              
@@ -19,9 +21,11 @@ export default PublicPigsPage
 
 export async function getStaticProps(context) {
     let data = await (await processogramApi.all()).data
+    let specie = await(await specieApi.getOne('pig')).data
     return {
       props: {
-          data
-      }      
+          data,
+          specie
+      }            
     }
 }

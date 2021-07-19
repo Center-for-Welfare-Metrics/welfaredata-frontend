@@ -15,17 +15,17 @@ const PublicChickensPage = () => {
 
     const [firstLoad,setFirstLoad] = useState(false)
 
-    useEffect(()=>{
-        processogramApi.all()
-        .then(({data}) => {
-            setProcessograms(data)
-            setFirstLoad(true)
-        })
-        .catch((error) => {
-            toast.error('Something Wrong. Some elements may not work.')
-            setFirstLoad(true)
-        })
-    },[])
+    // useEffect(()=>{
+    //     processogramApi.all()
+    //     .then(({data}) => {
+    //         setProcessograms(data)
+    //         setFirstLoad(true)
+    //     })
+    //     .catch((error) => {
+    //         toast.error('Something Wrong. Some elements may not work.')
+    //         setFirstLoad(true)
+    //     })
+    // },[])
 
     return (                            
         <Container ref={containerRef}>

@@ -77,10 +77,7 @@ let body_state = {
     `,
     full:css`
         margin-top:.5rem;
-        height:15.5rem; 
-        /* @media(min-width:300px){
-            height:11.5rem;
-        } */
+        height:18.5rem; 
         @media(min-width:1200px){
             height:22rem;
         }

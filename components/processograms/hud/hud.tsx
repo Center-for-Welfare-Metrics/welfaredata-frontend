@@ -6,7 +6,7 @@ import HudTreeControl from './hud-tree-control'
 import { Container } from './hud-styled'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import HudInterativeMenu from './interative-menu/interative-menu'
+
 import { ImainState } from '@/context/processogram'
 
 import update from 'immutability-helper'
@@ -16,8 +16,7 @@ interface IProcessogramHud{
     onChange(change:ImainState):void
     level:number
     stack:string[],
-    isMoving:boolean
-    shareString:string
+    isMoving:boolean    
     onHover:string
 }
 
@@ -26,8 +25,7 @@ const ProcessogramHud = ({
     onChange,
     level,
     stack,
-    isMoving,
-    shareString,
+    isMoving,    
     onHover
 }:IProcessogramHud) => {
 
@@ -65,7 +63,7 @@ const ProcessogramHud = ({
     },[onHover])
 
     return (
-        <HudContext.Provider value={{element,onChange,stackCoolFormat,shareString}}>
+        <HudContext.Provider value={{element,onChange,stackCoolFormat}}>
             {
                 !isMoving &&
                 <Container style={{
@@ -77,8 +75,7 @@ const ProcessogramHud = ({
                     {level>=2 && <HudControls />}                
                 </Container>
             }
-            <HudTreeControl />                            
-            <HudInterativeMenu />
+            <HudTreeControl />                                        
         </HudContext.Provider>
     )
 }

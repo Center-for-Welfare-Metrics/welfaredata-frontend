@@ -52,7 +52,7 @@ const anim = keyframes`
 `
 
 export const Container = styled.div`
-    position:absolute;
+    position:fixed;
     bottom:0;    
     right:0;
     width:100%;
@@ -65,11 +65,11 @@ export const Container = styled.div`
     border-top-left-radius:1rem;    
     border:2px solid ${({theme}) => theme.colors.blue};
     border-bottom:none;
-    color:${(({theme})=> theme.colors.blue)};
+    color:${(({theme}) => theme.colors.blue)};
     box-sizing: border-box; 
     padding:1rem;
     max-width:540px;
-    animation: ${anim} 500ms;
+    animation: ${anim} 1s;
     animation-timing-function: ease-in-out;  
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
 `

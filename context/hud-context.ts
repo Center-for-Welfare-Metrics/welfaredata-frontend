@@ -7,8 +7,7 @@ import { ImainStateChange } from "./processogram";
 export interface IHudContext {
     element:Element,    
     onChange(changes:ImainStateChange):void,
-    stackCoolFormat:ICoolFormat[]
-    shareString:string
+    stackCoolFormat:ICoolFormat[]    
 }
 
 const HudContext = createContext<IHudContext>(null)

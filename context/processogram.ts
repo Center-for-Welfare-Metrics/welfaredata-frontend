@@ -26,6 +26,8 @@ export interface IProcessogramContext {
     collection:any[],
     mediasViewer:IMediaViewer
     setMediasViewer(mediasViewer:IMediaViewer):void
+    stack:string[]
+    setStack(stack:string[]):void
 }
 
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import HudContext from "@/context/hud-context"
 import ProcessogramContext from "@/context/processogram"
-import { IContentInformation, getCollectionInformationsByCoolFormat } from "@/utils/processogram"
+import { IContentInformation, getCollectionInformationsByCoolFormat, ICoolFormat } from "@/utils/processogram"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
@@ -13,20 +13,32 @@ import MenuTabs from './menu-tabs/menu-tabs'
 import { SvgPath } from '@/utils/assets_path'
 import toast from 'react-hot-toast'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { createContext } from 'react'
+import { ISpecie } from '../../processogram-list'
 
 export type IInterativeMenuState = 'minimized'|'full'|'hide'
 
-const HudInterativeMenu = () => {
+export interface IInterativeMenu {
+    stackCoolFormat:ICoolFormat[]
+    shareString:string
+    specie:ISpecie
+}
 
-    const { stackCoolFormat,shareString } = useContext(HudContext)
+export const InterativeMenuContext = createContext<IInterativeMenu>(null)
+
+const InterativeMenu = ({
+    stackCoolFormat,
+    shareString,
+    specie
+}) => {    
 
     const { collection } = useContext(ProcessogramContext)
 
-    const [content,setContent] = useState<IContentInformation>(null)
+    const [ content,setContent ] = useState<IContentInformation>(null)
 
-    const [state,setState] = useState<IInterativeMenuState>('minimized')    
+    const [ state,setState ] = useState<IInterativeMenuState>('full')
 
-    const [renderTime,setRenderTime] = useState(false)
+    const [ renderTime,setRenderTime ] = useState(false)
 
     const gesture = useGesture(['to-up','to-down'])
 
@@ -41,17 +53,17 @@ const HudInterativeMenu = () => {
     },[gesture])  
 
     useEffect(()=>{        
-        setContent(getCollectionInformationsByCoolFormat(stackCoolFormat,collection))
+       let content =  getCollectionInformationsByCoolFormat(stackCoolFormat,collection)
+       setContent(content)
+       if(content===null){
+           setContent(specie)
+       }
     },[stackCoolFormat])
 
-    useEffect(()=>{        
-        window.addEventListener('keydown', handleKeyDown)
+    useEffect(()=>{                
         setTimeout(() => {
             setRenderTime(true)
-        }, 500);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown)
-        }        
+        }, 500);        
     },[])
     
 
@@ -91,26 +103,28 @@ const HudInterativeMenu = () => {
 
     return (
         renderTime && content !== null &&
-        <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
-            <MenuTabs state={state} content={content} />
-            <Minimize state={state}>
-                <Svg 
-                    src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
-                />
-            </Minimize>
-            <CopyTo onClick={(e)=>e.stopPropagation()}>
-                <CopyToClipboard 
-                    text={shareString || ''}
-                    onCopy={()=>{setCopied(copied+1)}}                
-                >
-                    <Share />
-                </CopyToClipboard>
-            </CopyTo>
-        </Container>       
+        <InterativeMenuContext.Provider value={{shareString,stackCoolFormat,specie}}>
+            <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
+                <MenuTabs state={state} content={content} />
+                <Minimize state={state}>
+                    <Svg 
+                        src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
+                    />
+                </Minimize>
+                <CopyTo onClick={(e)=>e.stopPropagation()}>
+                    <CopyToClipboard 
+                        text={shareString || ''}
+                        onCopy={()=>{setCopied(copied+1)}}                
+                    >
+                        <Share />
+                    </CopyToClipboard>
+                </CopyTo>
+            </Container>     
+        </InterativeMenuContext.Provider>  
     )
     
 }
 
 
 
-export default React.memo(HudInterativeMenu)
+export default React.memo(InterativeMenu)

@@ -6,12 +6,13 @@ import SVG, { Props as SVGProps } from 'react-inlinesvg';
 import update from 'immutability-helper'
 
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
-import { ImainState, ImainStateChange } from '@/context/processogram'
+import ProcessogramContext, { ImainState, ImainStateChange } from '@/context/processogram'
 import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/hud';
 import { getElementViewBox } from './processogram-helpers';
 import { useRouter } from 'next/router'
+import { useContext } from 'react';
 
 interface IProcessogram {
     productionSystem:ProductionSystemTypes
@@ -30,6 +31,8 @@ const LEVELS = ['--ps','--lf','--ph','--ci']
 
 const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef}:IProcessogram) => {
 
+    const {stack,setStack} = useContext(ProcessogramContext)
+
     const [isMoving,setIsMoving] = useState(false)    
 
     const [mainState,setMainState] = useState<ImainState>(null)
@@ -40,9 +43,17 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const [onHover,setOnHover] = useState<string>(null)
 
-    const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})
+    const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})     
 
-    const [shareString,setShareString] = useState('')
+    useEffect(()=>{
+        if(mainState){                                          
+            updateStack()
+            applyDocumentTriggers()
+            if(mainState.viewBox){
+                moveFigure()
+            }                             
+        }                  
+    },[mainState])
 
     useEffect(()=>{
         if(productionSystemSelected){                           
@@ -61,16 +72,12 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     const router = useRouter()
 
     useEffect(() => {
-        if(mainState){            
-            
+        if(mainState){                        
             if(router.query.s){
                 let share = router.query.s as string
                 getFromShareLink(share)
                 router.query.s = null
                 window.history.replaceState(null, '', '/pigs')
-            }else{
-                let x = window.location.href+`?s=${productionSystemSelected}`                                               
-                setShareString(x)
             }
         }        
     },[mainState])
@@ -160,22 +167,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         document.onclick = null     
         document.onresize = null   
         window.onresize = null
-    }
-
-    const [stack,setStack] = useState<string[]>([])
-
-    useEffect(()=>{
-        if(mainState){                                          
-            updateStack()
-            applyDocumentTriggers()
-            if(mainState.viewBox){
-                moveFigure()
-            }                             
-        }else{
-            setStack([])            
-        }                  
-    },[mainState])
-
+    }   
 
     const getCurrentDomElement = () => mainState.currentDomID?svgRef.current.querySelector(`#${mainState.currentDomID}`):svgRef.current    
 
@@ -355,8 +347,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                         onChange={handleHudChange}
                         level={mainState.level}
                         stack={stack}
-                        isMoving={isMoving}
-                        shareString={shareString}
+                        isMoving={isMoving}                        
                         onHover={onHover}
                     />                
                 }                                     

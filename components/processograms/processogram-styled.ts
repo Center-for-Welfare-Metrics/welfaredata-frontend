@@ -1,34 +1,19 @@
 import styled, {css} from 'styled-components'
 
-export const SvgContainer = styled.div`
-    display:flex;
-    flex-direction:column;
-    justify-content: center;
+export const SvgContainer = styled.div`       
     width:100%;
-    height:100%;           
+    margin:2rem 0;
     >svg{        
         height:auto;            
         transition:stroke-opacity 500ms;
         overflow:visible; 
         z-index:77;
         width:80%;
-        margin:auto;
-        margin-top:2.5%;
-        margin-bottom:2.5%;
+        margin-inline:auto;        
         opacity:1;
         display:block;       
         min-height:5rem;
         z-index: 77;
-    }
-    :first-child{
-        > svg{
-            margin-top:5%;
-        }
-    }
-    :last-child{
-        > svg{
-            margin-bottom:5%;
-        }
     }
     ${
         ({level}) => level !== undefined && (
@@ -70,7 +55,7 @@ export const SvgContainer = styled.div`
         )
     }    
 
-    @media(max-width:800px){
+    @media (hover: none){
         ${
         ({current,hover}) => (current !== undefined) && 
             css`                
@@ -84,5 +69,8 @@ export const SvgContainer = styled.div`
                 }
             `
         }
+    }
+    @media(max-width:800px){
+        margin:1rem 0;
     }
 `

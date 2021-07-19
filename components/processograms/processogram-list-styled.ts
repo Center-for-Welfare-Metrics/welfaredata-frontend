@@ -30,30 +30,29 @@ export const OverlapingMaster = styled.div`
 export const SubContainer = styled.div`
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
-    height:100%;    
+    height:fit-content;        
+    margin-block:auto;  
 `
 
 export const Container = styled.div`
+    display:flex;
+    flex-direction:column;
     position:relative;
     overflow:auto;           
     height: 100%;
     width: 100%;            
     ${({current,hover}) => (current === null) && hover && css`
-        svg{
-            /* transition:opacity ${time}; */
+        svg[id*='--ps']{            
             opacity: .5;
         }
-        svg#${hover}{
-            /* transition:opacity ${time}; */
+        svg#${hover}{            
             opacity: 1;
         }
     `}    
     ${({current}) => current===null && css`                
-        svg{
+        svg[id*='--ps']{
             transition:opacity 500ms;
-        }
-        
+        }        
     `}
     ${scrollBar('gray')}
 `

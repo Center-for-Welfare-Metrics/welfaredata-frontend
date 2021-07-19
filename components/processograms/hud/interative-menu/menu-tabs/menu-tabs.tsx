@@ -91,7 +91,6 @@ const MenuTabs = ({content,state}:IMenutabs) => {
         let local = (content.medias || [])
         let total = [...ref,...local]
 
-
         return total.length
     }
 
@@ -100,18 +99,25 @@ const MenuTabs = ({content,state}:IMenutabs) => {
             <TabIconsMemo state={state} hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
             <Body onClick={(e)=>e.stopPropagation()} onTouchStart={BodyTouchStart}>
                 {
-                    tab==='description' && <DescriptionTab 
+                    tab==='description' && 
+                    <DescriptionTab 
                         ref_description={content.ref_description}
                         ref_name={content.ref_name}
                         description={content.description}
                         levelName={content.levelName}
+                        _id={content._id}
                     />
                 }
                 {
-                    tab==='media' && <MediaTab ref_medias={content.ref_medias || []} medias={content.medias || []} />
+                    tab==='media' && 
+                    <MediaTab 
+                        ref_medias={content.ref_medias || []} 
+                        medias={content.medias || []} 
+                    />
                 }
                 {
-                    tab==='feedback' && <FeedbackTab />
+                    tab==='feedback' && 
+                    <FeedbackTab />
                 }
             </Body>
         </Container>

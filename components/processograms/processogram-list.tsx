@@ -7,12 +7,18 @@ import { SPECIES } from "@/utils/consts"
 import { Container, SubContainer,OverlapingMaster } from './processogram-list-styled'
 import ProcessogramContext, {IMediaViewer, IProcessogramContext} from '@/context/processogram'
 import FullScreenMediasViewer from "./hud/interative-menu/menu-tabs/full-screen-medias-viewer"
-
+import InterativeMenu from './hud/interative-menu/interative-menu'
 import { useRouter } from 'next/router'
 import { useEffect } from "react"
+import { translateStackToCoolFormat } from "@/utils/processogram"
+
+export interface ISpecie{
+    _id:SpeciesTypes
+    description:string
+}
 
 export interface IProcessogramList {
-    specie:SpeciesTypes
+    specie:ISpecie
     collection:any[]
 }
 
@@ -30,10 +36,25 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [NAOPODEUSAR,PROIBIDO] = useState(false)
 
-    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer}
+    const [stack,setStack] = useState<string[]>([])
+
+    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer,stack,setStack}
+
+    const [shareString,setShareString] = useState('')
 
     const router = useRouter()
     
+    useEffect(() => {
+        let location = window.location.href
+        if(!productionSystemSelected){
+            setStack([])
+            setShareString(location)
+        }else{
+            let x = location+`?s=${productionSystemSelected}`                                               
+            setShareString(x)
+        }
+    },[productionSystemSelected])
+
     const loadSharedLink = (s:string) => {
         setTimeout(() => {
             try {
@@ -46,8 +67,7 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                 } 
             } catch (error) {
                 console.log('para de tentar besteira aí')
-            }
-                 
+            }                 
         }, 500);    
     }
     
@@ -69,10 +89,10 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
             <Container ref={containerRef} hover={onHover} current={productionSystemSelected}>                
                 <SubContainer>                
                     {
-                        SPECIES[specie].map((productionSystem) => (
+                        SPECIES[specie._id].map((productionSystem) => (
                             <Processogram
                                 key={productionSystem}
-                                specie={specie}
+                                specie={specie._id}
                                 productionSystem={productionSystem}
                                 hoverChange={setOnHover}
                                 onSelect={setProductionSystemSelected}
@@ -81,7 +101,12 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                             />
                         ))
                     }
-                </SubContainer>                                      
+                </SubContainer> 
+                <InterativeMenu 
+                    shareString={shareString}
+                    stackCoolFormat={translateStackToCoolFormat(stack)}
+                    specie={specie}
+                />                                                       
             </Container>
             {
                 mediasViewer.medias.length >0 &&
