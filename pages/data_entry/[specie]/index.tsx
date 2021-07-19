@@ -13,14 +13,8 @@ const SpecieDataEntryPage = () => {
 
     useEffect(()=>{
         let specie_from_url : SpeciesTypes = Router.query.specie as any
-        setSpecie(specie_from_url)
-        console.log(specie)
+        setSpecie(specie_from_url)        
     },[])
-
-    useEffect(()=>{
-        console.log(specie)
-    },[specie])
-
 
     return (
         <DefaultLayout>

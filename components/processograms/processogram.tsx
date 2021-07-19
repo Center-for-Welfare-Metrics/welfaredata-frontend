@@ -137,7 +137,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         .duration(0)
         .then(() => {
             let isMobile = window.matchMedia('(max-width:540px)')
-            let top = isMobile.matches?'30%':'50%'
+            let top = isMobile.matches?'35%':'50%'
             TweenLite.to(svgRef.current,{
                 top:top,
                 left:'50%',
