@@ -1,7 +1,7 @@
 import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormInformations } from '@/context/data-entry'
 import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
-import ProductionSystemSelector from '../processograms/processogram-list'
+import ProductionSystemSelector, { ISpecie } from '../processograms/processogram-list'
 import Loader from "react-loader-spinner";
 import { 
     Container,
@@ -15,6 +15,7 @@ import voca from 'voca'
 import DataEntryForm from './form/data-entry-form'
 import update from 'immutability-helper'
 import processogramApi from '@/api/processogram'
+import specieApi from '@/api/specie'
 import theme from 'theme/schema.json'
 import lodash from 'lodash'
 import toast from 'react-hot-toast'
@@ -24,11 +25,7 @@ interface IProcessogramDataEntry {
     specie:SpeciesTypes
 }
 
-const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
-
-    const containerRef = useRef<HTMLElement>(null)
-
-    const [loaded,setLoaded] = useState(false)
+const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {        
     
     const [currentInformations,setCurrentInformations] = useState<IDataEntryFormInformations>(null)
 
@@ -47,13 +44,14 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const [onFetch,setOnFetch] = useState(false)
 
     const [clickLevel,setClickLevel] = useState<number>(null)
+    
+    const [specieItem,setSpecieItem] = useState<ISpecie>(null)
 
-    const [cantClick,setCantClick] = useState<boolean>(false)
 
     const timer = useRef(null)
 
     useEffect(() => {
-        fetchAll()
+        fetchInitial()
     },[])
 
     useEffect(()=> {                   
@@ -64,19 +62,17 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }
     },[currentInformations])
 
-    useEffect(()=>{
-        if(containerRef.current){
-            setLoaded(true)            
-        }
-    },[containerRef.current])
-
-    const fetchAll = (callback=null) => {
-        processogramApi.all()
-        .then(({data})=>{
+    const fetchInitial = async () => {
+        try {
+            let processogramData = await (await (processogramApi.all())).data        
+            let specieData = await (await (specieApi.getOne(specie))).data
+            setProcessograms(processogramData)
+            setSpecieItem(specieData)
+        } catch (error) {
+            toast.error('Error trying to download collection informations')
+        } finally {
             setFirstLoad(true)
-            setProcessograms(data)
-            callback?.()
-        }).catch(CommonErrorHandler)
+        }  
     }
 
     const refreshProcessograms = (_id,updated_processogram) => {        
@@ -211,24 +207,15 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         setClickLevel        
     }
 
-    
-
-    const fullPageTrigger = () => {
-        setCantClick(true)        
-        fetchAll(()=>{
-            setCantClick(false)
-        })
-    }
 
     return (
         firstLoad?
         (<DataEntryContext.Provider value={contextValues}>
             <Container>            
-                <ProcessogramSpace ref={containerRef}>
-                {
-                    loaded &&
+                <ProcessogramSpace>
+                {                    
                     <ProductionSystemSelector 
-                        specie={specie}
+                        specie={specieItem}
                         collection={processograms}
                     />
                 }
