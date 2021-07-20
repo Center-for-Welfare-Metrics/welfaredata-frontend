@@ -40,7 +40,8 @@ const ProcessogramHud = ({
     },[stack])
 
     useEffect(()=>{
-        if(stack.length>0){       
+        let match = window.matchMedia('(hover)').matches        
+        if(match && stack.length>0){       
             clearTimeout(delay.current)
             delay.current = setTimeout(() => {
                 if(onHover){
