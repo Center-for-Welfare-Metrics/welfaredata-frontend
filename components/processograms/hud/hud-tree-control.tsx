@@ -33,7 +33,7 @@ const HudTreeControl = () => {
                 stackCoolFormat.map(({domID,level,levelName,elementName},index) => (
                     <TreeItem 
                         style={{
-                            marginLeft:`${(level)*2}rem`,
+                            marginLeft:`${(level+1)*2}rem`,
                         }} 
                         key={domID}
                         active={element.id===domID}

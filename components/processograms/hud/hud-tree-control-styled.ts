@@ -27,8 +27,8 @@ export const TreeItem = styled.div`
 `
 
 export const Container = styled.div`        
-    position:absolute;
-    top:0rem;
+    position:fixed;
+    top:1.2rem;
     left:0rem;
     padding:.5rem;
     padding-top:.25rem;
