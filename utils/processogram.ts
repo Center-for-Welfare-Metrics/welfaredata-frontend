@@ -6,6 +6,7 @@ export interface ICoolFormat {
     elementName:string
     level:number
     domID:string
+    isHover?:boolean
 }
 
 export const translateStackToCoolFormat  = (stack:string[]) => {

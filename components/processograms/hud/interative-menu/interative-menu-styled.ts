@@ -36,19 +36,14 @@ export const Minimize = styled.div`
         stroke:${({theme}) => theme.colors.blue};
 
     }
-    :hover{
-        border:2px solid ${({theme}) => lighten(0.3,theme.colors.blue)};
-        svg{
-            stroke:${({theme}) => lighten(0.3,theme.colors.blue)};
-        }        
-    }
-`
-
-
-
-const anim = keyframes`
-    0% {transform:translateY(100%)}
-    100% {transform:translateY(0)}
+    @media (hover){
+        :hover{
+            border:2px solid ${({theme}) => lighten(0.3,theme.colors.blue)};
+            svg{
+                stroke:${({theme}) => lighten(0.3,theme.colors.blue)};
+            }              
+        }
+    }    
 `
 
 export const Container = styled.div`
@@ -69,7 +64,5 @@ export const Container = styled.div`
     box-sizing: border-box; 
     padding:1rem;
     max-width:540px;
-    /* animation: ${anim} 1s;
-    animation-timing-function: ease-in-out;   */
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
 `

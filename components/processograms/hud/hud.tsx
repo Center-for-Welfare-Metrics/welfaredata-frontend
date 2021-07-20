@@ -49,7 +49,8 @@ const ProcessogramHud = ({
                             domID:onHover,
                             elementName:normalizeElementNameByGivingID(onHover),
                             levelName:getLevelNameByGivingID(onHover),
-                            level:level+1
+                            level:level+1,
+                            isHover:true
                         }
                         setStackCoolFormat(update(stackCoolFormat,{
                             [level+1]:{$set:x}

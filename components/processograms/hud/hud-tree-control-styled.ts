@@ -24,6 +24,12 @@ export const TreeItem = styled.div`
     }
     animation:${fade} 500ms;
     line-height:1.2rem;
+
+    @media (hover:none){
+        ${({ishover}) => ishover && css`
+            display:none;
+        `}
+    }
 `
 
 export const Container = styled.div`        

@@ -30,14 +30,15 @@ const HudTreeControl = () => {
     return(
         <Container>
             {
-                stackCoolFormat.map(({domID,level,levelName,elementName},index) => (
+                stackCoolFormat.map(({domID,level,levelName,elementName,isHover},index) => (
                     <TreeItem 
                         style={{
                             marginLeft:`${(level+1)*2}rem`,
                         }} 
                         key={domID}
                         active={element.id===domID}
-                        onClick={onTreeItemClick({domID,level})}                        
+                        onClick={onTreeItemClick({domID,level})}
+                        ishover={isHover}
                     > 
                         {levelName} : {elementName} 
                     </TreeItem>
