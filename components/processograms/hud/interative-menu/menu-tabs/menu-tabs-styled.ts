@@ -1,5 +1,5 @@
-import { darken, lighten } from 'polished'
-import styled, {css} from 'styled-components'
+import { darken } from 'polished'
+import styled, {css,keyframes} from 'styled-components'
 
 
 
@@ -88,11 +88,23 @@ let body_state = {
     `
 }
 
+const anim = keyframes`
+    from{
+        height:15.5rem;
+    }
+    to{
+        height:0;
+    }
+`
+
 export const Body = styled.div`
     margin-top:.5rem;
     overflow:auto;
     transition: height 500ms,margin-top 500ms,width 500ms;
+    animation:${anim} ease-out 1s;
 `
+
+
 
 export const Container = styled.div`
     ${Body}{

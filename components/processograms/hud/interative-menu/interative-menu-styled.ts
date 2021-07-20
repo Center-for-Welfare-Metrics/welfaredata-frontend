@@ -69,7 +69,7 @@ export const Container = styled.div`
     box-sizing: border-box; 
     padding:1rem;
     max-width:540px;
-    animation: ${anim} 1s;
-    animation-timing-function: ease-in-out;  
+    /* animation: ${anim} 1s;
+    animation-timing-function: ease-in-out;   */
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
 `

@@ -36,7 +36,7 @@ const InterativeMenu = ({
 
     const [ content,setContent ] = useState<IContentInformation>(null)
 
-    const [ state,setState ] = useState<IInterativeMenuState>('full')
+    const [ state,setState ] = useState<IInterativeMenuState>('minimized')
 
     const [ renderTime,setRenderTime ] = useState(false)
 
@@ -120,7 +120,7 @@ const InterativeMenu = ({
                     </CopyToClipboard>
                 </CopyTo>
             </Container>     
-        </InterativeMenuContext.Provider>  
+        </InterativeMenuContext.Provider>
     )
     
 }
