@@ -14,10 +14,6 @@ export const Container = styled.div`
     z-index:500;
     backdrop-filter:blur(5px);
     display: ${({open})=>open?'block':'none'};
-    @media(max-width:800px){
-        border:none;
-        width: 100%;
-    }
 `
 
 export const FullBackground = styled.div`
@@ -27,9 +23,6 @@ export const FullBackground = styled.div`
     height:100%;
     z-index:499;
     display: ${({open})=>open?'block':'none'};
-    @media(max-width:800px){
-        display:none;
-    }
 `
 
 export const Body = styled.div`

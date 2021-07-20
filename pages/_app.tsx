@@ -41,16 +41,17 @@ function MyApp({ Component, pageProps }) {
 
   const handleCustomContextMenu = (event: MouseEvent) => {    
     event.preventDefault()
-    let selection = window.getSelection()
-    console.log(selection)
-    let { clientX, clientY } = event
-    setContextMenu({
-      open: true,
-      x: clientX,
-      y: clientY + window.scrollY,
-      type: 'none',
-      position:'mouse-oriented'
-    })
+    let match = window.matchMedia('(hover)').matches  
+    if(match){    
+      let { clientX, clientY } = event
+      setContextMenu({
+        open: true,
+        x: clientX,
+        y: clientY + window.scrollY,
+        type: 'none',
+        position:'mouse-oriented'
+      })
+    }
   }
 
   const closeCustomContextMenu = (event: MouseEvent) => {
