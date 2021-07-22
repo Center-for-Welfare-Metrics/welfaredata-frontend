@@ -24,7 +24,7 @@ export const TreeItem = styled.div`
     }
     animation:${fade} 500ms;
     line-height:1.2rem;
-
+    background-color:${transparentize(0.3,'black')}
     /* @media (hover:none){
         ${({ishover}) => ishover && css`
             display:none;
@@ -39,5 +39,8 @@ export const Container = styled.div`
     padding:.5rem;
     padding-top:.25rem;
     z-index:100;    
-    background: linear-gradient(165deg,rgba(0,0,0,1) 10%,rgba(0,0,0,.9) 20%,rgba(0,0,0,.8) 30%,rgba(0,0,0,.7) 40%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.4) 60%,rgba(0,0,0,.2) 70%,rgba(0,0,0,0) 80%,rgba(0,0,0,0) 90%,rgba(0,0,0,0) 100%);
+    /* background: #000000; */
+    background: -webkit-radial-gradient(center, #000000, #05050500);
+    background: -moz-radial-gradient(center, #000000, #05050500);
+    background: radial-gradient(ellipse at center, #000000, #05050500);
 `

@@ -108,7 +108,7 @@ const InterativeMenu = ({
                 <MenuTabs state={state} content={content} />
                 <Minimize state={state}>
                     <Svg 
-                        src={SvgPath({folder:'minimal-icons',file_name:'maximizer'})}
+                        src={SvgPath({folder:'icons',file_name:'arrow-down-sign-to-navigate'})}
                     />
                 </Minimize>
                 <CopyTo onClick={(e)=>e.stopPropagation()}>

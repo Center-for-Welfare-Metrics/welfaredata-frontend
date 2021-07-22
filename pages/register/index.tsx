@@ -8,6 +8,7 @@ import ErrorPage from 'next/error'
 
 import CheckPasswordStrength from 'check-password-strength'
 import { opacify } from "polished"
+import Head from "next/head"
 
 const Validator = require('validatorjs')
 
@@ -67,6 +68,10 @@ const RegisterPage = () => {
     }
 
     return(
+        <>
+        <Head>
+            <title>Welfare Data - Register</title>
+        </Head>
         <Register
             name={name}
             setName={setName}
@@ -80,6 +85,7 @@ const RegisterPage = () => {
             register={register}
             passwordStrength={passwordStrength}
         />
+        </>
     )
 }
 

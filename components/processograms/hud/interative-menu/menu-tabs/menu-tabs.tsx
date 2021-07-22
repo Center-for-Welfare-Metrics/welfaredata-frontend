@@ -22,7 +22,7 @@ const TabIcons = ({TabIconClick,tab,hasMedia,state}) => {
                 <Svg 
                     src={SvgPath({
                         folder:'icons',
-                        file_name:'text'
+                        file_name:'information'
                     })}
                 />
             </TabIconSizeFix>
@@ -70,6 +70,14 @@ const MenuTabs = ({content,state}:IMenutabs) => {
             }
         }
     },[content])
+
+    useEffect(() => {
+        if(state==='minimized'){
+            if(tab==='feedback'){
+                setTab('description')
+            }
+        }
+    },[state])
 
     const BodyTouchStart = (event) => {        
         if(event.currentTarget.scrollTop > 0){

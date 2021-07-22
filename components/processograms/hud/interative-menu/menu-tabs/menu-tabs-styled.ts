@@ -47,20 +47,30 @@ export const TabIcon = styled.div`
 `
 
 
-export const TabIconSizeFix = styled(TabIcon)`
+export const TabIconSizeFix = styled.div`
+    margin-right:1rem;
+    padding-bottom:.5rem;
+    margin-top:.05rem;
+    cursor:pointer;
     svg{
-        transition:width 500ms,height 500ms;
+        transition:width 500ms,height 500ms,opacity 500ms;
         ${({state}) => state==='full'?
             css`
                 width:2.8rem;
-                height:2.8rem;
+                height:2.7rem;
             `
             :
             css`
                 width:1.8rem;
                 height:1.8rem;
             `    
-        }      
+        }
+        ${({active}) => !active && css`            
+            opacity:.5;   
+            :hover{
+                opacity:.8;
+            }          
+        `}         
     }
 `
 

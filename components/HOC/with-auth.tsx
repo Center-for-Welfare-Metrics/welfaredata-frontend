@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 import Router from 'next/router'
 import UserContext from '@/context/user'
+import Head from 'next/head'
 
 const withAuth = Page => {
     const Auth = (props) => {
@@ -13,7 +14,12 @@ const withAuth = Page => {
         },[user])
 
         if(user){
-            return <Page {...props} />
+            return <>
+            <Head>
+                <title>Welfare Data - Auth Area</title>
+            </Head>
+            <Page {...props} />
+            </>
         }else{
             return <div>Loading...</div>
         }

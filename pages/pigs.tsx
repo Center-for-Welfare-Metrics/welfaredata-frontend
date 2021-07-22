@@ -2,11 +2,15 @@ import ProductionSystemSelector from "@/components/processograms/processogram-li
 import { Container } from "@/components/layouts/default-processogram-page-styled"
 import processogramApi from '@/api/processogram'
 import specieApi from '@/api/specie'
+import Head from "next/head"
 
 const PublicPigsPage = ({data,specie}) => {    
 
     return (            
         <Container>
+            <Head>
+                <title>Welfare Data - Pigs</title>
+            </Head>
             {                
                 <ProductionSystemSelector   
                     specie={specie}

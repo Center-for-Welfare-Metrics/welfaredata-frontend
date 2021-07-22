@@ -3,6 +3,7 @@ import Login from "@/components/auth/login"
 import onlyGuest from "@/components/HOC/only-guest"
 import UserContext from "@/context/user"
 import auth from "@/api/auth"
+import Head from "next/head"
 
 const Validator = require('validatorjs')
 
@@ -46,6 +47,10 @@ const LoginPage = () => {
     }
 
     return (
+        <>
+        <Head>
+            <title>Welfare Data - Login</title>
+        </Head>
         <Login
             email={email}
             setEmail={setEmail}
@@ -55,6 +60,7 @@ const LoginPage = () => {
             login={login}
             onFetch={onFetch}
         />
+        </>
     )
 }
 
