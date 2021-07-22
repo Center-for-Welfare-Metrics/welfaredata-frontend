@@ -3,11 +3,16 @@ import styled ,{css,keyframes} from 'styled-components'
 
 let fade = keyframes`
     0%{opacity:0}
-    100{opacity:1}
+    100%{opacity:1}
 `
 
 export const TreeItem = styled.div`
-   color:${({theme}) => theme.colors.blue};   
+   color:${({theme}) => theme.colors.blue};
+   transform-origin: top left;   
+   padding:0 .5rem .25rem .5rem;
+   :first-child{
+       padding:.5rem .5rem .25rem .5rem !important;
+   }
    width: fit-content;
    ${({active}) => active?
    css`
@@ -16,31 +21,19 @@ export const TreeItem = styled.div`
    `
     :
     css`
-        :hover{
-            transform: scale(1.05);
-        }
         cursor: pointer;
     `    
     }
     animation:${fade} 500ms;
-    line-height:1.2rem;
-    background-color:${transparentize(0.3,'black')}
-    /* @media (hover:none){
-        ${({ishover}) => ishover && css`
-            display:none;
-        `}
-    } */
+    line-height:1.2rem;    
+    width:100%;
 `
 
 export const Container = styled.div`        
     position:fixed;
-    top:1.2rem;
+    top:0rem;
     left:0rem;
-    padding:.5rem;
-    padding-top:.25rem;
-    z-index:100;    
-    /* background: #000000; */
-    background: -webkit-radial-gradient(center, #000000, #05050500);
-    background: -moz-radial-gradient(center, #000000, #05050500);
-    background: radial-gradient(ellipse at center, #000000, #05050500);
+    z-index:100;
+    width:100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7) 15%,rgba(0,0,0,0.3) 90%,rgba(0,0,0,0) 100%);
 `

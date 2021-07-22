@@ -96,15 +96,16 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 TweenLite.to(svgRef.current,{
                     opacity:1,
                     clearProps:'opacity'
-                }).duration(.5)
+                }).duration(0)
             })
         }else{            
             TweenLite.to(svgRef.current,{
                 top:topLeft.top,
                 left:topLeft.left,
                 translateY:'0',
-                translateX:'0'
-            }).duration(0.5)
+                translateX:'0',
+                ease:"power1.inOut"
+            }).duration(0.7)
             .then(()=>{            
                 TweenLite.to(svgRef.current,{
                     position:'static',
@@ -142,8 +143,9 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 top:top,
                 left:'50%',
                 translateX:'-50%',
-                translateY:'-50%'
-            })
+                translateY:'-50%',
+                ease:"power1.inOut"
+            }).duration(0.7)
         })
     }
 
@@ -250,7 +252,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             attr:{
                 viewBox:mainState.viewBox
             },
-            ease:'power1.inOut'
+            ease:"power1.inOut"
         }).duration(0.7)
         .then(()=>setIsMoving(false))
     }

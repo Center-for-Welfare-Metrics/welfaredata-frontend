@@ -23,8 +23,9 @@ export const OverlapingMaster = styled.div`
     left:0;
     width:100%;
     height:100%;
-    z-index:999;
-    background-color:  ${transparentize(0.8,'black')};
+    z-index:-1;
+    /* background-color:  ${transparentize(0.8,'black')}; */
+    background-color:white;
 `
 
 export const SubContainer = styled.div`

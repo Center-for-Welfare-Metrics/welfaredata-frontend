@@ -10,9 +10,10 @@ import FullScreenMediasViewer from "./hud/interative-menu/menu-tabs/full-screen-
 import InterativeMenu from './hud/interative-menu/interative-menu'
 import { useRouter } from 'next/router'
 import { useEffect } from "react"
-import { normalizeElementNameByGivingID, translateStackToCoolFormat } from "@/utils/processogram"
-import voca from 'voca'
-import { Container as HudTreeContainer, TreeItem } from '@/components/processograms/hud/hud-tree-control-styled'
+import { translateStackToCoolFormat } from "@/utils/processogram"
+import HudTreeControl from "./hud/hud-tree-control"
+
+import update from 'immutability-helper'
 
 export interface ISpecie{
     _id:SpeciesTypes
@@ -108,22 +109,10 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                     shareString={shareString}
                     stackCoolFormat={translateStackToCoolFormat(stack)}
                     specie={specie}
-                />    
-                <HudTreeContainer style={{top:0}}>                      
-                    <TreeItem style={{fontWeight:productionSystemSelected?'normal':'bold'}}>
-                        Specie: { voca.titleCase(specie._id)}
-                    </TreeItem>
-                    {
-                        !productionSystemSelected && onHover &&
-                        <TreeItem 
-                            style={{
-                                marginLeft:`2rem`,
-                            }} 
-                        >
-                            Production System: {normalizeElementNameByGivingID(onHover)}
-                        </TreeItem>
-                    }    
-                </HudTreeContainer>                                                   
+                />
+                <HudTreeControl 
+                    stackCoolFormat={translateStackToCoolFormat(stack)}                    
+                />                                                                  
             </Container>
             {
                 mediasViewer.medias.length >0 &&

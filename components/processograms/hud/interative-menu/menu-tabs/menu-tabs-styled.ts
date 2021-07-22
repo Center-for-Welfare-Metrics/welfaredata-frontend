@@ -8,41 +8,38 @@ export const TabIcon = styled.div`
     padding-bottom:.5rem;
     cursor:pointer;
     svg{
-        transition:width 500ms,height 500ms;
+        transition:width 500ms ease-in-out,height 500ms ease-in-out;
         ${({state}) => state==='full'?
             css`
                 width:3rem;
-                height:3rem;
+                height:3rem;                
             `
             :
             css`
                 width:2rem;
-                height:2rem;
+                height:2rem;                
             `    
-        }        
+        }
+        margin:0 !important;   
         path{
-            fill:${({theme})=> darken(0.2,theme.colors.blue)};
+            fill:${({theme})=> theme.colors.blue};
             transition:fill 500ms;
-        }
-        margin:0 !important;        
+        }     
     }
-    :hover{
-        svg{
-            path{
-                fill:${({theme})=> darken(0.1,theme.colors.blue)};
-                transition:fill 500ms;
+    ${({state,active}) => state==='full'?css`
+        ${active?css`
+            opacity: 1;
+        `:
+        css`
+            opacity:0.5;
+            :hover{
+                opacity:0.8;
             }
-        }
-    }
-    transition:padding-bottom 500ms;
-    ${({active,theme}) => active && css`
-        svg{
-            path{
-                fill:${({theme})=> theme.colors.blue}!important;
-                transition:fill 500ms;
-            }
-        }
+        `}
+    `:css`
+        opacity:0;
     `}
+    transition:padding-bottom 500ms,opacity 500ms;
     outline:none;
 `
 
@@ -54,23 +51,27 @@ export const TabIconSizeFix = styled.div`
     cursor:pointer;
     svg{
         transition:width 500ms,height 500ms,opacity 500ms;
-        ${({state}) => state==='full'?
+        ${({state,active}) => state==='full'?
             css`
                 width:2.8rem;
                 height:2.7rem;
+                ${active?css`
+                    opacity: 1;
+                `:
+                css`
+                    opacity:0.5;
+                    :hover{
+                        opacity:0.8;
+                    }
+                `} 
             `
             :
             css`
                 width:1.8rem;
-                height:1.8rem;
+                height:1.8rem;                
             `    
         }
-        ${({active}) => !active && css`            
-            opacity:.5;   
-            :hover{
-                opacity:.8;
-            }          
-        `}         
+         
     }
 `
 
@@ -110,8 +111,8 @@ const anim = keyframes`
 export const Body = styled.div`
     margin-top:.5rem;
     overflow:auto;
-    transition: height 500ms,margin-top 500ms,width 500ms;
-    animation:${anim} ease-out 1s;
+    transition: height 500ms ease-in-out,margin-top 500ms ease-in-out,width 500ms ease-in-out;
+    animation:${anim} ease-in-out 1s;
 `
 
 

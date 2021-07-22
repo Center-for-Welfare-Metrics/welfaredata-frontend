@@ -76,8 +76,7 @@ const ProcessogramHud = ({
                 }}>
                     {level>=2 && <HudControls />}                
                 </Container>
-            }
-            <HudTreeControl />                                        
+            }                                                    
         </HudContext.Provider>
     )
 }

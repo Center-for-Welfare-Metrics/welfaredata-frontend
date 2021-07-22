@@ -73,9 +73,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
 
     useEffect(() => {
         if(state==='minimized'){
-            if(tab==='feedback'){
-                setTab('description')
-            }
+            setTab('description')
         }
     },[state])
 
