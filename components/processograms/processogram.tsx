@@ -87,10 +87,13 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     },[mainState])
 
     useEffect(()=>{
-        clearTimeout(timeout.current)
-        timeout.current = setTimeout(() => {
-            setGhost(onHover)
-        }, 250);        
+        let isMobile = window.matchMedia('(hover:none)').matches
+        if(!isMobile){
+            clearTimeout(timeout.current)
+            timeout.current = setTimeout(() => {
+                setGhost(onHover)
+            }, 250);      
+        }
     },[onHover])
 
     const getFromShareLink = (share:string) => {
@@ -148,8 +151,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         }).delay(.5)
         .duration(0)
         .then(() => {
-            let isMobile = window.matchMedia('(max-width:540px)')
-            let top = isMobile.matches?'35%':'50%'
+            let isMobile = window.matchMedia('(max-width:540px)').matches
+            let top = isMobile?'35%':'50%'
             TweenLite.to(svgRef.current,{
                 top:top,
                 left:'50%',

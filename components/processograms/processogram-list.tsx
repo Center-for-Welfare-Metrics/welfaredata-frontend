@@ -63,16 +63,18 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
     const timeout = useRef(null)
 
     useEffect(() => {
-        clearTimeout(timeout.current)
+        let isMobile = window.matchMedia('(hover:none)').matches
+        if(!isMobile){
+            clearTimeout(timeout.current)
 
-        timeout.current = setTimeout(() => {
-            if(productionSystemSelected===null){
-                setGhost(onHover)
-            }else{
-                setGhost(null)
-            }
-        }, 250);
-       
+            timeout.current = setTimeout(() => {
+                if(productionSystemSelected===null){
+                    setGhost(onHover)
+                }else{
+                    setGhost(null)
+                }
+            }, 250);
+        }       
     },[onHover,productionSystemSelected])
 
     const loadSharedLink = (s:string) => {
