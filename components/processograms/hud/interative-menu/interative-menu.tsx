@@ -64,20 +64,7 @@ const InterativeMenu = ({
         setTimeout(() => {
             setRenderTime(true)
         }, 500);        
-    },[])
-    
-
-    const handleKeyDown = (event:KeyboardEvent) => {        
-        const Action = {
-            ArrowUp:()=>setState('full'),
-            ArrowDown:()=>setState('minimized')
-        }
-        try {
-            Action[event.key](event)
-        } catch (error) {
-            
-        }        
-    }    
+    },[])   
 
     const onClick = (event:Event) => {   
         event.stopPropagation()
@@ -105,12 +92,7 @@ const InterativeMenu = ({
         renderTime && content !== null &&
         <InterativeMenuContext.Provider value={{shareString,stackCoolFormat,specie}}>
             <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
-                <MenuTabs state={state} content={content} />
-                <Minimize state={state}>
-                    <Svg 
-                        src={SvgPath({folder:'icons',file_name:'arrow-down-sign-to-navigate'})}
-                    />
-                </Minimize>
+                <MenuTabs state={state} content={content} />               
                 <CopyTo onClick={(e)=>e.stopPropagation()}>
                     <CopyToClipboard 
                         text={shareString || ''}

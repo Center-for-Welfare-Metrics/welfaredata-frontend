@@ -33,6 +33,8 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [onHover,setOnHover] = useState<string>(null)
 
+    const [ghost,setGhost] = useState(null)
+
     const [productionSystemSelected,setProductionSystemSelected] = useState(null)
 
     const [mediasViewer,setMediasViewer] = useState<IMediaViewer>({medias:[],index:0})
@@ -56,7 +58,22 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
             let x = location+`?s=${productionSystemSelected}`                                               
             setShareString(x)
         }
-    },[productionSystemSelected])
+    },[productionSystemSelected])    
+
+    const timeout = useRef(null)
+
+    useEffect(() => {
+        clearTimeout(timeout.current)
+
+        timeout.current = setTimeout(() => {
+            if(productionSystemSelected===null){
+                setGhost(onHover)
+            }else{
+                setGhost(null)
+            }
+        }, 250);
+       
+    },[onHover,productionSystemSelected])
 
     const loadSharedLink = (s:string) => {
         setTimeout(() => {
@@ -101,17 +118,18 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
                                 onSelect={setProductionSystemSelected}
                                 productionSystemSelected={productionSystemSelected}
                                 listContainerRef={containerRef.current}
+                                setGhost={setGhost}
                             />
                         ))
                     }
                 </SubContainer> 
                 <InterativeMenu 
                     shareString={shareString}
-                    stackCoolFormat={translateStackToCoolFormat(stack)}
+                    stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}
                     specie={specie}
                 />
                 <HudTreeControl 
-                    stackCoolFormat={translateStackToCoolFormat(stack)}                    
+                    stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}                    
                 />                                                                  
             </Container>
             {

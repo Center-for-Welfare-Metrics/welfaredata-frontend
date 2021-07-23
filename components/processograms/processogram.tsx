@@ -21,6 +21,7 @@ interface IProcessogram {
     onSelect(id:string):void
     productionSystemSelected:string
     listContainerRef:any
+    setGhost(ghost):void
 }
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
@@ -29,7 +30,7 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef,setGhost}:IProcessogram) => {
 
     const {stack,setStack} = useContext(ProcessogramContext)
 
@@ -45,8 +46,11 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})     
 
+    const timeout = useRef(null)
+
     useEffect(()=>{
-        if(mainState){                                          
+        if(mainState){   
+            setGhost(null)                                       
             updateStack()
             applyDocumentTriggers()
             if(mainState.viewBox){
@@ -81,6 +85,13 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             }
         }        
     },[mainState])
+
+    useEffect(()=>{
+        clearTimeout(timeout.current)
+        timeout.current = setTimeout(() => {
+            setGhost(onHover)
+        }, 250);        
+    },[onHover])
 
     const getFromShareLink = (share:string) => {
         console.log(share)

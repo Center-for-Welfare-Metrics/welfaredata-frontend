@@ -13,12 +13,14 @@ export const translateStackToCoolFormat  = (stack:string[]) => {
     let cool_json : ICoolFormat[] = []
     try {
         stack.forEach((id,index) => {
-            cool_json.push({
-                levelName:getLevelNameByGivingID(id),
-                elementName:normalizeElementNameByGivingID(id),
-                level:index,
-                domID:id
-            })        
+            if(id!==null){
+                cool_json.push({
+                    levelName:getLevelNameByGivingID(id),
+                    elementName:normalizeElementNameByGivingID(id),
+                    level:index,
+                    domID:id
+                })        
+            }
         })
 
         return cool_json

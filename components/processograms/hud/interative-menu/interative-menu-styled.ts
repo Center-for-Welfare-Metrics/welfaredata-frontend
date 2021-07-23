@@ -6,7 +6,7 @@ import ShareOutlined from '@material-ui/icons/ShareOutlined'
 export const CopyTo = styled.div`
     position:absolute;
     top:1rem;
-    right:2.5rem;
+    right:.5rem;
     height:2rem;
     width:2rem;
 `
@@ -15,6 +15,7 @@ export const CopyTo = styled.div`
 export const Share = styled(ShareOutlined)`
     color:${({theme}) => theme.colors.blue} !important;        
     cursor:pointer;
+    transition:color 500ms !important;
     :hover{
         color:${({theme}) => lighten(0.3,theme.colors.blue)} !important;
     }
@@ -60,16 +61,19 @@ export const Container = styled.div`
     width:100%;
     height:fit-content;
     max-height:100vh;
-    background-color:${({theme}) => transparentize(0.2,theme.colors.black)};
-    backdrop-filter:blur(2px);
+    background: linear-gradient(360deg, rgba(0,0,0,.9) 10%,rgba(0,0,0,0.8) 80%,rgba(0,0,0,0.3) 90%,rgba(0,0,0,0) 100%);    
     z-index:99;
     border-top-right-radius:1rem;
-    border-top-left-radius:1rem;    
-    border:2px solid ${({theme}) => theme.colors.blue};
+    border-top-left-radius:1rem;
     border-bottom:none;
     color:${(({theme}) => theme.colors.blue)};
     box-sizing: border-box; 
     padding:1rem;
     max-width:540px;
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
+    ${({state}) => state==='full'?css`        
+        cursor:unset;
+    `:css`
+        cursor:pointer;      
+    `}
 `

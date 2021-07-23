@@ -28,18 +28,18 @@ export const TabIcon = styled.div`
     }
     ${({state,active}) => state==='full'?css`
         ${active?css`
-            opacity: 1;
+            filter:brightness(1);            
         `:
         css`
-            opacity:0.5;
+            filter:brightness(.5);            
             :hover{
-                opacity:0.8;
+                filter:brightness(.8);
             }
         `}
     `:css`
         opacity:0;
     `}
-    transition:padding-bottom 500ms,opacity 500ms;
+    transition:padding-bottom 500ms,filter 500ms,opacity 500ms;
     outline:none;
 `
 
@@ -50,25 +50,32 @@ export const TabIconSizeFix = styled.div`
     margin-top:.05rem;
     cursor:pointer;
     svg{
-        transition:width 500ms,height 500ms,opacity 500ms;
+        transition:width 500ms,height 500ms,filter 500ms;
         ${({state,active}) => state==='full'?
             css`
                 width:2.8rem;
-                height:2.7rem;
+                height:2.7rem;                
                 ${active?css`
-                    opacity: 1;
+                    filter:brightness(1);                    
                 `:
                 css`
-                    opacity:0.5;
+                    filter:brightness(0.5);                    
                     :hover{
-                        opacity:0.8;
+                        filter:brightness(0.8);                        
                     }
                 `} 
             `
             :
             css`
                 width:1.8rem;
-                height:1.8rem;                
+                height:1.8rem;
+                
+                filter:brightness(0.5);                    
+                :hover{
+                    filter:brightness(0.8);                        
+                }
+                    
+                
             `    
         }
          
@@ -112,7 +119,7 @@ export const Body = styled.div`
     margin-top:.5rem;
     overflow:auto;
     transition: height 500ms ease-in-out,margin-top 500ms ease-in-out,width 500ms ease-in-out;
-    animation:${anim} ease-in-out 1s;
+    animation:${anim} ease-in-out 1s;    
 `
 
 
