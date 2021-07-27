@@ -68,8 +68,7 @@ export const Container = styled.div`
     border-bottom:none;
     color:${(({theme}) => theme.colors.blue)};
     box-sizing: border-box; 
-    padding:1rem;
-    max-width:540px;
+    padding:1rem;    
     cursor: ${({state}) => state==='full'?'unset':'pointer'};
     ${({state}) => state==='full'?css`        
         cursor:unset;

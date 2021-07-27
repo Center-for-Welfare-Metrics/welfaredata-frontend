@@ -95,10 +95,16 @@ let body_state = {
     `,
     full:css`
         margin-top:.5rem;
-        height:15.5rem; 
-        @media(min-width:1200px){
-            height:22rem;
+        height:13rem; 
+        @media(min-width:900px){
+            height:10rem;
         }
+        @media(min-width:1200px){
+            height:15rem;
+        }
+        @media(max-height:400px){
+            height:5rem;
+        }        
     `,
     hide:css`
         margin-top:0;
@@ -108,7 +114,7 @@ let body_state = {
 
 const anim = keyframes`
     from{
-        height:15.5rem;
+        height:10rem;
     }
     to{
         height:0;
