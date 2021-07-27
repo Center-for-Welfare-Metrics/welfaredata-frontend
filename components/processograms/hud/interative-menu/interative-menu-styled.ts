@@ -61,7 +61,7 @@ export const Container = styled.div`
     width:100%;
     height:fit-content;
     max-height:100vh;
-    background: linear-gradient(360deg, rgba(0,0,0,.9) 10%,rgba(0,0,0,0.8) 80%,rgba(0,0,0,0.3) 90%,rgba(0,0,0,0) 100%);    
+    background: linear-gradient(360deg, rgba(0,0,0,.9) 10%,rgba(0,0,0,0.8) 80%,rgba(0,0,0,0.3) 95%,rgba(0,0,0,0) 100%);    
     z-index:99;
     border-top-right-radius:1rem;
     border-top-left-radius:1rem;

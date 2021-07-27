@@ -15,6 +15,8 @@ export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     disabled?:boolean
     defaultValue?:any
     customStyle?:any
+    minRows?:number
+    maxRows?:number
 }
 
 const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement>> = (
@@ -28,7 +30,7 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
         value,
         disabled=false,
         defaultValue=null,
-        customStyle,
+        customStyle,        
         ...rest
     }
 ) => {
@@ -44,7 +46,7 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         name={name}
                         type={type}
                         value={value}
-                        disabled={disabled}
+                        disabled={disabled}                        
                         {...rest}
                     />
                 )
@@ -56,7 +58,7 @@ const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement
                         type={type}
                         value={value}
                         disabled={disabled}
-                        {...rest}
+                        {...rest}                        
                     />
                 )
             }

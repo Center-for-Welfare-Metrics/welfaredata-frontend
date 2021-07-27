@@ -103,7 +103,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
     return (
         <Container state={state}>
             <TabIconsMemo state={state} hasMedia={mediasCount()>0} tab={tab} TabIconClick={TabIconClick} />
-            <Body onClick={(e)=>e.stopPropagation()} onTouchStart={BodyTouchStart}>
+            <Body tab={tab} onClick={(e)=>e.stopPropagation()} onTouchStart={BodyTouchStart}>
                 {
                     tab==='description' && 
                     <DescriptionTab 

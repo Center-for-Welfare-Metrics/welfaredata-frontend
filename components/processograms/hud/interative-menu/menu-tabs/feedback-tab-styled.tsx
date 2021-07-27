@@ -1,5 +1,11 @@
 import styled, {css} from 'styled-components'
 
+export const HeaderText = styled.div`
+    margin-bottom:1rem;
+    max-width:500px;
+    margin-inline:auto;
+`
+
 export const CheckButton = styled.label`
     width:1rem;
     height:1rem;
@@ -30,6 +36,8 @@ export const ButtonContainer = styled.div`
 
 export const FeedBackForm = styled.div`
     padding-right:.5rem;
+    max-width:500px;
+    margin-inline:auto;
 `
 
 export const Container = styled.div`

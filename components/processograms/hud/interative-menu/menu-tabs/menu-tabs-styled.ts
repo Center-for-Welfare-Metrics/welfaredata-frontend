@@ -88,29 +88,6 @@ export const TabIconsContainer = styled.div`
     width:fit-content;
 `
 
-let body_state = {
-    minimized:css`
-        margin-top:0;
-        height:0;        
-    `,
-    full:css`
-        margin-top:.5rem;
-        height:13rem; 
-        @media(min-width:900px){
-            height:10rem;
-        }
-        @media(min-width:1200px){
-            height:15rem;
-        }
-        @media(max-height:400px){
-            height:5rem;
-        }        
-    `,
-    hide:css`
-        margin-top:0;
-        height:0;
-    `
-}
 
 const anim = keyframes`
     from{
@@ -125,9 +102,30 @@ export const Body = styled.div`
     margin-top:.5rem;
     overflow:auto;
     transition: height 500ms ease-in-out,margin-top 500ms ease-in-out,width 500ms ease-in-out;
-    animation:${anim} ease-in-out 1s;    
+    animation:${anim} ease-in-out 1s;
+    ${({tab}) => tab==='feedback' && css`
+        height:17rem !important;
+    `}    
 `
 
+
+let body_state = {
+    minimized:css`
+        margin-top:0;
+        height:0;        
+    `,
+    full:css`
+        margin-top:.5rem;
+        height:5rem;
+        @media(min-width:1200px){
+            height:8rem;
+        }     
+    `,
+    hide:css`
+        margin-top:0;
+        height:0;
+    `
+}
 
 
 export const Container = styled.div`
