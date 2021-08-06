@@ -1,7 +1,7 @@
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
 import ProductionSystemSelector, { ISpecie } from "@/components/processograms/processogram-list"
-import {Container} from "@/components/layouts/default-processogram-page-styled"
+import { Container } from "@/components/layouts/default-processogram-page-styled"
 import { useEffect, useRef, useState } from "react"
 import theme from 'theme/schema.json'
 import processogramApi from '@/api/processogram'

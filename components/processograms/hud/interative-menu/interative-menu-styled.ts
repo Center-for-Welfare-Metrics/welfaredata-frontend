@@ -57,7 +57,7 @@ export const Minimize = styled.div`
 export const Container = styled.div`
     position:fixed;
     bottom:0;    
-    right:0;
+    left:0;
     width:100%;
     height:fit-content;
     max-height:100vh;

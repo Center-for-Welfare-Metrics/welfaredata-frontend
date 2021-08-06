@@ -39,9 +39,15 @@ const InterativeMenu = ({
     const [ state,setState ] = useState<IInterativeMenuState>('minimized')
 
     const [ renderTime,setRenderTime ] = useState(false)
-
+    
     const gesture = useGesture(['to-up','to-down'])
 
+    const [ style,setStyle] = useState({
+        maxWidth:null,
+        left:0
+    })
+
+    const [top,setTop] = useState(0)
     useEffect(()=>{
         if(gesture){
             if(gesture.gesture === 'to-up'){
@@ -60,7 +66,20 @@ const InterativeMenu = ({
        }
     },[stackCoolFormat])
 
-    useEffect(()=>{                
+    useEffect(()=>{
+        let editorParent = document.getElementById('processogram-editor-space')
+        if(editorParent){
+            let {width,left} = editorParent.getBoundingClientRect()
+            setStyle({
+                maxWidth:width,
+                left: left
+            })            
+        }
+        let nav = document.getElementById('main-nav-menu')
+        if(nav){
+            let top = nav.getBoundingClientRect().height
+            setTop(top)
+        }
         setTimeout(() => {
             setRenderTime(true)
         }, 500);        
@@ -91,9 +110,9 @@ const InterativeMenu = ({
     return (
         renderTime && content !== null &&
         <InterativeMenuContext.Provider value={{shareString,stackCoolFormat,specie}}>
-            <Container onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
+            <Container style={style} onContextMenu={(e)=>e.stopPropagation()} onClick={onClick} state={state}>
                 <MenuTabs state={state} content={content} />               
-                <CopyTo onClick={(e)=>e.stopPropagation()}>
+                <CopyTo style={{top:top,left:style.maxWidth}} onClick={(e)=>e.stopPropagation()}>
                     <CopyToClipboard 
                         text={shareString || ''}
                         onCopy={()=>{setCopied(copied+1)}}                

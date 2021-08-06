@@ -31,8 +31,8 @@ export const TreeItem = styled.div`
 
 export const Container = styled.div`        
     position:fixed;
-    top:0rem;
-    left:0rem;
+    top:0;
+    left:0;
     z-index:88;
     width:100%;
     background: linear-gradient(180deg, rgba(0,0,0,.9) 10%,rgba(0,0,0,0.8) 80%,rgba(0,0,0,0.3) 95%,rgba(0,0,0,0) 100%);    

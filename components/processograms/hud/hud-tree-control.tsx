@@ -17,6 +17,13 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
 
     const [localStack,setLocakStack] = useState<ICoolFormat[]>([])
 
+    const [top,setTop] = useState(0)
+
+    const [ style,setStyle] = useState({
+        maxWidth:null,
+        left:0
+    })
+
     useEffect(()=>{
         setLocakStack([{
             domID:null,
@@ -25,6 +32,22 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
             levelName:'Specie'
         },...stackCoolFormat])
     },[stackCoolFormat])
+
+    useEffect(() => {
+        let nav = document.getElementById('main-nav-menu')
+        if(nav){
+            let top = nav.getBoundingClientRect().height
+            setTop(top)
+        }
+        let editorParent = document.getElementById('processogram-editor-space')
+        if(editorParent){
+            let {width,left} = editorParent.getBoundingClientRect()
+            setStyle({
+                maxWidth:width,
+                left: left
+            })            
+        }
+    },[])
 
     const onTreeItemClick = ({domID,level}) => (event:Event) => {
         event.stopPropagation()
@@ -46,7 +69,7 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
     }
 
     return(
-        <Container>
+        <Container style={{top:top,...style}}>
             {
                 localStack.map(({domID,level,levelName,elementName,isHover},index) => (
                     <TreeItem 

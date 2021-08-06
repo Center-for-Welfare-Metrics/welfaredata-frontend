@@ -212,7 +212,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         firstLoad?
         (<DataEntryContext.Provider value={contextValues}>
             <Container>            
-                <ProcessogramSpace>
+                <ProcessogramSpace id='processogram-editor-space'>
                 {                    
                     <ProductionSystemSelector 
                         specie={specieItem}

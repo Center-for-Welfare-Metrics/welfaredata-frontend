@@ -7,6 +7,7 @@ export const Containter = styled.div`
     left:0;
     width: 100%;
     display:flex;
+    z-index:90;
     justify-content: space-between;
     padding:1rem 0 1rem 0;
     background-color:${({theme})=>theme.colors.black};
