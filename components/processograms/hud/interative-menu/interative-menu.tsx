@@ -101,6 +101,11 @@ const InterativeMenu = ({
                         <Share />
                     </CopyToClipboard>
                 </CopyTo>
+                <Minimize state={state}>
+                    <Svg 
+                        src={SvgPath({folder:'icons',file_name:'arrow-down-sign-to-navigate'})}
+                    />
+                </Minimize>
             </Container>     
         </InterativeMenuContext.Provider>
     )

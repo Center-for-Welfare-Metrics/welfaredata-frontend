@@ -4,9 +4,9 @@ import styled , {css} from 'styled-components'
 import ShareOutlined from '@material-ui/icons/ShareOutlined'
 
 export const CopyTo = styled.div`
-    position:absolute;
-    top:1rem;
-    right:.5rem;
+    position:fixed;
+    top:.5rem;
+    right:0rem;
     height:2rem;
     width:2rem;
 `

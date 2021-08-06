@@ -17,7 +17,7 @@ type tabOptions = 'description' | 'media'|'feedback'
 const TabIcons = ({TabIconClick,tab,hasMedia,state}) => {
 
     return (
-        <TabIconsContainer>
+        <TabIconsContainer state={state}>
             <TabIconSizeFix state={state} active={tab==='description'} onClick={TabIconClick('description')}>
                 <Svg 
                     src={SvgPath({

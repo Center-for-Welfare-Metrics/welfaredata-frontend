@@ -86,6 +86,8 @@ export const TabIconSizeFix = styled.div`
 export const TabIconsContainer = styled.div`
     display:flex;
     width:fit-content;
+    height:${({state})=>state==='minimized'?'1.8rem':'2.8rem'};
+    transition:height 500ms;
 `
 
 

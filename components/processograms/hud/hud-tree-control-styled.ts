@@ -33,7 +33,7 @@ export const Container = styled.div`
     position:fixed;
     top:0rem;
     left:0rem;
-    z-index:100;
+    z-index:88;
     width:100%;
     background: linear-gradient(180deg, rgba(0,0,0,.9) 10%,rgba(0,0,0,0.8) 80%,rgba(0,0,0,0.3) 95%,rgba(0,0,0,0) 100%);    
     min-height:5rem;
