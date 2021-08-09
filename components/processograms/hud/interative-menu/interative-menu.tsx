@@ -1,6 +1,6 @@
 import React from 'react'
 import HudContext from "@/context/hud-context"
-import ProcessogramContext from "@/context/processogram"
+import ProcessogramContext, { ISpecie } from "@/context/processogram"
 import { IContentInformation, getCollectionInformationsByCoolFormat, ICoolFormat } from "@/utils/processogram"
 import { useEffect } from "react"
 import { useState } from "react"
@@ -14,7 +14,6 @@ import { SvgPath } from '@/utils/assets_path'
 import toast from 'react-hot-toast'
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { createContext } from 'react'
-import { ISpecie } from '../../processogram-list'
 
 export type IInterativeMenuState = 'minimized'|'full'|'hide'
 

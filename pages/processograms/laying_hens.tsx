@@ -1,6 +1,6 @@
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
-import ProductionSystemSelector, { ISpecie } from "@/components/processograms/processogram-list"
+import ProductionSystemSelector from "@/components/processograms/processogram-list"
 import {Container} from "@/components/layouts/default-processogram-page-styled"
 import { useEffect, useRef, useState } from "react"
 import theme from 'theme/schema.json'
@@ -9,6 +9,7 @@ import Loader from "react-loader-spinner"
 import processogramApi from '@/api/processogram'
 import specieApi from '@/api/specie'
 import toast from "react-hot-toast"
+import { ISpecie } from "@/context/processogram"
 
 const LayingHensPage = () => {
 
