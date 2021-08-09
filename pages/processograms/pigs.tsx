@@ -1,6 +1,6 @@
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
-import ProductionSystemSelector, { ISpecie } from "@/components/processograms/processogram-list"
+import ProductionSystemSelector from "@/components/processograms/processogram-list"
 import { Container } from "@/components/layouts/default-processogram-page-styled"
 import { useEffect, useRef, useState } from "react"
 import theme from 'theme/schema.json'
@@ -9,6 +9,7 @@ import specieApi from '@/api/specie'
 import { LoaderContainer } from "@/components/miscellaneous/loaders"
 import Loader from "react-loader-spinner"
 import toast from "react-hot-toast"
+import { ISpecie } from "@/context/processogram"
 
 const PigPage = () => {
 
@@ -43,7 +44,7 @@ const PigPage = () => {
                     (
                         <ProductionSystemSelector                               
                             specie={specie}
-                            collection={processograms} 
+                            collection={processograms}
                         />
                     )
                     :

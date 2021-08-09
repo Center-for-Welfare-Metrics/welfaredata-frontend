@@ -1,7 +1,7 @@
 import DataEntryContext, { ICommonDataEntry, IDataEntryContext, IDataEntryFormInformations } from '@/context/data-entry'
 import { FieldReferenceTypes, SpeciesTypes, TabTypes } from '@/utils/enum_types'
 import { useEffect, useRef, useState } from 'react'
-import ProductionSystemSelector, { ISpecie } from '../processograms/processogram-list'
+import ProductionSystemSelector from '../processograms/processogram-list'
 import Loader from "react-loader-spinner";
 import { 
     Container,
@@ -20,6 +20,7 @@ import theme from 'theme/schema.json'
 import lodash from 'lodash'
 import toast from 'react-hot-toast'
 import { LoaderContainer } from '../miscellaneous/loaders';
+import { ISpecie } from '@/context/processogram';
 
 interface IProcessogramDataEntry {
     specie:SpeciesTypes
@@ -64,8 +65,15 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const fetchInitial = async () => {
         try {
-            let processogramData = await (await (processogramApi.all())).data        
-            let specieData = await (await (specieApi.getOne(specie))).data
+            let processogramData = await (await (processogramApi.all())).data 
+            // fast gambiarra
+            let specie_helper_gambiarra : string = specie
+            if(specie_helper_gambiarra === 'laying_hens'){
+                specie_helper_gambiarra = 'chicken'
+            }else if(specie_helper_gambiarra === 'pigs'){
+                specie_helper_gambiarra = 'pig'
+            }
+            let specieData = await (await (specieApi.getOne(specie_helper_gambiarra))).data
             setProcessograms(processogramData)
             setSpecieItem(specieData)
         } catch (error) {

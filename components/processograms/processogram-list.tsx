@@ -5,7 +5,7 @@ import Processogram from "@/components/processograms/processogram"
 import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
 import { Container, SubContainer,OverlapingMaster } from './processogram-list-styled'
-import ProcessogramContext, {IMediaViewer, IProcessogramContext} from '@/context/processogram'
+import ProcessogramContext, {IMediaViewer, IProcessogramContext, ISpecie} from '@/context/processogram'
 import FullScreenMediasViewer from "./hud/interative-menu/menu-tabs/full-screen-medias-viewer"
 import InterativeMenu from './hud/interative-menu/interative-menu'
 import { useRouter } from 'next/router'
@@ -15,10 +15,6 @@ import HudTreeControl from "./hud/hud-tree-control"
 
 import update from 'immutability-helper'
 
-export interface ISpecie{
-    _id:SpeciesTypes
-    description:string
-}
 
 export interface IProcessogramList {
     specie:ISpecie
@@ -43,7 +39,7 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const [stack,setStack] = useState<string[]>([])
 
-    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer,stack,setStack}
+    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer,stack,setStack,specie}
 
     const [shareString,setShareString] = useState('')
 

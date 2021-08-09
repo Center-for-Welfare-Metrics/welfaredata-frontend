@@ -5,12 +5,12 @@
         "auth":true,
         "childrens":[
             {
-                "name":"pig",
-                "href":"/pig"
+                "name":"pigs",
+                "href":"/pigs"
             },
             {
                 "name":"laying hens",
-                "href":"/chicken"
+                "href":"/laying_hens"
             }
         ]
     },
@@ -19,12 +19,12 @@
         "prefix":"/processograms",
         "childrens":[
             {
-                "name":"pig",
-                "href":"/pig"
+                "name":"pigs",
+                "href":"/pigs"
             },
             {
                 "name":"laying hens",
-                "href":"/chicken"
+                "href":"/laying_hens"
             }
         ]
     },

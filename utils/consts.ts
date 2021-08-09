@@ -8,7 +8,9 @@ export const CHICKEN : ProductionSystemTypes[] = ['conventional cages','single t
 
 export const SPECIES = {
     pig:PIG,
-    chicken:CHICKEN
+    chicken:CHICKEN,
+    pigs:PIG,
+    laying_hens:CHICKEN
 }
 
 export const CommonTabs : TabTypes[] = ['description','media']

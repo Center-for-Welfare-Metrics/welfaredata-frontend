@@ -1,3 +1,4 @@
+import { SpeciesTypes } from "@/utils/enum_types";
 import { IMedia } from "@/utils/processogram";
 import { createContext } from "react";
 
@@ -22,12 +23,18 @@ export interface IMediaViewer{
     medias:IMedia[]
     index:number
 }
+
+export interface ISpecie{
+    _id:SpeciesTypes
+    description:string
+}
 export interface IProcessogramContext {
     collection:any[],
     mediasViewer:IMediaViewer
     setMediasViewer(mediasViewer:IMediaViewer):void
     stack:string[]
-    setStack(stack:string[]):void
+    setStack(stack:string[]):void,
+    specie:ISpecie
 }
 
 

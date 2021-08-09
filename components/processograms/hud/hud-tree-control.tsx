@@ -1,4 +1,5 @@
 import HudContext from '@/context/hud-context'
+import ProcessogramContext from '@/context/processogram'
 import { ICoolFormat } from '@/utils/processogram'
 import { transparentize } from 'polished'
 import { useEffect } from 'react'
@@ -6,7 +7,7 @@ import { useState } from 'react'
 import { useContext } from 'react'
 import { getElementViewBox } from '../processogram-helpers'
 import { Container,TreeItem } from './hud-tree-control-styled'
-
+import voca from 'voca'
 interface IHudTreeControl {
     stackCoolFormat:ICoolFormat[]
 }
@@ -14,6 +15,8 @@ interface IHudTreeControl {
 const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
 
     // const { element,stackCoolFormat,onChange } = useContext(HudContext)
+
+    const {specie} = useContext(ProcessogramContext)
 
     const [localStack,setLocakStack] = useState<ICoolFormat[]>([])
 
@@ -24,10 +27,15 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
         left:0
     })
 
+    const dict_gambiarra = {
+        pig:'Pigs',
+        chicken:'Laying Hens'
+    }
+
     useEffect(()=>{
         setLocakStack([{
             domID:null,
-            elementName:'Pig',
+            elementName:dict_gambiarra[specie._id],
             level:-1,
             levelName:'Specie'
         },...stackCoolFormat])
