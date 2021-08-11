@@ -10,33 +10,15 @@ interface IMediaFileList {
 }
 
 
-const MediaFileList = ({medias,isLocal=false}:IMediaFileList) => {
+const MediaFileList = ({medias,isLocal=false}:IMediaFileList) => {    
 
-    const { currentInformations,currentFieldReference,updateReferenceData,handleLocalInputChange } = useContext(DataEntryContext)
-
-    const deleteMedia = (media) => {
-        let reference : IDataEntryFormInformations = currentInformations[currentFieldReference]        
-        let medias  = reference.medias
-        let indexOfDelete = medias.findIndex(x => x._id === media._id)
-        medias.splice(indexOfDelete,1)
-        updateReferenceData({medias},()=>{
-            toast.success('Global media deleted successfully!')   
-        }) 
-    }
-
-    const deleteLocalMedia = (media) => {        
-        let medias  = currentInformations.medias        
-        let indexOfDelete = medias.findIndex(x => x._id === media._id)
-        medias.splice(indexOfDelete,1)
-        handleLocalInputChange({medias},false)
-        toast.success('Specific media deleted successfully!')
-    }
+    
 
     return (
         <Container>
             {
                 medias.map((media) => (
-                    <MediaFile deleteMedia={deleteMedia} deleteLocalMedia={deleteLocalMedia} isLocal={isLocal} media={media} key={media._id} />
+                    <MediaFile isLocal={isLocal} media={media} key={media._id} />
                 ))
             }
         </Container>

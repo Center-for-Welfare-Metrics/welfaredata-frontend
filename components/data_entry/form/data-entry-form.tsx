@@ -2,32 +2,26 @@ import { useContext, useEffect, useState } from "react"
 import { Container,Body,Tabs, Tab,CustomLoader } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
 import MediaTab from '@/components/data_entry/form/tabs/media/media'
-import { TABS } from "@/utils/consts"
+import { CommonTabs, TABS } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
 import { Title } from "@/components/data_entry/form/tabs/tab-commons-styled"
 import theme from 'theme/schema.json'
+import { TabTypes } from '@/utils/enum_types'
 
 const DataEntryForm = () => {    
 
-    const {currentFieldReference,tab,setTab,onFetch,currentInformations} = useContext(DataEntryContext)
-
-    useEffect(()=>{        
-        if(!TABS[currentFieldReference]?.includes(tab)){
-            setTab('description')
-        }
-        
-    },[currentFieldReference])
+    const [tab,setTab] = useState<TabTypes>('description')
 
     return (
         
         <Container>
-            <Body load={!(!onFetch && currentInformations)}>                
+            <Body load={false}>                
                 {
-                    (!onFetch && currentInformations)?
+                    true?
                     (
                         <>
-                            <Title>{ voca.titleCase(currentInformations[currentFieldReference]?.name) }</Title>
+                            <Title>Título</Title>
                             {tab === 'description' && <BasicTab /> }
                             {tab === 'media' && <MediaTab /> }
                         </>
@@ -45,9 +39,9 @@ const DataEntryForm = () => {
             </Body>
             <Tabs>
                 {
-                    TABS[currentFieldReference]?.map((tab_reference) => 
-                    <Tab onClick={()=>setTab(tab_reference)} active={tab===tab_reference} key={tab_reference}>
-                        {voca.capitalize(tab_reference)}
+                    CommonTabs.map((tab) => 
+                    <Tab onClick={()=>setTab(tab)} active={tab===tab} key={tab}>
+                        {voca.capitalize(tab)}
                     </Tab>)
                 }
             </Tabs>
