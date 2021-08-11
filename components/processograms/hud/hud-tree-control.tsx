@@ -37,7 +37,7 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
             domID:null,
             elementName:dict_gambiarra[specie._id],
             level:-1,
-            levelName:'Specie'
+            levelName:'Species'
         },...stackCoolFormat])
     },[stackCoolFormat])
 
