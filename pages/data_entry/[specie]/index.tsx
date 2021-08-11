@@ -1,4 +1,4 @@
-import ProcessogramDataEntry from "@/components/data_entry/processogram"
+import ProcessogramDataEntry from "@/components/data_entry"
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
 import { SpeciesTypes } from "@/utils/enum_types"

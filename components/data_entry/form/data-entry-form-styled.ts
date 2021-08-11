@@ -2,6 +2,7 @@ import { transparentize } from 'polished';
 import styled from 'styled-components'
 
 import Loader from "react-loader-spinner";
+import { lighten } from 'polished';
 
 export const CustomLoader = styled(Loader)`
     top:50%;
@@ -11,20 +12,16 @@ export const CustomLoader = styled(Loader)`
 `
 
 export const Tab = styled.div`
-    color:${({theme,active}) => active?theme.colors.blue:transparentize(0.2,theme.colors.blue)};
-    font-size:${({theme})=>theme.fontSize.normal1};
-    transform: ${({active}) => active?'scale(1.2)':'scale(1)'};
-    cursor: pointer;
-    :hover{
-        transform: scale(1.2);
-        transition: transform 500ms, color 500ms;
-    }
+    color:${({theme,active}) => !active?theme.colors.blue:lighten(0.3,theme.colors.blue)};
+    font-size:${({theme})=>theme.fontSize.normal1};    
+    cursor: pointer;    
     transition: transform 500ms, color 500ms;
 `
 
 
 export const Tabs = styled.div`
     /* width:30%; */
+    margin-left:.5rem;
     margin-top:2rem;
 `
 

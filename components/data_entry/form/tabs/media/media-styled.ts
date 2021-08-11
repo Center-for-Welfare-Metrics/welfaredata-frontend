@@ -11,9 +11,9 @@ export const Section = styled.div`
     padding-top:1rem;
 `
 
-export const Container = styled.div`
-    padding:2rem;
+export const Container = styled.div`    
     padding-top:0;
+    padding-right:1rem;
     color:white;
 `
 

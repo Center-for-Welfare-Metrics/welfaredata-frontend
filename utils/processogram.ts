@@ -9,7 +9,7 @@ export interface ICoolFormat {
     isHover?:boolean
 }
 
-export const translateStackToCoolFormat  = (stack:string[]) => {
+export const translateStackToCoolFormat = (stack:string[]) : ICoolFormat[] => {
     let cool_json : ICoolFormat[] = []
     try {
         stack.forEach((id,index) => {

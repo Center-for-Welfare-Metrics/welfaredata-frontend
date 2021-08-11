@@ -2,7 +2,6 @@ import { useRef, useState } from "react"
 import { TweenLite, gsap } from 'gsap'
 gsap.registerPlugin(TweenLite)
 import Processogram from "@/components/processograms/processogram"
-import { SpeciesTypes } from "@/utils/enum_types"
 import { SPECIES } from "@/utils/consts"
 import { Container, SubContainer,OverlapingMaster } from './processogram-list-styled'
 import ProcessogramContext, {IMediaViewer, IProcessogramContext, ISpecie} from '@/context/processogram'
@@ -10,20 +9,19 @@ import FullScreenMediasViewer from "./hud/interative-menu/menu-tabs/full-screen-
 import InterativeMenu from './hud/interative-menu/interative-menu'
 import { useRouter } from 'next/router'
 import { useEffect } from "react"
-import { translateStackToCoolFormat } from "@/utils/processogram"
+import { getCollectionInformationsByCoolFormat, ICoolFormat, translateStackToCoolFormat } from "@/utils/processogram"
 import HudTreeControl from "./hud/hud-tree-control"
-
-import update from 'immutability-helper'
 
 
 export interface IProcessogramList {
     specie:ISpecie
     collection:any[]
+    onChange?(state:ICoolFormat[]):void
 }
 
 
 
-const ProcessogramList = ({specie,collection}:IProcessogramList) => {
+const ProcessogramList = ({specie,collection,onChange}:IProcessogramList) => {
     
     const containerRef = useRef<HTMLDivElement>(null)    
 
@@ -45,6 +43,18 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
 
     const router = useRouter()
     
+    useEffect(()=>{
+        let coolFormat = null        
+        if(ghost){
+            coolFormat = translateStackToCoolFormat([...stack,ghost])
+        }else{
+            coolFormat = translateStackToCoolFormat(stack)
+        }       
+        if(onChange){ 
+            onChange(coolFormat)
+        }
+    },[stack,ghost])
+
     useEffect(() => {
         let location = window.location.href
         if(!productionSystemSelected){
@@ -62,14 +72,13 @@ const ProcessogramList = ({specie,collection}:IProcessogramList) => {
         let isMobile = window.matchMedia('(hover:none)').matches
         if(!isMobile){
             clearTimeout(timeout.current)
-
             timeout.current = setTimeout(() => {
                 if(productionSystemSelected===null){
                     setGhost(onHover)
                 }else{
                     setGhost(null)
                 }
-            }, 250);
+            }, 50);
         }       
     },[onHover,productionSystemSelected])
 

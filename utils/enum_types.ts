@@ -16,7 +16,7 @@ export type ProductionSystemTypes = 'conventional cages' |
 
 export type TabTypes = 'description' | 'sources' | 'quality assessment' | 'media' | 'location' | 'data'
 
-export type FieldReferenceTypes = 'productionSystem' | 'lifeFate' | 'phase' | 'circumstance'
+export type LevelNames = 'production system' | 'life fate' | 'phase' | 'circumstance'
 
 export type CommonIconsTypes = string | 'push-pin' | 'eliminar' | 'exclamation-button' | 'upload-to-cloud'
 

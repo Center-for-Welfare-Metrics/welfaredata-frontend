@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Container,Body,Tabs, Tab,CustomLoader } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
 import MediaTab from '@/components/data_entry/form/tabs/media/media'
-import { CommonTabs, TABS } from "@/utils/consts"
+import { CommonTabs } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
 import { Title } from "@/components/data_entry/form/tabs/tab-commons-styled"
@@ -13,6 +13,8 @@ const DataEntryForm = () => {
 
     const [tab,setTab] = useState<TabTypes>('description')
 
+    const {contentInformation,specie} = useContext(DataEntryContext)
+
     return (
         
         <Container>
@@ -21,7 +23,7 @@ const DataEntryForm = () => {
                     true?
                     (
                         <>
-                            <Title>Título</Title>
+                            <Title>{voca.capitalize(contentInformation?.levelName || 'species')} : {voca.capitalize(contentInformation?.ref_name || specie._id)}</Title>
                             {tab === 'description' && <BasicTab /> }
                             {tab === 'media' && <MediaTab /> }
                         </>
@@ -39,9 +41,9 @@ const DataEntryForm = () => {
             </Body>
             <Tabs>
                 {
-                    CommonTabs.map((tab) => 
-                    <Tab onClick={()=>setTab(tab)} active={tab===tab} key={tab}>
-                        {voca.capitalize(tab)}
+                    CommonTabs.map((this_tab) => 
+                    <Tab onClick={()=>setTab(this_tab)} active={this_tab===tab} key={this_tab}>
+                        {voca.capitalize(this_tab)}
                     </Tab>)
                 }
             </Tabs>
