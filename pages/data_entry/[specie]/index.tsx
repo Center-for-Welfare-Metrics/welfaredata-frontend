@@ -2,19 +2,21 @@ import ProcessogramDataEntry from "@/components/data_entry"
 import withAuth from "@/components/HOC/with-auth"
 import DefaultLayout from "@/components/layouts"
 import { SpeciesTypes } from "@/utils/enum_types"
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
 
 
 const SpecieDataEntryPage = () => {
 
-    const [specie,setSpecie] = useState<SpeciesTypes>(null)
+    const [specie,setSpecie] = useState(null)
 
+    const router = useRouter()
 
-    useEffect(()=>{
-        let specie_from_url : SpeciesTypes = Router.query.specie as any
-        setSpecie(specie_from_url)        
-    },[])
+    useEffect(()=>{        
+        let { specie } = router.query
+        
+        setSpecie(specie)  
+    },[router.query.specie])
 
     return (
         <DefaultLayout>

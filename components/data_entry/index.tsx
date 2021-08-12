@@ -33,8 +33,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const [content,setContent] = useState(null)
 
     useEffect(() => {
+        setContent(null)
         fetchInitial()
-    },[])    
+    },[specie])    
 
     const fetchInitial = async () => {
         try {
