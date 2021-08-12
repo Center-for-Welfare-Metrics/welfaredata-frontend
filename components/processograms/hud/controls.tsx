@@ -73,14 +73,14 @@ const HudControls = () => {
     return (
         <>
              {getNextSiblingFrom(element) && 
-                <ToRight  onClick={toNextSibling}>
+                <ToRight onClick={toNextSibling}>
                     <SVG 
                         src={SvgPath({file_name:'right-arrow',folder:'minimal-icons'})}
                     />
                 </ToRight>                
             }
             {getPreviousSiblingFrom(element) && 
-            <ToLeft  onClick={toPreviousSibling}>
+            <ToLeft onClick={toPreviousSibling}>
                 <SVG
                     src={SvgPath({file_name:'right-arrow',folder:'minimal-icons'})}
                 />

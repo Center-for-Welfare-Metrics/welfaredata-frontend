@@ -12,9 +12,7 @@ interface IHudTreeControl {
     stackCoolFormat:ICoolFormat[]
 }
 
-const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
-
-    // const { element,stackCoolFormat,onChange } = useContext(HudContext)
+const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {    
 
     const {specie} = useContext(ProcessogramContext)
 

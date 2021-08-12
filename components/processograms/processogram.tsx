@@ -46,7 +46,34 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const [topLeft,setTopLeft] = useState<any>({top:0,left:0,scrollTop:0})     
 
+    const [style,setStyle] = useState({
+        top:0,
+        left:0
+    })
+
     const timeout = useRef(null)
+
+    const updateStyleOnResize = () => {
+        let top = 0
+        let left = 0
+        let nav = document.getElementById('main-nav-menu')
+        if(nav){
+            top = nav.getBoundingClientRect().height            
+        }
+        let editorParent = document.getElementById('processogram-editor-space')
+        if(editorParent){
+            left = editorParent.getBoundingClientRect().left
+                     
+        }
+        setStyle({
+            top:top,
+            left:left
+        }) 
+    }
+
+    useEffect(() => {
+        updateStyleOnResize()
+    },[])
 
     useEffect(()=>{
         if(mainState){   
@@ -141,6 +168,8 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const focusOnMe = () => {
         let { top,left } = getElementSizeInformations(svgRef.current)
+        top-= style.top
+        left-= style.left
         let scrollTop = listContainerRef.scrollTop
         setTopLeft({top,left,scrollTop})
         TweenLite.to(svgRef.current,{

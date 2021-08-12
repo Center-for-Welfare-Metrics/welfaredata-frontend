@@ -33,11 +33,39 @@ const ProcessogramHud = ({
 
     const [stackCoolFormat,setStackCoolFormat] = useState<ICoolFormat[]>([])    
 
+    const [ style,setStyle] = useState({
+        top:0,
+        left:0
+    })
+
     const delay = useRef(null)
 
     useEffect(()=>{
         setStackCoolFormat(translateStackToCoolFormat(stack))        
     },[stack])
+
+    useEffect(() => {
+        updateStyleOnResize()
+    },[])
+
+
+    const updateStyleOnResize = () => {
+        let top = 0
+        let left = 0
+        let nav = document.getElementById('main-nav-menu')
+        if(nav){
+            top = nav.getBoundingClientRect().height            
+        }
+        let editorParent = document.getElementById('processogram-editor-space')
+        if(editorParent){
+            left = editorParent.getBoundingClientRect().left
+                     
+        }
+        setStyle({
+            top:top,
+            left:left
+        }) 
+    }
 
     useEffect(()=>{
         let match = window.matchMedia('(hover)').matches        
@@ -69,10 +97,10 @@ const ProcessogramHud = ({
             {
                 !isMoving &&
                 <Container style={{
-                    top:elementRect.top,
+                    top:elementRect.top - style.top,
                     width:elementRect.width,
                     height:elementRect.height,
-                    left:elementRect.left
+                    left:elementRect.left - style.left
                 }}>
                     {level>=2 && <HudControls />}                
                 </Container>
