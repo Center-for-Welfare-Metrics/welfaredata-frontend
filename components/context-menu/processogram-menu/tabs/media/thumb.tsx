@@ -1,5 +1,6 @@
-import { IMedia } from "@/context/data-entry"
 
+
+import { IMedia } from '@/utils/processogram'
 import { Image,Thumbnail,Video } from './thumb-styled'
 
 interface IThumb {

@@ -1,8 +1,8 @@
 import MediaFile from './media-file'
 import { Container } from './list-styled'
-import DataEntryContext, { IDataEntryFormInformations, IMedia } from '@/context/data-entry'
-import React, { useContext } from 'react'
-import toast from 'react-hot-toast'
+
+import React from 'react'
+import { IMedia } from '@/utils/processogram'
 
 interface IMediaFileList {
     medias:IMedia[],

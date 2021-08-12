@@ -1,6 +1,5 @@
 import { CommonIconsTypes, ContextMenuPosition, SpeciesTypes } from "@/utils/enum_types";
 import { createContext } from "react";
-import { ICommonDataEntry } from "./data-entry";
 
 export interface IContextOptions {
     text:string
@@ -14,7 +13,7 @@ export interface IContextMenu {
     x?:number
     y?:number
     options?:IContextOptions[]
-    document?:ICommonDataEntry
+    document?:any
     svg?:any
     optionTarget?:any
     type:'options' | 'processogram' | 'none'
