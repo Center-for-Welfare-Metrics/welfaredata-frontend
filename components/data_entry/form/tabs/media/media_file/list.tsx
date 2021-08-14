@@ -10,9 +10,7 @@ interface IMediaFileList {
 }
 
 
-const MediaFileList = ({medias,isLocal=false}:IMediaFileList) => {    
-
-    
+const MediaFileList = ({medias,isLocal=false}:IMediaFileList) => {  
 
     return (
         <Container>

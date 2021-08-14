@@ -14,7 +14,7 @@ import theme from 'theme/schema.json'
 import toast from 'react-hot-toast'
 import { LoaderContainer } from '../miscellaneous/loaders';
 import { ISpecie } from '@/context/processogram';
-import { getCollectionInformationsByCoolFormat } from '@/utils/processogram';
+import { getCollectionInformationsByCoolFormat, ICoolFormat } from '@/utils/processogram';
 import DataEntryContext from "@/context/data-entry"
 
 interface IProcessogramDataEntry {
@@ -60,7 +60,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }  
     }
 
-    const onChildStateChange = (e) => {
+    const onChildStateChange = (e:ICoolFormat[]) => {
         setContent(getCollectionInformationsByCoolFormat(e,processograms))
     }
 
@@ -78,7 +78,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             </ProcessogramSpace>
             <FormSpace onClick={(e:Event)=>e.stopPropagation()}>   
                 <DataEntryContext.Provider value={{contentInformation:content,specie:specieItem}}>
-                    <DataEntryForm /> 
+                    <DataEntryForm />
                 </DataEntryContext.Provider>                                           
             </FormSpace>
         </Container>)

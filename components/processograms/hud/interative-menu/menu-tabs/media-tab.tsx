@@ -14,9 +14,6 @@ export interface IMediaComponent {
 }
 
 const Media = ({media,onClick,index}:IMediaComponent) => {        
-
-     
-
     return(
         <>
             <MediaStyled style={{backgroundImage:`url(${media.url})`}} onClick={(e)=>onClick(e,index)}>
