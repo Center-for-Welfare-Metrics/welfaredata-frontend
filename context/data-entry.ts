@@ -5,6 +5,8 @@ import { ISpecie } from "./processogram";
 export interface IDataEntryContext {
     contentInformation:IContentInformation
     specie:ISpecie
+    processograms:any[]
+    setProcessograms(processograms:any[])
 }
 
 const DataEntryContext = createContext<IDataEntryContext>(null)

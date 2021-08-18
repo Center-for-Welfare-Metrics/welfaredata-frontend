@@ -4,10 +4,13 @@ import { useRef } from "react"
 import { useEffect } from "react"
 import { useState } from "react"
 import { useContext } from "react"
+import voca from 'voca'
+import processogramApi from '@/api/processogram'
+import toast from "react-hot-toast"
 
 const BasicTab = () => {
 
-    const { contentInformation,specie } = useContext(DataEntryContext)
+    const { contentInformation,specie,setProcessograms } = useContext(DataEntryContext)
 
     const [global,setGlobal] = useState('')
 
@@ -20,19 +23,28 @@ const BasicTab = () => {
         setSpecific(contentInformation?.description || '')
     },[contentInformation])
 
-    const update = () => {
-        clearTimeout(timer.current)
-
-        timer.current = setTimeout(() => {
-            console.log('update trigger...')
-        }, 500);
+    const updateGlobal = (description) => {
+        if(contentInformation){        
+            clearTimeout(timer.current)
+            let { ref__id,levelName } = contentInformation
+            timer.current = setTimeout(() => {                
+                processogramApi.updateReference(voca.camelCase(levelName),ref__id,{
+                    description:description
+                }).then((response) => {
+                    setProcessograms(response.data)
+                }).catch((error) => {
+                    console.log(error)
+                    toast.error('Something wrong')
+                })                
+            }, 500);
+        }
     }
 
     return (
         <>
             <FormInput 
                 value={global}
-                onChange={(e)=>{setGlobal(e.target.value);update()}}
+                onChange={(e)=>{setGlobal(e.target.value);updateGlobal(e.target.value)}}
                 label='Global'
                 name='description'
                 multiline={true}
@@ -42,7 +54,7 @@ const BasicTab = () => {
                 contentInformation && 
                 <FormInput 
                     value={specific}
-                    onChange={(e)=>{setSpecific(e.target.value);update()}}
+                    onChange={(e)=>{setSpecific(e.target.value)}}
                     label='Specific'
                     name='description'
                     multiline={true}
