@@ -58,7 +58,7 @@ const InterativeMenu = ({
     },[gesture])  
 
     useEffect(()=>{        
-       let content =  getCollectionInformationsByCoolFormat(stackCoolFormat,collection)
+       let content =  getCollectionInformationsByCoolFormat(stackCoolFormat,collection).content
        setContent(content)
        if(content===null){
            setContent(specie)

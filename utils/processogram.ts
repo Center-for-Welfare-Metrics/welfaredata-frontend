@@ -1,5 +1,6 @@
 import voca from 'voca'
 import lodash from 'lodash'
+import { LevelNames } from './enum_types'
 
 export interface ICoolFormat {
     levelName:'Circumstance'|'Phase'|'Life Fate'|'Production System'|string,
@@ -148,19 +149,31 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
         }
     }
 
-    if(stack.length>0){
+    if(stack.length>0){        
+        let depth = []
         let target = collection
         for(let index in stack){
             let item = stack[index]
             let finded = find(item,target)
             if(finded){
+                let depth_reference = {
+                    levelName:voca.lowerCase(item.levelName),
+                    item:finded
+                }
+                depth.push(depth_reference)                
                 target = finded
             }
+        }        
+        return {
+            content:transformToContent(target,stack.length),
+            depth
         }
-        return transformToContent(target,stack.length)
     }
     
-    return null
+    return {
+        content:null,
+        depth:null
+    }
 }
 
 export const getLevelNameByGivingID = (id:string) => {
@@ -185,8 +198,8 @@ export const getLevelNameByGivingID = (id:string) => {
             }
         }
     } catch (error) {
-        return null
         console.log(error)
+        return null
     }    
 
     return null
@@ -271,4 +284,30 @@ export const getNextSiblingFrom = (element:Element) => {
     }
 
     return next_sibling
+}
+
+
+export interface IDepth{
+    item:any
+    levelName:LevelNames
+}
+
+let dict_helper = {
+    'life fate':'lifefates',
+    'phase':'phases',
+    'circumstance':'circumstances'
+}
+
+export const getInfoToUpdateProcessogram = (depth:IDepth[]) => {
+    if(!depth || depth.length === 0) return null
+    let id_tree = {}
+    let processogram_id
+    depth.forEach((item) => {
+        if(item.levelName === 'production system'){
+            processogram_id = item.item._id
+        }else{
+            id_tree[dict_helper[item.levelName]] = item.item._id
+        }
+    })
+    return {processogram_id,id_tree}
 }

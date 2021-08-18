@@ -14,7 +14,7 @@ import theme from 'theme/schema.json'
 import toast from 'react-hot-toast'
 import { LoaderContainer } from '../miscellaneous/loaders';
 import { ISpecie } from '@/context/processogram';
-import { getCollectionInformationsByCoolFormat, ICoolFormat } from '@/utils/processogram';
+import { getCollectionInformationsByCoolFormat, getInfoToUpdateProcessogram, ICoolFormat } from '@/utils/processogram';
 import DataEntryContext from "@/context/data-entry"
 
 interface IProcessogramDataEntry {
@@ -31,6 +31,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
     const [specieItem,setSpecieItem] = useState<ISpecie>(null)
 
     const [content,setContent] = useState(null)
+
+    const [pathAsObject,setPathAsObject] = useState(null)
 
     useEffect(() => {
         setContent(null)
@@ -60,8 +62,11 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }  
     }
 
-    const onChildStateChange = (e:ICoolFormat[]) => {
-        setContent(getCollectionInformationsByCoolFormat(e,processograms))
+    const onChildStateChange = (e:ICoolFormat[]) => {        
+        let {content,depth} = getCollectionInformationsByCoolFormat(e,processograms)
+        let pathAsObjectToUpdateProcessogram = getInfoToUpdateProcessogram(depth)
+        setPathAsObject(pathAsObjectToUpdateProcessogram)
+        setContent(content)
     }
 
     return (
@@ -77,7 +82,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             }
             </ProcessogramSpace>
             <FormSpace onClick={(e:Event)=>e.stopPropagation()}>   
-                <DataEntryContext.Provider value={{contentInformation:content,specie:specieItem,processograms,setProcessograms}}>
+                <DataEntryContext.Provider value={{contentInformation:content,specie:specieItem,processograms,setProcessograms,pathAsObject}}>
                     <DataEntryForm />
                 </DataEntryContext.Provider>                                           
             </FormSpace>
