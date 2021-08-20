@@ -82,7 +82,16 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
             }
             </ProcessogramSpace>
             <FormSpace onClick={(e:Event)=>e.stopPropagation()}>   
-                <DataEntryContext.Provider value={{contentInformation:content,specie:specieItem,processograms,setProcessograms,pathAsObject}}>
+                <DataEntryContext.Provider 
+                    value={{
+                        contentInformation:content,
+                        specie:specieItem,
+                        processograms,
+                        setProcessograms,
+                        pathAsObject,
+                        setSpecie:setSpecieItem
+                    }}
+                >
                     <DataEntryForm />
                 </DataEntryContext.Provider>                                           
             </FormSpace>

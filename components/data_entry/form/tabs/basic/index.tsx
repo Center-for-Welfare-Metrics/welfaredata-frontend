@@ -6,10 +6,12 @@ import processogramApi from '@/api/processogram'
 import toast from "react-hot-toast"
 import lodash from 'lodash'
 import update from 'immutability-helper'
+import specieApi from '@/api/specie'
+
 
 const BasicTab = () => {
 
-    const { contentInformation,specie,setProcessograms,pathAsObject,processograms } = useContext(DataEntryContext)
+    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie} = useContext(DataEntryContext)
 
     const [global,setGlobal] = useState('')
 
@@ -24,37 +26,55 @@ const BasicTab = () => {
     },[contentInformation])
 
     const updateGlobal = (description) => {
-        if(contentInformation){        
-            clearTimeout(globalTimer.current)
+        clearTimeout(globalTimer.current)
+        if(contentInformation){                    
             let { ref__id,levelName } = contentInformation
-            globalTimer.current = setTimeout(() => {                
-                processogramApi.updateReference(voca.camelCase(levelName),ref__id,{
-                    description:description
-                }).then((response) => {
-                    setProcessograms(response.data)
+            if(!contentInformation.noinformation){
+                globalTimer.current = setTimeout(() => {                
+                    processogramApi.updateReference(voca.camelCase(levelName),ref__id,{
+                        description:description
+                    }).then((response) => {
+                        setProcessograms(response.data)
+                    }).catch((error) => {
+                        console.log(error)
+                        toast.error("Can't do your request now. Please try later.")
+                    })                
+                }, 500);
+            }
+        }else{            
+            globalTimer.current = setTimeout(() => {
+                specieApi.update({description},specie._id)
+                .then((response) => {
+                    setSpecie(update(specie,{
+                        description:{$set:description}
+                    }))
                 }).catch((error) => {
                     console.log(error)
                     toast.error("Can't do your request now. Please try later.")
-                })                
-            }, 500);
+                })   
+            },500)
         }
     }
 
     const updateSpecific = (description) => {
-        if(contentInformation){
-            clearTimeout(specificTimer.current)        
-            specificTimer.current = setTimeout(() => {                
-                processogramApi.update({id_tree:pathAsObject.id_tree,values:{description}},pathAsObject.processogram_id)
-                .then((response) => {
-                    let index = lodash.findIndex(processograms,{_id:response.data._id})
-                    setProcessograms(update(processograms,{
-                        [index]:{$set:response.data}
-                    }))                    
-                }).catch((error) => {
-                    console.log(error)
-                    toast.error("Can't do your request now. Please try later.")
-                })
-            }, 500);
+        if(contentInformation){            
+            clearTimeout(specificTimer.current)       
+            if(!contentInformation.noinformation){ 
+                specificTimer.current = setTimeout(() => {                
+                    processogramApi.update({id_tree:pathAsObject.id_tree,values:{description}},pathAsObject.processogram_id)
+                    .then((response) => {
+                        let index = lodash.findIndex(processograms,{_id:response.data._id})
+                        setProcessograms(update(processograms,{
+                            [index]:{$set:response.data}
+                        }))                    
+                    }).catch((error) => {
+                        console.log(error)
+                        toast.error("Can't do your request now. Please try later.")
+                    })
+                }, 500);
+            }
+        }else{
+            console.log(specie)
         }
     }
 

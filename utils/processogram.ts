@@ -55,6 +55,7 @@ export interface IContentInformation {
     specie?: string
     updatedAt?: Date    
     _id?: string
+    noinformation?:boolean
     levelName:string
 }
 

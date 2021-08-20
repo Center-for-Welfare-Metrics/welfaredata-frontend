@@ -5,6 +5,7 @@ import { ISpecie } from "./processogram";
 export interface IDataEntryContext {
     contentInformation:IContentInformation
     specie:ISpecie
+    setSpecie(specie:ISpecie):void
     processograms:any[]
     setProcessograms(processograms:any[]):void
     pathAsObject:any
