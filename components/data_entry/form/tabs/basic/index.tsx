@@ -8,22 +8,76 @@ import lodash from 'lodash'
 import update from 'immutability-helper'
 import specieApi from '@/api/specie'
 
+let keys = {
+    'lifeFate':'lifefates',
+    'phase':'phases',
+    'circumstance':'circumstances'
+}
 
 const BasicTab = () => {
 
-    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie} = useContext(DataEntryContext)
+    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie } = useContext(DataEntryContext)
 
     const [global,setGlobal] = useState('')
 
     const [specific,setSpecific] = useState('')
 
+    const [onCreate,setOnCreate] = useState(false)
+
     const globalTimer = useRef(null)
     const specificTimer = useRef(null)
 
-    useEffect(()=>{
-        setGlobal(contentInformation?contentInformation.ref_description:specie.description)
-        setSpecific(contentInformation?.description || '')
+    useEffect(()=>{                
+        if(contentInformation){
+            console.log(processograms)
+            if(contentInformation.noinformation){
+                if(!onCreate){                    
+                    setOnCreate(true)
+                    processogramApi.getOneReference(contentInformation.levelName,{name:voca.lowerCase(contentInformation.elementName),specie:specie._id})
+                    .then((response) => {
+                        createNewLayer(response.data)
+                    }).catch(() => {
+                        processogramApi.createReference(contentInformation.levelName,{name:voca.lowerCase(contentInformation.elementName),specie:specie._id,description:''})
+                        .then((response) => {
+                            createNewLayer(response.data)
+                        })
+                    })
+                }
+            }else{
+                setGlobal(contentInformation.ref_description || '')
+                setSpecific(contentInformation.description || '')
+            }
+        }else{
+            setGlobal(specie.description)
+            setSpecific('')
+        }        
     },[contentInformation])
+
+    const createNewLayer = (data) => {
+        if(contentInformation.levelName==='productionSystem'){
+            processogramApi.create({productionSystem:data._id,specie:specie._id})
+            .then((response) => {
+                setProcessograms(update(processograms,{$push:[response.data]}))
+            })
+            .finally(() => {
+                setOnCreate(false)
+            })
+        }else{
+            let obj = {
+                [contentInformation.levelName]:data._id,                        
+            }
+            processogramApi.newLayer({id_tree:pathAsObject.id_tree,object:obj,pushTo:keys[contentInformation.levelName]},pathAsObject.processogram_id)
+            .then((response) => {
+                let index = lodash.findIndex(processograms,{_id:response.data._id})
+                setProcessograms(update(processograms,{
+                    [index]:{$set:response.data}
+                }))  
+            })
+            .finally(() => {
+                setOnCreate(false)
+            })
+        }
+    }
 
     const updateGlobal = (description) => {
         clearTimeout(globalTimer.current)
@@ -44,7 +98,7 @@ const BasicTab = () => {
         }else{            
             globalTimer.current = setTimeout(() => {
                 specieApi.update({description},specie._id)
-                .then((response) => {
+                .then(() => {
                     setSpecie(update(specie,{
                         description:{$set:description}
                     }))
@@ -73,8 +127,6 @@ const BasicTab = () => {
                     })
                 }, 500);
             }
-        }else{
-            console.log(specie)
         }
     }
 

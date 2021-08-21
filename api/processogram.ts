@@ -14,4 +14,5 @@ export default {
   uploadFileToReference: (fieldReference,_id:string,formData:any,uploadProgress:any) => api.patch(`${fieldReference}/${_id}/upload`,formData,{headers:{'content-type':'multipart/form-data'},onUploadProgress:uploadProgress}),
   updateReference: (fieldReference,_id:string,data:any) => api.patch(`${fieldReference}/${_id}`,data),
   uploadLocalFile: (_id:string,formData:any,uploadProgress:any) => api.patch(p(`${_id}/upload`),formData,{headers:{'content-type':'multipart/form-data'},onUploadProgress:uploadProgress}),
+  createReference: (filedReference,data:{name:string, specie:SpeciesTypes,description:''}) => api.post(`${filedReference}`,data)
 }

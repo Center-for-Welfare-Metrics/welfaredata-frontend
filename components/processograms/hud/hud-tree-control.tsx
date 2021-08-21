@@ -1,13 +1,9 @@
-import HudContext from '@/context/hud-context'
 import ProcessogramContext from '@/context/processogram'
 import { ICoolFormat } from '@/utils/processogram'
-import { transparentize } from 'polished'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useContext } from 'react'
-import { getElementViewBox } from '../processogram-helpers'
 import { Container,TreeItem } from './hud-tree-control-styled'
-import voca from 'voca'
 interface IHudTreeControl {
     stackCoolFormat:ICoolFormat[]
 }

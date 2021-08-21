@@ -56,6 +56,7 @@ export interface IContentInformation {
     updatedAt?: Date    
     _id?: string
     noinformation?:boolean
+    elementName?:string
     levelName:string
 }
 
@@ -124,13 +125,14 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
 
     const transformToContent = (item,stack_length:number) => {
         if(!item) return null
+        let keys = {
+            1:'productionSystem',
+            2:'lifeFate',
+            3:'phase',
+            4:'circumstance'
+        }
         try {
-            let keys = {
-                1:'productionSystem',
-                2:'lifeFate',
-                3:'phase',
-                4:'circumstance'
-            }
+            
         
             let childrenName = keys[stack_length]        
             let children_content = item[childrenName]
@@ -141,11 +143,14 @@ export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collec
             
             return {...item,...new_children_content,[childrenName]:undefined,levelName:convert_keys[childrenName]}
         } catch (error) {
-            // console.log(error)            
+            // console.log(error)    
+            let svgItem = stack[stack_length-1]
             return {
                 ref_name:'',
                 ref_description:'Information not available yet. Select the feedback tab if you want to leave a suggestion',
-                noinformation:true
+                noinformation:true,
+                levelName:keys[stack_length],
+                elementName:svgItem.elementName
             }
         }
     }
