@@ -19,7 +19,14 @@ export const SvgContainer = styled.div`
         opacity:1;
         display:block;       
         min-height:5rem;
-        z-index: 77;        
+        z-index: 77;
+    }
+    ${
+        ({level}) => level === undefined && css`
+            >svg{
+                max-height:80vh;
+            }
+        `
     }
     ${
         ({level}) => level !== undefined && (
