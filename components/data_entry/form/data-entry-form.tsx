@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Container,Body,Tabs, Tab,CustomLoader } from './data-entry-form-styled'
+import { Container,Body,Tabs, Tab,CustomLoader, FetchingDiv,FetchingTitle } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
 import MediaTab from '@/components/data_entry/form/tabs/media/media'
 import { CommonTabs } from "@/utils/consts"
@@ -13,30 +13,28 @@ const DataEntryForm = () => {
 
     const [tab,setTab] = useState<TabTypes>('description')
 
-    const {contentInformation,specie} = useContext(DataEntryContext)
+    const {contentInformation,specie,onFetch} = useContext(DataEntryContext)
 
-    return (
-        
+    return (        
         <Container>
             <Body load={false}>                
                 {
-                    true?
-                    (
-                        <>
-                            <Title>{voca.capitalize(contentInformation?.levelName || 'species')} : {voca.capitalize(contentInformation?.ref_name || specie._id)}</Title>
-                            {tab === 'description' && <BasicTab /> }
-                            {tab === 'media' && <MediaTab /> }
-                        </>
-                    )
-                    :
-                    (
-                        <CustomLoader 
-                            color={theme.default.colors.pink}
-                            type='ThreeDots'
-                            height={100}
-                            width={100}   
-                        />
-                    )
+                    
+                    <>
+                        <Title>{voca.capitalize(contentInformation?.levelName || 'species')} : {voca.capitalize(contentInformation?.ref_name || specie._id)}</Title>
+                        {tab === 'description' && <BasicTab /> }
+                        {tab === 'media' && <MediaTab /> }
+                        <FetchingDiv style={{display:onFetch?'block':'none'}}>
+                            <FetchingTitle>Fetching "x". Please Wait</FetchingTitle>
+                            <CustomLoader 
+                                color={theme.default.colors.blue}
+                                type='ThreeDots'
+                                height={100}
+                                width={100}   
+                            />
+                        </FetchingDiv>
+                    </>
+                    
                 }                
             </Body>
             <Tabs>

@@ -35,6 +35,7 @@ export interface IProcessogramContext {
     stack:string[]
     setStack(stack:string[]):void,
     specie:ISpecie
+    isLocked:boolean
 }
 
 

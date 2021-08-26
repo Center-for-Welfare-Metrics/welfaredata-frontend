@@ -34,8 +34,10 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [pathAsObject,setPathAsObject] = useState(null)
 
+    const [onFetch,setOnFetch] = useState(false)
+
     useEffect(() => {
-        setContent(null)
+        setContent(null)        
         fetchInitial()
     },[specie])    
 
@@ -62,11 +64,13 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         }  
     }
 
-    const onChildStateChange = (e:ICoolFormat[]) => {        
-        let {content,depth} = getCollectionInformationsByCoolFormat(e,processograms)
-        let pathAsObjectToUpdateProcessogram = getInfoToUpdateProcessogram(depth)
-        setPathAsObject(pathAsObjectToUpdateProcessogram)
-        setContent(content)
+    const onChildStateChange = (e:ICoolFormat[]) => {          
+        if(!onFetch){    
+            let {content,depth} = getCollectionInformationsByCoolFormat(e,processograms)
+            let pathAsObjectToUpdateProcessogram = getInfoToUpdateProcessogram(depth)
+            setPathAsObject(pathAsObjectToUpdateProcessogram)
+            setContent(content)
+        }
     }
 
     return (
@@ -78,6 +82,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                     specie={specieItem}
                     collection={processograms}         
                     onChange={onChildStateChange}
+                    isLocked={onFetch}
                 />
             }
             </ProcessogramSpace>
@@ -89,7 +94,9 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                         processograms,
                         setProcessograms,
                         pathAsObject,
-                        setSpecie:setSpecieItem
+                        setSpecie:setSpecieItem,
+                        onFetch,
+                        setOnFetch                    
                     }}
                 >
                     <DataEntryForm />

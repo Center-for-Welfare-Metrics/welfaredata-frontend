@@ -32,7 +32,7 @@ const LEVELS = ['--ps','--lf','--ph','--ci']
 
 const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef,setGhost}:IProcessogram) => {
 
-    const {stack,setStack} = useContext(ProcessogramContext)
+    const {stack,setStack,isLocked} = useContext(ProcessogramContext)
 
     const [isMoving,setIsMoving] = useState(false)    
 
@@ -299,49 +299,55 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     }
 
     const mouseLeave = (event:MS<SVGElement,MouseEvent>) => {
-        if(mainState === null){
-            hoverChange(null)
-        }else{
-            setOnHover(null)       
+        if(!isLocked){
+            if(mainState === null){
+                hoverChange(null)
+            }else{
+                setOnHover(null)       
+            }
         }
     }
 
     const mouseMove = (event:MS<SVGElement,MouseEvent>) => {
-        if(mainState===null){
-            hoverChange(svgRef.current.id)
-        }else{            
-            if(targetIsInside(event.target)){                
-                let right_target_id = getRightTargetID({
-                    element:event.target,
-                    level:LEVELS[mainState.level+1],
-                    current:svgRef.current.id
-                })                
-                if(onHover!==right_target_id){                    
-                    setOnHover(right_target_id)                                  
-                }
-            }else{ 
-                if(onHover!==null){               
-                    setOnHover(null)
+        if(!isLocked){
+            if(mainState===null){
+                hoverChange(svgRef.current.id)
+            }else{            
+                if(targetIsInside(event.target)){                
+                    let right_target_id = getRightTargetID({
+                        element:event.target,
+                        level:LEVELS[mainState.level+1],
+                        current:svgRef.current.id
+                    })                
+                    if(onHover!==right_target_id){                    
+                        setOnHover(right_target_id)                                  
+                    }
+                }else{ 
+                    if(onHover!==null){               
+                        setOnHover(null)
+                    }
                 }
             }
         }
     }
 
     const ProcessogramClick = (event:MS<SVGElement,MouseEvent>) => {
-        if(mainState === null){
-            let id = svgRef.current.id
-            onSelect(id)
-            setMainState({
-                currentDomID:null,
-                viewBox:null,                                                
-                level:0
-            })                       
-        }else{               
-            if(targetIsInside(event.target)){
-                event.stopPropagation()
-                InnerClick()
-            }            
-        }      
+        if(!isLocked){
+            if(mainState === null){
+                let id = svgRef.current.id
+                onSelect(id)
+                setMainState({
+                    currentDomID:null,
+                    viewBox:null,                                                
+                    level:0
+                })                       
+            }else{               
+                if(targetIsInside(event.target)){
+                    event.stopPropagation()
+                    InnerClick()
+                }            
+            }  
+        }    
     }
 
     const InnerClick = () => {

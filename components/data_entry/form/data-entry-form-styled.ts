@@ -5,10 +5,18 @@ import Loader from "react-loader-spinner";
 import { lighten } from 'polished';
 
 export const CustomLoader = styled(Loader)`
-    top:50%;
-    left:50%;
-    transform:translate(-50%,0); 
-    position:absolute;
+    
+`
+
+export const FetchingTitle = styled.div`
+    color:${({theme}) => theme.colors.blue};
+`
+
+export const FetchingDiv = styled.div`        
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:center;
 `
 
 export const Tab = styled.div`

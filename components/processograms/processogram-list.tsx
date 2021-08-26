@@ -17,11 +17,12 @@ export interface IProcessogramList {
     specie:ISpecie
     collection:any[]
     onChange?(state:ICoolFormat[]):void
+    isLocked?:boolean
 }
 
 
 
-const ProcessogramList = ({specie,collection,onChange}:IProcessogramList) => {
+const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramList) => {
     
     const containerRef = useRef<HTMLDivElement>(null)    
 
@@ -37,7 +38,7 @@ const ProcessogramList = ({specie,collection,onChange}:IProcessogramList) => {
 
     const [stack,setStack] = useState<string[]>([])
 
-    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer,stack,setStack,specie}
+    const contextValue : IProcessogramContext = {collection,mediasViewer,setMediasViewer,stack,setStack,specie,isLocked}
 
     const [shareString,setShareString] = useState('')
 

@@ -16,32 +16,42 @@ let keys = {
 
 const BasicTab = () => {
 
-    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie } = useContext(DataEntryContext)
+    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie,setOnFetch,onFetch } = useContext(DataEntryContext)
 
     const [global,setGlobal] = useState('')
 
-    const [specific,setSpecific] = useState('')
-
-    const [onCreate,setOnCreate] = useState(false)
+    const [specific,setSpecific] = useState('')    
 
     const globalTimer = useRef(null)
     const specificTimer = useRef(null)
 
-    useEffect(()=>{                
-        if(contentInformation){
-            console.log(processograms)
+    useEffect(() => {       
+        changeValues()                      
+    },[contentInformation])
+
+    const changeValues = () => {
+        if(contentInformation){            
             if(contentInformation.noinformation){
-                if(!onCreate){                    
-                    setOnCreate(true)
+                if(!onFetch){                                
+                    setOnFetch(true)
                     processogramApi.getOneReference(contentInformation.levelName,{name:voca.lowerCase(contentInformation.elementName),specie:specie._id})
                     .then((response) => {
                         createNewLayer(response.data)
-                    }).catch(() => {
+                        .then((processograms_updated) => {
+                            setProcessograms(processograms_updated)
+                            setOnFetch(false)
+                        })               
+                    })
+                    .catch(() => {
                         processogramApi.createReference(contentInformation.levelName,{name:voca.lowerCase(contentInformation.elementName),specie:specie._id,description:''})
                         .then((response) => {
-                            createNewLayer(response.data)
+                            createNewLayer(response.data) 
+                            .then((processograms_updated) => {
+                                setProcessograms(processograms_updated)
+                                setOnFetch(false)
+                            })                  
                         })
-                    })
+                    })                    
                 }
             }else{
                 setGlobal(contentInformation.ref_description || '')
@@ -50,33 +60,31 @@ const BasicTab = () => {
         }else{
             setGlobal(specie.description)
             setSpecific('')
-        }        
-    },[contentInformation])
+        }
+    }
 
     const createNewLayer = (data) => {
-        if(contentInformation.levelName==='productionSystem'){
-            processogramApi.create({productionSystem:data._id,specie:specie._id})
-            .then((response) => {
-                setProcessograms(update(processograms,{$push:[response.data]}))
-            })
-            .finally(() => {
-                setOnCreate(false)
-            })
-        }else{
-            let obj = {
-                [contentInformation.levelName]:data._id,                        
+        return new Promise<any[]>((resolve,reject) => {
+            if(contentInformation.levelName==='productionSystem'){
+                processogramApi.create({productionSystem:data._id,specie:specie._id})
+                .then((response) => {
+                    let processograms_updated = update(processograms,{$push:[response.data]})                    
+                    resolve(processograms_updated)
+                })
+            }else{
+                let obj = {
+                    [contentInformation.levelName]:data._id,                        
+                }
+                processogramApi.newLayer({id_tree:pathAsObject.id_tree,object:obj,pushTo:keys[contentInformation.levelName]},pathAsObject.processogram_id)
+                .then((response) => {
+                    let index = lodash.findIndex(processograms,{_id:response.data._id})
+                    let processograms_updated = update(processograms,{
+                        [index]:{$set:response.data}
+                    }) 
+                    resolve(processograms_updated)
+                })
             }
-            processogramApi.newLayer({id_tree:pathAsObject.id_tree,object:obj,pushTo:keys[contentInformation.levelName]},pathAsObject.processogram_id)
-            .then((response) => {
-                let index = lodash.findIndex(processograms,{_id:response.data._id})
-                setProcessograms(update(processograms,{
-                    [index]:{$set:response.data}
-                }))  
-            })
-            .finally(() => {
-                setOnCreate(false)
-            })
-        }
+        })        
     }
 
     const updateGlobal = (description) => {
