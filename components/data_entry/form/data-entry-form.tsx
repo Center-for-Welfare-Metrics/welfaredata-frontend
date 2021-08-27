@@ -9,9 +9,19 @@ import { Title } from "@/components/data_entry/form/tabs/tab-commons-styled"
 import theme from 'theme/schema.json'
 import { TabTypes } from '@/utils/enum_types'
 
+import SVG from 'react-inlinesvg'
+import { SvgPath } from "@/utils/assets_path"
+import Modal from "@/components/common/modal"
+import ReferenceSettings from "../reference-settings"
+
+
+
 const DataEntryForm = () => {    
 
+    
     const [tab,setTab] = useState<TabTypes>('description')
+
+    const [settingsOpen,setSettingsOpen] = useState(false)
 
     const {contentInformation,specie,onFetch} = useContext(DataEntryContext)
 
@@ -21,11 +31,22 @@ const DataEntryForm = () => {
                 {
                     
                     <>
-                        <Title>{voca.capitalize(contentInformation?.levelName || 'species')} : {voca.capitalize(contentInformation?.ref_name || specie._id)}</Title>
-                        {tab === 'description' && <BasicTab /> }
-                        {tab === 'media' && <MediaTab /> }
-                        <FetchingDiv style={{display:onFetch?'block':'none'}}>
-                            <FetchingTitle>Fetching "x". Please Wait</FetchingTitle>
+                        <div style={{display:!onFetch?'block':'none'}}>
+                            <Title>
+                                {voca.titleCase(contentInformation?.levelName || 'species')} : {voca.titleCase((contentInformation?.ref_alternative_name || contentInformation?.ref_name) || specie._id)}
+                                {
+                                    contentInformation && contentInformation.levelName !== 'production system' &&
+                                    <SVG 
+                                        src={SvgPath({folder:'minimal-icons',file_name:'settings'})}
+                                        onClick={()=>setSettingsOpen(true)}
+                                    />
+                                }
+                            </Title>
+                            {tab === 'description' && <BasicTab /> }
+                            {tab === 'media' && <MediaTab /> }
+                        </div>
+                        <FetchingDiv style={{display:onFetch?'flex':'none'}}>
+                            <FetchingTitle>Fetching data... Please Wait</FetchingTitle>
                             <CustomLoader 
                                 color={theme.default.colors.blue}
                                 type='ThreeDots'
@@ -33,6 +54,12 @@ const DataEntryForm = () => {
                                 width={100}   
                             />
                         </FetchingDiv>
+                        <Modal 
+                            isOpen={settingsOpen}
+                            onClose={()=>setSettingsOpen(false)}
+                        >       
+                            <ReferenceSettings />                                                     
+                        </Modal>
                     </>
                     
                 }                

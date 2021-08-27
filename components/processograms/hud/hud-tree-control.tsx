@@ -1,16 +1,17 @@
 import ProcessogramContext from '@/context/processogram'
-import { ICoolFormat } from '@/utils/processogram'
+import { getCollectionInformationsByCoolFormat, ICoolFormat } from '@/utils/processogram'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { Container,TreeItem } from './hud-tree-control-styled'
+import voca from 'voca'
 interface IHudTreeControl {
     stackCoolFormat:ICoolFormat[]
 }
 
 const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {    
 
-    const {specie} = useContext(ProcessogramContext)
+    const {specie,collection} = useContext(ProcessogramContext)
 
     const [localStack,setLocakStack] = useState<ICoolFormat[]>([])
 
@@ -70,6 +71,18 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
         // }     
     }
 
+    const getRealName = (elementName,localStack,index) => {
+        try {
+            if(index>0){
+                return voca.titleCase((getCollectionInformationsByCoolFormat(localStack.slice(1,index),collection).content?.ref_alternative_name || getCollectionInformationsByCoolFormat(localStack.slice(1,index),collection).content?.ref_name) || elementName)
+            }else{
+                return elementName
+            }
+        } catch (error) {
+            return elementName
+        }                
+    }
+
     return(
         <Container style={{top:top,...style}}>
             {
@@ -78,12 +91,11 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
                         style={{
                             paddingLeft:`${(level+1)*2}rem`,                            
                         }}
-                        key={domID}
-                        // active={element.id===domID}
+                        key={domID}                        
                         onClick={onTreeItemClick({domID,level})}
                         ishover={isHover}
                     > 
-                        {levelName} : {elementName} 
+                        {levelName} : {getRealName(elementName,localStack,index+1)}
                     </TreeItem>
                 ))
             }            

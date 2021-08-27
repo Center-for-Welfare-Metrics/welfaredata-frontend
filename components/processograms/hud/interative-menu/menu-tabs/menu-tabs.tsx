@@ -108,7 +108,7 @@ const MenuTabs = ({content,state}:IMenutabs) => {
                     tab==='description' && 
                     <DescriptionTab 
                         ref_description={content.ref_description}
-                        ref_name={content.ref_name}
+                        ref_name={content.ref_alternative_name || content.ref_name}
                         description={content.description}
                         levelName={content.levelName}
                         _id={content._id}

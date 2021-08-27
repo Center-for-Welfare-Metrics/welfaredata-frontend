@@ -24,7 +24,7 @@ const PublicPigsPage = ({data,specie}) => {
 export default PublicPigsPage
 
 export async function getStaticProps(context) {
-    let data = await (await processogramApi.all()).data
+    let data = await (await processogramApi.all('pig')).data
     let specie = await(await specieApi.getOne('pig')).data
     return {
       props: {

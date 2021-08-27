@@ -16,7 +16,7 @@ let keys = {
 
 const BasicTab = () => {
 
-    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie,setOnFetch,onFetch } = useContext(DataEntryContext)
+    const { contentInformation,specie,setProcessograms,pathAsObject,processograms,setSpecie,setOnFetch,onFetch,updateContent } = useContext(DataEntryContext)
 
     const [global,setGlobal] = useState('')
 
@@ -39,8 +39,12 @@ const BasicTab = () => {
                         createNewLayer(response.data)
                         .then((processograms_updated) => {
                             setProcessograms(processograms_updated)
+                            updateContent(processograms_updated)
                             setOnFetch(false)
-                        })               
+                        })
+                        .catch(() => {
+                            setOnFetch(false)
+                        })          
                     })
                     .catch(() => {
                         processogramApi.createReference(contentInformation.levelName,{name:voca.lowerCase(contentInformation.elementName),specie:specie._id,description:''})
@@ -48,8 +52,12 @@ const BasicTab = () => {
                             createNewLayer(response.data) 
                             .then((processograms_updated) => {
                                 setProcessograms(processograms_updated)
-                                setOnFetch(false)
+                                updateContent(processograms_updated)
+                                setOnFetch(false)                                
                             })                  
+                        })
+                        .catch(() => {
+                            setOnFetch(false)
                         })
                     })                    
                 }
@@ -65,25 +73,31 @@ const BasicTab = () => {
 
     const createNewLayer = (data) => {
         return new Promise<any[]>((resolve,reject) => {
-            if(contentInformation.levelName==='productionSystem'){
-                processogramApi.create({productionSystem:data._id,specie:specie._id})
-                .then((response) => {
-                    let processograms_updated = update(processograms,{$push:[response.data]})                    
-                    resolve(processograms_updated)
-                })
-            }else{
-                let obj = {
-                    [contentInformation.levelName]:data._id,                        
+            try {
+                if(contentInformation.levelName==='productionSystem'){
+                    processogramApi.create({productionSystem:data._id,specie:specie._id})
+                    .then((response) => {
+                        let processograms_updated = update(processograms,{$push:[response.data]})                    
+                        resolve(processograms_updated)
+                    })
+                }else{
+                    let obj = {
+                        [contentInformation.levelName]:data._id,                        
+                    }
+                    processogramApi.newLayer({id_tree:pathAsObject.id_tree,object:obj,pushTo:keys[contentInformation.levelName]},pathAsObject.processogram_id)
+                    .then((response) => {
+                        let index = lodash.findIndex(processograms,{_id:response.data._id})
+                        let processograms_updated = update(processograms,{
+                            [index]:{$set:response.data}
+                        }) 
+                        resolve(processograms_updated)
+                    })
                 }
-                processogramApi.newLayer({id_tree:pathAsObject.id_tree,object:obj,pushTo:keys[contentInformation.levelName]},pathAsObject.processogram_id)
-                .then((response) => {
-                    let index = lodash.findIndex(processograms,{_id:response.data._id})
-                    let processograms_updated = update(processograms,{
-                        [index]:{$set:response.data}
-                    }) 
-                    resolve(processograms_updated)
-                })
+            } catch (error) {
+                toast.error('Something Wrong... ')
+                reject(error)
             }
+            
         })        
     }
 
@@ -95,7 +109,7 @@ const BasicTab = () => {
                 globalTimer.current = setTimeout(() => {                
                     processogramApi.updateReference(voca.camelCase(levelName),ref__id,{
                         description:description
-                    }).then((response) => {
+                    },specie._id).then((response) => {
                         setProcessograms(response.data)
                     }).catch((error) => {
                         console.log(error)

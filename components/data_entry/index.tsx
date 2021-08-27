@@ -36,6 +36,8 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const [onFetch,setOnFetch] = useState(false)
 
+    const [localStack,setLocakStack] = useState<ICoolFormat[]>([])
+
     useEffect(() => {
         setContent(null)        
         fetchInitial()
@@ -43,15 +45,18 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
 
     const fetchInitial = async () => {
         try {
-            let processogramData = await (await (processogramApi.all())).data 
-
-            // fast gambiarra
             let specie_helper_gambiarra : string = specie
+            
             if(specie_helper_gambiarra === 'laying_hens'){
                 specie_helper_gambiarra = 'chicken'
             }else if(specie_helper_gambiarra === 'pigs'){
                 specie_helper_gambiarra = 'pig'
             }
+
+            let processogramData = await (await (processogramApi.all(specie_helper_gambiarra))).data 
+
+            // fast gambiarra
+            
             // end of fast gambiarra
 
             let specieData = await (await (specieApi.getOne(specie_helper_gambiarra))).data
@@ -68,9 +73,15 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         if(!onFetch){    
             let {content,depth} = getCollectionInformationsByCoolFormat(e,processograms)
             let pathAsObjectToUpdateProcessogram = getInfoToUpdateProcessogram(depth)
+            setLocakStack(e)
             setPathAsObject(pathAsObjectToUpdateProcessogram)
             setContent(content)
         }
+    }
+
+    const updateContentAfterFetch = (processograms) => {
+        let {content} = getCollectionInformationsByCoolFormat(localStack,processograms)
+        setContent(content)
     }
 
     return (
@@ -90,6 +101,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
                 <DataEntryContext.Provider 
                     value={{
                         contentInformation:content,
+                        updateContent:updateContentAfterFetch,
                         specie:specieItem,
                         processograms,
                         setProcessograms,

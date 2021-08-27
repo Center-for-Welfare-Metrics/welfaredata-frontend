@@ -252,29 +252,31 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         }
     }
 
-    const clickOut = () => {        
-        let parent = getParent() as any
-        if(mainState.level>0){
-            if(parent){                
-                let isInner = false                
-                let inner_current = null 
-                if(!parent.id.includes('--ps')){
-                    inner_current = parent.id
-                    isInner = true
-                }                
-                let viewBox = getElementViewBox(parent,isInner)
-                setMainState({
-                    ...mainState,
-                    level:mainState.level-1,
-                    viewBox,
-                    currentDomID:inner_current          
-                })            
+    const clickOut = () => {  
+        if(!isLocked){      
+            let parent = getParent() as any
+            if(mainState.level>0){
+                if(parent){                
+                    let isInner = false                
+                    let inner_current = null 
+                    if(!parent.id.includes('--ps')){
+                        inner_current = parent.id
+                        isInner = true
+                    }                
+                    let viewBox = getElementViewBox(parent,isInner)
+                    setMainState({
+                        ...mainState,
+                        level:mainState.level-1,
+                        viewBox,
+                        currentDomID:inner_current          
+                    })            
+                }
+            }else if(mainState.level === 0){     
+                removeDocumentTriggers()         
+                setMainState(null)
+                onSelect(null)
+                hoverChange(null)
             }
-        }else if(mainState.level === 0){     
-            removeDocumentTriggers()         
-            setMainState(null)
-            onSelect(null)
-            hoverChange(null)
         }
     }       
 
@@ -333,7 +335,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
 
     const ProcessogramClick = (event:MS<SVGElement,MouseEvent>) => {
         if(!isLocked){
-            if(mainState === null){
+            if(mainState === null && svgRef.current){
                 let id = svgRef.current.id
                 onSelect(id)
                 setMainState({

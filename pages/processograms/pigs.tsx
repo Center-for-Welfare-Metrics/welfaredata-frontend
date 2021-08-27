@@ -25,7 +25,7 @@ const PigPage = () => {
 
     const fetchInitialData = async () => {
         try {
-            let processogramData = await (await (processogramApi.all())).data        
+            let processogramData = await (await (processogramApi.all('pig'))).data        
             let specieData = await (await (specieApi.getOne('pig'))).data
             setProcessograms(processogramData)
             setSpecie(specieData)

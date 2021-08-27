@@ -25,7 +25,7 @@ const LayingHensPage = () => {
 
     const fetchInitialData = async () => {
         try {
-            let processogramData = await (await (processogramApi.all())).data        
+            let processogramData = await (await (processogramApi.all('chicken'))).data        
             let specieData = await (await (specieApi.getOne('chicken'))).data
             setProcessograms(processogramData)
             setSpecie(specieData)

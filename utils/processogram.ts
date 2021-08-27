@@ -49,6 +49,7 @@ export interface IContentInformation {
     ref_global_population?: string    
     ref_medias?: any[]
     ref_name?: string
+    ref_alternative_name?: string
     ref_name_synonyms?: string[]
     ref_specie?: string
     ref_updatedAt?: Date
@@ -60,8 +61,7 @@ export interface IContentInformation {
     levelName:string
 }
 
-export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collection:any[]) => {
-
+export const getCollectionInformationsByCoolFormat = (stack:ICoolFormat[],collection:any[]) => {    
     const find = (item:ICoolFormat,collection) => {
         if(!item) return null
         
