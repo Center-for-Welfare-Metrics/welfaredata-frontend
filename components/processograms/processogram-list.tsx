@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 import { useEffect } from "react"
 import { ICoolFormat, translateStackToCoolFormat } from "@/utils/processogram"
 import HudTreeControl from "./hud/hud-tree-control"
-import anime from 'animejs'
 
 export interface IProcessogramList {
     specie:ISpecie

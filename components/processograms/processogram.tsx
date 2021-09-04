@@ -2,8 +2,6 @@ import React from 'react'
 import { TweenLite, gsap } from 'gsap'
 gsap.registerPlugin(TweenLite)
 
-import anime from 'animejs';
-
 import { MouseEvent as MS , useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
 import update from 'immutability-helper'
@@ -75,19 +73,116 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     }
 
     useEffect(() => {
-        updateStyleOnResize()
+        updateStyleOnResize()   
+        fixInitialViewBox()     
     },[])
+
+    // useEffect(()=>{        
+    //     if(svgRef.current){
+    //         pluginInitial(true)
+    //     }
+    // },[svgRef.current])
+
+    let intervalout = useRef(null)
+
+    const fixInitialViewBox = () => {
+        intervalout.current = setInterval(()=>{
+            console.log('loop...')
+            if(svgRef.current){
+                console.log('end')
+                clearInterval(intervalout.current)
+                pluginInitial(true)
+            }
+        },500)
+    }
+
+    const pluginInitial = async (first=false) => {
+        return new Promise(async (resolve,reject) => {
+            if(svgRef.current.id === 'multi_tier--ps'){
+                let topFigure = svgRef.current.querySelector('#x33_RD_x5F_TIER--ci-01')
+                let middleFigure = svgRef.current.querySelector('#x32_ND_x5F_TIER--ci-02')            
+                await TweenLite.to(topFigure,{
+                    translateY:'250%',
+                    opacity:0,
+                    display:'none'          
+                })
+                await TweenLite.to(middleFigure,{
+                    translateY:'150%',                
+                    opacity:0,
+                    display:'none'          
+                })
+                resolve(true)
+                if(first){
+                    setTimeout(() => {
+                        let viewBox = getElementViewBox(svgRef.current,false)
+                        TweenLite.to(svgRef.current,{
+                            attr:{
+                                viewBox:viewBox
+                            },                
+                        })
+                    }, 600);                
+                }
+            }
+        })
+        
+    }    
 
     useEffect(()=>{
         if(mainState){   
             setGhost(null)                                       
             updateStack()
-            applyDocumentTriggers()
+            applyDocumentTriggers()            
             if(mainState.viewBox){
                 moveFigure()
-            }                             
+            }                                               
         }                  
     },[mainState])
+
+    const pluginUpdate = async (next_id) => {
+        return new Promise(async (resolve,reject) => {
+            if(svgRef.current.id === 'multi_tier--ps'){
+                let topFigure = svgRef.current.querySelector('#x33_RD_x5F_TIER--ci-01') as any
+                let middleFigure = svgRef.current.querySelector('#x32_ND_x5F_TIER--ci-02') as any
+                if(next_id==='laying--ph'){
+                    if(topFigure.style.display==='none'){
+                        try {                                        
+                            await TweenLite.to(topFigure,{
+                                display:'block',         
+                                translateY:'0',
+                                opacity:1,
+                            })
+                            await TweenLite.to(middleFigure,{
+                                display:'block',
+                                translateY:'0',                
+                                opacity:1,
+                            })
+                            resolve(true)
+                        } catch (error) {
+                            resolve(true)
+                        }       
+                    }else{
+                        resolve(true)
+                    }                              
+                }else{
+                    if(next_id && !next_id.includes('--ci')){
+                        if(topFigure.style.display==='block'){
+                            pluginInitial()
+                            .then(()=>{
+                                resolve(true)
+                            })
+                        }else{
+                            resolve(true)
+                        }
+                    }else{
+                        resolve(true)
+                    }
+                }
+            }else{
+                resolve(true)
+            }
+        })
+        
+    }
 
     useEffect(()=>{
         if(productionSystemSelected){                           
@@ -231,7 +326,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                     clearProps:'opacity,margin',
                 }).duration(0.01)
                 .then(()=>{
-                    listContainerRef.scrollTo(0,topLeft.scrollTop)                    
+                    listContainerRef.scrollTo(0,topLeft.scrollTop)                  
                 })
             })            
         }        
@@ -341,13 +436,16 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                         inner_current = parent.id
                         isInner = true
                     }                
-                    let viewBox = getElementViewBox(parent,isInner)
-                    setMainState({
-                        ...mainState,
-                        level:mainState.level-1,
-                        viewBox,
-                        currentDomID:inner_current          
-                    })            
+                    pluginUpdate(inner_current)
+                    .then(()=>{
+                        let viewBox = getElementViewBox(parent,isInner)
+                        setMainState({
+                            ...mainState,
+                            level:mainState.level-1,
+                            viewBox,
+                            currentDomID:inner_current          
+                        })           
+                    }) 
                 }
             }else if(mainState.level === 0){     
                 removeDocumentTriggers()         
@@ -438,19 +536,27 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     }
 
     const toNextLevel = (element:any) => {  
-        setIsMoving(true)                        
-        let viewBox = getElementViewBox(element,true)
-        setMainState({
-            ...mainState,
-            level:mainState.level+1,
-            viewBox,
-            currentDomID:element.id                     
-        })        
+        setIsMoving(true)       
+        pluginUpdate(element.id)
+        .then(()=>{                 
+            let viewBox = getElementViewBox(element,true)
+            setMainState({
+                ...mainState,
+                level:mainState.level+1,
+                viewBox,
+                currentDomID:element.id                     
+            })
+        })      
     }           
 
     const handleHudChange = (change:ImainStateChange) => {
         setIsMoving(true)
-        setMainState({...mainState,...change})
+        let element = svgRef.current.querySelector(`#${change.currentDomID}`)
+        pluginUpdate(change.currentDomID)
+        .then(()=>{ 
+            let viewBox = getElementViewBox(element,true)
+            setMainState({...mainState,...change,viewBox})
+        })
     }
 
     return (           

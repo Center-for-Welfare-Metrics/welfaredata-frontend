@@ -29,14 +29,14 @@ export const SvgContainer = styled.div`
             text-rendering: optimizeSpeed;
         }
     }
-    ${
+    /* ${
         ({level}) => level === undefined && css`
             >svg{
                 width:auto;
                 max-width:80%;
             }
         `
-    }
+    } */
     
     @media(max-width:800px){
         margin:1rem 0;
