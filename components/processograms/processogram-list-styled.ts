@@ -1,6 +1,5 @@
 import { lighten, transparentize } from 'polished'
 import styled , {css} from 'styled-components'
-const time = '500ms'
 
 const scrollBar = (color,size='.5rem') => css`
     ::-webkit-scrollbar {
@@ -24,7 +23,6 @@ export const OverlapingMaster = styled.div`
     width:100%;
     height:100%;
     z-index:-1;
-    /* background-color:  ${transparentize(0.8,'black')}; */
     background-color:white;
 `
 
@@ -41,19 +39,7 @@ export const Container = styled.div`
     position:relative;
     overflow:auto;           
     height: 100%;
-    width: 100%;            
-    ${({current,hover}) => (current === null) && hover && css`
-        svg[id*='--ps']{            
-            opacity: .5;
-        }
-        svg#${hover}{            
-            opacity: 1;
-        }
-    `}    
-    ${({current}) => current===null && css`                
-        svg[id*='--ps']{
-            transition:opacity 500ms;
-        }        
-    `}
+    width: 100%;       
+    opacity:1;     
     ${scrollBar('gray')}
 `

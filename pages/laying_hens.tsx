@@ -1,57 +1,35 @@
 import ProductionSystemSelector from "@/components/processograms/processogram-list"
 import { Container } from "@/components/layouts/default-processogram-page-styled"
-import { useEffect, useRef, useState } from "react"
-import theme from 'theme/schema.json'
 import processogramApi from '@/api/processogram'
-import { LoaderContainer } from "@/components/miscellaneous/loaders"
-import Loader from "react-loader-spinner"
-import toast from "react-hot-toast"
+import specieApi from '@/api/specie'
+import Head from "next/head"
 
-const PublicChickensPage = () => {
+const PublicHensPage = ({data,specie}) => {    
 
-    const [processograms,setProcessograms] = useState<any>([])
-
-    const containerRef = useRef(null)
-
-    const [firstLoad,setFirstLoad] = useState(false)
-
-    // useEffect(()=>{
-    //     processogramApi.all()
-    //     .then(({data}) => {
-    //         setProcessograms(data)
-    //         setFirstLoad(true)
-    //     })
-    //     .catch((error) => {
-    //         toast.error('Something Wrong. Some elements may not work.')
-    //         setFirstLoad(true)
-    //     })
-    // },[])
-
-    return (                            
-        <Container ref={containerRef}>
-            {/* {
-                firstLoad?
-                (
-                    <ProductionSystemSelector   
-                        specie='chicken'
-                        collection={processograms}
-                    />
-                )
-                :
-                (
-                    <LoaderContainer>
-                        <h1>Working</h1>
-                        <Loader 
-                            color={theme.default.colors.blue}
-                            type='ThreeDots'
-                            height={100}
-                            width={250} 
-                        />
-                    </LoaderContainer>
-                )
-            }               */}
+    return (            
+        <Container>
+            <Head>
+                <title>Welfare Data - Laying Hens</title>
+            </Head>
+            {                
+                <ProductionSystemSelector   
+                    specie={specie}
+                    collection={data}
+                />                
+            }              
         </Container>        
     )
 }
 
-export default PublicChickensPage
+export default PublicHensPage
+
+export async function getStaticProps(context) {
+    let data = await (await processogramApi.all('chicken')).data
+    let specie = await(await specieApi.getOne('chicken')).data
+    return {
+      props: {
+          data,
+          specie
+      }            
+    }
+}

@@ -1,6 +1,9 @@
 import React from 'react'
 import { TweenLite, gsap } from 'gsap'
 gsap.registerPlugin(TweenLite)
+
+import anime from 'animejs';
+
 import { MouseEvent as MS , useEffect, useRef, useState } from 'react';
 import SVG, { Props as SVGProps } from 'react-inlinesvg';
 import update from 'immutability-helper'
@@ -110,6 +113,9 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 router.query.s = null
                 window.history.replaceState(null, '', '/pigs')
             }
+            if(svgRef.current){
+                userInteractionLevelChangeEffects()
+            }
         }        
     },[mainState])
 
@@ -120,8 +126,80 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             timeout.current = setTimeout(() => {
                 setGhost(onHover)
             }, 250);      
-        }
+        }   
+        try {
+            if(mainState && svgRef.current){
+                userInteractionHoverEffects()
+            }
+        } catch (error) {
+            console.log(`user interaction => ${error}`)
+        }        
     },[onHover])
+
+    const userInteractionHoverEffects = async () => {        
+        let query =  mainState.currentDomID?`[id='${mainState.currentDomID}'] [id*='${LEVELS[mainState.level+1]}']`:`[id*='${LEVELS[mainState.level+1]}']`
+        let targets = svgRef.current.querySelectorAll(query)
+        if(onHover){
+            if(targets.length > 0){
+                TweenLite.to(targets,{
+                    filter: 'brightness(0.5)'                    
+                })
+            }
+            let target = svgRef.current.querySelector(`#${onHover}`)
+            if(target){
+                TweenLite.to(target,{
+                    filter: 'brightness(1.1)'                     
+                })         
+            }   
+        }else{
+            if(targets.length > 0){
+                TweenLite.to(targets,{
+                    filter: 'brightness(1)'                      
+                })
+            }
+        }
+    }
+
+    const userInteractionLevelChangeEffects = async () => {        
+        reset()
+        let query =  `[id*='${LEVELS[mainState.level]}']`
+        let targets = svgRef.current.querySelectorAll(query)
+        if(!onHover){
+            if(targets.length > 0){
+                TweenLite.to(targets,{
+                    filter: 'brightness(1)'                      
+                })
+            }
+        }
+        if(mainState.currentDomID){
+            if(targets.length > 0){
+                TweenLite.to(targets,{
+                    filter: 'brightness(0.5)'                    
+                })
+            }
+            let target = svgRef.current.querySelector(`#${mainState.currentDomID}`)
+            if(target){
+                TweenLite.to(target,{
+                    filter: 'brightness(1.1)'                     
+                })         
+            }   
+        }else{
+            if(targets.length > 0){
+                TweenLite.to(targets,{
+                    filter: 'brightness(1)'                      
+                })
+            }
+        }        
+    }
+
+    const reset = async () => {
+        if(svgRef.current){
+            let all = svgRef.current.querySelectorAll(`[id*='--']`)
+            TweenLite.to(all,{
+                filter:'brightness(1)'
+            })
+        }
+    }
 
     const getFromShareLink = (share:string) => {
         console.log(share)
@@ -133,11 +211,11 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
             TweenLite.to(svgRef.current,{
                 display:'block'
             }).delay(.5)
-            .then(() => {                    
+            .then(() => {                
                 TweenLite.to(svgRef.current,{
                     opacity:1,
                     clearProps:'opacity'
-                }).duration(0)
+                }).duration(0.5)
             })
         }else{            
             TweenLite.to(svgRef.current,{
@@ -171,7 +249,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         top-= style.top
         left-= style.left
         let scrollTop = listContainerRef.scrollTop
-        setTopLeft({top,left,scrollTop})
+        setTopLeft({top,left,scrollTop})        
         TweenLite.to(svgRef.current,{
             position:'absolute',
             top,
@@ -186,7 +264,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                 translateX:'-50%',
                 translateY:'-50%',
                 ease:"power1.inOut"
-            }).duration(0.7)
+            }).duration(0.7)           
         })
     }
 

@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from "react"
 import { ICoolFormat, translateStackToCoolFormat } from "@/utils/processogram"
 import HudTreeControl from "./hud/hud-tree-control"
-
+import anime from 'animejs'
 
 export interface IProcessogramList {
     specie:ISpecie
@@ -80,8 +80,26 @@ const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramLis
                     setGhost(null)
                 }
             }, 50);
+            userInteractionEffect()
         }       
+        
     },[onHover,productionSystemSelected])
+
+    const userInteractionEffect = async () => {
+        if(productionSystemSelected===null){   
+            if(onHover){                                    
+                let svgs = document.querySelectorAll(`svg[id*='--ps']:not(#${onHover})`)                                           
+                TweenLite.to(svgs,{
+                    filter: 'brightness(0.5)'                    
+                })
+            }else{
+                let svgs = document.querySelectorAll(`svg[id*='--ps']:not(#${onHover})`)            
+                TweenLite.to(svgs,{
+                    filter: 'brightness(1)'                    
+                })
+            }
+        }
+    }
 
     const loadSharedLink = (s:string) => {
         setTimeout(() => {
@@ -114,7 +132,7 @@ const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramLis
                 NAOPODEUSAR &&
                 <OverlapingMaster onContextMenu={(e)=>e.stopPropagation()} />         
             }
-            <Container ref={containerRef} hover={onHover} current={productionSystemSelected}>                
+            <Container ref={containerRef} current={productionSystemSelected}>                
                 <SubContainer>                
                     {
                         SPECIES[specie._id].map((productionSystem) => (

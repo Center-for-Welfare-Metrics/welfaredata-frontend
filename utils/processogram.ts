@@ -257,6 +257,7 @@ export const getRightTargetID = ({element,level,current}) => {
 
 
 export const getPreviousSiblingFrom = (element:Element) => {
+    
     let previous_sibling = element.nextElementSibling as any
 
     let siblingElementName = normalizeElementNameByGivingID(previous_sibling?.id)
@@ -264,9 +265,18 @@ export const getPreviousSiblingFrom = (element:Element) => {
 
     if(siblingElementName===elementName) return getNextSiblingFrom(previous_sibling)
 
+    if(previous_sibling!==null && !previous_sibling.id.includes('--')){
+        return null
+    }
+
     if(previous_sibling===null){
         if(element.id.includes('--ci')){
-            return element.parentElement.childNodes[0]
+            let el = element.parentElement.childNodes[0] as any
+            if(!el.id.includes('--')){
+                return null
+            }
+
+            return el
         }
     }
 
@@ -274,17 +284,26 @@ export const getPreviousSiblingFrom = (element:Element) => {
 }
 
 export const getNextSiblingFrom = (element:Element) => {
+            
     let next_sibling = element.previousElementSibling as any
+        
 
     let siblingElementName = normalizeElementNameByGivingID(next_sibling?.id)
     let elementName = normalizeElementNameByGivingID(element.id)
+
+    if(next_sibling!==null && !next_sibling.id.includes('--')){
+        return null
+    }
 
     if(siblingElementName===elementName) return getNextSiblingFrom(next_sibling)        
     
     if(next_sibling===null){
         if(element.id.includes('--ci')){
             let child_length = element.parentElement.childNodes.length
-            let el = element.parentElement.childNodes[child_length-1]        
+            let el = element.parentElement.childNodes[child_length-1] as any
+            if(!el.id.includes('--')){
+                return null
+            }
             return el
         }
     }
