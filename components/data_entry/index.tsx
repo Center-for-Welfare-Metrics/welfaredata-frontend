@@ -17,6 +17,7 @@ import { ISpecie } from '@/context/processogram';
 import { getCollectionInformationsByCoolFormat, getInfoToUpdateProcessogram, ICoolFormat } from '@/utils/processogram';
 import DataEntryContext from "@/context/data-entry"
 
+
 interface IProcessogramDataEntry {
     specie:SpeciesTypes
 }
@@ -42,6 +43,7 @@ const ProcessogramDataEntry = ({specie}:IProcessogramDataEntry) => {
         setContent(null)        
         fetchInitial()
     },[specie])    
+
 
     const fetchInitial = async () => {
         try {

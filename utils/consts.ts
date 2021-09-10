@@ -23,6 +23,11 @@ export const PhaseTABS : TabTypes[] = [...CommonTabs]
 
 export const CircumstanceTabs : TabTypes[] = [...CommonTabs]
 
+export const DictAlternativeNames = {
+    pig:'Pigs',
+    chicken:'Egg Production Chickens'
+}
+
 export const TABS = {
     productionSystem:ProductionSystemTABS,
     lifeFate:LifeFateTABS,

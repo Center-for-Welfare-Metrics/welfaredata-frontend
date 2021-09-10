@@ -6,11 +6,13 @@
         "childrens":[
             {
                 "name":"pigs",
-                "href":"/pigs"
+                "href":"/pigs",
+                "reload":true
             },
             {
-                "name":"laying hens",
-                "href":"/laying_hens"
+                "name":"egg production chickens",
+                "href":"/laying_hens",
+                "reload":true
             }
         ]
     },
@@ -23,7 +25,7 @@
                 "href":"/pigs"
             },
             {
-                "name":"laying hens",
+                "name":"egg production chickens",
                 "href":"/laying_hens"
             }
         ]

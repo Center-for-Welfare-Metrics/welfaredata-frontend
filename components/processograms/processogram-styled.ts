@@ -12,16 +12,15 @@ export const SvgContainer = styled.div`
     >svg{        
         height:auto;            
         overflow:visible; 
-        z-index:77;        
-        width:80%;
+        z-index:77;                
         margin-inline:auto;        
         opacity:1;
         display:block;       
         min-height:5rem;
         z-index: 77;
-        max-height:80vh;  
-        /* shape-rendering: optimizeSpeed;
-        text-rendering: optimizeSpeed;       */
+        max-height:80vh;        
+        /* transition:width 500ms;   */
+        width:80%;
     }
     @media (max-width:800px) {
         >svg {
@@ -30,15 +29,24 @@ export const SvgContainer = styled.div`
         }
     }
     /* ${
-        ({level}) => level === undefined && css`
+        ({level}) => level === undefined? css`
             >svg{
-                width:auto;
-                max-width:80%;
-            }
+                width:50%;
+            }            
+        `:
+        css`
+            >svg{
+                width:80%;
+            } 
         `
     } */
     
     @media(max-width:800px){
         margin:1rem 0;
+        /* >svg{
+            width:90%;
+        } */
     }
+
+    
 `

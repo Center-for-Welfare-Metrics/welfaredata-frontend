@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 
 export const Title = styled.div`
     color:${({theme})=> theme.colors.blue };
-    font-size:${({theme}) => theme.fontSize.normal };
+    font-size:${ ({theme}) => theme.fontSize.large };
     display: flex;
     align-items:center;
     svg{
@@ -10,7 +10,7 @@ export const Title = styled.div`
         margin-left:.5rem;
         cursor:pointer;
         path{
-            fill:${({theme})=>theme.colors.blue} !important;
+            fill:${({theme,warning})=>warning?theme.colors.yellow:theme.colors.blue} !important;
         }
     }  
 `

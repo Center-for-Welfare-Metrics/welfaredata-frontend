@@ -1,6 +1,6 @@
-import { transparentize } from 'polished';
-import styled from 'styled-components'
 
+import styled ,{css} from 'styled-components'
+import SVG from 'react-inlinesvg'
 import Loader from "react-loader-spinner";
 import { lighten } from 'polished';
 
@@ -27,8 +27,16 @@ export const Tab = styled.div`
 `
 
 
+
+export const Warning = styled(SVG)`
+    path{
+        ${({warning,theme}) => warning && css`
+            fill:${theme.colors.yellow} !important;
+        `}
+    }
+`
+
 export const Tabs = styled.div`
-    /* width:30%; */
     margin-left:.5rem;
     margin-top:2rem;
 `

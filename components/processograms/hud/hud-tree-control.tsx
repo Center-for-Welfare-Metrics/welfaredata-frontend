@@ -1,17 +1,20 @@
-import ProcessogramContext from '@/context/processogram'
-import { getCollectionInformationsByCoolFormat, ICoolFormat } from '@/utils/processogram'
+import ProcessogramContext, { ImainStateChange } from '@/context/processogram'
+import { getCollectionInformationsByCoolFormat, ICoolFormat, translateStackToCoolFormat } from '@/utils/processogram'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { Container,TreeItem } from './hud-tree-control-styled'
 import voca from 'voca'
+import { DictAlternativeNames } from '@/utils/consts'
+import { getElementViewBox } from '../processogram-helpers'
 interface IHudTreeControl {
     stackCoolFormat:ICoolFormat[]
+    onChange(change:ImainStateChange):void
 }
 
-const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {    
+const HudTreeControl = ({stackCoolFormat,onChange}:IHudTreeControl) => {    
 
-    const {specie,collection} = useContext(ProcessogramContext)
+    const {specie,collection,stack} = useContext(ProcessogramContext)
 
     const [localStack,setLocakStack] = useState<ICoolFormat[]>([])
 
@@ -22,15 +25,12 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
         left:0
     })
 
-    const dict_gambiarra = {
-        pig:'Pigs',
-        chicken:'Laying Hens'
-    }
-
     useEffect(()=>{
+        // let {content} = getCollectionInformationsByCoolFormat(translateStackToCoolFormat(stack),collection)
+        // console.log(content)
         setLocakStack([{
             domID:null,
-            elementName:dict_gambiarra[specie._id],
+            elementName:DictAlternativeNames[specie._id],
             level:-1,
             levelName:'Species'
         },...stackCoolFormat])
@@ -54,21 +54,37 @@ const HudTreeControl = ({stackCoolFormat}:IHudTreeControl) => {
 
     const onTreeItemClick = ({domID,level}) => (event:Event) => {
         event.stopPropagation()
-        // if(element.id!==domID && domID){            
-        //     let svg = document.getElementById(stackCoolFormat[0].domID)
+        let current = stack[stack.length-1]        
+        if(current!==domID && domID){            
+            let svg = document.getElementById(stackCoolFormat[0].domID)
             
-        //     let element_to_focus = level>0?svg.querySelector(`#${domID}`):svg
+            let element_to_focus = level>0?svg.querySelector(`#${domID}`):svg
 
-        //     let currentDomID = level>0?domID:null
+            let currentDomID = level>0?domID:null
 
-        //     let viewBox = getElementViewBox(element_to_focus)
+            let viewBox = getElementViewBox(element_to_focus)
             
-        //     onChange({
-        //         viewBox,
-        //         currentDomID,
-        //         level                
-        //     })
-        // }     
+            onChange({
+                viewBox,
+                currentDomID,
+                level                
+            })
+        }else if(domID === null){
+            if(stack.length>1){
+                let svg = document.getElementById(stackCoolFormat[0].domID)
+                let viewBox = getElementViewBox(svg)
+                onChange({
+                    viewBox,
+                    currentDomID:null,
+                    level:0                
+                })
+                setTimeout(() => {
+                    onChange(null)    
+                }, 600);           
+            }else{
+                onChange(null)
+            }
+        }
     }
 
     const getRealName = (elementName,localStack,index) => {

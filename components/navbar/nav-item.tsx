@@ -30,8 +30,11 @@ const NavItem = ({children,name,prefix}:INavItem) => {
             <Childrens>
                 {
                     children.sort(sort_children).map((item_children) => (
+                        item_children.reload?                        
+                        <Children href={prefix+item_children.href} active={Router.pathname.includes(prefix+item_children.href)}>{item_children.name}</Children>
+                        :
                         <Link passHref={true} key={item_children.href} href={prefix+item_children.href}>
-                            <Children active={Router.pathname.includes(prefix+item_children.href)} >{item_children.name}</Children>
+                            <Children active={Router.pathname.includes(prefix+item_children.href)}>{item_children.name}</Children>
                         </Link>
                     ))
                 }

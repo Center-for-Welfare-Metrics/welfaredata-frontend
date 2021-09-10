@@ -25,9 +25,7 @@ const getElementPercentageSizeRelativeToSvgParent = (element) => {
     let element_area = elementViewBox.width * elementViewBox.height    
     
 
-    let percentage_size : number = (element_area*100)/svg_area
-
-    // console.log(percentage_size)
+    let percentage_size : number = (element_area*100)/svg_area    
 
     return percentage_size    
 }

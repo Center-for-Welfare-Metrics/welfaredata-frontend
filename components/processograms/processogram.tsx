@@ -8,12 +8,13 @@ import update from 'immutability-helper'
 
 import { ProductionSystemTypes, SpeciesTypes } from '@/utils/enum_types';
 import ProcessogramContext, { ImainState, ImainStateChange } from '@/context/processogram'
-import { getElementSizeInformations, getRightTargetID } from '@/utils/processogram'
+import { getElementSizeInformations, getRightTargetID, translateStackToCoolFormat } from '@/utils/processogram'
 import { SvgContainer} from './processogram-styled'
 import ProcessogramHud from './hud/hud';
 import { getElementViewBox } from './processogram-helpers';
 import { useRouter } from 'next/router'
 import { useContext } from 'react';
+import HudTreeControl from './hud/hud-tree-control';
 
 interface IProcessogram {
     productionSystem:ProductionSystemTypes
@@ -23,6 +24,7 @@ interface IProcessogram {
     productionSystemSelected:string
     listContainerRef:any
     setGhost(ghost):void
+    ghost:any
 }
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
@@ -31,7 +33,7 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 const LEVELS = ['--ps','--lf','--ph','--ci']
 
-const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef,setGhost}:IProcessogram) => {
+const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSystemSelected,listContainerRef,setGhost,ghost}:IProcessogram) => {
 
     const {stack,setStack,isLocked} = useContext(ProcessogramContext)
 
@@ -76,12 +78,6 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         updateStyleOnResize()   
         fixInitialViewBox()     
     },[])
-
-    // useEffect(()=>{        
-    //     if(svgRef.current){
-    //         pluginInitial(true)
-    //     }
-    // },[svgRef.current])
 
     let intervalout = useRef(null)
 
@@ -128,7 +124,7 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
     }    
 
     useEffect(()=>{
-        if(mainState){   
+        if(mainState){               
             setGhost(null)                                       
             updateStack()
             applyDocumentTriggers()            
@@ -528,6 +524,12 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         }    
     }
 
+    const FirstProcessogramClick = (event:any) => {
+        if(!isLocked){ 
+            console.log(event)
+        }
+    }
+
     const InnerClick = () => {
         let element = svgRef.current.querySelector(`#${onHover}`)
         if(element){
@@ -549,14 +551,25 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
         })      
     }           
 
-    const handleHudChange = (change:ImainStateChange) => {
-        setIsMoving(true)
-        let element = svgRef.current.querySelector(`#${change.currentDomID}`)
-        pluginUpdate(change.currentDomID)
-        .then(()=>{ 
-            let viewBox = getElementViewBox(element,true)
-            setMainState({...mainState,...change,viewBox})
-        })
+    const handleHudChange = (change:ImainStateChange) => { 
+        if(change){          
+            let element        
+            if(change.currentDomID === null){
+                element = svgRef.current
+            }else{
+                element = svgRef.current.querySelector(`#${change.currentDomID}`)
+            }        
+            pluginUpdate(change.currentDomID)
+            .then(()=>{ 
+                let viewBox = getElementViewBox(element,true)
+                setMainState({...mainState,...change,viewBox})
+            })
+        }else{
+            removeDocumentTriggers()         
+            setMainState(null)
+            onSelect(null)
+            hoverChange(null)
+        }
     }
 
     return (           
@@ -573,19 +586,36 @@ const Processogram = ({productionSystem,specie,hoverChange,onSelect,productionSy
                     onClick={ProcessogramClick}                    
                     onMouseLeave={mouseLeave}
                     onMouseMove={mouseMove}      
-                    src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
+                    src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}
+                    onLoad={console.log}                                 
                 />
+                {/* {
+                    mainState!==null?
+                    <ProcessogramSVG                
+                        ref={svgRef}
+                        onClick={ProcessogramClick}                    
+                        onMouseLeave={mouseLeave}
+                        onMouseMove={mouseMove}      
+                        src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}                                      
+                    />
+                    :
+                    <img onClick={FirstProcessogramClick} src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`} />
+                }                 */}
                 { 
                     mainState &&                            
                     <ProcessogramHud 
-                        element={getCurrentDomElement()}
-                        onChange={handleHudChange}
+                        element={getCurrentDomElement()}                        
                         level={mainState.level}
                         stack={stack}
                         isMoving={isMoving}                        
                         onHover={onHover}
+                        onChange={handleHudChange}
                     />                
-                }                                     
+                }      
+                {mainState && <HudTreeControl 
+                    stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}
+                    onChange={handleHudChange}
+                /> }                             
             </SvgContainer>              
         </>                  
     )

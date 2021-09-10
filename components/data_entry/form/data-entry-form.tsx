@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import { Container,Body,Tabs, Tab,CustomLoader, FetchingDiv,FetchingTitle } from './data-entry-form-styled'
+import { Container,Body,Tabs, Tab,CustomLoader, FetchingDiv,FetchingTitle,Warning } from './data-entry-form-styled'
 import BasicTab from '@/components/data_entry/form/tabs/basic'
 import MediaTab from '@/components/data_entry/form/tabs/media/media'
-import { CommonTabs } from "@/utils/consts"
+import { CommonTabs, DictAlternativeNames } from "@/utils/consts"
 import voca from 'voca'
 import DataEntryContext from "@/context/data-entry"
 import { Title } from "@/components/data_entry/form/tabs/tab-commons-styled"
@@ -32,13 +32,14 @@ const DataEntryForm = () => {
                     
                     <>
                         <div style={{display:!onFetch?'block':'none'}}>
-                            <Title>
-                                {voca.titleCase(contentInformation?.levelName || 'species')} : {voca.titleCase((contentInformation?.ref_alternative_name || contentInformation?.ref_name) || specie._id)}
+                            <Title warning={contentInformation?.ref_alternative_name?true:false}>
+                                {voca.titleCase(contentInformation?.levelName || 'species')} : {voca.titleCase((contentInformation?.ref_alternative_name || contentInformation?.ref_name) || DictAlternativeNames[specie._id])}
                                 {
                                     contentInformation && contentInformation.levelName !== 'production system' &&
                                     <SVG 
                                         src={SvgPath({folder:'minimal-icons',file_name:'settings'})}
                                         onClick={()=>setSettingsOpen(true)}
+                                        
                                     />
                                 }
                             </Title>

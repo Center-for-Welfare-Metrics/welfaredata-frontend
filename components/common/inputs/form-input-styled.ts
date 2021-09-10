@@ -23,7 +23,8 @@ export const Label = styled.label`
     position:absolute;
     white-space: nowrap;
     ${({theme }) => css`
-        top:1rem;        
+        bottom:0;
+        transform:translateY(-50%);
         z-index:auto;
         font-size:${theme.fontSize.small};
         color:${({theme})=>theme.colors.blue};

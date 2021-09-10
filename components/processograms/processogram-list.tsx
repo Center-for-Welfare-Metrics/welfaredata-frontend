@@ -41,6 +41,8 @@ const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramLis
 
     const [shareString,setShareString] = useState('')
 
+    const [totalLoaded,setTotalLoaded] = useState(0)
+
     const router = useRouter()
     
     useEffect(()=>{
@@ -144,6 +146,7 @@ const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramLis
                                 productionSystemSelected={productionSystemSelected}
                                 listContainerRef={containerRef.current}
                                 setGhost={setGhost}
+                                ghost={ghost}
                             />
                         ))
                     }
@@ -153,9 +156,10 @@ const ProcessogramList = ({specie,collection,onChange,isLocked}:IProcessogramLis
                     stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}
                     specie={specie}
                 />
-                <HudTreeControl 
-                    stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}                    
-                />                                                                  
+                {productionSystemSelected === null && <HudTreeControl 
+                    stackCoolFormat={translateStackToCoolFormat([...stack,ghost])}
+                    onChange={()=>{}}
+                /> }                                                                 
             </Container>
             {
                 mediasViewer.medias.length >0 &&
