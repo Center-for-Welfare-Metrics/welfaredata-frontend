@@ -1,5 +1,5 @@
 import NavBar from '../navbar'
-import {Container} from './deafult-styled'
+import {Container,Content} from './deafult-styled'
 
 interface IDefaultLayout{
     children:React.ReactNode
@@ -8,7 +8,9 @@ interface IDefaultLayout{
 const DefaultLayout = ({children}:IDefaultLayout) => (
     <Container>
         <NavBar />
-        {children}
+        <Content>
+            {children}
+        </Content>
     </Container>
 )
 

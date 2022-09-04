@@ -1,30 +1,52 @@
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 
-import SVG from 'react-inlinesvg'
-
-export const Container = styled.div`
-    margin-bottom:5rem;
-    width:60rem;
-    transition:width 500ms;
-`
-
-export const Svg = styled(SVG)`
-    ${({level,g_id})=>(
-        level==='-last-' && `
-            [id*=--ci]{
-                opacity:.5;                
-            }
-            [id=${g_id}]{
-                opacity:1;
-            }
-        `
-    )}
-    [id*=${({level})=>level}]{
-        opacity:.5;
-        :hover{
-            opacity:1;
-        }
-        transition:opacity 500ms;
+export const SvgContainer = styled.div`       
+    width:100%;
+    margin:2.5rem 0;
+    :first-child{
+        margin-top:5rem;        
     }
-    transition:opacity 500ms;
+    :last-child{
+        margin-bottom:5rem;        
+    }
+    >svg{        
+        height:auto;            
+        overflow:visible; 
+        z-index:77;                
+        margin-inline:auto;        
+        opacity:1;
+        display:block;       
+        min-height:5rem;
+        z-index: 77;
+        max-height:80vh;        
+        /* transition:width 500ms;   */
+        width:80%;
+    }
+    @media (max-width:800px) {
+        >svg {
+            shape-rendering: optimizeSpeed;
+            text-rendering: optimizeSpeed;
+        }
+    }
+    /* ${
+        ({level}) => level === undefined? css`
+            >svg{
+                width:50%;
+            }            
+        `:
+        css`
+            >svg{
+                width:80%;
+            } 
+        `
+    } */
+    
+    @media(max-width:800px){
+        margin:1rem 0;
+        /* >svg{
+            width:90%;
+        } */
+    }
+
+    
 `

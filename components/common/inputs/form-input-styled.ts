@@ -1,59 +1,38 @@
-import styled from 'styled-components'
-
+import { lighten, transparentize } from 'polished'
+import styled,{css} from 'styled-components'
 
 export const Container = styled.div`
-    padding:2rem;
+    padding:2rem 0 2rem 0;
     position: relative;
     display:flex;
     flex-direction: column;
+    box-sizing:border-box;
+    width:100%;
 `
 
 export const Icon = styled.i`
     position:absolute;
     top:2.5rem;
     left:2rem;
-    color:${({theme})=>theme.colors.local_yellow};
+    color:${({theme})=>theme.colors.yellow};
     font-size:${({theme})=>theme.fontSize.large};
 `
 
 export const Label = styled.label`
-    color:${({theme})=>theme.colors.local_white};
+    color:${({theme})=>transparentize(0.5,theme.colors.blue)};
     position:absolute;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
-    transition: all 500ms;
-    z-index:-1;
     white-space: nowrap;
-    ${({ focus }) => focus && `
-        top:1rem;
-        left:2rem;
-        transform: translate(0,0);
-        transition: all 500ms;
+    ${({theme }) => css`
+        bottom:0;
+        transform:translateY(-50%);
         z-index:auto;
+        font-size:${theme.fontSize.small};
+        color:${({theme})=>theme.colors.blue};
     `}
 `
-
-export const Input = styled.input`
-    height: 2rem;
-    width:15rem;
-    border:none;
-    background-color: transparent;
-    color:${({theme})=>theme.colors.local_white};
-    border-bottom:1px solid ${({theme})=>theme.colors.local_white};
-    outline: none;
-    text-indent: 1.6rem;
-    :-webkit-autofill {
-        box-shadow: 0 0 0 30px ${({theme})=>theme.colors.local_blue} inset;
-    }
-    :-webkit-autofill {
-        -webkit-text-fill-color: ${({theme})=>theme.colors.local_white} !important;
-    }
-`
-
 export const Error = styled.span`
     font-size:${({theme})=>theme.fontSize.small};
-    color:${({theme})=>theme.colors.local_red};
+    color:${({theme})=>theme.colors.red};
     white-space: pre-wrap;
     text-align: center;
     font-weight:bold;

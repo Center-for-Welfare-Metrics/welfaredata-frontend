@@ -1,50 +1,68 @@
-import { useState,FC,InputHTMLAttributes } from 'react'
+import { useState,FC,InputHTMLAttributes, useEffect, TextareaHTMLAttributes } from 'react'
 
-import {Container,Label,Icon,Error,Input} from './form-input-styled'
+import {Container,Label,Icon,Error} from './form-input-styled'
+import { LabeledInput, LabeledTextArea } from './inputs'
+import React from 'react'
 
-
-interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
+export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
     name:string,
     type?:string,
-    error:string[],
+    error?:string,
     label:string,
-    icon:string
+    icon?:string,
+    value:any,
+    multiline?:boolean
+    disabled?:boolean
+    defaultValue?:any
+    customStyle?:any
+    minRows?:number
+    maxRows?:number
 }
 
-const FormInput : FC<IFormInput> = (
+const FormInput : FC<IFormInput> | FC<TextareaHTMLAttributes<HTMLTextAreaElement>> = (
     {
         name,
+        multiline=false,
         type='text',
         error,
         label,
         icon,
+        value,
+        disabled=false,
+        defaultValue=null,
+        customStyle,        
         ...rest
     }
 ) => {
 
-    const [onFocus,setFocus] = useState(false)
-
-    const moveLabel = () => {
-        let {value} = rest
-        if(!onFocus){
-            setFocus(true)
-        }else if(value===''){
-            setFocus(false)
-        }
-    }
-
     return (
-        <Container>
-            <Label focus={onFocus} htmlFor={name}>{label}</Label>
-            <Icon aria-hidden className={`fas ${icon}`} />
-            <Input 
-                id={name}
-                name={name}
-                type={type}
-                onFocus={moveLabel}
-                onBlur={moveLabel}
-                {...rest}
-            />
+        <Container style={customStyle}>
+            <Label htmlFor={name}>{label}</Label>
+            {
+                multiline?
+                (
+                    <LabeledTextArea 
+                        id={name}
+                        name={name}
+                        type={type}
+                        value={value}
+                        disabled={disabled}                        
+                        {...rest}
+                    />
+                )
+                :
+                (
+                    <LabeledInput 
+                        id={name}
+                        name={name}
+                        type={type}
+                        value={value}
+                        disabled={disabled}
+                        {...rest}                        
+                    />
+                )
+            }
+            
             {error && <Error>
                 {error}
             </Error>}
@@ -52,4 +70,4 @@ const FormInput : FC<IFormInput> = (
     )
 }
 
-export default FormInput
+export default React.memo(FormInput)

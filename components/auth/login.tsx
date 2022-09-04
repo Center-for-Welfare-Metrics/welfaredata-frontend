@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import SubmitButton from '@/components/common/buttons/submit-button'
+import { SuccessButton } from '@/components/common/buttons/default-button-styled'
 import FormInput from '@/components/common/inputs/form-input'
 import {Container,Form,LinkTo} from './auth-styled'
 
@@ -10,7 +10,8 @@ const Login = (
         password,
         setPassword,
         login,
-        error
+        error,
+        onFetch=false
     }
 ) => {
     return (
@@ -33,10 +34,10 @@ const Login = (
                     type='password'
                     icon='fa-key'
                 />
-                <SubmitButton type='submit'>Login</SubmitButton>
+                <SuccessButton disabled={onFetch} load={onFetch} type='submit'>Login</SuccessButton>
             </Form>
             <LinkTo>
-                Don't have an account? <Link href='/register'>Register now!</Link>
+                Don't have an account?<a>Register now!</a>
             </LinkTo>
         </Container>
     )

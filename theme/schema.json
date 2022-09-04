@@ -1,30 +1,32 @@
 {
     "default":{
         "colors":{
-            "local_blue":"#38618c",
-            "local_yellow":"#FFE74C",
-            "local_white":"#FFFFFF",
-            "local_pink":"#730e28",
-            "local_red":"#9C3848",
-            "local_green":"#4DA167",
-            "local_black":"#000000"
+            "blue":"#38618c",
+            "deep_blue":"#0c1a27",
+            "yellow":"#FFE74C",
+            "white":"#FFFFFF",
+            "pink":"#730e28",
+            "red":"#9C3848",
+            "green":"#4DA167",
+            "black":"#000000",
+            "gray":"#919191"
         },
         "fontSize":{
-            "very_small":".5rem",
+            "verySmall":".5rem",
             "small":".8rem",
             "normal":"1rem",
+            "normal1":"1.2rem",
             "large":"1.5rem",
-            "extraLarge":"2rem"
+            "extraLarge":"2rem",
+            "extraVeryLarge":"2.5rem"
         },
         "fontFamily":{
 
         },
-        "spacing":{
-            "very_small":".5rem",
-            "small":".8rem",
-            "normal":"1rem",
-            "large":"1.5rem",
-            "extraLarge":"2rem"
+        "borderSize":{
+            "very_small":"1px",
+            "medium":"3px",
+            "large":"5px"
         }
     },
     "light":{
@@ -33,6 +35,4 @@
         }
     }
 }
-
-
 

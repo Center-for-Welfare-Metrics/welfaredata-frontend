@@ -2,36 +2,17 @@
     {
         "name":"data entry",
         "prefix":"/data_entry",
+        "auth":true,
         "childrens":[
             {
-                "name":"simple cohort",
-                "href":"/simple_cohort"
+                "name":"pigs",
+                "href":"/pigs",
+                "reload":true
             },
             {
-                "name":"multiple cohort",
-                "href":"/multiple_cohort"
-            },
-            {
-                "name":"no- or meta-cohort",
-                "href":"/meta-cohort"
-            },
-            {
-                "name":"sources",
-                "href":"/sources"
-            }
-        ]
-    },
-    {
-        "name":"processing",
-        "prefix":"/processing",
-        "childrens":[
-            {
-                "name":"repors",
-                "href":"/reports"
-            },
-            {
-                "name":"extraction",
-                "href":"/extraction"
+                "name":"egg production chickens",
+                "href":"/laying_hens",
+                "reload":true
             }
         ]
     },
@@ -40,11 +21,11 @@
         "prefix":"/processograms",
         "childrens":[
             {
-                "name":"pig",
-                "href":"/pig"
+                "name":"pigs",
+                "href":"/pigs"
             },
             {
-                "name":"laying hens",
+                "name":"egg production chickens",
                 "href":"/laying_hens"
             }
         ]
@@ -52,14 +33,11 @@
     {
         "name":"admin",
         "prefix":"/admin",
+        "auth":true,
         "childrens":[
             {
-                "name":"users",
-                "href":"/users"
-            },
-            {
-                "name":"privileges",
-                "href":"/privileges"
+                "name":"users and privileges",
+                "href":"/users_and_privileges"
             }
         ]
     }

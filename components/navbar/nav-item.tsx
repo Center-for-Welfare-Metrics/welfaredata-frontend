@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {Container,Name,Childrens, Children} from './nav-item-styled'
 import Router from 'next/router'
+import React from 'react'
 
 interface INavItem {
     children:any[]
@@ -25,12 +26,15 @@ const NavItem = ({children,name,prefix}:INavItem) => {
 
     return (
         <Container>
-            <Name active={Router.pathname.includes(prefix)}>{name}</Name>
+            <Name active={Router.pathname.startsWith(Router.basePath + prefix)}>{name}</Name>
             <Childrens>
                 {
                     children.sort(sort_children).map((item_children) => (
+                        item_children.reload?                        
+                        <Children href={prefix+item_children.href} active={Router.pathname.includes(prefix+item_children.href)}>{item_children.name}</Children>
+                        :
                         <Link passHref={true} key={item_children.href} href={prefix+item_children.href}>
-                            <Children active={Router.pathname.includes(prefix+item_children.href)} >{item_children.name}</Children>
+                            <Children active={Router.pathname.includes(prefix+item_children.href)}>{item_children.name}</Children>
                         </Link>
                     ))
                 }
@@ -40,4 +44,4 @@ const NavItem = ({children,name,prefix}:INavItem) => {
 }
 
 
-export default NavItem
+export default React.memo(NavItem)
