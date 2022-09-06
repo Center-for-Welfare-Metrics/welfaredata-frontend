@@ -1,111 +1,143 @@
-import { useEffect, useState } from 'react'
-import Head from 'next/head'
-import { ThemeProvider } from "styled-components"
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import { ThemeProvider } from "styled-components";
 
-import { useTheme } from '../theme/useTheme'
-import { GlobalStyles } from '../theme/globalStyle'
-import UserContext, { IUser, IUserContext } from '@/context/user'
-import ContextMenuContext, { IContextMenu } from '@/context/context-menu'
-import authApi from '@/api/auth'
-import ContextMenu from '@/components/context-menu/context-menu'
-import { Toaster } from 'react-hot-toast';
-import 'react-image-gallery/styles/css/image-gallery.css'
+import { useTheme } from "../theme/useTheme";
+import { GlobalStyles } from "../theme/globalStyle";
+import UserContext, { IUser, IUserContext } from "@/context/user";
+import ContextMenuContext, { IContextMenu } from "@/context/context-menu";
+import authApi from "queries/auth";
+import ContextMenu from "@/components/context-menu/context-menu";
+import { Toaster } from "react-hot-toast";
+import "react-image-gallery/styles/css/image-gallery.css";
 
 function MyApp({ Component, pageProps }) {
+  const [user, setUser] = useState<IUser>(null);
+  const [firstLoad, setFirstLoad] = useState(false);
 
-  const [user, setUser] = useState<IUser>(null)
-  const [firstLoad, setFirstLoad] = useState(false)
+  const { theme, themeLoaded } = useTheme();
+  const [selectedTheme, setSelectedTheme] = useState(theme);
 
-  const { theme, themeLoaded } = useTheme()
-  const [selectedTheme, setSelectedTheme] = useState(theme)
+  const [contextMenu, setContextMenu] = useState<IContextMenu>({
+    open: false,
+    x: 0,
+    y: 0,
+    type: "none",
+    position: "mouse-oriented",
+  });
 
-  const [contextMenu, setContextMenu] = useState<IContextMenu>({ open: false, x: 0, y: 0, type: 'none',position:'mouse-oriented'})
+  const [loading, setLoading] = useState(false);
 
-  const [loading,setLoading] = useState(false)
+  const [temporary, setTemporary] = useState<any>(null);
 
-  const [temporary,setTemporary] = useState<any>(null)
-
-  const contextMenuValues = { contextMenu, setContextMenu,loading,setLoading,temporary,setTemporary}
+  const contextMenuValues = {
+    contextMenu,
+    setContextMenu,
+    loading,
+    setLoading,
+    temporary,
+    setTemporary,
+  };
 
   useEffect(() => {
     setSelectedTheme(theme);
-  }, [themeLoaded])
+  }, [themeLoaded]);
 
   const logOut = () => {
     authApi.logout().then(() => {
-      setUser(null)
-    })
-  }
+      setUser(null);
+    });
+  };
 
-  const userValue: IUserContext = { user, setUser, logOut }
+  const userValue: IUserContext = { user, setUser, logOut };
 
-  const handleCustomContextMenu = (event: MouseEvent) => {    
-    event.preventDefault()
-    let match = window.matchMedia('(hover)').matches  
-    if(match){    
-      let { clientX, clientY } = event
+  const handleCustomContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
+    let match = window.matchMedia("(hover)").matches;
+    if (match) {
+      let { clientX, clientY } = event;
       setContextMenu({
         open: true,
         x: clientX,
         y: clientY + window.scrollY,
-        type: 'none',
-        position:'mouse-oriented'
-      })
+        type: "none",
+        position: "mouse-oriented",
+      });
     }
-  }
+  };
 
   const closeCustomContextMenu = (event: MouseEvent) => {
-    event.stopPropagation()
+    event.stopPropagation();
     setContextMenu({
       open: false,
-      type: 'none',
-      position:'mouse-oriented'
-    })
-  }
+      type: "none",
+      position: "mouse-oriented",
+    });
+  };
 
   useEffect(() => {
-    document.oncontextmenu = handleCustomContextMenu
+    document.oncontextmenu = handleCustomContextMenu;
     if (!user) {
-      authApi.get_user()
+      authApi
+        .get_user()
         .then(({ data }) => {
-          setUser(data)
+          setUser(data);
         })
         .catch(() => {
-          setFirstLoad(true)
-        })
+          setFirstLoad(true);
+        });
     } else {
-      setFirstLoad(true)
+      setFirstLoad(true);
     }
     return () => {
-      document.oncontextmenu = null
-    }
-  }, [])
+      document.oncontextmenu = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
-      setFirstLoad(true)
+      setFirstLoad(true);
     }
-  }, [user])
+  }, [user]);
 
-  return (firstLoad && themeLoaded) &&
-    <ThemeProvider theme={selectedTheme}>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://kit.fontawesome.com/07fc634891.js" crossOrigin="anonymous"></script>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap" rel="stylesheet" />
-      </Head>
-      
-        <GlobalStyles/>
+  return (
+    firstLoad &&
+    themeLoaded && (
+      <ThemeProvider theme={selectedTheme}>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <script
+            src="https://kit.fontawesome.com/07fc634891.js"
+            crossOrigin="anonymous"
+          ></script>
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap"
+            rel="stylesheet"
+          />
+        </Head>
+
+        <GlobalStyles />
         <UserContext.Provider value={userValue}>
-          <Toaster position='top-right' reverseOrder={false} toastOptions={{ duration: 5000 }}  />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{ duration: 5000 }}
+          />
           <ContextMenuContext.Provider value={contextMenuValues}>
             <Component {...pageProps} />
-            <ContextMenu isOpen={contextMenu.open} onClose={closeCustomContextMenu} />
-          </ContextMenuContext.Provider>          
-        </UserContext.Provider>          
-    </ThemeProvider>
-
+            <ContextMenu
+              isOpen={contextMenu.open}
+              onClose={closeCustomContextMenu}
+            />
+          </ContextMenuContext.Provider>
+        </UserContext.Provider>
+      </ThemeProvider>
+    )
+  );
 }
 
-export default MyApp
+export default MyApp;
