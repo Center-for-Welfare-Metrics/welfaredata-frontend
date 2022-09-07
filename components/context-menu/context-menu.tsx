@@ -35,21 +35,6 @@ const ContextMenu = ({ onClose, isOpen }: IContextMenuComponent) => {
   useEffect(() => {
     if (contextMenu.open) {
       openContextMenu();
-      if (!contextMenu.document) {
-        if (contextMenu.type === "processogram") {
-          // let {field,name} = needSetInformations(contextMenu.svg?.id)
-          // setLoading(true)
-          // processogramApi.getOneReference(field,{
-          //     name:name,
-          //     specie:contextMenu.specie
-          // }).then(({data}) => {
-          //     setLoading(false)
-          //     setTemporary(data)
-          // }).catch(()=>{
-          //     setLoading(false)
-          // })
-        }
-      }
     }
   }, [contextMenu]);
 

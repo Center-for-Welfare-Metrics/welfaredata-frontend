@@ -52,7 +52,7 @@ export interface IContentInformation {
   ref_createdAt?: Date;
   ref_description?: string;
   ref_global_population?: string;
-  ref_medias?: any[];
+  ref_medias?: IMedia[];
   ref_name?: string;
   ref_alternative_name?: string;
   ref_name_synonyms?: string[];

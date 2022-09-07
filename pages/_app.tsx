@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "styled-components";
-
+import { RecoilRoot } from "recoil";
 import { useTheme } from "../theme/useTheme";
 import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
@@ -52,17 +52,17 @@ function MyApp({ Component, pageProps }) {
   const userValue: IUserContext = { user, setUser, logOut };
 
   const handleCustomContextMenu = (event: MouseEvent) => {
-    event.preventDefault();
+    // event.preventDefault();
     let match = window.matchMedia("(hover)").matches;
     if (match) {
       let { clientX, clientY } = event;
-      setContextMenu({
-        open: true,
-        x: clientX,
-        y: clientY + window.scrollY,
-        type: "none",
-        position: "mouse-oriented",
-      });
+      // setContextMenu({
+      //   open: true,
+      //   x: clientX,
+      //   y: clientY + window.scrollY,
+      //   type: "none",
+      //   position: "mouse-oriented",
+      // });
     }
   };
 
@@ -128,7 +128,9 @@ function MyApp({ Component, pageProps }) {
             toastOptions={{ duration: 5000 }}
           />
           <ContextMenuContext.Provider value={contextMenuValues}>
-            <Component {...pageProps} />
+            <RecoilRoot>
+              <Component {...pageProps} />
+            </RecoilRoot>
             <ContextMenu
               isOpen={contextMenu.open}
               onClose={closeCustomContextMenu}

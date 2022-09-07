@@ -1,12 +1,15 @@
 import FormInput from "@/components/common/inputs/form-input";
 import DataEntryContext from "@/context/data-entry";
-import { useRef, useEffect, useState, useContext } from "react";
+import { useRef, useEffect, useContext, useMemo } from "react";
 import voca from "voca";
 import processogramApi from "queries/processogram";
 import toast from "react-hot-toast";
-import lodash from "lodash";
-import update from "immutability-helper";
 import specieApi from "queries/specie";
+import { useRecoilState } from "recoil";
+import {
+  recoilGlobalDescription,
+  recoilLocalDescription,
+} from "recoil/processogram";
 
 let keys = {
   lifeFate: "lifefates",
@@ -18,18 +21,56 @@ const BasicTab = () => {
   const {
     contentInformation,
     specie,
-    setProcessograms,
     pathAsObject,
-    processograms,
-    setSpecie,
+    setProcessograms,
+    updateContent,
     setOnFetch,
     onFetch,
-    updateContent,
   } = useContext(DataEntryContext);
 
-  const [global, setGlobal] = useState("");
+  const globaUniqueId = useMemo(() => {
+    if (contentInformation) {
+      return (
+        voca.camelCase(contentInformation?.levelName) +
+        contentInformation?.ref__id
+      );
+    } else {
+      return specie._id;
+    }
+  }, [contentInformation]);
 
-  const [specific, setSpecific] = useState("");
+  const localUniqueId = useMemo(() => {
+    if (contentInformation) {
+      return (
+        voca.camelCase(contentInformation?.levelName) + contentInformation?._id
+      );
+    } else {
+      return specie._id;
+    }
+  }, [contentInformation]);
+
+  const [global, setGlobal] = useRecoilState(
+    recoilGlobalDescription(globaUniqueId)
+  );
+
+  const [specific, setSpecific] = useRecoilState(
+    recoilLocalDescription(localUniqueId)
+  );
+
+  useEffect(() => {
+    if (contentInformation) {
+      if (!!!global && contentInformation?.ref__id) {
+        setGlobal(contentInformation.ref_description);
+      }
+      if (!!!specific && contentInformation?._id) {
+        setSpecific(contentInformation.description);
+      }
+    } else {
+      if (!!!global && specie) {
+        setSpecific(specie.description);
+      }
+    }
+  }, [contentInformation]);
 
   const globalTimer = useRef(null);
   const specificTimer = useRef(null);
@@ -67,26 +108,19 @@ const BasicTab = () => {
                   description: "",
                 })
                 .then((response) => {
-                  createNewLayer(response.data).then(
-                    (processograms_updated) => {
+                  createNewLayer(response.data)
+                    .then((processograms_updated) => {
                       setProcessograms(processograms_updated);
                       updateContent(processograms_updated);
                       setOnFetch(false);
-                    }
-                  );
-                })
-                .catch(() => {
-                  setOnFetch(false);
+                    })
+                    .catch(() => {
+                      setOnFetch(false);
+                    });
                 });
             });
         }
-      } else {
-        setGlobal(contentInformation.ref_description || "");
-        setSpecific(contentInformation.description || "");
       }
-    } else {
-      setGlobal(specie?.description);
-      setSpecific("");
     }
   };
 
@@ -94,36 +128,22 @@ const BasicTab = () => {
     return new Promise<any[]>((resolve, reject) => {
       try {
         if (contentInformation.levelName === "productionSystem") {
-          processogramApi
-            .create({ productionSystem: data?._id, specie: specie?._id })
-            .then((response) => {
-              let processograms_updated = update(processograms, {
-                $push: [response.data],
-              });
-              resolve(processograms_updated);
-            });
+          processogramApi.create({
+            productionSystem: data?._id,
+            specie: specie?._id,
+          });
         } else {
           let obj = {
             [contentInformation.levelName]: data?._id,
           };
-          processogramApi
-            .newLayer(
-              {
-                id_tree: pathAsObject.id_tree,
-                object: obj,
-                pushTo: keys[contentInformation.levelName],
-              },
-              pathAsObject.processogram_id
-            )
-            .then((response) => {
-              let index = lodash.findIndex(processograms, {
-                _id: response.data?._id,
-              });
-              let processograms_updated = update(processograms, {
-                [index]: { $set: response.data },
-              });
-              resolve(processograms_updated);
-            });
+          processogramApi.newLayer(
+            {
+              id_tree: pathAsObject.id_tree,
+              object: obj,
+              pushTo: keys[contentInformation.levelName],
+            },
+            pathAsObject.processogram_id
+          );
         }
       } catch (error) {
         toast.error("Something Wrong... ");
@@ -147,31 +167,12 @@ const BasicTab = () => {
               },
               specie?._id
             )
-            .then((response) => {
-              setProcessograms(response.data);
-            })
             .catch((error) => {
               console.log(error);
               toast.error("Can't do your request now. Please try later.");
             });
         }, 500);
       }
-    } else {
-      globalTimer.current = setTimeout(() => {
-        specieApi
-          .update({ description }, specie?._id)
-          .then(() => {
-            setSpecie(
-              update(specie, {
-                description: { $set: description },
-              })
-            );
-          })
-          .catch((error) => {
-            console.log(error);
-            toast.error("Can't do your request now. Please try later.");
-          });
-      }, 500);
     }
   };
 
@@ -185,51 +186,48 @@ const BasicTab = () => {
               { id_tree: pathAsObject.id_tree, values: { description } },
               pathAsObject.processogram_id
             )
-            .then((response) => {
-              let index = lodash.findIndex(processograms, {
-                _id: response.data?._id,
-              });
-              setProcessograms(
-                update(processograms, {
-                  [index]: { $set: response.data },
-                })
-              );
-            })
             .catch((error) => {
               console.log(error);
               toast.error("Can't do your request now. Please try later.");
             });
         }, 500);
       }
+    } else {
+      specificTimer.current = setTimeout(() => {
+        specieApi.update({ description }, specie?._id).catch((error) => {
+          console.log(error);
+          toast.error("Can't do your request now. Please try later.");
+        });
+      }, 500);
     }
   };
 
   return (
     <>
-      <FormInput
-        value={global}
-        onChange={(e) => {
-          setGlobal(e.target.value);
-          updateGlobal(e.target.value);
-        }}
-        label="Global"
-        name="description"
-        multiline={true}
-        rows={4}
-      />
       {contentInformation && (
         <FormInput
-          value={specific}
+          value={global}
           onChange={(e) => {
-            setSpecific(e.target.value);
-            updateSpecific(e.target.value);
+            setGlobal(e.target.value);
+            updateGlobal(e.target.value);
           }}
-          label="Specific"
+          label="Global"
           name="description"
           multiline={true}
           rows={4}
         />
       )}
+      <FormInput
+        value={specific}
+        onChange={(e) => {
+          setSpecific(e.target.value);
+          updateSpecific(e.target.value);
+        }}
+        label="Specific"
+        name="description"
+        multiline={true}
+        rows={4}
+      />
     </>
   );
 };

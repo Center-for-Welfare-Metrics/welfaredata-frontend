@@ -6,14 +6,14 @@ import { IMedia } from "@/utils/processogram";
 
 interface IMediaFileList {
   medias: IMedia[];
-  isLocal?: boolean;
+  onDelete(media: IMedia): void;
 }
 
-const MediaFileList = ({ medias, isLocal = false }: IMediaFileList) => {
+const MediaFileList = ({ medias, onDelete }: IMediaFileList) => {
   return (
     <Container>
       {medias.map((media) => (
-        <MediaFile isLocal={isLocal} media={media} key={media?._id} />
+        <MediaFile onDelete={onDelete} media={media} key={media?._id} />
       ))}
     </Container>
   );

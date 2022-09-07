@@ -6,6 +6,7 @@ import { MediaList, MediaStyled, FullScreenImage } from "./media-tab-styled";
 import React from "react";
 import { useContext } from "react";
 import ProcessogramContext from "@/context/processogram";
+import MediaFile from "@/components/data_entry/form/tabs/media/media_file/media-file";
 
 export interface IMediaComponent {
   media: IMedia;
@@ -32,19 +33,27 @@ export interface IMediaTab {
 const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
   const { setMediasViewer } = useContext(ProcessogramContext);
 
-  const mediaClick = (event: Event, index: number) => {
-    event.stopPropagation();
-    setMediasViewer({ medias: [...medias, ...ref_medias], index: index });
+  const mediaClick = (event: Event, media: IMedia) => {
+    if (!media.type.includes("video")) {
+      event.stopPropagation();
+      const allMedias = [...medias, ...ref_medias];
+      const onlyImages = allMedias.filter(
+        (media) => !media.type.includes("video")
+      );
+      const index = onlyImages.findIndex((m) => m._id === media._id);
+      setMediasViewer({ medias: onlyImages, index: index });
+    }
   };
 
   return (
     <MediaList>
       {[...medias, ...ref_medias].map((media, index) => (
-        <Media
+        <MediaFile
           key={media?._id}
           media={media}
-          onClick={mediaClick}
-          index={index}
+          disabledContext
+          onClick={(e) => mediaClick(e, media)}
+          onlyImage
         />
       ))}
     </MediaList>
