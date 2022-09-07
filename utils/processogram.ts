@@ -13,6 +13,7 @@ export interface ICoolFormat {
   level: number;
   domID: string;
   isHover?: boolean;
+  color?: string;
 }
 
 export const translateStackToCoolFormat = (stack: string[]): ICoolFormat[] => {

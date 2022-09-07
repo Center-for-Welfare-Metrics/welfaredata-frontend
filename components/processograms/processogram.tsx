@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { TweenLite, gsap } from "gsap";
 gsap.registerPlugin(TweenLite);
 
@@ -561,12 +561,6 @@ const Processogram = ({
     }
   };
 
-  const FirstProcessogramClick = (event: any) => {
-    if (!isLocked) {
-      console.log(event);
-    }
-  };
-
   const InnerClick = () => {
     let element = svgRef.current.querySelector(`#${onHover}`);
     if (element) {
@@ -607,6 +601,10 @@ const Processogram = ({
     }
   };
 
+  const coolFormatStack = useMemo(() => {
+    return translateStackToCoolFormat([...stack, ghost]);
+  }, [stack, ghost]);
+
   return (
     <>
       <SvgContainer
@@ -622,7 +620,6 @@ const Processogram = ({
           onMouseLeave={mouseLeave}
           onMouseMove={mouseMove}
           src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}
-          onLoad={console.log}
         />
         {mainState && (
           <ProcessogramHud
@@ -636,7 +633,7 @@ const Processogram = ({
         )}
         {mainState && (
           <HudTreeControl
-            stackCoolFormat={translateStackToCoolFormat([...stack, ghost])}
+            stackCoolFormat={coolFormatStack}
             onChange={handleHudChange}
           />
         )}

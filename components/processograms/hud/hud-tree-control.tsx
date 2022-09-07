@@ -16,6 +16,32 @@ interface IHudTreeControl {
   onChange(change: ImainStateChange): void;
 }
 
+const getNextStrokeColorFromElement = (element: Element, deepth = 0) => {
+  if (deepth > 10) {
+    return "";
+  }
+  let strokeColor = "";
+  strokeColor = element.getAttribute("stroke");
+  if (strokeColor) {
+    return strokeColor;
+  }
+  let children = element.children;
+  for (let i = 0; i < children.length; i++) {
+    let child = children[i];
+    if (child.getAttribute("stroke")) {
+      strokeColor = child.getAttribute("stroke") || "";
+      break;
+    } else {
+      strokeColor = getNextStrokeColorFromElement(child, deepth + 1);
+      if (strokeColor) {
+        break;
+      }
+    }
+  }
+
+  return strokeColor;
+};
+
 const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
   const { specie, collection, stack } = useContext(ProcessogramContext);
 
@@ -28,10 +54,21 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
     left: 0,
   });
 
-  useEffect(() => {
-    // let {content} = getCollectionInformationsByCoolFormat(translateStackToCoolFormat(stack),collection)
-    // console.log(content)
-    setLocakStack([
+  const getCurrentElement = () => {
+    if (stackCoolFormat) {
+      const svg = document.getElementById(stackCoolFormat?.[0]?.domID);
+      if (stackCoolFormat?.length > 1) {
+        const lastItem = stackCoolFormat[stackCoolFormat.length - 1];
+        const element = svg?.querySelector(`#${lastItem.domID}`);
+        return element;
+      }
+      return svg;
+    }
+    return null;
+  };
+
+  const updateLocalStack = () => {
+    const newLocalStack = [
       {
         domID: null,
         elementName: DictAlternativeNames[specie?._id],
@@ -39,7 +76,19 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
         levelName: "Species",
       },
       ...stackCoolFormat,
-    ]);
+    ];
+    const element = getCurrentElement();
+    if (element) {
+      const color = getNextStrokeColorFromElement(element);
+      if (color) {
+        newLocalStack[newLocalStack.length - 1].color = color;
+      }
+    }
+    setLocakStack(newLocalStack);
+  };
+
+  useEffect(() => {
+    updateLocalStack();
   }, [stackCoolFormat]);
 
   useEffect(() => {
@@ -120,10 +169,11 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
   return (
     <Container style={{ top: top, ...style }}>
       {localStack.map(
-        ({ domID, level, levelName, elementName, isHover }, index) => (
+        ({ domID, level, levelName, elementName, isHover, color }, index) => (
           <TreeItem
             style={{
               paddingLeft: `${(level + 1) * 2}rem`,
+              color: color || null,
             }}
             key={domID}
             onClick={onTreeItemClick({ domID, level })}

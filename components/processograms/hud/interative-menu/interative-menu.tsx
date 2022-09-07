@@ -120,7 +120,7 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
           state={state}
         >
           <MenuTabs state={state} content={content} />
-          <CopyTo
+          {/* <CopyTo
             style={{ top: top, left: style.maxWidth }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -132,7 +132,7 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
             >
               <Share />
             </CopyToClipboard>
-          </CopyTo>
+          </CopyTo> */}
           <Minimize state={state}>
             <Svg
               src={SvgPath({
