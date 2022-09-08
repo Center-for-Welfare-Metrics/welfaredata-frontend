@@ -5,12 +5,9 @@ import {
   TabIconsContainer,
   TabIcon,
   Body,
-  TabIconSizeFix,
 } from "./menu-tabs-styled";
 import DescriptionTab from "./description-tab";
-
-import Svg from "react-inlinesvg";
-import { SvgPath } from "@/utils/assets_path";
+import { Info, MessageSquare, Camera } from "react-feather";
 import { IInterativeMenuState } from "../interative-menu";
 import MediaTab from "./media-tab";
 import React from "react";
@@ -24,47 +21,49 @@ import {
   recoilLocalMedias,
 } from "recoil/processogram";
 import voca from "voca";
+import { useMediaQuery } from "@material-ui/core";
+import { ThemeColors } from "theme/globalStyle";
+
 export type tabOptions = "description" | "media" | "feedback";
 
 const TabIcons = ({ TabIconClick, tab, hasMedia, state }) => {
+  const matchMedia = useMediaQuery("(max-width: 800px)");
+
+  const IconSize = matchMedia ? 32 : 42;
+  const IconStrokeWidth = matchMedia ? 1 : 1.5;
+  const IconColor = ThemeColors.blue;
+
   return (
     <TabIconsContainer state={state}>
-      <TabIconSizeFix
-        state={state}
-        active={tab === "description"}
+      <TabIcon
+        $state={state}
+        $active={tab === "description"}
         onClick={TabIconClick("description")}
       >
-        <Svg
-          src={SvgPath({
-            folder: "icons",
-            file_name: "information",
-          })}
-        />
-      </TabIconSizeFix>
+        <Info size={IconSize} strokeWidth={IconStrokeWidth} color={IconColor} />
+      </TabIcon>
       {hasMedia && (
         <TabIcon
-          state={state}
-          active={tab === "media"}
+          $state={state}
+          $active={tab === "media"}
           onClick={TabIconClick("media")}
         >
-          <Svg
-            src={SvgPath({
-              folder: "icons",
-              file_name: "media-outline",
-            })}
+          <Camera
+            size={IconSize}
+            strokeWidth={IconStrokeWidth}
+            color={IconColor}
           />
         </TabIcon>
       )}
       <TabIcon
-        state={state}
-        active={tab === "feedback"}
+        $state={state}
+        $active={tab === "feedback"}
         onClick={TabIconClick("feedback")}
       >
-        <Svg
-          src={SvgPath({
-            folder: "icons",
-            file_name: "feedback",
-          })}
+        <MessageSquare
+          size={IconSize}
+          strokeWidth={IconStrokeWidth}
+          color={IconColor}
         />
       </TabIcon>
     </TabIconsContainer>

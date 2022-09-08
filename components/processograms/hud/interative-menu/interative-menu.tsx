@@ -16,7 +16,7 @@ import useGesture from "@/utils/gestures";
 import MenuTabs from "./menu-tabs/menu-tabs";
 import { SvgPath } from "@/utils/assets_path";
 import toast from "react-hot-toast";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import { ChevronDown } from "react-feather";
 import { createContext } from "react";
 
 export type IInterativeMenuState = "minimized" | "full" | "hide";
@@ -134,12 +134,7 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
             </CopyToClipboard>
           </CopyTo> */}
           <Minimize state={state}>
-            <Svg
-              src={SvgPath({
-                folder: "icons",
-                file_name: "arrow-down-sign-to-navigate",
-              })}
-            />
+            <ChevronDown size={24} strokeWidth={1.5} />
           </Minimize>
         </Container>
       </InterativeMenuContext.Provider>

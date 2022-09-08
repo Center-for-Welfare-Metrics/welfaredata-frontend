@@ -19,6 +19,9 @@ export const TreeItem = styled.div`
   line-height: 1.2rem;
   width: fit-content;
   cursor: pointer;
+  @media (max-width: 800px) {
+    font-size: 1rem;
+  }
 `;
 
 export const Container = styled.div`

@@ -10,6 +10,7 @@ import authApi from "queries/auth";
 import ContextMenu from "@/components/context-menu/context-menu";
 import { Toaster } from "react-hot-toast";
 import "react-image-gallery/styles/css/image-gallery.css";
+import "theme/fast.css";
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState<IUser>(null);

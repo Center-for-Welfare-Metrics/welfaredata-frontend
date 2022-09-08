@@ -1,21 +1,21 @@
-import { lighten } from 'polished'
-import  { createGlobalStyle,css } from 'styled-components'
+import { lighten } from "polished";
+import { createGlobalStyle, css } from "styled-components";
 
-const scrollBar = (color,size='.5rem') => css`
-    ::-webkit-scrollbar {
-        width: ${size};
-        height: ${size};
-    }
-    ::-webkit-scrollbar-thumb {
-        background-color: ${({theme})=>theme.colors[color]};
-        transition: background-color 500ms;
-        border-radius:2rem;
-    }
-    ::-webkit-scrollbar-thumb:hover{
-        background-color: ${({theme})=> lighten(0.1,theme.colors[color])};
-        transition: background-color 500ms;
-    }
-`
+const scrollBar = (color, size = ".5rem") => css`
+  ::-webkit-scrollbar {
+    width: ${size};
+    height: ${size};
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors[color]};
+    transition: background-color 500ms;
+    border-radius: 2rem;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: ${({ theme }) => lighten(0.1, theme.colors[color])};
+    transition: background-color 500ms;
+  }
+`;
 
 export const GlobalStyles = createGlobalStyle`
 
@@ -28,20 +28,21 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     html{
+        background-color: ${({ theme }) => theme.colors.black};  
         width:100%;
         height:100%;
     }
     html,body,div,textarea{        
-        ${scrollBar('gray')}
+        ${scrollBar("gray")}
     }
     body{
-        background-color: ${({theme}) => theme.colors.black};        
+        background-color: ${({ theme }) => theme.colors.black};        
         width:100%;
         height: 100%;
         font-family: 'Titillium Web', sans-serif;         
     }
     div,textarea{
-        ${scrollBar('blue','.25rem')}
+        ${scrollBar("blue", ".25rem")}
     }
     textarea{
         font-family : inherit;
@@ -63,4 +64,16 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     /* --------------------- hack | gambiarra ---------------- */
-`
+`;
+
+export const ThemeColors = {
+  blue: "#ffebff",
+  deep_blue: "#0c1a27",
+  yellow: "#FFE74C",
+  white: "#FFFFFF",
+  pink: "#730e28",
+  red: "#9C3848",
+  green: "#4DA167",
+  black: "#000000",
+  gray: "#919191",
+};
