@@ -82,7 +82,7 @@ const FeedbackTab = () => {
       <FeedBackForm>
         <form method="post" onSubmit={submitForm}>
           <FormInput
-            customStyle={{ paddingBottom: "0" }}
+            customStyle={{ paddingTop: "0" }}
             onClick={(e) => e.stopPropagation()}
             name="email"
             label="Email (optional)"
@@ -91,7 +91,7 @@ const FeedbackTab = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <FormInput
-            customStyle={{ paddingBottom: "0" }}
+            customStyle={{ paddingTop: "0" }}
             onClick={(e) => e.stopPropagation()}
             name="short_description"
             label="Short Description *"

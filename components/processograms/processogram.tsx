@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
-import { TweenLite, gsap } from "gsap";
-gsap.registerPlugin(TweenLite);
-
+import { gsap } from "gsap";
 import { MouseEvent as MS, useEffect, useRef, useState } from "react";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
 import update from "immutability-helper";
@@ -22,7 +20,7 @@ import { getElementViewBox } from "./processogram-helpers";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import HudTreeControl from "./hud/hud-tree-control";
-import { constSelector, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { recoilCoolStack } from "recoil/processogram";
 import _ from "lodash";
 
@@ -120,12 +118,12 @@ const Processogram = ({
         let middleFigure = svgRef.current.querySelector(
           "#x32_ND_x5F_TIER--ci-02"
         );
-        await TweenLite.to(topFigure, {
+        await gsap.to(topFigure, {
           translateY: "250%",
           opacity: 0,
           display: "none",
         });
-        await TweenLite.to(middleFigure, {
+        await gsap.to(middleFigure, {
           translateY: "150%",
           opacity: 0,
           display: "none",
@@ -134,7 +132,7 @@ const Processogram = ({
         if (first) {
           setTimeout(() => {
             let viewBox = getElementViewBox(svgRef.current);
-            TweenLite.to(svgRef.current, {
+            gsap.to(svgRef.current, {
               attr: {
                 viewBox: viewBox,
               },
@@ -173,12 +171,12 @@ const Processogram = ({
         if (next_id === "laying--ph") {
           if (topFigure.style.display === "none") {
             try {
-              await TweenLite.to(topFigure, {
+              await gsap.to(topFigure, {
                 display: "block",
                 translateY: "0",
                 opacity: 1,
               });
-              await TweenLite.to(middleFigure, {
+              await gsap.to(middleFigure, {
                 display: "block",
                 translateY: "0",
                 opacity: 1,
@@ -273,26 +271,26 @@ const Processogram = ({
 
     if (onHover) {
       if (targets.length > 0) {
-        TweenLite.to(targets, {
+        gsap.to(targets, {
           filter: "brightness(0.5)",
         });
       }
       const target = svgRef.current.querySelector(`#${onHover}`);
       if (target) {
-        TweenLite.to(target, {
+        gsap.to(target, {
           filter: "brightness(1.1)",
         });
       }
     } else {
       if (targets.length > 0) {
-        TweenLite.to(targets, {
+        gsap.to(targets, {
           filter: "brightness(1)",
         });
       }
       const queryToFadeOut = `[id*='${currentLevelId}']:not([id='${mainState.currentDomID}'])`;
       const targetsToFadeOut = svgRef.current.querySelectorAll(queryToFadeOut);
       if (targetsToFadeOut.length > 0) {
-        TweenLite.to(targetsToFadeOut, {
+        gsap.to(targetsToFadeOut, {
           filter: "brightness(0.5)",
         });
       }
@@ -305,26 +303,26 @@ const Processogram = ({
     let targets = svgRef?.current?.querySelectorAll(query);
     if (!onHover) {
       if (targets?.length > 0) {
-        TweenLite.to(targets, {
+        gsap.to(targets, {
           filter: "brightness(1)",
         });
       }
     }
     if (mainState?.currentDomID) {
       if (targets?.length > 0) {
-        TweenLite.to(targets, {
+        gsap.to(targets, {
           filter: "brightness(0.5)",
         });
       }
       let target = svgRef?.current?.querySelector(`#${mainState.currentDomID}`);
       if (target) {
-        TweenLite.to(target, {
+        gsap.to(target, {
           filter: "brightness(1.1)",
         });
       }
     } else {
       if (targets?.length > 0) {
-        TweenLite.to(targets, {
+        gsap.to(targets, {
           filter: "brightness(1)",
         });
       }
@@ -334,7 +332,7 @@ const Processogram = ({
   const reset = async () => {
     if (svgRef?.current) {
       let all = svgRef.current.querySelectorAll(`[id*='--']`);
-      TweenLite.to(all, {
+      gsap.to(all, {
         filter: "brightness(1)",
       });
     }
@@ -347,30 +345,35 @@ const Processogram = ({
   const originalPosition = () => {
     let isHidden = svgRef?.current?.style?.display === "none";
     if (isHidden) {
-      TweenLite.to(svgRef?.current, {
-        display: "block",
-      })
+      gsap
+        .to(svgRef?.current, {
+          display: "block",
+        })
         .delay(0.5)
         .then(() => {
-          TweenLite.to(svgRef?.current, {
-            opacity: 1,
-            clearProps: "opacity",
-          }).duration(0.5);
+          gsap
+            .to(svgRef?.current, {
+              opacity: 1,
+              clearProps: "opacity",
+            })
+            .duration(0.5);
         });
     } else {
-      TweenLite.to(svgRef?.current, {
-        top: topLeft.top,
-        left: topLeft.left,
-        translateY: "0",
-        translateX: "0",
-        ease: "power1.inOut",
-      })
+      gsap
+        .to(svgRef?.current, {
+          top: topLeft.top,
+          left: topLeft.left,
+          translateY: "0",
+          translateX: "0",
+          ease: "power1.inOut",
+        })
         .duration(0.7)
         .then(() => {
-          TweenLite.to(svgRef?.current, {
-            position: "static",
-            clearProps: "opacity,margin",
-          })
+          gsap
+            .to(svgRef?.current, {
+              position: "static",
+              clearProps: "opacity,margin",
+            })
             .duration(0.01)
             .then(() => {
               listContainerRef?.scrollTo(0, topLeft?.scrollTop);
@@ -380,10 +383,11 @@ const Processogram = ({
   };
 
   const fadeOutMe = () => {
-    TweenLite.to(svgRef?.current, { opacity: 0 })
+    gsap
+      .to(svgRef?.current, { opacity: 0 })
       .duration(0.5)
       .then(() => {
-        TweenLite.to(svgRef?.current, { display: "none" }).duration(0);
+        gsap.to(svgRef?.current, { display: "none" }).duration(0);
       });
   };
 
@@ -393,22 +397,25 @@ const Processogram = ({
     left -= style.left;
     let scrollTop = listContainerRef.scrollTop;
     setTopLeft({ top, left, scrollTop });
-    TweenLite.to(svgRef.current, {
-      position: "absolute",
-      top,
-      left,
-      margin: "0",
-    })
+    gsap
+      .to(svgRef.current, {
+        position: "absolute",
+        top,
+        left,
+        margin: "0",
+      })
       .delay(0.5)
       .duration(0)
       .then(() => {
-        TweenLite.to(svgRef.current, {
-          top: "50%",
-          left: "50%",
-          translateX: "-50%",
-          translateY: "-50%",
-          ease: "power1.inOut",
-        }).duration(0.7);
+        gsap
+          .to(svgRef.current, {
+            top: "50%",
+            left: "50%",
+            translateX: "-50%",
+            translateY: "-50%",
+            ease: "power1.inOut",
+          })
+          .duration(0.7);
       });
   };
 
@@ -566,12 +573,13 @@ const Processogram = ({
   const moveFigure = () => {
     if (!isMoving) {
       setIsMoving(true);
-      TweenLite.to(svgRef.current, {
-        attr: {
-          viewBox: mainState.viewBox,
-        },
-        ease: "power1.inOut",
-      })
+      gsap
+        .to(svgRef.current, {
+          attr: {
+            viewBox: mainState.viewBox,
+          },
+          ease: "power1.inOut",
+        })
         .duration(0.7)
         .then(() => {
           setIsMoving(false);

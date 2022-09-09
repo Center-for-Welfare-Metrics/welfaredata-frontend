@@ -33,16 +33,14 @@ export const Label = styled.label<LabelProps>`
     z-index: auto;
     font-size: ${theme.fontSize.small};
     color: ${({ theme }) => theme.colors.blue};
-  `}
-
-  ${({ $hasValue, $multiline }) =>
+  `}/* ${({ $hasValue, $multiline }) =>
     $hasValue &&
     !$multiline &&
     css`
       transform: translateY(-150%);
     `}
 
-    transition: transform 100ms linear;
+    transition: transform 100ms linear; */
 `;
 export const Error = styled.span`
   font-size: ${({ theme }) => theme.fontSize.small};

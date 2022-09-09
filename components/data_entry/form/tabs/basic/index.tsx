@@ -94,9 +94,8 @@ const BasicTab = () => {
                 .then((processograms_updated) => {
                   setProcessograms(processograms_updated);
                   updateContent(processograms_updated);
-                  setOnFetch(false);
                 })
-                .catch(() => {
+                .finally(() => {
                   setOnFetch(false);
                 });
             })
@@ -112,9 +111,8 @@ const BasicTab = () => {
                     .then((processograms_updated) => {
                       setProcessograms(processograms_updated);
                       updateContent(processograms_updated);
-                      setOnFetch(false);
                     })
-                    .catch(() => {
+                    .finally(() => {
                       setOnFetch(false);
                     });
                 });
@@ -128,22 +126,36 @@ const BasicTab = () => {
     return new Promise<any[]>((resolve, reject) => {
       try {
         if (contentInformation.levelName === "productionSystem") {
-          processogramApi.create({
-            productionSystem: data?._id,
-            specie: specie?._id,
-          });
+          processogramApi
+            .create({
+              productionSystem: data?._id,
+              specie: specie?._id,
+            })
+            .then(({ data }) => {
+              resolve(data);
+            })
+            .catch(() => {
+              reject();
+            });
         } else {
           let obj = {
             [contentInformation.levelName]: data?._id,
           };
-          processogramApi.newLayer(
-            {
-              id_tree: pathAsObject.id_tree,
-              object: obj,
-              pushTo: keys[contentInformation.levelName],
-            },
-            pathAsObject.processogram_id
-          );
+          processogramApi
+            .newLayer(
+              {
+                id_tree: pathAsObject.id_tree,
+                object: obj,
+                pushTo: keys[contentInformation.levelName],
+              },
+              pathAsObject.processogram_id
+            )
+            .then(({ data }) => {
+              resolve(data);
+            })
+            .catch(() => {
+              reject();
+            });
         }
       } catch (error) {
         toast.error("Something Wrong... ");
