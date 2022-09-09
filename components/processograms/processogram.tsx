@@ -23,7 +23,7 @@ import HudTreeControl from "./hud/hud-tree-control";
 import { useRecoilState } from "recoil";
 import { recoilCoolStack } from "recoil/processogram";
 import _ from "lodash";
-
+import { isIOS } from "react-device-detect";
 interface IProcessogram {
   productionSystem: ProductionSystemTypes;
   specie: SpeciesTypes;
@@ -34,6 +34,32 @@ interface IProcessogram {
   setGhost(ghost): void;
   ghost: any;
 }
+
+const BRIGHTNESS = {
+  hovering: {
+    filter: "brightness(1.1)",
+  },
+  active: {
+    filter: "brightness(1)",
+  },
+  out: {
+    filter: "brightness(0.5)",
+  },
+};
+
+const OPACITY = {
+  hovering: {
+    opacity: 1,
+  },
+  active: {
+    opacity: 1,
+  },
+  out: {
+    opacity: 0.5,
+  },
+};
+
+const FILTER = isIOS ? OPACITY : BRIGHTNESS;
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
   <SVG innerRef={ref} {...props} />
@@ -271,28 +297,20 @@ const Processogram = ({
 
     if (onHover) {
       if (targets.length > 0) {
-        gsap.to(targets, {
-          filter: "brightness(0.5)",
-        });
+        gsap.to(targets, FILTER.out);
       }
       const target = svgRef.current.querySelector(`#${onHover}`);
       if (target) {
-        gsap.to(target, {
-          filter: "brightness(1.1)",
-        });
+        gsap.to(target, FILTER.hovering);
       }
     } else {
       if (targets.length > 0) {
-        gsap.to(targets, {
-          filter: "brightness(1)",
-        });
+        gsap.to(targets, FILTER.active);
       }
       const queryToFadeOut = `[id*='${currentLevelId}']:not([id='${mainState.currentDomID}'])`;
       const targetsToFadeOut = svgRef.current.querySelectorAll(queryToFadeOut);
       if (targetsToFadeOut.length > 0) {
-        gsap.to(targetsToFadeOut, {
-          filter: "brightness(0.5)",
-        });
+        gsap.to(targetsToFadeOut, FILTER.out);
       }
     }
   };
@@ -303,28 +321,20 @@ const Processogram = ({
     let targets = svgRef?.current?.querySelectorAll(query);
     if (!onHover) {
       if (targets?.length > 0) {
-        gsap.to(targets, {
-          filter: "brightness(1)",
-        });
+        gsap.to(targets, FILTER.active);
       }
     }
     if (mainState?.currentDomID) {
       if (targets?.length > 0) {
-        gsap.to(targets, {
-          filter: "brightness(0.5)",
-        });
+        gsap.to(targets, FILTER.out);
       }
       let target = svgRef?.current?.querySelector(`#${mainState.currentDomID}`);
       if (target) {
-        gsap.to(target, {
-          filter: "brightness(1.1)",
-        });
+        gsap.to(target, FILTER.hovering);
       }
     } else {
       if (targets?.length > 0) {
-        gsap.to(targets, {
-          filter: "brightness(1)",
-        });
+        gsap.to(targets, FILTER.active);
       }
     }
   };
@@ -332,9 +342,7 @@ const Processogram = ({
   const reset = async () => {
     if (svgRef?.current) {
       let all = svgRef.current.querySelectorAll(`[id*='--']`);
-      gsap.to(all, {
-        filter: "brightness(1)",
-      });
+      gsap.to(all, FILTER.active);
     }
   };
 
