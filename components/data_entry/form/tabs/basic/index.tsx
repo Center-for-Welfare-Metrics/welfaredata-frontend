@@ -58,19 +58,29 @@ const BasicTab = () => {
   );
 
   useEffect(() => {
-    if (contentInformation) {
-      if (!!!global && contentInformation?.ref__id) {
-        setGlobal(contentInformation.ref_description);
-      }
-      if (!!!specific && contentInformation?._id) {
-        setSpecific(contentInformation.description);
-      }
-    } else {
-      if (!!!global && specie) {
-        setSpecific(specie.description);
+    const levelName = voca.camelCase(contentInformation?.levelName);
+    const ref_id = contentInformation?.ref__id;
+    const _id = contentInformation?._id;
+    if (
+      globaUniqueId.includes(levelName) &&
+      localUniqueId.includes(levelName) &&
+      globaUniqueId.includes(ref_id) &&
+      localUniqueId.includes(_id)
+    ) {
+      if (contentInformation) {
+        if (global === null && contentInformation?.ref__id) {
+          setGlobal(contentInformation.ref_description || "");
+        }
+        if (specific === null && contentInformation?._id) {
+          setSpecific(contentInformation.description || "");
+        }
+      } else {
+        if (global === null && specie) {
+          setSpecific(specie.description || "");
+        }
       }
     }
-  }, [contentInformation]);
+  }, [contentInformation, globaUniqueId, localUniqueId]);
 
   const globalTimer = useRef(null);
   const specificTimer = useRef(null);

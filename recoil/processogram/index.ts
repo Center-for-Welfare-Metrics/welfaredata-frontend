@@ -5,14 +5,14 @@ import { atom } from "recoil";
 export const recoilGlobalDescription = memoize((id) =>
   atom<string>({
     key: `recoilGlobalDescription${id}`,
-    default: "",
+    default: null,
   })
 );
 
 export const recoilLocalDescription = memoize((id) =>
   atom<string>({
     key: `recoilLocalDescription${id}`,
-    default: "",
+    default: null,
   })
 );
 
