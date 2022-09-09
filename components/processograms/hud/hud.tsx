@@ -1,13 +1,6 @@
 import React, { useRef } from "react";
 import HudContext from "@/context/hud-context";
-import {
-  getLevelNameByGivingID,
-  ICoolFormat,
-  normalizeElementNameByGivingID,
-  translateStackToCoolFormat,
-} from "@/utils/processogram";
 import HudControls from "./controls";
-import HudTreeControl from "./hud-tree-control";
 import { Container } from "./hud-styled";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -15,6 +8,8 @@ import { useState } from "react";
 import { ImainState } from "@/context/processogram";
 
 import update from "immutability-helper";
+import { useRecoilValue } from "recoil";
+import { recoilCoolStack } from "recoil/processogram";
 
 interface IProcessogramHud {
   element: Element;
@@ -35,7 +30,7 @@ const ProcessogramHud = ({
 }: IProcessogramHud) => {
   const elementRect = element.getBoundingClientRect();
 
-  const [stackCoolFormat, setStackCoolFormat] = useState<ICoolFormat[]>([]);
+  const coolStack = useRecoilValue(recoilCoolStack);
 
   const [style, setStyle] = useState({
     top: 0,
@@ -43,10 +38,6 @@ const ProcessogramHud = ({
   });
 
   const delay = useRef(null);
-
-  useEffect(() => {
-    setStackCoolFormat(translateStackToCoolFormat(stack));
-  }, [stack]);
 
   useEffect(() => {
     updateStyleOnResize();
@@ -69,35 +60,10 @@ const ProcessogramHud = ({
     });
   };
 
-  useEffect(() => {
-    let match = window.matchMedia("(hover)").matches;
-    if (match && stack.length > 0) {
-      clearTimeout(delay.current);
-      delay.current = setTimeout(() => {
-        if (onHover) {
-          if (level < 3) {
-            let x: ICoolFormat = {
-              domID: onHover,
-              elementName: normalizeElementNameByGivingID(onHover),
-              levelName: getLevelNameByGivingID(onHover),
-              level: level + 1,
-              isHover: true,
-            };
-            setStackCoolFormat(
-              update(stackCoolFormat, {
-                [level + 1]: { $set: x },
-              })
-            );
-          }
-        } else {
-          setStackCoolFormat(translateStackToCoolFormat(stack));
-        }
-      }, 100);
-    }
-  }, [onHover]);
-
   return (
-    <HudContext.Provider value={{ element, onChange, stackCoolFormat }}>
+    <HudContext.Provider
+      value={{ element, onChange, stackCoolFormat: coolStack }}
+    >
       {!isMoving && (
         <Container
           style={{

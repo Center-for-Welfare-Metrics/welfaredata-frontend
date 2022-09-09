@@ -27,9 +27,9 @@ const FullScreenMediasViewer = () => {
             thumbnail: media.url,
             originalTitle: media.originalName,
           }))}
-          showPlayButton={false}
-          // stopPropagation={true}
-          showBullets={true}
+          showNav={false}
+          showFullscreenButton={false}
+          showBullets={false}
           startIndex={mediasViewer.index}
         />
       </div>

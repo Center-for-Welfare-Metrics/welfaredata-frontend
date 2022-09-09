@@ -1,52 +1,35 @@
-import styled, {css} from 'styled-components'
+import styled, { css } from "styled-components";
 
-export const SvgContainer = styled.div`       
-    width:100%;
-    margin:2.5rem 0;
-    :first-child{
-        margin-top:5rem;        
+export const SvgContainer = styled.div`
+  width: 100%;
+  margin: 2.5rem 0;
+  :first-child {
+    margin-top: 5rem;
+  }
+  :last-child {
+    margin-bottom: 5rem;
+  }
+  > svg {
+    height: auto;
+    overflow: visible;
+    z-index: 77;
+    margin-inline: auto;
+    opacity: 1;
+    display: block;
+    min-height: 5rem;
+    z-index: 77;
+    max-height: 80vh;
+    /* transition:width 500ms;   */
+    width: 80%;
+  }
+  @media (max-width: 800px) {
+    > svg {
+      shape-rendering: optimizeSpeed;
+      text-rendering: optimizeSpeed;
     }
-    :last-child{
-        margin-bottom:5rem;        
-    }
-    >svg{        
-        height:auto;            
-        overflow:visible; 
-        z-index:77;                
-        margin-inline:auto;        
-        opacity:1;
-        display:block;       
-        min-height:5rem;
-        z-index: 77;
-        max-height:80vh;        
-        /* transition:width 500ms;   */
-        width:80%;
-    }
-    @media (max-width:800px) {
-        >svg {
-            shape-rendering: optimizeSpeed;
-            text-rendering: optimizeSpeed;
-        }
-    }
-    /* ${
-        ({level}) => level === undefined? css`
-            >svg{
-                width:50%;
-            }            
-        `:
-        css`
-            >svg{
-                width:80%;
-            } 
-        `
-    } */
-    
-    @media(max-width:800px){
-        margin:1rem 0;
-        /* >svg{
-            width:90%;
-        } */
-    }
+  }
 
-    
-`
+  @media (max-width: 800px) {
+    margin: 1rem 0;
+  }
+`;

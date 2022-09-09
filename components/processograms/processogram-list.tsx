@@ -17,8 +17,10 @@ import FullScreenMediasViewer from "./hud/interative-menu/menu-tabs/full-screen-
 import InterativeMenu from "./hud/interative-menu/interative-menu";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { ICoolFormat, translateStackToCoolFormat } from "@/utils/processogram";
+import { ICoolFormat } from "@/utils/processogram";
 import HudTreeControl from "./hud/hud-tree-control";
+import { useRecoilValue } from "recoil";
+import { recoilCoolStack } from "recoil/processogram";
 
 export interface IProcessogramList {
   specie: ISpecie;
@@ -34,6 +36,8 @@ const ProcessogramList = ({
   isLocked,
 }: IProcessogramList) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const coolFormat = useRecoilValue(recoilCoolStack);
 
   const [onHover, setOnHover] = useState<string>(null);
 
@@ -68,16 +72,10 @@ const ProcessogramList = ({
   const router = useRouter();
 
   useEffect(() => {
-    let coolFormat = null;
-    if (ghost) {
-      coolFormat = translateStackToCoolFormat([...stack, ghost]);
-    } else {
-      coolFormat = translateStackToCoolFormat(stack);
-    }
     if (onChange) {
       onChange(coolFormat);
     }
-  }, [stack, ghost]);
+  }, [coolFormat]);
 
   useEffect(() => {
     let location = window.location.href;
@@ -175,14 +173,11 @@ const ProcessogramList = ({
         </SubContainer>
         <InterativeMenu
           shareString={shareString}
-          stackCoolFormat={translateStackToCoolFormat([...stack, ghost])}
+          stackCoolFormat={coolFormat}
           specie={specie}
         />
         {productionSystemSelected === null && (
-          <HudTreeControl
-            stackCoolFormat={translateStackToCoolFormat([...stack, ghost])}
-            onChange={() => {}}
-          />
+          <HudTreeControl stackCoolFormat={coolFormat} onChange={() => {}} />
         )}
       </Container>
       {mediasViewer.medias.length > 0 && <FullScreenMediasViewer />}

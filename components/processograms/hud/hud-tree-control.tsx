@@ -2,7 +2,6 @@ import ProcessogramContext, { ImainStateChange } from "@/context/processogram";
 import {
   getCollectionInformationsByCoolFormat,
   ICoolFormat,
-  translateStackToCoolFormat,
 } from "@/utils/processogram";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -11,6 +10,8 @@ import { Container, TreeItem } from "./hud-tree-control-styled";
 import voca from "voca";
 import { DictAlternativeNames } from "@/utils/consts";
 import { getElementViewBox } from "../processogram-helpers";
+import _ from "lodash";
+
 interface IHudTreeControl {
   stackCoolFormat: ICoolFormat[];
   onChange(change: ImainStateChange): void;
@@ -54,12 +55,11 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
     left: 0,
   });
 
-  const getCurrentElement = () => {
+  const getCurrentElement = (item: ICoolFormat) => {
     if (stackCoolFormat) {
       const svg = document.getElementById(stackCoolFormat?.[0]?.domID);
       if (stackCoolFormat?.length > 1) {
-        const lastItem = stackCoolFormat[stackCoolFormat.length - 1];
-        const element = svg?.querySelector(`#${lastItem.domID}`);
+        const element = svg?.querySelector(`#${item.domID}`);
         return element;
       }
       return svg;
@@ -68,16 +68,18 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
   };
 
   const updateLocalStack = () => {
-    const newLocalStack = [
+    const stackCoolCopy = _.cloneDeep(stackCoolFormat);
+    let newLocalStack = [
       {
         domID: null,
         elementName: DictAlternativeNames[specie?._id],
         level: -1,
         levelName: "Species",
       },
-      ...stackCoolFormat,
+      ...stackCoolCopy,
     ];
-    const element = getCurrentElement();
+    const last = newLocalStack[newLocalStack.length - 1];
+    const element = getCurrentElement(last);
     if (element) {
       const color = getNextStrokeColorFromElement(element);
       if (color) {

@@ -1,4 +1,4 @@
-import { IMedia } from "@/utils/processogram";
+import { ICoolFormat, IMedia } from "@/utils/processogram";
 import { memoize } from "lodash";
 import { atom } from "recoil";
 
@@ -29,3 +29,8 @@ export const recoilLocalMedias = memoize((id) =>
     default: null,
   })
 );
+
+export const recoilCoolStack = atom<ICoolFormat[]>({
+  key: "recoilCoolStack",
+  default: [],
+});

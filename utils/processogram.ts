@@ -24,7 +24,7 @@ export const translateStackToCoolFormat = (stack: string[]): ICoolFormat[] => {
         cool_json.push({
           levelName: getLevelNameByGivingID(id),
           elementName: normalizeElementNameByGivingID(id),
-          level: index,
+          level: getLevelNumberByGivingID(id),
           domID: id,
         });
       }
@@ -117,7 +117,7 @@ export const getCollectionInformationsByCoolFormat = (
         3: findCircumstance,
       };
 
-      return levels[item.level](item, collection);
+      return levels[item.level]?.(item, collection);
     } catch (error) {
       console.log(error);
       return null;
@@ -222,6 +222,34 @@ export const getLevelNameByGivingID = (id: string) => {
   return null;
 };
 
+const getLevelNumberByGivingID = (id: string) => {
+  if (!id) return null;
+
+  try {
+    let map_keys = {
+      "--ps": 0,
+      "--lf": 1,
+      "--ph": 2,
+      "--ci": 3,
+    };
+
+    let keys = Object.keys(map_keys);
+
+    for (let index in keys) {
+      let key = keys[index];
+
+      if (id.includes(key)) {
+        return map_keys[key];
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+
+  return null;
+};
+
 export const normalizeElementNameByGivingID = (id: string) => {
   if (id) {
     try {
@@ -260,7 +288,7 @@ export const getRightTargetID = ({ element, level, current }) => {
       return null;
     }
 
-    return element_helper.id;
+    return element_helper.id as string;
   } catch (error) {
     return null;
   }

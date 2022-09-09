@@ -35,8 +35,6 @@ export const Minimize = styled.div`
       css`
         transform: rotate(180deg);
       `}
-    width:100%;
-    height: 100%;
     path {
       transition: fill 500ms;
       fill: ${({ theme }) => theme.colors.blue};

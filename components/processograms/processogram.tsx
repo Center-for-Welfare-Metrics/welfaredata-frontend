@@ -13,15 +13,18 @@ import ProcessogramContext, {
 } from "@/context/processogram";
 import {
   getElementSizeInformations,
+  getLevelNameByGivingID,
   getRightTargetID,
   translateStackToCoolFormat,
 } from "@/utils/processogram";
 import { SvgContainer } from "./processogram-styled";
-import ProcessogramHud from "./hud/hud";
 import { getElementViewBox } from "./processogram-helpers";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import HudTreeControl from "./hud/hud-tree-control";
+import { constSelector, useRecoilState } from "recoil";
+import { recoilCoolStack } from "recoil/processogram";
+import _ from "lodash";
 
 interface IProcessogram {
   productionSystem: ProductionSystemTypes;
@@ -51,6 +54,8 @@ const Processogram = ({
   ghost,
 }: IProcessogram) => {
   const { stack, setStack, isLocked } = useContext(ProcessogramContext);
+
+  const [coolStack, setCoolStack] = useRecoilState(recoilCoolStack);
 
   const [isMoving, setIsMoving] = useState(false);
 
@@ -128,7 +133,7 @@ const Processogram = ({
         resolve(true);
         if (first) {
           setTimeout(() => {
-            let viewBox = getElementViewBox(svgRef.current, false);
+            let viewBox = getElementViewBox(svgRef.current);
             TweenLite.to(svgRef.current, {
               attr: {
                 viewBox: viewBox,
@@ -142,9 +147,14 @@ const Processogram = ({
 
   useEffect(() => {
     if (mainState) {
-      setGhost(null);
-      updateStack();
       applyDocumentTriggers();
+    }
+  }, [mainState, onHover]);
+
+  useEffect(() => {
+    if (mainState) {
+      updateStack();
+      setGhost(null);
       if (mainState.viewBox) {
         moveFigure();
       }
@@ -217,13 +227,13 @@ const Processogram = ({
 
   useEffect(() => {
     if (mainState) {
-      if (router.query.s) {
+      if (router?.query?.s) {
         let share = router.query.s as string;
         getFromShareLink(share);
         router.query.s = null;
         window.history.replaceState(null, "", "/pigs");
       }
-      if (svgRef.current) {
+      if (svgRef?.current) {
         userInteractionLevelChangeEffects();
       }
     }
@@ -238,7 +248,7 @@ const Processogram = ({
       }, 250);
     }
     try {
-      if (mainState && svgRef.current) {
+      if (mainState && svgRef?.current) {
         userInteractionHoverEffects();
       }
     } catch (error) {
@@ -247,19 +257,27 @@ const Processogram = ({
   }, [onHover]);
 
   const userInteractionHoverEffects = async () => {
+    const currentLevelId = LEVELS[mainState.level];
+
+    const nextLevelId = LEVELS[mainState.level + 1] || currentLevelId;
+
     let query = mainState.currentDomID
-      ? `[id='${mainState.currentDomID}'] [id*='${
-          LEVELS[mainState.level + 1]
-        }']`
-      : `[id*='${LEVELS[mainState.level + 1]}']`;
-    let targets = svgRef.current.querySelectorAll(query);
+      ? `[id='${mainState.currentDomID}'] [id*='${nextLevelId}']`
+      : `[id*='${nextLevelId}']`;
+
+    if (currentLevelId === nextLevelId) {
+      query = `[id*='${currentLevelId}']`;
+    }
+
+    const targets = svgRef?.current?.querySelectorAll(query);
+
     if (onHover) {
       if (targets.length > 0) {
         TweenLite.to(targets, {
           filter: "brightness(0.5)",
         });
       }
-      let target = svgRef.current.querySelector(`#${onHover}`);
+      const target = svgRef.current.querySelector(`#${onHover}`);
       if (target) {
         TweenLite.to(target, {
           filter: "brightness(1.1)",
@@ -269,6 +287,13 @@ const Processogram = ({
       if (targets.length > 0) {
         TweenLite.to(targets, {
           filter: "brightness(1)",
+        });
+      }
+      const queryToFadeOut = `[id*='${currentLevelId}']:not([id='${mainState.currentDomID}'])`;
+      const targetsToFadeOut = svgRef.current.querySelectorAll(queryToFadeOut);
+      if (targetsToFadeOut.length > 0) {
+        TweenLite.to(targetsToFadeOut, {
+          filter: "brightness(0.5)",
         });
       }
     }
@@ -277,28 +302,28 @@ const Processogram = ({
   const userInteractionLevelChangeEffects = async () => {
     reset();
     let query = `[id*='${LEVELS[mainState.level]}']`;
-    let targets = svgRef.current.querySelectorAll(query);
+    let targets = svgRef?.current?.querySelectorAll(query);
     if (!onHover) {
-      if (targets.length > 0) {
+      if (targets?.length > 0) {
         TweenLite.to(targets, {
           filter: "brightness(1)",
         });
       }
     }
-    if (mainState.currentDomID) {
-      if (targets.length > 0) {
+    if (mainState?.currentDomID) {
+      if (targets?.length > 0) {
         TweenLite.to(targets, {
           filter: "brightness(0.5)",
         });
       }
-      let target = svgRef.current.querySelector(`#${mainState.currentDomID}`);
+      let target = svgRef?.current?.querySelector(`#${mainState.currentDomID}`);
       if (target) {
         TweenLite.to(target, {
           filter: "brightness(1.1)",
         });
       }
     } else {
-      if (targets.length > 0) {
+      if (targets?.length > 0) {
         TweenLite.to(targets, {
           filter: "brightness(1)",
         });
@@ -307,7 +332,7 @@ const Processogram = ({
   };
 
   const reset = async () => {
-    if (svgRef.current) {
+    if (svgRef?.current) {
       let all = svgRef.current.querySelectorAll(`[id*='--']`);
       TweenLite.to(all, {
         filter: "brightness(1)",
@@ -320,20 +345,20 @@ const Processogram = ({
   };
 
   const originalPosition = () => {
-    let isHidden = svgRef.current.style.display === "none";
+    let isHidden = svgRef?.current?.style?.display === "none";
     if (isHidden) {
-      TweenLite.to(svgRef.current, {
+      TweenLite.to(svgRef?.current, {
         display: "block",
       })
         .delay(0.5)
         .then(() => {
-          TweenLite.to(svgRef.current, {
+          TweenLite.to(svgRef?.current, {
             opacity: 1,
             clearProps: "opacity",
           }).duration(0.5);
         });
     } else {
-      TweenLite.to(svgRef.current, {
+      TweenLite.to(svgRef?.current, {
         top: topLeft.top,
         left: topLeft.left,
         translateY: "0",
@@ -342,28 +367,28 @@ const Processogram = ({
       })
         .duration(0.7)
         .then(() => {
-          TweenLite.to(svgRef.current, {
+          TweenLite.to(svgRef?.current, {
             position: "static",
             clearProps: "opacity,margin",
           })
             .duration(0.01)
             .then(() => {
-              listContainerRef.scrollTo(0, topLeft.scrollTop);
+              listContainerRef?.scrollTo(0, topLeft?.scrollTop);
             });
         });
     }
   };
 
   const fadeOutMe = () => {
-    TweenLite.to(svgRef.current, { opacity: 0 })
+    TweenLite.to(svgRef?.current, { opacity: 0 })
       .duration(0.5)
       .then(() => {
-        TweenLite.to(svgRef.current, { display: "none" }).duration(0);
+        TweenLite.to(svgRef?.current, { display: "none" }).duration(0);
       });
   };
 
   const focusOnMe = () => {
-    let { top, left } = getElementSizeInformations(svgRef.current);
+    let { top, left } = getElementSizeInformations(svgRef?.current);
     top -= style.top;
     left -= style.left;
     let scrollTop = listContainerRef.scrollTop;
@@ -410,18 +435,18 @@ const Processogram = ({
   };
 
   const getCurrentDomElement = () =>
-    mainState.currentDomID
+    mainState?.currentDomID
       ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
       : svgRef.current;
 
   const updateStack = () => {
-    let updated_stack_lenght = mainState.level + 1;
-    let old_stack_lenght = stack.length;
+    let updated_stack_lenght = mainState?.level + 1;
+    let old_stack_lenght = stack?.length;
 
     if (updated_stack_lenght > old_stack_lenght) {
       setStack(
         update(stack, {
-          $push: [mainState.currentDomID || svgRef.current.id],
+          $push: [mainState?.currentDomID || svgRef?.current.id],
         })
       );
     } else if (updated_stack_lenght < old_stack_lenght) {
@@ -433,18 +458,30 @@ const Processogram = ({
         })
       );
     } else if (old_stack_lenght === updated_stack_lenght) {
-      setStack(
-        update(stack, {
-          [updated_stack_lenght - 1]: {
-            $set: mainState.currentDomID,
-          },
-        })
+      let newStack = update(stack, {
+        [updated_stack_lenght - 1]: {
+          $set: mainState?.currentDomID,
+        },
+      });
+      const ghostElement = svgRef?.current?.querySelector(
+        `#${mainState?.currentDomID}`
       );
+      if (ghostElement) {
+        const parent = ghostElement?.parentElement;
+        if (parent) {
+          const parentID = parent.id;
+          const parentIndex = newStack?.indexOf(parentID);
+          if (parentIndex === -1) {
+            newStack[newStack?.length - 2] = parentID;
+          }
+        }
+      }
+      setStack(newStack);
     }
   };
 
   const getParent = () => {
-    if (mainState.currentDomID) {
+    if (mainState?.currentDomID) {
       let node = svgRef.current.querySelector(`#${mainState.currentDomID}`);
       let levelBefore = LEVELS[mainState.level - 1];
       while (node !== svgRef.current) {
@@ -462,16 +499,20 @@ const Processogram = ({
   const clickOut = () => {
     if (!isLocked) {
       let parent = getParent() as any;
-      if (mainState.level > 0) {
+      if (mainState?.level > 0) {
         if (parent) {
-          let isInner = false;
           let inner_current = null;
-          if (!parent.id.includes("--ps")) {
+          if (!parent.id?.includes("--ps")) {
             inner_current = parent.id;
-            isInner = true;
           }
+          const currentLevel = LEVELS[mainState?.level];
+
+          if (onHover?.includes(currentLevel)) {
+            return;
+          }
+
           pluginUpdate(inner_current).then(() => {
-            let viewBox = getElementViewBox(parent, isInner);
+            let viewBox = getElementViewBox(parent);
             setMainState({
               ...mainState,
               level: mainState.level - 1,
@@ -494,19 +535,48 @@ const Processogram = ({
       ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
       : svgRef.current;
 
-    return currentElement.contains(elementClicked as Node);
+    return (
+      currentElement.contains(elementClicked as Node) ||
+      targetIsSibling(elementClicked)
+    );
+  };
+
+  const targetIsSibling = (target: EventTarget) => {
+    let currentElement = mainState.currentDomID
+      ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
+      : svgRef.current;
+
+    let currentLevel = LEVELS[mainState.level];
+
+    const right_target_id = getRightTargetID({
+      element: target,
+      level: currentLevel,
+      current: svgRef.current?.id,
+    });
+
+    if (!right_target_id) return null;
+
+    if (right_target_id === currentElement.id) {
+      return null;
+    }
+
+    if (right_target_id.includes(currentLevel)) return right_target_id;
   };
 
   const moveFigure = () => {
-    setIsMoving(true);
-    TweenLite.to(svgRef.current, {
-      attr: {
-        viewBox: mainState.viewBox,
-      },
-      ease: "power1.inOut",
-    })
-      .duration(0.7)
-      .then(() => setIsMoving(false));
+    if (!isMoving) {
+      setIsMoving(true);
+      TweenLite.to(svgRef.current, {
+        attr: {
+          viewBox: mainState.viewBox,
+        },
+        ease: "power1.inOut",
+      })
+        .duration(0.7)
+        .then(() => {
+          setIsMoving(false);
+        });
+    }
   };
 
   const mouseLeave = (event: MS<SVGElement, MouseEvent>) => {
@@ -524,14 +594,20 @@ const Processogram = ({
       if (mainState === null) {
         hoverChange(svgRef.current.id);
       } else {
-        if (targetIsInside(event.target)) {
-          let right_target_id = getRightTargetID({
-            element: event.target,
-            level: LEVELS[mainState.level + 1],
-            current: svgRef.current.id,
-          });
-          if (onHover !== right_target_id) {
-            setOnHover(right_target_id);
+        const isInside = targetIsInside(event.target);
+        const sibling = targetIsSibling(event.target);
+        if (isInside || sibling) {
+          if (sibling) {
+            setOnHover(sibling);
+          } else {
+            let right_target_id = getRightTargetID({
+              element: event.target,
+              level: LEVELS[mainState.level + 1],
+              current: svgRef.current.id,
+            });
+            if (onHover !== right_target_id) {
+              setOnHover(right_target_id);
+            }
           }
         } else {
           if (onHover !== null) {
@@ -569,12 +645,15 @@ const Processogram = ({
   };
 
   const toNextLevel = (element: any) => {
-    setIsMoving(true);
     pluginUpdate(element.id).then(() => {
-      let viewBox = getElementViewBox(element, true);
+      const viewBox = getElementViewBox(element);
+      const currentLevel = LEVELS[mainState.level];
+      const nextLevel = onHover.includes(currentLevel)
+        ? mainState.level
+        : mainState.level + 1;
       setMainState({
         ...mainState,
-        level: mainState.level + 1,
+        level: nextLevel,
         viewBox,
         currentDomID: element.id,
       });
@@ -590,7 +669,7 @@ const Processogram = ({
         element = svgRef.current.querySelector(`#${change.currentDomID}`);
       }
       pluginUpdate(change.currentDomID).then(() => {
-        let viewBox = getElementViewBox(element, true);
+        let viewBox = getElementViewBox(element);
         setMainState({ ...mainState, ...change, viewBox });
       });
     } else {
@@ -601,9 +680,43 @@ const Processogram = ({
     }
   };
 
-  const coolFormatStack = useMemo(() => {
-    return translateStackToCoolFormat([...stack, ghost]);
-  }, [stack, ghost]);
+  const updateCoolStack = () => {
+    const currentStack = _.cloneDeep(stack);
+    const ghostLevelName = getLevelNameByGivingID(ghost);
+    const lastStackItemLevelName = getLevelNameByGivingID(
+      currentStack[currentStack.length - 1]
+    );
+    if (ghostLevelName === lastStackItemLevelName) {
+      currentStack.pop();
+    }
+    const goingStack = [...currentStack, ghost];
+    if (svgRef.current) {
+      const ghostElement = svgRef?.current?.querySelector(`#${ghost}`);
+      if (ghostElement) {
+        const parent = ghostElement?.parentElement;
+        if (parent) {
+          const parentID = parent.id;
+          const parentIndex = goingStack.indexOf(parentID);
+          if (parentIndex === -1) {
+            goingStack[goingStack.length - 2] = parentID;
+          }
+        }
+      }
+    }
+    setCoolStack(translateStackToCoolFormat(goingStack));
+  };
+
+  useEffect(() => {
+    if (svgRef.current) {
+      if (productionSystemSelected) {
+        if (svgRef.current.id === productionSystemSelected) {
+          updateCoolStack();
+        }
+      } else {
+        updateCoolStack();
+      }
+    }
+  }, [stack, ghost, svgRef.current]);
 
   return (
     <>
@@ -621,7 +734,7 @@ const Processogram = ({
           onMouseMove={mouseMove}
           src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}
         />
-        {mainState && (
+        {/* {mainState && (
           <ProcessogramHud
             element={getCurrentDomElement()}
             level={mainState.level}
@@ -630,10 +743,10 @@ const Processogram = ({
             onHover={onHover}
             onChange={handleHudChange}
           />
-        )}
+        )} */}
         {mainState && (
           <HudTreeControl
-            stackCoolFormat={coolFormatStack}
+            stackCoolFormat={coolStack}
             onChange={handleHudChange}
           />
         )}
