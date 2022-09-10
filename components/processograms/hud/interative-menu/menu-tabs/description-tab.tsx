@@ -23,7 +23,7 @@ const DescriptionTab = ({
       <Title>
         {!matchMedia && (
           <>
-            {voca.titleCase(levelName) || "Specie"} :{" "}
+            {voca.titleCase(levelName) || "Species"} :{" "}
             {voca.titleCase(ref_name) || voca.titleCase(_id)}
           </>
         )}

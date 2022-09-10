@@ -22,10 +22,7 @@ export const TabIconsContainer = styled.div`
   height: ${({ state }) => (state === "minimized" ? "1.8rem" : "2.8rem")};
   transition: height 500ms;
   gap: 1rem;
-  margin-bottom: 0.5rem;
-  @media (max-width: 800px) {
-    margin-bottom: 0rem;
-  }
+  height: fit-content;
 `;
 
 const anim = keyframes`

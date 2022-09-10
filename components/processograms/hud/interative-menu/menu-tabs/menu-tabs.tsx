@@ -29,7 +29,7 @@ export type tabOptions = "description" | "media" | "feedback";
 const TabIcons = ({ TabIconClick, tab, hasMedia, state }) => {
   const matchMedia = useMediaQuery("(max-width: 800px)");
 
-  const IconSize = matchMedia ? 32 : 42;
+  const IconSize = 32;
   const IconStrokeWidth = matchMedia ? 1 : 1.5;
   const IconColor = ThemeColors.blue;
 

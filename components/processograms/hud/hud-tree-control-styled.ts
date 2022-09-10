@@ -13,7 +13,7 @@ export const TreeItem = styled.div`
   :first-child {
     padding: 0.5rem 0.5rem 0.25rem 0.5rem !important;
   }
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   width: fit-content;
   animation: ${fade} 500ms;
   line-height: 1.2rem;
