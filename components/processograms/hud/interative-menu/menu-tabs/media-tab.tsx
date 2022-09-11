@@ -36,7 +36,7 @@ const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
   const mediaClick = (event: Event, media: IMedia) => {
     if (!media.type.includes("video")) {
       event.stopPropagation();
-      const allMedias = [...medias, ...ref_medias];
+      const allMedias = [...(medias || []), ...(ref_medias || [])];
       const onlyImages = allMedias.filter(
         (media) => !media.type.includes("video")
       );
