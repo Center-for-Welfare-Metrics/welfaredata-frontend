@@ -47,7 +47,7 @@ const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
 
   return (
     <MediaList>
-      {[...medias, ...ref_medias].map((media, index) => (
+      {[...(medias || []), ...(ref_medias || [])].map((media, index) => (
         <MediaFile
           key={media?._id}
           media={media}
