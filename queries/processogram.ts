@@ -40,4 +40,9 @@ export default {
     filedReference,
     data: { name: string; specie: SpeciesTypes; description: "" }
   ) => api.post(`${filedReference}`, data),
+  addNewMedia: (
+    fieldReference,
+    _id: string,
+    data: { url: string; type: "youtube" }
+  ) => api.patch(`${fieldReference}/${_id}/newmedia`, data),
 };

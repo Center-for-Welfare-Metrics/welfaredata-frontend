@@ -14,17 +14,6 @@ export interface IMediaComponent {
   index: number;
 }
 
-const Media = ({ media, onClick, index }: IMediaComponent) => {
-  return (
-    <>
-      <MediaStyled
-        style={{ backgroundImage: `url(${media.url})` }}
-        onClick={(e) => onClick(e, index)}
-      ></MediaStyled>
-    </>
-  );
-};
-
 export interface IMediaTab {
   medias: IMedia[];
   ref_medias: IMedia[];
@@ -34,7 +23,7 @@ const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
   const { setMediasViewer } = useContext(ProcessogramContext);
 
   const mediaClick = (event: Event, media: IMedia) => {
-    if (!media.type.includes("video")) {
+    if (!media.type.includes("video") && media.type !== "youtube") {
       event.stopPropagation();
       const allMedias = [...(medias || []), ...(ref_medias || [])];
       const onlyImages = allMedias.filter(

@@ -40,6 +40,7 @@ export const Thumb = styled.div`
   height: 6rem;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 `;
 
 export const DialogVideo = styled.video`

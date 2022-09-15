@@ -2,7 +2,7 @@ import MediaFileList from "@/components/data_entry/form/tabs/media/media_file/li
 
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
-import { Container, Section, Title } from "./media-styled";
+import { Container, Section, Title, UploadYoutube } from "./media-styled";
 import specieApi from "queries/specie";
 import UploadFile from "@/components/common/inputs/upload-file";
 import DataEntryContext from "@/context/data-entry";
@@ -12,6 +12,11 @@ import { useRecoilState } from "recoil";
 import { recoilGlobalMedias, recoilLocalMedias } from "recoil/processogram";
 import toast from "react-hot-toast";
 import { IMedia } from "@/utils/processogram";
+import Modal from "@/components/common/modal";
+import FormInput from "@/components/common/inputs/form-input";
+import { Box } from "@material-ui/core";
+import { Button } from "@/components/common/buttons/submit-button-styled";
+import { SuccessButton } from "@/components/common/buttons/default-button-styled";
 
 const MediasTab = () => {
   const globalInputFileRef = useRef<HTMLInputElement>(null);
@@ -25,6 +30,10 @@ const MediasTab = () => {
   const [localProgress, setLocalProgress] = useState(0);
 
   const [globalProgress, setGlobalProgress] = useState(0);
+
+  const [youtubeModal, setYoutubeModal] = useState(false);
+
+  const [youtubeUrl, setYoutubeUrl] = useState("");
 
   const { contentInformation, pathAsObject, specie } =
     useContext(DataEntryContext);
@@ -114,6 +123,32 @@ const MediasTab = () => {
       });
   };
 
+  const addYoutubeToGlobal = () => {
+    const field = voca.camelCase(contentInformation?.levelName);
+    processogramApi
+      .addNewMedia(field, contentInformation?.ref__id, {
+        type: "youtube",
+        url: youtubeUrl,
+      })
+      .then(({ data }) => {
+        setGlobalMedias([...globalMedias, data]);
+        setYoutubeModal(false);
+      });
+  };
+
+  const addYoutubeToSpecie = () => {
+    const field = "specie";
+    processogramApi
+      .addNewMedia(field, specie._id, {
+        type: "youtube",
+        url: youtubeUrl,
+      })
+      .then(({ data }) => {
+        setLocalMedias([...localMedias, data]);
+        setYoutubeModal(false);
+      });
+  };
+
   const uploadToLocal = (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -195,6 +230,10 @@ const MediasTab = () => {
     }
   };
 
+  const openYoutubeModal = () => {
+    setYoutubeModal(true);
+  };
+
   return (
     <Container>
       {contentInformation && (
@@ -210,6 +249,7 @@ const MediasTab = () => {
             progress={globalProgress}
             onFetch={uploadingGlobal}
           />
+          <UploadYoutube onClick={openYoutubeModal}>From youtube</UploadYoutube>
         </Section>
       )}
       <Section>
@@ -224,7 +264,30 @@ const MediasTab = () => {
           progress={localProgress}
           onFetch={uploadingLocal}
         />
+        {!contentInformation && (
+          <UploadYoutube onClick={openYoutubeModal}>From youtube</UploadYoutube>
+        )}
       </Section>
+
+      <Modal
+        isOpen={youtubeModal}
+        onClose={() => setYoutubeModal(false)}
+        clear={() => setYoutubeUrl("")}
+      >
+        <Box py={2} px={3}>
+          <FormInput
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
+          />
+          <SuccessButton
+            onClick={
+              contentInformation ? addYoutubeToGlobal : addYoutubeToSpecie
+            }
+          >
+            Adicionar
+          </SuccessButton>
+        </Box>
+      </Modal>
     </Container>
   );
 };

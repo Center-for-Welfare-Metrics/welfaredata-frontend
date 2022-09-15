@@ -67,11 +67,15 @@ const MediaFile = ({
 
   const openImageFullScreen = () => {
     if (onlyImage) {
-      if (!media.type.includes("video")) {
+      if (!media.type.includes("video") && media.type !== "youtube") {
         return;
       }
     }
     toggle(true);
+  };
+
+  const getYoutubeUrlId = (url: string) => {
+    return url.split("v=")[1];
   };
 
   return (
@@ -93,6 +97,25 @@ const MediaFile = ({
             <Video onClick={openImageFullScreen}>
               <source src={media?.url + "#t=0.1"} type={media?.type}></source>
             </Video>
+          </Thumb>
+        )}
+
+        {media?.type === "youtube" && (
+          <Thumb onClick={openImageFullScreen}>
+            <VideoOverlay />
+            <IconWrapper>
+              <PlayCircleFilled />
+            </IconWrapper>
+            <Image
+              style={{
+                backgroundImage: `url(https://img.youtube.com/vi/${getYoutubeUrlId(
+                  media?.url
+                )}/0.jpg)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
           </Thumb>
         )}
         <Dialog
@@ -138,11 +161,36 @@ const MediaFile = ({
               <source src={media?.url} type={media?.type}></source>
             </Video>
           )}
+          {media?.type === "youtube" && (
+            <Responsive>
+              <iframe
+                src={`https://www.youtube.com/embed/${getYoutubeUrlId(
+                  media?.url
+                )}?autoplay=1`}
+                allowFullScreen
+                height={"100%"}
+              />
+            </Responsive>
+          )}
         </FullScreenView>
       )}
     </>
   );
 };
+
+const Responsive = styled.div`
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  position: relative;
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
 
 const VideoOverlay = styled.div`
   position: absolute;
