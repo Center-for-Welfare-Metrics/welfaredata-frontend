@@ -16,6 +16,8 @@ import Dialog from "@/components/common/dialog/dialog";
 import { IMedia } from "@/utils/processogram";
 import { PlayCircleFilled } from "@material-ui/icons";
 import styled from "styled-components";
+import queryString from "query-string";
+
 export interface IMediaFile {
   media: IMedia;
   disabledContext?: boolean;
@@ -75,7 +77,27 @@ const MediaFile = ({
   };
 
   const getYoutubeUrlId = (url: string) => {
-    return url.split("v=")[1];
+    const parsed = queryString.parseUrl(url);
+    const v = parsed.query.v;
+    if (!v) {
+      try {
+        const url = parsed.url;
+        const index = url.lastIndexOf("/");
+        return url.substring(index + 1);
+      } catch (error) {
+        return "";
+      }
+    }
+    return v;
+  };
+
+  const getYoutubeTimeStart = (url: string) => {
+    const parsed = queryString.parseUrl(url);
+    const t = parsed.query.t;
+    if (!t) {
+      return "";
+    }
+    return t;
   };
 
   return (
@@ -166,7 +188,7 @@ const MediaFile = ({
               <iframe
                 src={`https://www.youtube.com/embed/${getYoutubeUrlId(
                   media?.url
-                )}?autoplay=1`}
+                )}?autoplay=1&start=${getYoutubeTimeStart(media?.url)}`}
                 allowFullScreen
                 height={"100%"}
               />
