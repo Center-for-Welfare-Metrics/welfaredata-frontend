@@ -18,6 +18,8 @@ import { Box } from "@material-ui/core";
 import { Button } from "@/components/common/buttons/submit-button-styled";
 import { SuccessButton } from "@/components/common/buttons/default-button-styled";
 
+type youtubeModal = "global" | "local";
+
 const MediasTab = () => {
   const globalInputFileRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +33,7 @@ const MediasTab = () => {
 
   const [globalProgress, setGlobalProgress] = useState(0);
 
-  const [youtubeModal, setYoutubeModal] = useState(false);
+  const [youtubeModal, setYoutubeModal] = useState<youtubeModal>(null);
 
   const [youtubeUrl, setYoutubeUrl] = useState("");
 
@@ -132,7 +134,22 @@ const MediasTab = () => {
       })
       .then(({ data }) => {
         setGlobalMedias([...globalMedias, data]);
-        setYoutubeModal(false);
+        setYoutubeModal(null);
+      });
+  };
+
+  const addYoutubeToLocal = () => {
+    const id_tree = pathAsObject.id_tree;
+    const processogram_id = pathAsObject?.processogram_id;
+    processogramApi
+      .addNewMediaLocal(processogram_id, {
+        id_tree,
+        type: "youtube",
+        url: youtubeUrl,
+      })
+      .then(({ data }) => {
+        setLocalMedias([...localMedias, data]);
+        setYoutubeModal(null);
       });
   };
 
@@ -145,7 +162,7 @@ const MediasTab = () => {
       })
       .then(({ data }) => {
         setLocalMedias([...localMedias, data]);
-        setYoutubeModal(false);
+        setYoutubeModal(null);
       });
   };
 
@@ -230,8 +247,8 @@ const MediasTab = () => {
     }
   };
 
-  const openYoutubeModal = () => {
-    setYoutubeModal(true);
+  const openYoutubeModal = (modal: youtubeModal) => {
+    setYoutubeModal(modal);
   };
 
   return (
@@ -249,7 +266,9 @@ const MediasTab = () => {
             progress={globalProgress}
             onFetch={uploadingGlobal}
           />
-          <UploadYoutube onClick={openYoutubeModal}>From youtube</UploadYoutube>
+          <UploadYoutube onClick={() => openYoutubeModal("global")}>
+            From youtube
+          </UploadYoutube>
         </Section>
       )}
       <Section>
@@ -264,14 +283,14 @@ const MediasTab = () => {
           progress={localProgress}
           onFetch={uploadingLocal}
         />
-        {!contentInformation && (
-          <UploadYoutube onClick={openYoutubeModal}>From youtube</UploadYoutube>
-        )}
+        <UploadYoutube onClick={() => openYoutubeModal("local")}>
+          From youtube
+        </UploadYoutube>
       </Section>
 
       <Modal
-        isOpen={youtubeModal}
-        onClose={() => setYoutubeModal(false)}
+        isOpen={!!youtubeModal}
+        onClose={() => setYoutubeModal(null)}
         clear={() => setYoutubeUrl("")}
       >
         <Box py={2} px={3}>
@@ -281,7 +300,11 @@ const MediasTab = () => {
           />
           <SuccessButton
             onClick={
-              contentInformation ? addYoutubeToGlobal : addYoutubeToSpecie
+              contentInformation
+                ? youtubeModal === "global"
+                  ? addYoutubeToGlobal
+                  : addYoutubeToLocal
+                : addYoutubeToSpecie
             }
           >
             Adicionar

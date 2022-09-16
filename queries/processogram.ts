@@ -36,6 +36,10 @@ export default {
       headers: { "content-type": "multipart/form-data" },
       onUploadProgress: uploadProgress,
     }),
+  addNewMediaLocal: (
+    _id: string,
+    data: { url: string; type: "youtube"; id_tree: any }
+  ) => api.patch(p(`${_id}/newmedia`), data),
   createReference: (
     filedReference,
     data: { name: string; specie: SpeciesTypes; description: "" }
