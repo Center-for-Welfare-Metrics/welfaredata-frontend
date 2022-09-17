@@ -8,8 +8,8 @@ type TabIconProps = {
 };
 
 export const TabIcon = styled.div<TabIconProps>`
-  ${({ $active, $state }) => css`
-    opacity: ${$state === "minimized" ? ($active ? 1 : 0) : $active ? 1 : 0.4};
+  ${({ $active }) => css`
+    opacity: ${$active ? 1 : 0.4};
   `}
   cursor:pointer;
   -webkit-tap-highlight-color: transparent;

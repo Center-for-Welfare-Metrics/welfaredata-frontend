@@ -22,17 +22,17 @@ export interface IMediaTab {
 const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
   const { setMediasViewer } = useContext(ProcessogramContext);
 
-  const mediaClick = (event: Event, media: IMedia) => {
-    if (!media.type.includes("video") && media.type !== "youtube") {
-      event.stopPropagation();
-      const allMedias = [...(medias || []), ...(ref_medias || [])];
-      const onlyImages = allMedias.filter(
-        (media) => !media.type.includes("video")
-      );
-      const index = onlyImages.findIndex((m) => m._id === media._id);
-      setMediasViewer({ medias: onlyImages, index: index });
-    }
-  };
+  // const mediaClick = (event: Event, media: IMedia) => {
+  //   if (!media.type.includes("video") && media.type !== "youtube") {
+  //     event.stopPropagation();
+  //     const allMedias = [...(medias || []), ...(ref_medias || [])];
+  //     const onlyImages = allMedias.filter(
+  //       (media) => !media.type.includes("video")
+  //     );
+  //     const index = onlyImages.findIndex((m) => m._id === media._id);
+  //     setMediasViewer({ medias: onlyImages, index: index });
+  //   }
+  // };
 
   return (
     <MediaList>
@@ -41,8 +41,8 @@ const MediaTab = ({ medias, ref_medias }: IMediaTab) => {
           key={media?._id}
           media={media}
           disabledContext
-          onClick={(e) => mediaClick(e, media)}
-          onlyImage
+          // onClick={(e) => mediaClick(e, media)}
+          // onlyImage
         />
       ))}
     </MediaList>
