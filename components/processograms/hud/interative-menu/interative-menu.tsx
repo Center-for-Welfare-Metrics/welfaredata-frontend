@@ -18,6 +18,8 @@ import { SvgPath } from "@/utils/assets_path";
 import toast from "react-hot-toast";
 import { ChevronDown } from "react-feather";
 import { createContext } from "react";
+import { useRecoilState } from "recoil";
+import { recoilMenuState } from "recoil/processogram";
 
 export type IInterativeMenuState = "minimized" | "full" | "hide";
 
@@ -34,7 +36,7 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
 
   const [content, setContent] = useState<IContentInformation>(null);
 
-  const [state, setState] = useState<IInterativeMenuState>("full");
+  const [state, setState] = useRecoilState(recoilMenuState);
 
   const [renderTime, setRenderTime] = useState(false);
 

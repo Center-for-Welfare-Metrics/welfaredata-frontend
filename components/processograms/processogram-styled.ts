@@ -19,7 +19,7 @@ export const SvgContainer = styled.div`
     min-height: 5rem;
     z-index: 77;
     max-height: 80vh;
-    /* transition:width 500ms;   */
+
     width: 80%;
   }
   @media (max-width: 800px) {

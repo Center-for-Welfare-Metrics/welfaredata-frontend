@@ -1,3 +1,4 @@
+import { IInterativeMenuState } from "@/components/processograms/hud/interative-menu/interative-menu";
 import { ICoolFormat, IMedia } from "@/utils/processogram";
 import { memoize } from "lodash";
 import { atom } from "recoil";
@@ -33,4 +34,9 @@ export const recoilLocalMedias = memoize((id) =>
 export const recoilCoolStack = atom<ICoolFormat[]>({
   key: "recoilCoolStack",
   default: [],
+});
+
+export const recoilMenuState = atom<IInterativeMenuState>({
+  key: "recoilMenuState",
+  default: "full",
 });

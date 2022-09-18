@@ -3,7 +3,6 @@ import { gsap } from "gsap";
 import { MouseEvent as MS, useEffect, useRef, useState } from "react";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
 import update from "immutability-helper";
-
 import { ProductionSystemTypes, SpeciesTypes } from "@/utils/enum_types";
 import ProcessogramContext, {
   ImainState,
@@ -750,16 +749,6 @@ const Processogram = ({
           onMouseMove={mouseMove}
           src={`/assets/svg/zoo/${specie}/${productionSystem}.svg`}
         />
-        {/* {mainState && (
-          <ProcessogramHud
-            element={getCurrentDomElement()}
-            level={mainState.level}
-            stack={stack}
-            isMoving={isMoving}
-            onHover={onHover}
-            onChange={handleHudChange}
-          />
-        )} */}
         {mainState && (
           <HudTreeControl
             stackCoolFormat={coolStack}

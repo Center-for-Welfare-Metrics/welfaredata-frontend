@@ -20,7 +20,7 @@ import { useEffect } from "react";
 import { ICoolFormat } from "@/utils/processogram";
 import HudTreeControl from "./hud/hud-tree-control";
 import { useRecoilValue } from "recoil";
-import { recoilCoolStack } from "recoil/processogram";
+import { recoilCoolStack, recoilMenuState } from "recoil/processogram";
 
 export interface IProcessogramList {
   specie: ISpecie;
@@ -54,6 +54,8 @@ const ProcessogramList = ({
   const [NAOPODEUSAR, PROIBIDO] = useState(false);
 
   const [stack, setStack] = useState<string[]>([]);
+
+  const menuStateValue = useRecoilValue(recoilMenuState);
 
   const contextValue: IProcessogramContext = {
     collection,
@@ -156,7 +158,7 @@ const ProcessogramList = ({
         <OverlapingMaster onContextMenu={(e) => e.stopPropagation()} />
       )}
       <Container ref={containerRef} current={productionSystemSelected}>
-        <SubContainer>
+        <SubContainer $menuOpen={menuStateValue === "full"}>
           {SPECIES[specie?._id]?.map((productionSystem) => (
             <Processogram
               key={productionSystem}
