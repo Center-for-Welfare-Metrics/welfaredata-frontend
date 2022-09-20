@@ -141,8 +141,10 @@ const Processogram = ({
   const pluginInitial = async (first = false) => {
     return new Promise(async (resolve, reject) => {
       if (svgRef.current.id === "multi_tier--ps") {
-        let topFigure = svgRef.current.querySelector("#x33_RD_x5F_TIER--ci-01");
-        let middleFigure = svgRef.current.querySelector(
+        let topFigure = svgRef.current?.querySelector(
+          "#x33_RD_x5F_TIER--ci-01"
+        );
+        let middleFigure = svgRef.current?.querySelector(
           "#x32_ND_x5F_TIER--ci-02"
         );
         await gsap.to(topFigure, {
@@ -188,11 +190,11 @@ const Processogram = ({
 
   const pluginUpdate = async (next_id) => {
     return new Promise(async (resolve, reject) => {
-      if (svgRef.current.id === "multi_tier--ps") {
-        let topFigure = svgRef.current.querySelector(
+      if (svgRef.current?.id === "multi_tier--ps") {
+        let topFigure = svgRef.current?.querySelector(
           "#x33_RD_x5F_TIER--ci-01"
         ) as any;
-        let middleFigure = svgRef.current.querySelector(
+        let middleFigure = svgRef.current?.querySelector(
           "#x32_ND_x5F_TIER--ci-02"
         ) as any;
         if (next_id === "laying--ph") {
@@ -301,16 +303,20 @@ const Processogram = ({
       if (targets.length > 0) {
         gsap.to(targets, FILTER.out);
       }
-      const target = svgRef.current.querySelector(`#${onHover}`);
-      if (target) {
-        gsap.to(target, FILTER.hovering);
+      try {
+        const target = svgRef.current?.querySelector(`#${onHover}`);
+        if (target) {
+          gsap.to(target, FILTER.hovering);
+        }
+      } catch (error) {
+        console.log(`user interaction => ${error}`);
       }
     } else {
       if (targets.length > 0) {
         gsap.to(targets, FILTER.active);
       }
       const queryToFadeOut = `[id*='${currentLevelId}']:not([id='${mainState.currentDomID}'])`;
-      const targetsToFadeOut = svgRef.current.querySelectorAll(queryToFadeOut);
+      const targetsToFadeOut = svgRef.current?.querySelectorAll(queryToFadeOut);
       if (targetsToFadeOut.length > 0) {
         gsap.to(targetsToFadeOut, FILTER.out);
       }
@@ -343,7 +349,7 @@ const Processogram = ({
 
   const reset = async () => {
     if (svgRef?.current) {
-      let all = svgRef.current.querySelectorAll(`[id*='--']`);
+      let all = svgRef.current?.querySelectorAll(`[id*='--']`);
       gsap.to(all, FILTER.active);
     }
   };
@@ -457,7 +463,7 @@ const Processogram = ({
 
   const getCurrentDomElement = () =>
     mainState?.currentDomID
-      ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
+      ? svgRef.current?.querySelector(`#${mainState.currentDomID}`)
       : svgRef.current;
 
   const updateStack = () => {
@@ -503,7 +509,7 @@ const Processogram = ({
 
   const getParent = () => {
     if (mainState?.currentDomID) {
-      let node = svgRef.current.querySelector(`#${mainState.currentDomID}`);
+      let node = svgRef.current?.querySelector(`#${mainState.currentDomID}`);
       let levelBefore = LEVELS[mainState.level - 1];
       while (node !== svgRef.current) {
         node = node.parentElement;
@@ -553,7 +559,7 @@ const Processogram = ({
 
   const targetIsInside = (elementClicked: EventTarget) => {
     let currentElement = mainState.currentDomID
-      ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
+      ? svgRef.current?.querySelector(`#${mainState.currentDomID}`)
       : svgRef.current;
 
     return (
@@ -564,7 +570,7 @@ const Processogram = ({
 
   const targetIsSibling = (target: EventTarget) => {
     let currentElement = mainState.currentDomID
-      ? svgRef.current.querySelector(`#${mainState.currentDomID}`)
+      ? svgRef.current?.querySelector(`#${mainState.currentDomID}`)
       : svgRef.current;
 
     let currentLevel = LEVELS[mainState.level];
@@ -660,9 +666,13 @@ const Processogram = ({
   };
 
   const InnerClick = () => {
-    let element = svgRef.current.querySelector(`#${onHover}`);
-    if (element) {
-      toNextLevel(element);
+    try {
+      let element = svgRef.current?.querySelector(`#${onHover}`);
+      if (element) {
+        toNextLevel(element);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -688,7 +698,7 @@ const Processogram = ({
       if (change.currentDomID === null) {
         element = svgRef.current;
       } else {
-        element = svgRef.current.querySelector(`#${change.currentDomID}`);
+        element = svgRef.current?.querySelector(`#${change.currentDomID}`);
       }
       pluginUpdate(change.currentDomID).then(() => {
         let viewBox = getElementViewBox(element);
@@ -713,16 +723,20 @@ const Processogram = ({
     }
     const goingStack = [...currentStack, ghost];
     if (svgRef.current) {
-      const ghostElement = svgRef?.current?.querySelector(`#${ghost}`);
-      if (ghostElement) {
-        const parent = ghostElement?.parentElement;
-        if (parent) {
-          const parentID = parent.id;
-          const parentIndex = goingStack.indexOf(parentID);
-          if (parentIndex === -1) {
-            goingStack[goingStack.length - 2] = parentID;
+      try {
+        const ghostElement = svgRef?.current?.querySelector(`#${ghost}`);
+        if (ghostElement) {
+          const parent = ghostElement?.parentElement;
+          if (parent) {
+            const parentID = parent.id;
+            const parentIndex = goingStack.indexOf(parentID);
+            if (parentIndex === -1) {
+              goingStack[goingStack.length - 2] = parentID;
+            }
           }
         }
+      } catch (error) {
+        console.log(error);
       }
     }
     setCoolStack(translateStackToCoolFormat(goingStack));

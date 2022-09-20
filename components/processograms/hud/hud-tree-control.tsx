@@ -59,8 +59,12 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
     if (stackCoolFormat) {
       const svg = document.getElementById(stackCoolFormat?.[0]?.domID);
       if (stackCoolFormat?.length > 1) {
-        const element = svg?.querySelector(`#${item.domID}`);
-        return element;
+        try {
+          const element = svg?.querySelector(`#${item.domID}`);
+          return element;
+        } catch (error) {
+          return null;
+        }
       }
       return svg;
     }
