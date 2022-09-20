@@ -19,8 +19,19 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { ICoolFormat } from "@/utils/processogram";
 import HudTreeControl from "./hud/hud-tree-control";
-import { useRecoilValue } from "recoil";
-import { recoilCoolStack, recoilMenuState } from "recoil/processogram";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  recoilCoolStack,
+  recoilIsOnSpecieLevel,
+  recoilMenuState,
+} from "recoil/processogram";
+import {
+  CreditsContainer,
+  Subtitle,
+  Title,
+  TitleContainer,
+} from "./processogram-styled";
+import { Box } from "@material-ui/core";
 
 export interface IProcessogramList {
   specie: ISpecie;
@@ -52,6 +63,8 @@ const ProcessogramList = ({
   });
 
   const [NAOPODEUSAR, PROIBIDO] = useState(false);
+
+  const isOnSpecieLevel = useRecoilValue(recoilIsOnSpecieLevel);
 
   const [stack, setStack] = useState<string[]>([]);
 
@@ -154,10 +167,18 @@ const ProcessogramList = ({
 
   return (
     <ProcessogramContext.Provider value={contextValue}>
-      {NAOPODEUSAR && (
+      {/* {NAOPODEUSAR && (
         <OverlapingMaster onContextMenu={(e) => e.stopPropagation()} />
-      )}
-      <Container ref={containerRef} current={productionSystemSelected}>
+      )} */}
+      <Container ref={containerRef}>
+        <TitleContainer $visible={isOnSpecieLevel}>
+          <Title>
+            The life of sows and market pigs in four production systems
+          </Title>
+          <Subtitle>
+            (click on the components to zoom in/out the different levels)
+          </Subtitle>
+        </TitleContainer>
         <SubContainer $menuOpen={menuStateValue === "full"}>
           {SPECIES[specie?._id]?.map((productionSystem) => (
             <Processogram
@@ -173,6 +194,28 @@ const ProcessogramList = ({
             />
           ))}
         </SubContainer>
+        <CreditsContainer
+          $visible={isOnSpecieLevel && menuStateValue === "minimized"}
+        >
+          <Box>
+            <ul>
+              <li>Wladimir J.Alonso</li>
+              <li>Cynthia Schick-Paim</li>
+              <li>Herikle Mesquita</li>
+            </ul>
+            <p>
+              Click{" "}
+              <a
+                href="https://welfarefootprint.org/research-projects/processograms/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here
+              </a>{" "}
+              for more information
+            </p>
+          </Box>
+        </CreditsContainer>
         <InterativeMenu
           shareString={shareString}
           stackCoolFormat={coolFormat}

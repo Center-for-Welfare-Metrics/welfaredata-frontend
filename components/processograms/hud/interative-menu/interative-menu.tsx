@@ -49,13 +49,13 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
 
   const [top, setTop] = useState(0);
   useEffect(() => {
-    if (gesture) {
-      if (gesture.gesture === "to-up") {
-        setState("full");
-      } else if (gesture.gesture === "to-down") {
-        setState("minimized");
-      }
-    }
+    // if (gesture) {
+    //   if (gesture.gesture === "to-up") {
+    //     setState("full");
+    //   } else if (gesture.gesture === "to-down") {
+    //     setState("minimized");
+    //   }
+    // }
   }, [gesture]);
 
   useEffect(() => {

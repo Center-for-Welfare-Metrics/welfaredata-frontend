@@ -19,8 +19,8 @@ import { getElementViewBox } from "./processogram-helpers";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import HudTreeControl from "./hud/hud-tree-control";
-import { useRecoilState } from "recoil";
-import { recoilCoolStack } from "recoil/processogram";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { recoilCoolStack, recoilIsOnSpecieLevel } from "recoil/processogram";
 import _ from "lodash";
 import { isIOS } from "react-device-detect";
 interface IProcessogram {
@@ -89,6 +89,8 @@ const Processogram = ({
   const ref = useRef<HTMLDivElement>(null);
 
   const [onHover, setOnHover] = useState<string>(null);
+
+  const setIsOnSpecieLevel = useSetRecoilState(recoilIsOnSpecieLevel);
 
   const [topLeft, setTopLeft] = useState<any>({
     top: 0,
@@ -236,6 +238,7 @@ const Processogram = ({
     if (productionSystemSelected) {
       if (mainState) {
         focusOnMe();
+        setIsOnSpecieLevel(false);
       } else {
         fadeOutMe();
       }
@@ -363,7 +366,10 @@ const Processogram = ({
               opacity: 1,
               clearProps: "opacity",
             })
-            .duration(0.5);
+            .duration(0.5)
+            .then(() => {
+              setIsOnSpecieLevel(true);
+            });
         });
     } else {
       gsap
@@ -384,6 +390,7 @@ const Processogram = ({
             .duration(0.01)
             .then(() => {
               listContainerRef?.scrollTo(0, topLeft?.scrollTop);
+              setIsOnSpecieLevel(true);
             });
         });
     }

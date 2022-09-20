@@ -40,3 +40,8 @@ export const recoilMenuState = atom<IInterativeMenuState>({
   key: "recoilMenuState",
   default: "full",
 });
+
+export const recoilIsOnSpecieLevel = atom<boolean>({
+  key: "recoilIsOnSpecieLevel",
+  default: true,
+});
