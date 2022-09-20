@@ -255,37 +255,41 @@ const MediasTab = () => {
     <Container>
       {contentInformation && (
         <Section>
-          <Title>Global</Title>
+          <Box display="flex" alignItems="center" gridGap={32} mb={2}>
+            <Title>Global</Title>
+            <UploadFile
+              setFile={uploadToGlobal}
+              inputFileRef={globalInputFileRef}
+              progress={globalProgress}
+              onFetch={uploadingGlobal}
+            />
+            <UploadYoutube onClick={() => openYoutubeModal("global")}>
+              From youtube
+            </UploadYoutube>
+          </Box>
           <MediaFileList
             onDelete={onDeleteGlobal}
             medias={globalMedias || []}
           />
-          <UploadFile
-            setFile={uploadToGlobal}
-            inputFileRef={globalInputFileRef}
-            progress={globalProgress}
-            onFetch={uploadingGlobal}
-          />
-          <UploadYoutube onClick={() => openYoutubeModal("global")}>
-            From youtube
-          </UploadYoutube>
         </Section>
       )}
       <Section>
-        <Title>Specific</Title>
+        <Box display="flex" alignItems="center" gridGap={32} mb={2}>
+          <Title>Specific</Title>
+          <UploadFile
+            setFile={contentInformation ? uploadToLocal : uploadToSpecie}
+            inputFileRef={localInputFileRef}
+            progress={localProgress}
+            onFetch={uploadingLocal}
+          />
+          <UploadYoutube onClick={() => openYoutubeModal("local")}>
+            From youtube
+          </UploadYoutube>
+        </Box>
         <MediaFileList
           onDelete={contentInformation ? onDeleteSpecific : onDeleteSpecie}
           medias={localMedias || []}
         />
-        <UploadFile
-          setFile={contentInformation ? uploadToLocal : uploadToSpecie}
-          inputFileRef={localInputFileRef}
-          progress={localProgress}
-          onFetch={uploadingLocal}
-        />
-        <UploadYoutube onClick={() => openYoutubeModal("local")}>
-          From youtube
-        </UploadYoutube>
       </Section>
 
       <Modal

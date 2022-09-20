@@ -5,8 +5,6 @@ export const UploadYoutube = styled.div`
   border-radius: 4px;
   width: fit-content;
   padding: 0.5rem;
-  position: absolute;
-  bottom: 0;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   :hover {
@@ -17,7 +15,7 @@ export const UploadYoutube = styled.div`
 
 export const Title = styled.div`
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: ${({ theme }) => theme.colors.blue};
 `;
 
