@@ -11,13 +11,14 @@ import ContextMenu from "@/components/context-menu/context-menu";
 import { Toaster } from "react-hot-toast";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "theme/fast.css";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState<IUser>(null);
   const [firstLoad, setFirstLoad] = useState(false);
 
   const { theme, themeLoaded } = useTheme();
-  const [selectedTheme, setSelectedTheme] = useState(theme);
+  const [selectedTheme, setSelectedTheme] = useState(null);
 
   const [contextMenu, setContextMenu] = useState<IContextMenu>({
     open: false,
@@ -30,6 +31,8 @@ function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
 
   const [temporary, setTemporary] = useState<any>(null);
+
+  const { pathname } = useRouter();
 
   const contextMenuValues = {
     contextMenu,
@@ -79,14 +82,18 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     document.oncontextmenu = handleCustomContextMenu;
     if (!user) {
-      authApi
-        .get_user()
-        .then(({ data }) => {
-          setUser(data);
-        })
-        .catch(() => {
-          setFirstLoad(true);
-        });
+      if (pathname !== "/pigs") {
+        authApi
+          .get_user()
+          .then(({ data }) => {
+            setUser(data);
+          })
+          .catch(() => {
+            setFirstLoad(true);
+          });
+      } else {
+        setFirstLoad(true);
+      }
     } else {
       setFirstLoad(true);
     }
@@ -103,7 +110,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     firstLoad &&
-    themeLoaded && (
+    selectedTheme && (
       <ThemeProvider theme={selectedTheme}>
         <Head>
           <meta
