@@ -2,7 +2,6 @@ import { lighten, transparentize } from "polished";
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
-  padding: 2rem 0 2rem 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -26,21 +25,13 @@ type LabelProps = {
 export const Label = styled.label<LabelProps>`
   color: ${({ theme }) => transparentize(0.5, theme.colors.blue)};
   position: absolute;
-  white-space: nowrap;
+  transform: translateY(105%);
   ${({ theme }) => css`
     bottom: 0;
-    transform: translateY(-50%);
     z-index: auto;
     font-size: ${theme.fontSize.small};
     color: ${({ theme }) => theme.colors.blue};
-  `}/* ${({ $hasValue, $multiline }) =>
-    $hasValue &&
-    !$multiline &&
-    css`
-      transform: translateY(-150%);
-    `}
-
-    transition: transform 100ms linear; */
+  `}
 `;
 export const Error = styled.span`
   font-size: ${({ theme }) => theme.fontSize.small};

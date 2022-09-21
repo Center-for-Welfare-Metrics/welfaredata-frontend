@@ -24,7 +24,7 @@ const FeedbackTab = () => {
 
   const [detailed, setDetailed] = useState("");
 
-  const [short, setShort] = useState("");
+  const [short, setShort] = useState("User feedback");
 
   const [email, setEmail] = useState("");
 
@@ -75,35 +75,22 @@ const FeedbackTab = () => {
 
   return (
     <Container>
-      <HeaderText>
-        Want to leave some feedback? Please use the fields below to enter a
-        short description, and optionally a more detailed explanation
-      </HeaderText>
+      <HeaderText>Feedback</HeaderText>
       <FeedBackForm>
         <form method="post" onSubmit={submitForm}>
           <FormInput
             customStyle={{ paddingTop: "0" }}
             onClick={(e) => e.stopPropagation()}
             name="email"
-            label="Email (optional)"
-            type="email"
+            label="Contact (Email, etc)"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <FormInput
-            customStyle={{ paddingTop: "0" }}
-            onClick={(e) => e.stopPropagation()}
-            name="short_description"
-            label="Short Description *"
-            required
-            value={short}
-            onChange={(e) => setShort(e.target.value)}
-            autoComplete="off"
-          />
-          <FormInput
             onClick={(e) => e.stopPropagation()}
             name="detailed_description"
-            label="Detailed Description (optional)"
+            label="Suggestions, corrections (when possible, please send a link with the original source). Thanks in advance!"
             multiline={true}
             value={detailed}
             onChange={(e) => setDetailed(e.target.value)}

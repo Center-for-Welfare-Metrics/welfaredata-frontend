@@ -9,6 +9,7 @@ import {
 import { Container, Label, Icon, Error } from "./form-input-styled";
 import { LabeledInput, LabeledTextArea } from "./inputs";
 import React from "react";
+import { Box } from "@material-ui/core";
 
 export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -41,32 +42,34 @@ const FormInput:
   ...rest
 }) => {
   return (
-    <Container style={customStyle}>
-      <Label $multiline={multiline} $hasValue={!!value} htmlFor={name}>
-        {label}
-      </Label>
-      {multiline ? (
-        <LabeledTextArea
-          id={name}
-          name={name}
-          type={type}
-          value={value}
-          disabled={disabled}
-          {...rest}
-        />
-      ) : (
-        <LabeledInput
-          id={name}
-          name={name}
-          type={type}
-          value={value}
-          disabled={disabled}
-          {...rest}
-        />
-      )}
+    <Box py={3} width="100%">
+      <Container style={customStyle}>
+        <Label $multiline={multiline} $hasValue={!!value} htmlFor={name}>
+          {label}
+        </Label>
+        {multiline ? (
+          <LabeledTextArea
+            id={name}
+            name={name}
+            type={type}
+            value={value}
+            disabled={disabled}
+            {...rest}
+          />
+        ) : (
+          <LabeledInput
+            id={name}
+            name={name}
+            type={type}
+            value={value}
+            disabled={disabled}
+            {...rest}
+          />
+        )}
 
-      {error && <Error>{error}</Error>}
-    </Container>
+        {error && <Error>{error}</Error>}
+      </Container>
+    </Box>
   );
 };
 
