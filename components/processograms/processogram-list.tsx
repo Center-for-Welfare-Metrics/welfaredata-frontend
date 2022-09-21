@@ -200,7 +200,7 @@ const ProcessogramList = ({
           <Box>
             <ul>
               <li>Wladimir J.Alonso</li>
-              <li>Cynthia Schick-Paim</li>
+              <li>Cynthia Schuck Paim</li>
               <li>Herikle Mesquita</li>
             </ul>
             <p>
