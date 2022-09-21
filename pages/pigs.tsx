@@ -25,6 +25,6 @@ export async function getStaticProps(context) {
       data,
       specie,
     },
-    revalidate: 60,
+    revalidate: 30,
   };
 }
