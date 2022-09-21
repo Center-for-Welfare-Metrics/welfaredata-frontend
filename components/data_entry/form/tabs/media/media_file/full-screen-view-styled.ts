@@ -42,4 +42,8 @@ export const InnerContent = styled.div`
   transform: scaleX(1) scaleY(1) scaleZ(1);
   z-index: 497;
   min-width: 60rem;
+  @media (max-width: 800px) {
+    min-width: 100vw;
+    max-width: 100vw;
+  }
 `;
