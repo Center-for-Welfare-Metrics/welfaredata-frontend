@@ -82,7 +82,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     document.oncontextmenu = handleCustomContextMenu;
     if (!user) {
-      if (pathname !== "/pigs") {
+      if (pathname !== "/pigs" && pathname !== "/") {
         authApi
           .get_user()
           .then(({ data }) => {
