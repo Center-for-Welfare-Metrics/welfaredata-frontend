@@ -23,6 +23,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   recoilCoolStack,
   recoilIsOnSpecieLevel,
+  recoilIsOnSpecieLevelDelay,
   recoilMenuState,
 } from "recoil/processogram";
 import {
@@ -65,6 +66,8 @@ const ProcessogramList = ({
   const [NAOPODEUSAR, PROIBIDO] = useState(false);
 
   const isOnSpecieLevel = useRecoilValue(recoilIsOnSpecieLevel);
+
+  const isOnSpecieLevelDelay = useRecoilValue(recoilIsOnSpecieLevelDelay);
 
   const [stack, setStack] = useState<string[]>([]);
 
@@ -165,6 +168,10 @@ const ProcessogramList = ({
     }
   }, [router.query.s]);
 
+  const creditIsVisible = () => {
+    return isOnSpecieLevel && menuStateValue === "minimized";
+  };
+
   return (
     <ProcessogramContext.Provider value={contextValue}>
       {/* {NAOPODEUSAR && (
@@ -194,28 +201,28 @@ const ProcessogramList = ({
             />
           ))}
         </SubContainer>
-        <CreditsContainer
-          $visible={isOnSpecieLevel && menuStateValue === "minimized"}
-        >
-          <Box>
-            <ul>
-              <li>Wladimir J.Alonso</li>
-              <li>Cynthia Schuck Paim</li>
-              <li>Herikle Mesquita</li>
-            </ul>
-            <p>
-              Click{" "}
-              <a
-                href="https://welfarefootprint.org/research-projects/processograms/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                here
-              </a>{" "}
-              for more information
-            </p>
-          </Box>
-        </CreditsContainer>
+        {isOnSpecieLevelDelay && (
+          <CreditsContainer $visible={creditIsVisible()}>
+            <Box>
+              <ul>
+                <li>Wladimir J.Alonso</li>
+                <li>Cynthia Schuck Paim</li>
+                <li>Herikle Mesquita</li>
+              </ul>
+              <p>
+                Click{" "}
+                <a
+                  href="https://welfarefootprint.org/research-projects/processograms/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here
+                </a>{" "}
+                for more information
+              </p>
+            </Box>
+          </CreditsContainer>
+        )}
         <InterativeMenu
           shareString={shareString}
           stackCoolFormat={coolFormat}

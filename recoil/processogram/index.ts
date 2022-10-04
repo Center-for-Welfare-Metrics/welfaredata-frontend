@@ -45,3 +45,8 @@ export const recoilIsOnSpecieLevel = atom<boolean>({
   key: "recoilIsOnSpecieLevel",
   default: true,
 });
+
+export const recoilIsOnSpecieLevelDelay = atom<boolean>({
+  key: "recoilIsOnSpecieLevelDelay",
+  default: true,
+});

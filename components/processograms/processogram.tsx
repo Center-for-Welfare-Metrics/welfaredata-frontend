@@ -20,7 +20,11 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import HudTreeControl from "./hud/hud-tree-control";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { recoilCoolStack, recoilIsOnSpecieLevel } from "recoil/processogram";
+import {
+  recoilCoolStack,
+  recoilIsOnSpecieLevel,
+  recoilIsOnSpecieLevelDelay,
+} from "recoil/processogram";
 import _ from "lodash";
 import { isIOS } from "react-device-detect";
 interface IProcessogram {
@@ -91,6 +95,8 @@ const Processogram = ({
   const [onHover, setOnHover] = useState<string>(null);
 
   const setIsOnSpecieLevel = useSetRecoilState(recoilIsOnSpecieLevel);
+
+  const setIsOnSpecieLevelDelay = useSetRecoilState(recoilIsOnSpecieLevelDelay);
 
   const [topLeft, setTopLeft] = useState<any>({
     top: 0,
@@ -375,6 +381,7 @@ const Processogram = ({
             .duration(0.5)
             .then(() => {
               setIsOnSpecieLevel(true);
+              setIsOnSpecieLevelDelay(true);
             });
         });
     } else {
@@ -397,6 +404,7 @@ const Processogram = ({
             .then(() => {
               listContainerRef?.scrollTo(0, topLeft?.scrollTop);
               setIsOnSpecieLevel(true);
+              setIsOnSpecieLevelDelay(true);
             });
         });
     }
@@ -435,7 +443,10 @@ const Processogram = ({
             translateY: "-50%",
             ease: "power1.inOut",
           })
-          .duration(0.7);
+          .duration(0.7)
+          .then(() => {
+            setIsOnSpecieLevelDelay(false);
+          });
       });
   };
 
