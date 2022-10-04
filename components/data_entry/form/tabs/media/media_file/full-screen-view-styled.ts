@@ -43,7 +43,7 @@ export const InnerContent = styled.div`
   z-index: 497;
   min-width: 60rem;
   @media (max-width: 800px) {
-    min-width: 100vw;
-    max-width: 100vw;
+    min-width: 80vw;
+    max-width: 80vw;
   }
 `;
