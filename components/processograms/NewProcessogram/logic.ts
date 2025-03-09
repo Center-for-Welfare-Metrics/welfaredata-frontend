@@ -44,7 +44,7 @@ export const useProcessogramLogic = () => {
   };
 
   const changeLevelTo = useCallback(
-    async (target: SVGElement) => {
+    (target: SVGElement) => {
       const viewBox = getElementViewBox(target);
       const id = target.id;
       const currentLevelById = getLevelById(id);
@@ -54,12 +54,14 @@ export const useProcessogramLogic = () => {
       };
       currentLevel.current = currentLevelById;
       deleteRule();
-      await gsap.to(svgRef, {
+      gsap.to(svgRef, {
         attr: {
           viewBox: viewBox,
         },
+        onComplete: () => {
+          insertHoverRule(id, nextLevel);
+        },
       });
-      insertHoverRule(id, nextLevel);
     },
     [svgRef]
   );
@@ -109,7 +111,7 @@ export const useProcessogramLogic = () => {
     const sheet = document.createElement("style");
     document.head.appendChild(sheet);
     styleSheet.current = sheet;
-    window.addEventListener("click", onClick);
+    window.addEventListener("click", onClick, { passive: false });
     insertHoverRule(null, 1);
     initialized.current = true;
 
