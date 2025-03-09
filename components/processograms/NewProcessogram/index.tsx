@@ -15,7 +15,7 @@ export const NewProcessogram = () => {
     <SvgContainer>
       <ProcessogramSVG
         ref={setSvgRef}
-        src={`/assets/svg/zoo/pig/conventional intensive.svg`}
+        src={`/assets/svg/zoo/pig/enhanced intensive.svg`}
       />
     </SvgContainer>
   );

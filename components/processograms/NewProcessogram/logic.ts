@@ -7,9 +7,6 @@ import { gsap } from "gsap";
 export const useProcessogramLogic = () => {
   const [svgRef, setSvgRef] = useState<SVGElement | null>(null);
 
-  const currentInteractableElements = useRef<NodeListOf<SVGElement> | null>(
-    null
-  );
   const historyLevel = useRef<{
     [key: number]: {
       id: string;
@@ -18,14 +15,6 @@ export const useProcessogramLogic = () => {
   const currentLevel = useRef<number>(0);
   const styleSheet = useRef<HTMLStyleElement | null>(null);
   const initialized = useRef<boolean>(false);
-
-  const handlersRef = useRef<{
-    onClick: (event: MouseEvent) => void;
-    onClickOut: (event: MouseEvent) => void;
-  }>({
-    onClick: () => {},
-    onClickOut: () => {},
-  });
 
   const deleteRule = () => {
     if (!styleSheet.current) return;
@@ -54,44 +43,6 @@ export const useProcessogramLogic = () => {
     styleSheet.current.sheet.insertRule(hoverRule, 0);
   };
 
-  const attachEvents = useCallback(
-    (level: number, parentLevelId: string | null) => {
-      if (!svgRef) return;
-
-      window.addEventListener("click", handlersRef.current.onClickOut);
-
-      const byIdSelector = `[id*="${INVERSE_DICT[level]}"]`;
-
-      const fullSelector = parentLevelId
-        ? `#${parentLevelId} > ${byIdSelector}`
-        : byIdSelector;
-
-      insertHoverRule(parentLevelId, level);
-
-      currentInteractableElements.current =
-        svgRef.querySelectorAll<SVGElement>(fullSelector);
-
-      if (!currentInteractableElements.current) return;
-
-      const elementsArray = Array.from(currentInteractableElements.current);
-      for (const element of elementsArray) {
-        element.addEventListener("click", handlersRef.current.onClick);
-      }
-    },
-    [svgRef]
-  );
-
-  const detachEvents = useCallback(() => {
-    if (!currentInteractableElements.current) return;
-
-    window.removeEventListener("click", handlersRef.current.onClickOut);
-    deleteRule();
-    const elementsArray = Array.from(currentInteractableElements.current);
-    for (const element of elementsArray) {
-      element.removeEventListener("click", handlersRef.current.onClick);
-    }
-  }, []);
-
   const changeLevelTo = useCallback(
     async (target: SVGElement) => {
       const viewBox = getElementViewBox(target);
@@ -102,31 +53,36 @@ export const useProcessogramLogic = () => {
         id,
       };
       currentLevel.current = currentLevelById;
-      detachEvents();
+      deleteRule();
       await gsap.to(svgRef, {
         attr: {
           viewBox: viewBox,
         },
       });
-      attachEvents(nextLevel, id);
+      insertHoverRule(id, nextLevel);
     },
     [svgRef]
   );
 
-  const onClick = useCallback(
-    (event: MouseEvent) => {
-      event.stopPropagation();
-      const currentTarget = event.currentTarget as SVGElement;
-      changeLevelTo(currentTarget);
-    },
-    [changeLevelTo]
-  );
+  const getClickedStage = useCallback((target: SVGElement, level: number) => {
+    const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
+    const stageClicked = target.closest(selector) as SVGElement | null;
+    return stageClicked;
+  }, []);
 
-  const onClickOut = useCallback(
+  const onClick = useCallback(
     async (event: MouseEvent) => {
       event.stopPropagation();
+      const clickedStage = getClickedStage(
+        event.target as SVGElement,
+        currentLevel.current
+      );
+      if (clickedStage) {
+        changeLevelTo(clickedStage);
+        return;
+      }
+
       const previousLevel = currentLevel.current - 1;
-      console.log(previousLevel);
       if (previousLevel < 1) {
         const element = svgRef;
         changeLevelTo(element);
@@ -143,15 +99,8 @@ export const useProcessogramLogic = () => {
 
       changeLevelTo(element);
     },
-    [svgRef, changeLevelTo]
+    [svgRef, changeLevelTo, getClickedStage]
   );
-
-  useEffect(() => {
-    handlersRef.current = {
-      onClick,
-      onClickOut,
-    };
-  }, [onClick, onClickOut]);
 
   useEffect(() => {
     if (initialized.current) return;
@@ -160,9 +109,18 @@ export const useProcessogramLogic = () => {
     const sheet = document.createElement("style");
     document.head.appendChild(sheet);
     styleSheet.current = sheet;
-    attachEvents(1, null);
+    window.addEventListener("click", onClick);
+    insertHoverRule(null, 1);
     initialized.current = true;
-  }, [svgRef]);
+
+    return () => {
+      window.removeEventListener("click", onClick);
+      deleteRule();
+      if (styleSheet.current) {
+        document.head.removeChild(styleSheet.current);
+      }
+    };
+  }, [onClick, svgRef]);
 
   return { setSvgRef };
 };
