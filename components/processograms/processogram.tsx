@@ -768,10 +768,10 @@ const Processogram = ({
   return (
     <>
       <SvgContainer
-        level={mainState?.level}
-        current={mainState?.currentDomID || svgRef.current?.id}
-        childrens={LEVELS[mainState?.level + 1] || null}
-        hover={onHover}
+        // level={mainState?.level}
+        // current={mainState?.currentDomID || svgRef.current?.id}
+        // childrens={LEVELS[mainState?.level + 1] || null}
+        // hover={onHover}
         ref={ref}
       >
         <ProcessogramSVG

@@ -3,6 +3,7 @@ import { Container } from "@/components/layouts/default-processogram-page-styled
 import processogramApi from "queries/processogram";
 import specieApi from "queries/specie";
 import Head from "next/head";
+import { NewProcessogram } from "@/components/processograms/NewProcessogram";
 
 const PublicPigsPage = ({ data, specie }) => {
   return (
@@ -10,7 +11,8 @@ const PublicPigsPage = ({ data, specie }) => {
       <Head>
         <title>Welfare Data - Pigs</title>
       </Head>
-      {<ProductionSystemSelector specie={specie} collection={data} />}
+      {/* <ProductionSystemSelector specie={specie} collection={data} /> */}
+      <NewProcessogram />
     </Container>
   );
 };
