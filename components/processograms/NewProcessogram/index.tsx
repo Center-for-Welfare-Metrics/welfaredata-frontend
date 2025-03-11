@@ -9,12 +9,12 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 ));
 
 export const NewProcessogram = () => {
-  const { setSvgRef } = useProcessogramLogic();
+  const { svgRef } = useProcessogramLogic();
 
   return (
     <SvgContainer>
       <ProcessogramSVG
-        ref={setSvgRef}
+        ref={svgRef}
         src={`/assets/svg/zoo/pig/enhanced intensive.svg`}
       />
     </SvgContainer>
