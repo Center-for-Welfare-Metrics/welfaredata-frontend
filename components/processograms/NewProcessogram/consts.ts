@@ -8,3 +8,5 @@ export const LEVELS_DICT = {
 export const INVERSE_DICT = Object.fromEntries(
   Object.entries(LEVELS_DICT).map(([key, value]) => [value, key])
 ) as Record<number, string>;
+
+export const MAX_LEVEL = Object.keys(LEVELS_DICT).length - 1;

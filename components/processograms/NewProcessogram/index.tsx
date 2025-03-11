@@ -8,15 +8,18 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
   <SVG innerRef={ref} {...props} />
 ));
 
-export const NewProcessogram = () => {
-  const { svgRef } = useProcessogramLogic();
+type Props = {
+  src: string;
+};
+
+export const NewProcessogram = ({ src }: Props) => {
+  const { svgRef } = useProcessogramLogic({
+    enableBruteOptimization: src.includes("chicken"),
+  });
 
   return (
     <SvgContainer>
-      <ProcessogramSVG
-        ref={svgRef}
-        src={`/assets/svg/zoo/pig/enhanced intensive.svg`}
-      />
+      <ProcessogramSVG ref={svgRef} src={src} />
     </SvgContainer>
   );
 };

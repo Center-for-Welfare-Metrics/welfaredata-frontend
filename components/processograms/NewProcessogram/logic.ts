@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getElementViewBox } from "../processogram-helpers";
-import { INVERSE_DICT } from "./consts";
+import { INVERSE_DICT, MAX_LEVEL } from "./consts";
 import { getLevelById } from "./utils";
 import { gsap } from "gsap";
+import { useOptimizeSvgParts } from "../useOptimizeSvgParts";
 
 type HistoryLevel = {
   [key: number]: {
@@ -10,13 +11,23 @@ type HistoryLevel = {
   };
 };
 
-export const useProcessogramLogic = () => {
+type Props = {
+  enableBruteOptimization?: boolean;
+};
+
+export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
   const styleSheet = useRef<CSSStyleSheet | null>(null);
   const initialized = useRef<boolean>(false);
+
+  const { replaceWithOptimized, restoreOriginal } = useOptimizeSvgParts();
+
+  const initializeOptimization = useCallback(() => {
+    replaceWithOptimized(svgElement, `[id*="${INVERSE_DICT[MAX_LEVEL]}"]`);
+  }, [svgElement]);
 
   const deleteRule = () => {
     if (!styleSheet.current) return;
@@ -61,7 +72,9 @@ export const useProcessogramLogic = () => {
       historyLevel.current[currentLevelById] = {
         id,
       };
+
       currentLevel.current = currentLevelById;
+
       deleteRule();
       gsap.to(svgElement, {
         attr: {
@@ -71,6 +84,19 @@ export const useProcessogramLogic = () => {
         ease: "power2.inOut",
         onComplete: () => {
           insertHoverRule(id, nextLevel);
+          if (enableBruteOptimization) return;
+          if (currentLevelById + 1 === MAX_LEVEL) {
+            restoreOriginal(
+              svgElement,
+              `#${id} [id*="${INVERSE_DICT[MAX_LEVEL]}"]`,
+              enableBruteOptimization
+            );
+          } else if (currentLevelById < MAX_LEVEL) {
+            replaceWithOptimized(
+              svgElement,
+              `[id*="${INVERSE_DICT[MAX_LEVEL]}"]`
+            );
+          }
         },
       });
     },
@@ -138,6 +164,7 @@ export const useProcessogramLogic = () => {
       window.addEventListener("click", handleClick, { passive: false });
 
       // Mark as initialized
+      initializeOptimization();
       initialized.current = true;
     }
 
@@ -153,7 +180,13 @@ export const useProcessogramLogic = () => {
       // Reset initialized flag
       initialized.current = false;
     };
-  }, [handleClick, deleteRule, insertHoverRule, svgElement]);
+  }, [
+    handleClick,
+    deleteRule,
+    insertHoverRule,
+    svgElement,
+    initializeOptimization,
+  ]);
 
   return { svgRef: setSvgElement };
 };
