@@ -11,7 +11,8 @@ const PublicPigsPage = ({ data, specie }) => {
       <Head>
         <title>Welfare Data - Pigs</title>
       </Head>
-      <ProductionSystemSelector specie={specie} collection={data} />
+      {/* <ProductionSystemSelector specie={specie} collection={data} /> */}
+      <NewProcessogram src="/assets/svg/zoo/pig/enhanced intensive.svg" />
     </Container>
   );
 };
