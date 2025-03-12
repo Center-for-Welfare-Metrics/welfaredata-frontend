@@ -44,6 +44,11 @@ const SvgContainer = styled.div`
     * {
       transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
     }
+
+    .dimmed,
+    .out-focus {
+      filter: brightness(0.5);
+    }
   }
   @media (max-width: 800px) {
     > svg {
