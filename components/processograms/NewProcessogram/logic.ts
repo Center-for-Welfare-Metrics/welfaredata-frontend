@@ -113,7 +113,6 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
           insertHoverRule(id, nextLevel);
           if (enableBruteOptimization) return;
           if (currentLevelById + 1 === MAX_LEVEL) {
-            console.log("restore");
             restoreOriginal(
               svgElement,
               `#${id} [id*="${INVERSE_DICT[MAX_LEVEL]}"]`,
