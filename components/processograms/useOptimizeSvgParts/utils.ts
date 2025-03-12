@@ -3,6 +3,67 @@ interface Size {
   h: number;
 }
 
+function getRotationTransform(element: SVGElement) {
+  const transformAttr = element.getAttribute("transform");
+  if (!transformAttr) return { angle: 0, cx: 0, cy: 0 };
+
+  // Match "rotate(angle cx cy)" format
+  const match = transformAttr.match(
+    /rotate\((-?\d+(?:\.\d+)?)(?:\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?))?\)/
+  );
+
+  if (!match) return { angle: 0, cx: 0, cy: 0 };
+
+  const angle = parseFloat(match[1]); // Rotation angle
+  const cx = match[2] ? parseFloat(match[2]) : 0; // Center X (optional)
+  const cy = match[3] ? parseFloat(match[3]) : 0; // Center Y (optional)
+
+  return { angle, cx, cy };
+}
+
+function getTransformedBBox(element: SVGGraphicsElement) {
+  const bbox = element.getBBox();
+  const { angle, cx, cy } = getRotationTransform(element);
+
+  if (angle === 0) return bbox; // No rotation, return normal bbox
+
+  const radians = (angle * Math.PI) / 180; // Convert degrees to radians
+
+  // Four original corners of the bbox
+  const corners = [
+    { x: bbox.x, y: bbox.y }, // Top-left
+    { x: bbox.x + bbox.width, y: bbox.y }, // Top-right
+    { x: bbox.x, y: bbox.y + bbox.height }, // Bottom-left
+    { x: bbox.x + bbox.width, y: bbox.y + bbox.height }, // Bottom-right
+  ];
+
+  // Rotate each corner around (cx, cy)
+  const rotatedCorners = corners.map(({ x, y }) => {
+    const dx = x - cx;
+    const dy = y - cy;
+    return {
+      x: cx + dx * Math.cos(radians) - dy * Math.sin(radians),
+      y: cy + dx * Math.sin(radians) + dy * Math.cos(radians),
+    };
+  });
+
+  // Compute new bbox from rotated corners
+  const xValues = rotatedCorners.map((p) => p.x);
+  const yValues = rotatedCorners.map((p) => p.y);
+
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
+
+  return {
+    x: xMin,
+    y: yMin,
+    width: xMax - xMin,
+    height: yMax - yMin,
+  };
+}
+
 const getScale = (
   relativeSize: number,
   minScale: number = 4,
@@ -64,17 +125,16 @@ export const optimizeSvg = (
     const bbox = group.getBBox();
     if (bbox.width === 0 || bbox.height === 0) continue;
 
+    // Get the transformed bounding box of the group, some elements might be rotated
+    const { width, height, x, y } = getTransformedBBox(group);
+
     // Clone the element to preserve the original structure
     const clonedGroup = group.cloneNode(true) as SVGGraphicsElement;
     originalItemsMap.set(group.id, clonedGroup);
-    // Inline all styles to the cloned <g>
-    inlineStyles(clonedGroup);
 
     // Serialize the updated <g> with styles
     const serializer = new XMLSerializer();
-    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${
-      bbox.x
-    } ${bbox.y} ${bbox.width} ${bbox.height}">${serializer.serializeToString(
+    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${width} ${height}">${serializer.serializeToString(
       clonedGroup
     )}</svg>`;
 
@@ -93,13 +153,13 @@ export const optimizeSvg = (
 
       const relativeSize = getRelativeSize(
         { w: svgElement.clientWidth, h: svgElement.clientHeight },
-        { w: bbox.width, h: bbox.height }
+        { w: width, h: height }
       );
 
       const scale = getScale(relativeSize, 2, 0.5);
 
-      canvas.width = bbox.width * scale;
-      canvas.height = bbox.height * scale;
+      canvas.width = width * scale;
+      canvas.height = height * scale;
 
       ctx?.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
@@ -111,10 +171,10 @@ export const optimizeSvg = (
 
       const dataUrl = canvas.toDataURL("image/png", 1.0);
 
-      imgElement.setAttribute("x", bbox.x.toString());
-      imgElement.setAttribute("y", bbox.y.toString());
-      imgElement.setAttribute("width", bbox.width.toString());
-      imgElement.setAttribute("height", bbox.height.toString());
+      imgElement.setAttribute("x", x.toString());
+      imgElement.setAttribute("y", y.toString());
+      imgElement.setAttribute("width", width.toString());
+      imgElement.setAttribute("height", height.toString());
       imgElement.setAttribute("href", dataUrl);
 
       if (group.tagName === "path") {
@@ -141,12 +201,4 @@ export const optimizeSvg = (
   }
 
   return { originalItemsMap };
-};
-
-const inlineStyles = (element: Element) => {
-  const computedStyle = window.getComputedStyle(element);
-  for (const prop of Array.from(computedStyle)) {
-    element.setAttribute(prop, computedStyle.getPropertyValue(prop));
-  }
-  Array.from(element.children).forEach(inlineStyles);
 };

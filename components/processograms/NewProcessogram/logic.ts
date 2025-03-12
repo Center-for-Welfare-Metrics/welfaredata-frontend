@@ -22,6 +22,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   const currentLevel = useRef<number>(0);
   const styleSheet = useRef<CSSStyleSheet | null>(null);
   const initialized = useRef<boolean>(false);
+  const ruleCache = useRef<Set<string>>(new Set());
 
   const { replaceWithOptimized, restoreOriginal } = useOptimizeSvgParts();
 
@@ -34,13 +35,36 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
 
     if (!styleSheet.current.cssRules.length) return;
 
-    styleSheet.current.deleteRule(0);
+    ruleCache.current.clear();
+
+    while (styleSheet.current.cssRules.length) {
+      styleSheet.current.deleteRule(0);
+    }
   };
 
-  const insertHoverRule = (parentElement: string | null, level: number) => {
-    if (!svgElement || !styleSheet.current) return;
+  const insertHighlightRule = (
+    focusedElementId: string,
+    focusedLevel: number
+  ) => {
+    if (!focusedElementId) return;
 
-    deleteRule();
+    const levelId = INVERSE_DICT[focusedLevel];
+
+    const focusedRule = `[id*="${levelId}"]:not([id="${focusedElementId}"]){
+        filter: brightness(0.5);
+      }`;
+
+    if (ruleCache.current.has(focusedRule)) return;
+
+    try {
+      styleSheet.current.insertRule(focusedRule, 0);
+    } catch (e) {
+      console.error("Failed to insert CSS rule:", e);
+    }
+  };
+
+  const insertHoverRule = (focusedElementId: string | null, level: number) => {
+    if (!svgElement || !styleSheet.current) return;
 
     const svgId = svgElement.id;
 
@@ -48,13 +72,15 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
 
     const levelString = INVERSE_DICT[level];
 
-    const hoverRule = parentElement
-      ? `#${parentElement}:has([id*="${levelString}"]:hover) > *:not([id*="${levelString}"]:hover) {
+    const hoverRule = focusedElementId
+      ? `#${focusedElementId}:has([id*="${levelString}"]:hover) > *:not([id*="${levelString}"]:hover) {
       filter: brightness(0.5);
     }`
       : `#${svgId}:has([id*="${levelString}"]:hover) > *:not([id*="${levelString}"]:hover) {
       filter: brightness(0.5);
     }`;
+
+    if (ruleCache.current.has(hoverRule)) return;
 
     try {
       styleSheet.current.insertRule(hoverRule, 0);
@@ -76,6 +102,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
       currentLevel.current = currentLevelById;
 
       deleteRule();
+      insertHighlightRule(id, currentLevelById);
       gsap.to(svgElement, {
         attr: {
           viewBox,

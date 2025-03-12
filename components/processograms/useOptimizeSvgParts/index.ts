@@ -34,6 +34,8 @@ export const useOptimizeSvgParts = () => {
 
       for (const gElement of gElements) {
         const id = gElement.id;
+        if (!gElement.getAttribute("data-optimized")) continue;
+
         if (!id || !originalGElements.current.has(id)) continue;
 
         const originalG = originalGElements.current.get(id);
