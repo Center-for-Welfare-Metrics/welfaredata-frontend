@@ -4,6 +4,7 @@ import { INVERSE_DICT, MAX_LEVEL } from "./consts";
 import { getLevelById } from "./utils";
 import { gsap } from "gsap";
 import { useOptimizeSvgParts } from "../useOptimizeSvgParts";
+import { useSvgCssRules } from "./useSvgCssRules";
 
 type HistoryLevel = {
   [key: number]: {
@@ -20,74 +21,22 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
-  const styleSheet = useRef<CSSStyleSheet | null>(null);
   const initialized = useRef<boolean>(false);
-  const ruleCache = useRef<Set<string>>(new Set());
+  const styleRef = useRef<HTMLStyleElement | null>(null);
 
-  const { replaceWithOptimized, restoreOriginal } = useOptimizeSvgParts();
+  const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts();
+  const {
+    initializeStyleSheet,
+    deleteRule,
+    insertHighlightRule,
+    insertHoverRule,
+    cleanupStyleSheet,
+  } = useSvgCssRules();
 
   const initializeOptimization = useCallback(() => {
-    replaceWithOptimized(svgElement, `[id*="${INVERSE_DICT[MAX_LEVEL]}"]`);
+    optimizeAllElements(svgElement);
+    optimizeLevelElements(svgElement, null);
   }, [svgElement]);
-
-  const deleteRule = () => {
-    if (!styleSheet.current) return;
-
-    if (!styleSheet.current.cssRules.length) return;
-
-    ruleCache.current.clear();
-
-    while (styleSheet.current.cssRules.length) {
-      styleSheet.current.deleteRule(0);
-    }
-  };
-
-  const insertHighlightRule = (
-    focusedElementId: string,
-    focusedLevel: number
-  ) => {
-    if (!focusedElementId) return;
-
-    const levelId = INVERSE_DICT[focusedLevel];
-
-    const focusedRule = `[id*="${levelId}"]:not([id="${focusedElementId}"]){
-        filter: brightness(0.5);
-      }`;
-
-    if (ruleCache.current.has(focusedRule)) return;
-
-    try {
-      styleSheet.current.insertRule(focusedRule, 0);
-    } catch (e) {
-      console.error("Failed to insert CSS rule:", e);
-    }
-  };
-
-  const insertHoverRule = (focusedElementId: string | null, level: number) => {
-    if (!svgElement || !styleSheet.current) return;
-
-    const svgId = svgElement.id;
-
-    if (!svgId) return;
-
-    const levelString = INVERSE_DICT[level];
-
-    const hoverRule = focusedElementId
-      ? `#${focusedElementId}:has([id*="${levelString}"]:hover) > *:not([id*="${levelString}"]:hover) {
-      filter: brightness(0.5);
-    }`
-      : `#${svgId}:has([id*="${levelString}"]:hover) > *:not([id*="${levelString}"]:hover) {
-      filter: brightness(0.5);
-    }`;
-
-    if (ruleCache.current.has(hoverRule)) return;
-
-    try {
-      styleSheet.current.insertRule(hoverRule, 0);
-    } catch (e) {
-      console.error("Failed to insert CSS rule:", e);
-    }
-  };
 
   const changeLevelTo = useCallback(
     (target: SVGElement) => {
@@ -108,26 +57,20 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
           viewBox,
         },
         duration: 0.7,
-        ease: "power2.inOut",
+        ease: "power1.inOut",
         onComplete: () => {
-          insertHoverRule(id, nextLevel);
-          if (enableBruteOptimization) return;
-          if (currentLevelById + 1 === MAX_LEVEL) {
-            restoreOriginal(
-              svgElement,
-              `#${id} [id*="${INVERSE_DICT[MAX_LEVEL]}"]`,
-              enableBruteOptimization
-            );
-          } else if (currentLevelById < MAX_LEVEL) {
-            replaceWithOptimized(
-              svgElement,
-              `[id*="${INVERSE_DICT[MAX_LEVEL]}"]`
-            );
-          }
+          insertHoverRule(svgElement, id, nextLevel);
+          optimizeLevelElements(svgElement, id, enableBruteOptimization);
         },
       });
     },
-    [svgElement]
+    [
+      svgElement,
+      deleteRule,
+      insertHighlightRule,
+      insertHoverRule,
+      optimizeLevelElements,
+    ]
   );
 
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
@@ -176,18 +119,15 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     // Skip if already initialized or svgRef is not available
     if (initialized.current || !svgElement) return;
 
-    // Create stylesheet for highlighting elements
-    const style = document.createElement("style");
-    document.head.appendChild(style);
-
-    // Store reference to the stylesheet
-    if (style.sheet) {
-      styleSheet.current = style.sheet;
+    // Initialize stylesheet
+    const style = initializeStyleSheet();
+    if (style) {
+      styleRef.current = style;
 
       // Initialize hover effect for first level
-      insertHoverRule(null, 1);
+      insertHoverRule(svgElement, null, 1);
 
-      // Add clcik handler
+      // Add click handler
       window.addEventListener("click", handleClick, { passive: false });
 
       // Mark as initialized
@@ -198,10 +138,8 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     return () => {
       window.removeEventListener("click", handleClick);
 
-      deleteRule();
-
-      if (style && document.head.contains(style)) {
-        document.head.removeChild(style);
+      if (styleRef.current) {
+        cleanupStyleSheet(styleRef.current);
       }
 
       // Reset initialized flag
@@ -209,10 +147,10 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     };
   }, [
     handleClick,
-    deleteRule,
-    insertHoverRule,
     svgElement,
     initializeOptimization,
+    insertHoverRule,
+    cleanupStyleSheet,
   ]);
 
   return { svgRef: setSvgElement };

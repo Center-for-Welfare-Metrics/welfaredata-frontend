@@ -1,4 +1,6 @@
-export const LEVELS_DICT = {
+export const LEVELS_DICT: {
+  [key: string]: number;
+} = {
   "--ps": 0,
   "--lf": 1,
   "--ph": 2,

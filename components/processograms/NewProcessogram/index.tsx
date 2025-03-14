@@ -44,6 +44,16 @@ const SvgContainer = styled.div`
     * {
       transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
     }
+
+    &.dimmed,
+    .dimmed {
+      filter: brightness(0.5);
+    }
+
+    &.hovered,
+    .hovered {
+      filter: brightness(1);
+    }
   }
   @media (max-width: 800px) {
     > svg {

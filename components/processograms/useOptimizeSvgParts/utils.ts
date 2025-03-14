@@ -185,15 +185,12 @@ export const optimizeSvg = (
         gElement.setAttribute("id", group.id);
         gElement.appendChild(imgElement);
         gElement.setAttribute("data-optimized", "true");
-        group.replaceWith(gElement);
         optimizedMap.set(group.id, gElement);
       } else {
-        while (group.firstChild) {
-          group.removeChild(group.firstChild);
-        }
-        group.setAttribute("data-optimized", "true");
-        group.appendChild(imgElement);
-        optimizedMap.set(group.id, group);
+        const gClone = group.cloneNode(false) as SVGGraphicsElement;
+        gClone.setAttribute("data-optimized", "true");
+        gClone.appendChild(imgElement);
+        optimizedMap.set(group.id, gClone);
       }
     };
 
