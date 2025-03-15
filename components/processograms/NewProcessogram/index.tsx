@@ -13,13 +13,17 @@ type Props = {
 };
 
 export const NewProcessogram = ({ src }: Props) => {
-  const { svgRef } = useProcessogramLogic({
+  const { svgRef, focusedElementId, onTransition } = useProcessogramLogic({
     enableBruteOptimization: src.includes("chicken"),
   });
 
   return (
     <SvgContainer>
-      <ProcessogramSVG ref={svgRef} src={src} />
+      <ProcessogramSVG
+        ref={svgRef}
+        src={src}
+        className={`${focusedElementId} ${onTransition ? "onTransition" : ""}`}
+      />
     </SvgContainer>
   );
 };
@@ -45,14 +49,8 @@ const SvgContainer = styled.div`
       transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
     }
 
-    &.dimmed,
-    .dimmed {
-      filter: brightness(0.5);
-    }
-
-    &.hovered,
-    .hovered {
-      filter: brightness(1);
+    &.onTransition {
+      pointer-events: none;
     }
   }
   @media (max-width: 800px) {

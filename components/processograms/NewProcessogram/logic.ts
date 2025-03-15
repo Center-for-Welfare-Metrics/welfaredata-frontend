@@ -19,20 +19,15 @@ type Props = {
 export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
+  const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
+  const [onTransition, setOnTransition] = useState<boolean>(false);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
   const initialized = useRef<boolean>(false);
-  const styleRef = useRef<HTMLStyleElement | null>(null);
 
   const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts();
 
-  const {
-    initializeStyleSheet,
-    deleteRule,
-    insertHighlightRule,
-    insertHoverRule,
-    cleanupStyleSheet,
-  } = useSvgCssRules();
+  const { initializeStyleSheet, cleanupStyleSheet } = useSvgCssRules();
 
   const initializeOptimization = useCallback(() => {
     optimizeAllElements(svgElement);
@@ -44,16 +39,13 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
       const viewBox = getElementViewBox(target);
       const id = target.id;
       const currentLevelById = getLevelById(id);
-      const nextLevel = currentLevelById + 1;
       historyLevel.current[currentLevelById] = {
         id,
       };
 
       currentLevel.current = currentLevelById;
-
-      deleteRule();
-      insertHighlightRule(id, currentLevelById);
-
+      setOnTransition(true);
+      setFocusedElementId(id);
       gsap.to(svgElement, {
         attr: {
           viewBox,
@@ -61,18 +53,12 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
         duration: 0.7,
         ease: "power1.inOut",
         onComplete: () => {
+          setOnTransition(false);
           optimizeLevelElements(svgElement, id, enableBruteOptimization);
-          insertHoverRule(svgElement, id, nextLevel);
         },
       });
     },
-    [
-      svgElement,
-      deleteRule,
-      insertHighlightRule,
-      insertHoverRule,
-      optimizeLevelElements,
-    ]
+    [svgElement, optimizeLevelElements, setFocusedElementId]
   );
 
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
@@ -118,42 +104,33 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   );
 
   useEffect(() => {
-    // Skip if already initialized or svgRef is not available
-    if (initialized.current || !svgElement) return;
-
-    // Initialize stylesheet
-    const style = initializeStyleSheet();
-    if (style) {
-      styleRef.current = style;
-
-      // Initialize hover effect for first level
-      insertHoverRule(svgElement, null, 1);
-
-      // Add click handler
-      window.addEventListener("click", handleClick, { passive: false });
-
-      // Mark as initialized
-      initializeOptimization();
-      initialized.current = true;
-    }
+    window.addEventListener("click", handleClick, { passive: false });
 
     return () => {
       window.removeEventListener("click", handleClick);
 
-      if (styleRef.current) {
-        cleanupStyleSheet(styleRef.current);
-      }
+      cleanupStyleSheet();
+    };
+  }, [handleClick]);
 
-      // Reset initialized flag
+  useEffect(() => {
+    if (initialized.current || !svgElement) return;
+
+    initializeStyleSheet(svgElement);
+    setFocusedElementId(svgElement.id);
+    initializeOptimization();
+    initialized.current = true;
+    return () => {
       initialized.current = false;
+      cleanupStyleSheet();
     };
   }, [
-    handleClick,
+    initializeStyleSheet,
+    setFocusedElementId,
     svgElement,
     initializeOptimization,
-    insertHoverRule,
     cleanupStyleSheet,
   ]);
 
-  return { svgRef: setSvgElement };
+  return { svgRef: setSvgElement, focusedElementId, onTransition };
 };

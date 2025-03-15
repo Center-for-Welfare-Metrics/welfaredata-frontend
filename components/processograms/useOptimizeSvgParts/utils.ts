@@ -156,7 +156,7 @@ export const optimizeSvg = (
         { w: width, h: height }
       );
 
-      const scale = getScale(relativeSize, 2, 0.5);
+      const scale = getScale(relativeSize, 3, 1.5);
 
       canvas.width = width * scale;
       canvas.height = height * scale;
