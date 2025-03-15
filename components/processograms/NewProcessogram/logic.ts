@@ -25,6 +25,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   const styleRef = useRef<HTMLStyleElement | null>(null);
 
   const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts();
+
   const {
     initializeStyleSheet,
     deleteRule,
@@ -52,6 +53,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
 
       deleteRule();
       insertHighlightRule(id, currentLevelById);
+
       gsap.to(svgElement, {
         attr: {
           viewBox,
@@ -59,8 +61,8 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
         duration: 0.7,
         ease: "power1.inOut",
         onComplete: () => {
-          insertHoverRule(svgElement, id, nextLevel);
           optimizeLevelElements(svgElement, id, enableBruteOptimization);
+          insertHoverRule(svgElement, id, nextLevel);
         },
       });
     },
