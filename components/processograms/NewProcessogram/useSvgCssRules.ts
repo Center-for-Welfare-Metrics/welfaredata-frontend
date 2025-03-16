@@ -34,7 +34,30 @@ export const useSvgCssRules = () => {
   );
 
   const generateAllCssHighlightRules = useCallback(
-    (allElements: Element[], svgId: string) => {},
+    (allElements: Element[], svgId: string) => {
+      const rules = [];
+
+      for (const element of allElements) {
+        const elementId = element.id;
+        const level = getLevelById(elementId);
+
+        const allDescendants: string[] = [];
+
+        for (let i = level; i > 0; i--) {
+          allDescendants.push(INVERSE_DICT[i]);
+        }
+
+        for (const descendant of allDescendants) {
+          const rule = `.${elementId} [id*="${descendant}"]:not(#${elementId}){
+            filter: brightness(0.5);
+          }`;
+
+          rules.push(rule);
+        }
+      }
+
+      return rules;
+    },
     []
   );
 
@@ -42,7 +65,9 @@ export const useSvgCssRules = () => {
     (svg: SVGElement) => {
       const allElements = Array.from(svg.querySelectorAll('[id*="--"]'));
 
-      const rules = generateAllCssHoverRules(allElements, svg.id);
+      const hoverRules = generateAllCssHoverRules(allElements, svg.id);
+      const highlightRules = []; //generateAllCssHighlightRules(allElements, svg.id);
+      const rules = [...hoverRules, ...highlightRules];
 
       for (const rule of rules) {
         if (ruleCache.current.has(rule)) continue;

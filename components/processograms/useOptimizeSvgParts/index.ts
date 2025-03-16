@@ -56,21 +56,24 @@ export const useOptimizeSvgParts = () => {
     []
   );
 
-  const optimizeAllElements = useCallback((svgElement: SVGElement | null) => {
-    if (!svgElement) return;
+  const optimizeAllElements = useCallback(
+    async (svgElement: SVGElement | null) => {
+      if (!svgElement) return;
 
-    const dashedElementSelector = '[id*="--"]';
+      const dashedElementSelector = '[id*="--"]';
 
-    const { originalItemsMap } = optimizeSvg(
-      svgElement,
-      dashedElementSelector,
-      optimizedGElements.current
-    );
+      const { originalItemsMap } = await optimizeSvg(
+        svgElement,
+        dashedElementSelector,
+        optimizedGElements.current
+      );
 
-    originalItemsMap.forEach((value, key) => {
-      originalGElements.current.set(key, value);
-    });
-  }, []);
+      originalItemsMap.forEach((value, key) => {
+        originalGElements.current.set(key, value);
+      });
+    },
+    []
+  );
 
   const optimizeLevelElements = useCallback(
     (

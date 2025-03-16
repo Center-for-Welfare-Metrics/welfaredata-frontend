@@ -3,6 +3,8 @@ import styled from "styled-components";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
 
 import { useProcessogramLogic } from "./logic";
+import Loader from "react-loader-spinner";
+import { ThemeColors } from "theme/globalStyle";
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
   <SVG innerRef={ref} {...props} />
@@ -13,20 +15,45 @@ type Props = {
 };
 
 export const NewProcessogram = ({ src }: Props) => {
-  const { svgRef, focusedElementId, onTransition } = useProcessogramLogic({
-    enableBruteOptimization: src.includes("chicken"),
-  });
+  const { svgRef, focusedElementId, onTransition, loadingOptimization } =
+    useProcessogramLogic({
+      enableBruteOptimization: src.includes("chicken"),
+    });
 
   return (
-    <SvgContainer>
-      <ProcessogramSVG
-        ref={svgRef}
-        src={src}
-        className={`${focusedElementId} ${onTransition ? "onTransition" : ""}`}
-      />
-    </SvgContainer>
+    <>
+      <SvgContainer>
+        <ProcessogramSVG
+          ref={svgRef}
+          src={src}
+          className={`${focusedElementId} ${
+            onTransition ? "onTransition" : ""
+          }`}
+        />
+      </SvgContainer>
+      {loadingOptimization && (
+        <LoadingBackdrop>
+          {" "}
+          <Loader type="Oval" color={ThemeColors.white} />
+        </LoadingBackdrop>
+      )}
+    </>
   );
 };
+
+const LoadingBackdrop = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const SvgContainer = styled.div`
   width: 100%;

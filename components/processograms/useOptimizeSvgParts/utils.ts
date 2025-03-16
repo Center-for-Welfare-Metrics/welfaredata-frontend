@@ -94,18 +94,21 @@ const getRelativeSize = (first: Size, second: Size): number => {
   return relativeSize;
 };
 
-export const optimizeSvg = (
+export const optimizeSvg = async (
   svgElement: SVGElement,
   selector: string,
   optimizedMap: Map<string, SVGElement>
-) => {
-  if (!svgElement) return;
+): Promise<{ originalItemsMap: Map<string, SVGGraphicsElement> }> => {
+  if (!svgElement) return { originalItemsMap: new Map() };
 
   const originalItemsMap = new Map<string, SVGGraphicsElement>();
 
   const groups = Array.from(
     svgElement.querySelectorAll(selector)
   ) as SVGGraphicsElement[];
+
+  // Create an array to collect all promises
+  const processingPromises: Promise<void>[] = [];
 
   for (const group of groups) {
     if (group.getAttribute("data-optimized") === "true") continue;
@@ -141,61 +144,78 @@ export const optimizeSvg = (
     const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
     const url = URL.createObjectURL(svgBlob);
 
-    const img = new Image();
+    // Create a promise for this group's processing
+    const processPromise = new Promise<void>((resolve) => {
+      const img = new Image();
 
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-      if (ctx) {
-        ctx.imageSmoothingEnabled = false;
-      }
+        if (ctx) {
+          ctx.imageSmoothingEnabled = false;
+        }
 
-      const relativeSize = getRelativeSize(
-        { w: svgElement.clientWidth, h: svgElement.clientHeight },
-        { w: width, h: height }
-      );
-
-      const scale = getScale(relativeSize, 3, 1.5);
-
-      canvas.width = width * scale;
-      canvas.height = height * scale;
-
-      ctx?.drawImage(img, 0, 0);
-      URL.revokeObjectURL(url);
-
-      const imgElement = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "image"
-      );
-
-      const dataUrl = canvas.toDataURL("image/png", 1.0);
-
-      imgElement.setAttribute("x", x.toString());
-      imgElement.setAttribute("y", y.toString());
-      imgElement.setAttribute("width", width.toString());
-      imgElement.setAttribute("height", height.toString());
-      imgElement.setAttribute("href", dataUrl);
-
-      if (group.tagName === "path") {
-        const gElement = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "g"
+        const relativeSize = getRelativeSize(
+          { w: svgElement.clientWidth, h: svgElement.clientHeight },
+          { w: width, h: height }
         );
-        gElement.setAttribute("id", group.id);
-        gElement.appendChild(imgElement);
-        gElement.setAttribute("data-optimized", "true");
-        optimizedMap.set(group.id, gElement);
-      } else {
-        const gClone = group.cloneNode(false) as SVGGraphicsElement;
-        gClone.setAttribute("data-optimized", "true");
-        gClone.appendChild(imgElement);
-        optimizedMap.set(group.id, gClone);
-      }
-    };
 
-    img.src = url;
+        const scale = getScale(relativeSize, 3, 1);
+
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+
+        ctx?.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
+        const imgElement = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "image"
+        );
+
+        const dataUrl = canvas.toDataURL("image/png", 1.0);
+
+        imgElement.setAttribute("x", x.toString());
+        imgElement.setAttribute("y", y.toString());
+        imgElement.setAttribute("width", width.toString());
+        imgElement.setAttribute("height", height.toString());
+        imgElement.setAttribute("href", dataUrl);
+
+        if (group.tagName === "path") {
+          const gElement = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g"
+          );
+          gElement.setAttribute("id", group.id);
+          gElement.appendChild(imgElement);
+          gElement.setAttribute("data-optimized", "true");
+          optimizedMap.set(group.id, gElement);
+        } else {
+          const gClone = group.cloneNode(false) as SVGGraphicsElement;
+          gClone.setAttribute("data-optimized", "true");
+          gClone.appendChild(imgElement);
+          optimizedMap.set(group.id, gClone);
+        }
+
+        resolve();
+      };
+
+      // Handle errors in image loading
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        console.error(`Failed to load image for group ${groupId}`);
+        resolve(); // Resolve anyway to avoid blocking other operations
+      };
+
+      img.src = url;
+    });
+
+    processingPromises.push(processPromise);
   }
+
+  // Wait for all images to be processed
+  await Promise.all(processingPromises);
 
   return { originalItemsMap };
 };

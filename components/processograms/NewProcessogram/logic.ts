@@ -21,6 +21,8 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
   const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
   const [onTransition, setOnTransition] = useState<boolean>(false);
+  const [loadingOptimization, setLoadingOptimization] =
+    useState<boolean>(false);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
   const initialized = useRef<boolean>(false);
@@ -29,9 +31,11 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
 
   const { initializeStyleSheet, cleanupStyleSheet } = useSvgCssRules();
 
-  const initializeOptimization = useCallback(() => {
-    optimizeAllElements(svgElement);
+  const initializeOptimization = useCallback(async () => {
+    setLoadingOptimization(true);
+    await optimizeAllElements(svgElement);
     optimizeLevelElements(svgElement, null);
+    setLoadingOptimization(false);
   }, [svgElement]);
 
   const changeLevelTo = useCallback(
@@ -132,5 +136,10 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     cleanupStyleSheet,
   ]);
 
-  return { svgRef: setSvgElement, focusedElementId, onTransition };
+  return {
+    svgRef: setSvgElement,
+    focusedElementId,
+    onTransition,
+    loadingOptimization,
+  };
 };
