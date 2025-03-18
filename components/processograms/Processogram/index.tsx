@@ -13,8 +13,8 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 type Props = {
   src: string;
-  open?: boolean;
-  onClose?: () => void;
+  open: boolean;
+  onClose: () => void;
 };
 
 export const NewProcessogram = ({ src, open, onClose }: Props) => {
@@ -25,8 +25,10 @@ export const NewProcessogram = ({ src, open, onClose }: Props) => {
     onTransition,
     loadingOptimization,
     start,
+    stop,
   } = useProcessogramLogic({
-    enableBruteOptimization: src.includes("chicken"),
+    enableBruteOptimization: false,
+    onClose,
   });
 
   const { optimize, restore } = useBeforeStart({
@@ -37,12 +39,17 @@ export const NewProcessogram = ({ src, open, onClose }: Props) => {
   useEffect(() => {
     if (!svgElement) return;
 
-    if (!open) {
-      optimize();
-    } else {
-      restore();
-      start();
-    }
+    const run = async () => {
+      if (!open) {
+        optimize();
+        stop();
+      } else {
+        await restore();
+        start();
+      }
+    };
+
+    run();
   }, [open, optimize, restore, svgElement]);
 
   return (
@@ -86,25 +93,17 @@ const LoadingBackdrop = styled.div`
 
 const SvgContainer = styled.div`
   width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 100%;
   > svg {
     height: auto;
     overflow: visible;
-    z-index: 77;
     margin-inline: auto;
     opacity: 1;
     display: block;
-    min-height: 5rem;
-    z-index: 77;
-    max-height: 80vh;
-    width: 90%;
     * {
       transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
     }
-
+    max-height: 60vh;
     &.onTransition {
       pointer-events: none;
     }

@@ -96,6 +96,9 @@ export const useSvgCssRules = () => {
     if (document.head.contains(styleSheet.current?.ownerNode)) {
       document.head.removeChild(styleSheet.current?.ownerNode);
     }
+
+    styleSheet.current = null;
+    ruleCache.current.clear();
   }, []);
 
   return {

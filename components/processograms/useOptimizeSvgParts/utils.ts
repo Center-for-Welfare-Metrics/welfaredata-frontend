@@ -148,11 +148,11 @@ export const processSvgToImage = async (
       }
 
       // Set canvas dimensions to match the SVG's intended size
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width * 2;
+      canvas.height = height * 2;
 
       // Draw the image with specific dimensions to ensure proper scaling
-      ctx?.drawImage(img, 0, 0, width, height);
+      ctx?.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
 
       const imgElement = document.createElementNS(

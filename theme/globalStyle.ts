@@ -28,9 +28,7 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     html{
-        background-color: ${({ theme }) => theme.colors.black};  
-        width:100%;
-        height:100%;
+        background-color: ${({ theme }) => theme.colors.black};          
     }
     html,body,div,textarea{        
         ${scrollBar("gray")}

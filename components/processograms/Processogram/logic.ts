@@ -14,9 +14,13 @@ type HistoryLevel = {
 
 type Props = {
   enableBruteOptimization?: boolean;
+  onClose: () => void;
 };
 
-export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
+export const useProcessogramLogic = ({
+  enableBruteOptimization,
+  onClose,
+}: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
   const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
@@ -77,6 +81,10 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     setInitialized(true);
   }, []);
 
+  const stop = useCallback(() => {
+    setInitialized(false);
+  }, []);
+
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
     const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
     const stageClicked = target.closest(selector) as SVGElement | null;
@@ -102,6 +110,11 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
       // Navigate back
       const previousLevel = currentLevel.current - 1;
       if (previousLevel < 1) {
+        if (previousLevel < 0) {
+          onClose();
+          return;
+        }
+
         changeLevelTo(svgElement);
         return;
       }
@@ -116,18 +129,21 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
 
       changeLevelTo(element);
     },
-    [changeLevelTo, getClickedStage, svgElement]
+    [changeLevelTo, getClickedStage, svgElement, onClose]
   );
 
   useEffect(() => {
+    if (!initialized) return;
+
     window.addEventListener("click", handleClick, { passive: false });
 
     return () => {
+      console.log("cleanup");
       window.removeEventListener("click", handleClick);
 
       cleanupStyleSheet();
     };
-  }, [handleClick]);
+  }, [handleClick, initialized]);
 
   useEffect(() => {
     if (!initialized) return;
@@ -148,7 +164,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     svgElement,
     initializeOptimization,
     cleanupStyleSheet,
-    // initialized,
+    initialized,
   ]);
 
   return {
@@ -158,5 +174,6 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     onTransition,
     loadingOptimization,
     start,
+    stop,
   };
 };

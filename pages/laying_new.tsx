@@ -3,6 +3,14 @@ import processogramApi from "queries/processogram";
 import specieApi from "queries/specie";
 import Head from "next/head";
 import { NewProcessogram } from "@/components/processograms/Processogram";
+import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
+
+const paths = [
+  "chicken/conventional cages.svg",
+  "chicken/free range.svg",
+  "chicken/multi tier.svg",
+  "chicken/single tier.svg",
+];
 
 const PublicHensPage = ({ data, specie }) => {
   return (
@@ -10,7 +18,7 @@ const PublicHensPage = ({ data, specie }) => {
       <Head>
         <title>Welfare Data - Laying Hens</title>
       </Head>
-      <NewProcessogram src="/assets/svg/zoo/chicken/multi tier.svg" />
+      <ProcessogramsList paths={paths} />
     </Container>
   );
 };
