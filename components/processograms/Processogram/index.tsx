@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React from "react";
 import { styled } from "styled-components";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
 
 import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
-import { useBeforeStart } from "./hooks/useBeforeStart";
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
   <SVG innerRef={ref} {...props} />
@@ -13,52 +12,17 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 type Props = {
   src: string;
-  open: boolean;
-  onClose: () => void;
 };
 
-export const NewProcessogram = ({ src, open, onClose }: Props) => {
-  const {
-    setSvgElement,
-    svgElement,
-    focusedElementId,
-    onTransition,
-    loadingOptimization,
-    start,
-    stop,
-  } = useProcessogramLogic({
-    enableBruteOptimization: false,
-    onClose,
-  });
-
-  const { optimize, restore } = useBeforeStart({
-    svgElement,
-    updateSvgElement: setSvgElement,
-  });
-
-  useEffect(() => {
-    if (!svgElement) return;
-
-    const run = async () => {
-      if (!open) {
-        optimize();
-        stop();
-      } else {
-        await restore();
-        start();
-      }
-    };
-
-    run();
-  }, [open, optimize, restore, svgElement]);
+export const NewProcessogram = ({ src }: Props) => {
+  const { setSvgElement, focusedElementId, onTransition, loadingOptimization } =
+    useProcessogramLogic({
+      enableBruteOptimization: false,
+    });
 
   return (
     <>
-      <SvgContainer
-        style={{
-          pointerEvents: open ? "auto" : "none",
-        }}
-      >
+      <SvgContainer>
         <ProcessogramSVG
           ref={setSvgElement}
           src={src}

@@ -14,13 +14,9 @@ type HistoryLevel = {
 
 type Props = {
   enableBruteOptimization?: boolean;
-  onClose: () => void;
 };
 
-export const useProcessogramLogic = ({
-  enableBruteOptimization,
-  onClose,
-}: Props) => {
+export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
   const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
@@ -29,7 +25,6 @@ export const useProcessogramLogic = ({
     useState<boolean>(false);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
-  const [initialized, setInitialized] = useState<boolean>(false);
   const isReady = useRef<boolean>(false);
 
   const { optimizeAllElements, optimizeLevelElements } =
@@ -77,14 +72,6 @@ export const useProcessogramLogic = ({
     [svgElement, optimizeLevelElements, setFocusedElementId]
   );
 
-  const start = useCallback(() => {
-    setInitialized(true);
-  }, []);
-
-  const stop = useCallback(() => {
-    setInitialized(false);
-  }, []);
-
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
     const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
     const stageClicked = target.closest(selector) as SVGElement | null;
@@ -110,11 +97,6 @@ export const useProcessogramLogic = ({
       // Navigate back
       const previousLevel = currentLevel.current - 1;
       if (previousLevel < 1) {
-        if (previousLevel < 0) {
-          onClose();
-          return;
-        }
-
         changeLevelTo(svgElement);
         return;
       }
@@ -129,12 +111,10 @@ export const useProcessogramLogic = ({
 
       changeLevelTo(element);
     },
-    [changeLevelTo, getClickedStage, svgElement, onClose]
+    [changeLevelTo, getClickedStage, svgElement]
   );
 
   useEffect(() => {
-    if (!initialized) return;
-
     window.addEventListener("click", handleClick, { passive: false });
 
     return () => {
@@ -143,11 +123,9 @@ export const useProcessogramLogic = ({
 
       cleanupStyleSheet();
     };
-  }, [handleClick, initialized]);
+  }, [handleClick]);
 
   useEffect(() => {
-    if (!initialized) return;
-
     if (isReady.current || !svgElement) return;
 
     initializeStyleSheet(svgElement);
@@ -164,7 +142,6 @@ export const useProcessogramLogic = ({
     svgElement,
     initializeOptimization,
     cleanupStyleSheet,
-    initialized,
   ]);
 
   return {
@@ -173,7 +150,5 @@ export const useProcessogramLogic = ({
     focusedElementId,
     onTransition,
     loadingOptimization,
-    start,
-    stop,
   };
 };

@@ -130,7 +130,7 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
       return optimizedRootElement.current;
     }
 
-    originalRootElement.current = svgElement;
+    originalRootElement.current = svgElement.cloneNode(true) as SVGElement;
 
     const optimizedSvg = await processSvgToImage(svgElement);
 

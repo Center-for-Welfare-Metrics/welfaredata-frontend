@@ -57,10 +57,10 @@ function getTransformedBBox(element: SVGGraphicsElement) {
   const yMax = Math.max(...yValues);
 
   return {
-    x: xMin,
-    y: yMin,
-    width: xMax - xMin,
-    height: yMax - yMin,
+    x: parseFloat(xMin.toFixed(3)),
+    y: parseFloat(yMin.toFixed(3)),
+    width: parseFloat((xMax - xMin).toFixed(3)),
+    height: parseFloat((yMax - yMin).toFixed(3)),
   };
 }
 
@@ -205,9 +205,20 @@ const processGroupToImage = async (
   const clonedGroup = group.cloneNode(true) as SVGGraphicsElement;
   originalItemsMap.set(group.id, clonedGroup);
 
+  // Function to recursively remove the attribute from an element and its children
+  const removeAttributeRecursively = (element: Element, attribute: string) => {
+    element.removeAttribute(attribute);
+    Array.from(element.children).forEach((child) =>
+      removeAttributeRecursively(child, attribute)
+    );
+  };
+
+  // Remove the attribute from the cloned group and its children
+  removeAttributeRecursively(clonedGroup, "bx:origin");
+
   // Serialize the updated <g> with styles
   const serializer = new XMLSerializer();
-  const svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${width} ${height}">${serializer.serializeToString(
+  const svgString = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${x} ${y} ${width} ${height}">${serializer.serializeToString(
     clonedGroup
   )}</svg>`;
 
@@ -224,6 +235,8 @@ const processGroupToImage = async (
   return new Promise<void>((resolve) => {
     const img = new Image();
 
+    img.crossOrigin = "anonymous";
+
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -232,8 +245,12 @@ const processGroupToImage = async (
         ctx.imageSmoothingEnabled = false;
       }
 
-      canvas.width = width * scale;
-      canvas.height = height * scale;
+      const safeScale = Math.min(scale, 10); // Cap maximum scale
+      const safeWidth = Math.max(1, Math.min(width * safeScale, 8192)); // Prevent zero width and cap maximum
+      const safeHeight = Math.max(1, Math.min(height * safeScale, 8192)); // Prevent zero height and cap maximum
+
+      canvas.width = safeWidth;
+      canvas.height = safeHeight;
 
       ctx?.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
@@ -271,9 +288,12 @@ const processGroupToImage = async (
     };
 
     // Handle errors in image loading
-    img.onerror = () => {
+    img.onerror = (error) => {
       URL.revokeObjectURL(url);
-      console.error(`Failed to load image for group ${group.id}`);
+      console.error(`Failed to load image for group ${group.id}:`, {
+        dimensions: { width, height, x, y, scale },
+        svgString: svgString, // Log part of the SVG string
+      });
       resolve(); // Resolve anyway to avoid blocking other operations
     };
 
