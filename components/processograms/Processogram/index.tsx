@@ -5,6 +5,7 @@ import SVG, { Props as SVGProps } from "react-inlinesvg";
 import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
+import { useBeforeStart } from "./hooks/useBeforeStart";
 
 const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
   <SVG innerRef={ref} {...props} />
@@ -15,16 +16,30 @@ type Props = {
 };
 
 export const NewProcessogram = ({ src }: Props) => {
-  const { svgRef, focusedElementId, onTransition, loadingOptimization } =
-    useProcessogramLogic({
-      enableBruteOptimization: src.includes("chicken"),
-    });
+  const {
+    setSvgElement,
+    svgElement,
+    focusedElementId,
+    onTransition,
+    loadingOptimization,
+    start,
+  } = useProcessogramLogic({
+    enableBruteOptimization: src.includes("chicken"),
+  });
+
+  const {} = useBeforeStart({
+    svgElement,
+  });
+
+  useEffect(() => {
+    start();
+  }, []);
 
   return (
     <>
       <SvgContainer>
         <ProcessogramSVG
-          ref={svgRef}
+          ref={setSvgElement}
           src={src}
           className={`${focusedElementId} ${
             onTransition ? "onTransition" : ""

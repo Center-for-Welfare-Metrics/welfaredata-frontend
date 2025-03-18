@@ -1,4 +1,4 @@
-import { NewProcessogram } from "../NewProcessogram";
+import { NewProcessogram } from "../Processogram";
 
 export const ProcessogramsList = () => {
   return (

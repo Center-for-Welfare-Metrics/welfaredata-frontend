@@ -25,16 +25,21 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     useState<boolean>(false);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
-  const initialized = useRef<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
+  const isReady = useRef<boolean>(false);
 
-  const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts();
+  const { optimizeAllElements, optimizeLevelElements } =
+    useOptimizeSvgParts(svgElement);
 
   const { initializeStyleSheet, cleanupStyleSheet } = useSvgCssRules();
 
   const initializeOptimization = useCallback(async () => {
     setLoadingOptimization(true);
-    await optimizeAllElements(svgElement);
-    optimizeLevelElements(svgElement, null);
+    await optimizeAllElements();
+    optimizeLevelElements({
+      currentElementId: null,
+      bruteOptimization: enableBruteOptimization,
+    });
     setLoadingOptimization(false);
   }, [svgElement]);
 
@@ -58,12 +63,19 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
         ease: "power1.inOut",
         onComplete: () => {
           setOnTransition(false);
-          optimizeLevelElements(svgElement, id, enableBruteOptimization);
+          optimizeLevelElements({
+            currentElementId: id,
+            bruteOptimization: enableBruteOptimization,
+          });
         },
       });
     },
     [svgElement, optimizeLevelElements, setFocusedElementId]
   );
+
+  const start = useCallback(() => {
+    setInitialized(true);
+  }, []);
 
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
     const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
@@ -118,14 +130,16 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   }, [handleClick]);
 
   useEffect(() => {
-    if (initialized.current || !svgElement) return;
+    if (!initialized) return;
+
+    if (isReady.current || !svgElement) return;
 
     initializeStyleSheet(svgElement);
     setFocusedElementId(svgElement.id);
     initializeOptimization();
-    initialized.current = true;
+    isReady.current = true;
     return () => {
-      initialized.current = false;
+      isReady.current = false;
       cleanupStyleSheet();
     };
   }, [
@@ -137,9 +151,11 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   ]);
 
   return {
-    svgRef: setSvgElement,
+    setSvgElement,
+    svgElement,
     focusedElementId,
     onTransition,
     loadingOptimization,
+    start,
   };
 };

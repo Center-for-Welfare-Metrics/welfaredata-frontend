@@ -3,7 +3,7 @@ import { Container } from "@/components/layouts/default-processogram-page-styled
 import processogramApi from "queries/processogram";
 import specieApi from "queries/specie";
 import Head from "next/head";
-import { NewProcessogram } from "@/components/processograms/NewProcessogram";
+import { NewProcessogram } from "@/components/processograms/Processogram";
 
 const PublicPigsPage = ({ data, specie }) => {
   return (

@@ -1,14 +1,29 @@
 import { useCallback, useRef } from "react";
 import { optimizeSvg } from "./utils";
-import { INVERSE_DICT, MAX_LEVEL } from "../NewProcessogram/consts";
-import { getLevelById } from "../NewProcessogram/utils";
+import { INVERSE_DICT, MAX_LEVEL } from "../Processogram/consts";
+import { getLevelById } from "../Processogram/utils";
 
-export const useOptimizeSvgParts = () => {
+type ReplaceWithOptimizedParams = {
+  svgElement: SVGElement | null;
+  selector: string;
+};
+
+type RestoreOriginalParams = {
+  selector: string;
+  bruteOptimization?: boolean;
+};
+
+type OptimizeLevelElementsParams = {
+  currentElementId: string | null;
+  bruteOptimization?: boolean;
+};
+
+export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
   const originalGElements = useRef<Map<string, SVGElement>>(new Map());
   const optimizedGElements = useRef<Map<string, SVGElement>>(new Map());
 
   const replaceWithOptimized = useCallback(
-    (svgElement: SVGElement | null, selector: string) => {
+    ({ svgElement, selector }: ReplaceWithOptimizedParams) => {
       if (!svgElement) return;
 
       const gElements = Array.from(svgElement.querySelectorAll(selector));
@@ -31,11 +46,7 @@ export const useOptimizeSvgParts = () => {
   );
 
   const restoreOriginal = useCallback(
-    (
-      svgElement: SVGElement | null,
-      selector: string,
-      bruteOptimization = false
-    ) => {
+    ({ selector, bruteOptimization }: RestoreOriginalParams) => {
       if (!svgElement) return;
 
       const gElements = Array.from(svgElement.querySelectorAll(selector));
@@ -56,31 +67,24 @@ export const useOptimizeSvgParts = () => {
     []
   );
 
-  const optimizeAllElements = useCallback(
-    async (svgElement: SVGElement | null) => {
-      if (!svgElement) return;
+  const optimizeAllElements = useCallback(async () => {
+    if (!svgElement) return;
 
-      const dashedElementSelector = '[id*="--"]';
+    const dashedElementSelector = '[id*="--"]';
 
-      const { originalItemsMap } = await optimizeSvg(
-        svgElement,
-        dashedElementSelector,
-        optimizedGElements.current
-      );
+    const { originalItemsMap } = await optimizeSvg(
+      svgElement,
+      dashedElementSelector,
+      optimizedGElements.current
+    );
 
-      originalItemsMap.forEach((value, key) => {
-        originalGElements.current.set(key, value);
-      });
-    },
-    []
-  );
+    originalItemsMap.forEach((value, key) => {
+      originalGElements.current.set(key, value);
+    });
+  }, []);
 
   const optimizeLevelElements = useCallback(
-    (
-      svgElement: SVGElement | null,
-      currentElementId: string | null,
-      bruteOptimization = false
-    ) => {
+    ({ currentElementId, bruteOptimization }: OptimizeLevelElementsParams) => {
       if (!svgElement) return;
 
       const levelNum = currentElementId ? getLevelById(currentElementId) : 0;
@@ -89,7 +93,10 @@ export const useOptimizeSvgParts = () => {
         const currentLevelSelector = `[id="${currentElementId}"]`;
 
         // Restore current level to original
-        restoreOriginal(svgElement, currentLevelSelector, false);
+        restoreOriginal({
+          selector: currentLevelSelector,
+          bruteOptimization: false,
+        });
 
         // If we're at max level, no need to optimize next level
         if (levelNum >= MAX_LEVEL) return;
@@ -108,7 +115,7 @@ export const useOptimizeSvgParts = () => {
       const optimizeNextLevel = nextLevelNum < MAX_LEVEL || bruteOptimization;
 
       if (optimizeNextLevel) {
-        replaceWithOptimized(svgElement, nextLevelSelector);
+        replaceWithOptimized({ svgElement, selector: nextLevelSelector });
       }
     },
     [restoreOriginal, replaceWithOptimized]
