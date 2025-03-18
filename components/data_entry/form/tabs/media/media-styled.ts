@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 export const UploadYoutube = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.blue};

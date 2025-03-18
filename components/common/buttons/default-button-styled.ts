@@ -1,4 +1,4 @@
-import styled, { keyframes, css } from "styled-components";
+import { styled, keyframes, css } from "styled-components";
 import { darken } from "polished";
 import { GetColorType } from "@/utils/theme";
 
@@ -26,7 +26,11 @@ const spin = keyframes`
     }
 `;
 
-export const DefaultButton = styled.button`
+type ButtonProps = {
+  load?: boolean;
+};
+
+export const DefaultButton = styled.button<ButtonProps>`
   margin-top: 1rem;
   background-color: ${({ theme }) => GetColorType({ theme, type: "default" })};
   color: white;

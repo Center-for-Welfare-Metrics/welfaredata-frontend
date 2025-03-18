@@ -88,7 +88,7 @@ const InterativeMenu = ({ stackCoolFormat, shareString, specie }) => {
     }, 500);
   }, []);
 
-  const onClick = (event: Event) => {
+  const onClick = (event: any) => {
     event.stopPropagation();
     let userSelection = window.getSelection().toString();
 

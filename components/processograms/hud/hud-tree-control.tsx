@@ -115,7 +115,7 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
 
   const onTreeItemClick =
     ({ domID, level }) =>
-    (event: Event) => {
+    (event: any) => {
       event.stopPropagation();
       let current = stack[stack.length - 1];
       if (current !== domID && domID) {
@@ -183,7 +183,6 @@ const HudTreeControl = ({ stackCoolFormat, onChange }: IHudTreeControl) => {
             }}
             key={domID}
             onClick={onTreeItemClick({ domID, level })}
-            ishover={isHover}
           >
             {levelName} : {getRealName(elementName, localStack, index + 1)}
           </TreeItem>

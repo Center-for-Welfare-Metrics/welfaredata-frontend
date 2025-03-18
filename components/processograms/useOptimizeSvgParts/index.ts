@@ -1,10 +1,9 @@
 import { useCallback, useRef } from "react";
-import { optimizeSvg } from "./utils";
+import { optimizeSvg, processSvgToImage } from "./utils";
 import { INVERSE_DICT, MAX_LEVEL } from "../Processogram/consts";
 import { getLevelById } from "../Processogram/utils";
 
 type ReplaceWithOptimizedParams = {
-  svgElement: SVGElement | null;
   selector: string;
 };
 
@@ -21,9 +20,11 @@ type OptimizeLevelElementsParams = {
 export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
   const originalGElements = useRef<Map<string, SVGElement>>(new Map());
   const optimizedGElements = useRef<Map<string, SVGElement>>(new Map());
+  const originalRootElement = useRef<SVGElement | null>(null);
+  const optimizedRootElement = useRef<SVGElement | null>(null);
 
   const replaceWithOptimized = useCallback(
-    ({ svgElement, selector }: ReplaceWithOptimizedParams) => {
+    ({ selector }: ReplaceWithOptimizedParams) => {
       if (!svgElement) return;
 
       const gElements = Array.from(svgElement.querySelectorAll(selector));
@@ -42,7 +43,7 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
         }
       }
     },
-    []
+    [svgElement]
   );
 
   const restoreOriginal = useCallback(
@@ -64,7 +65,7 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
         gElement.replaceWith(originalG);
       }
     },
-    []
+    [svgElement]
   );
 
   const optimizeAllElements = useCallback(async () => {
@@ -81,7 +82,7 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
     originalItemsMap.forEach((value, key) => {
       originalGElements.current.set(key, value);
     });
-  }, []);
+  }, [svgElement]);
 
   const optimizeLevelElements = useCallback(
     ({ currentElementId, bruteOptimization }: OptimizeLevelElementsParams) => {
@@ -115,16 +116,47 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
       const optimizeNextLevel = nextLevelNum < MAX_LEVEL || bruteOptimization;
 
       if (optimizeNextLevel) {
-        replaceWithOptimized({ svgElement, selector: nextLevelSelector });
+        replaceWithOptimized({ selector: nextLevelSelector });
       }
     },
-    [restoreOriginal, replaceWithOptimized]
+    [restoreOriginal, replaceWithOptimized, svgElement]
   );
+
+  const optimizeRootElement = useCallback(async () => {
+    if (!svgElement) return;
+
+    if (optimizedRootElement.current) {
+      svgElement.replaceWith(optimizedRootElement.current);
+      return optimizedRootElement.current;
+    }
+
+    originalRootElement.current = svgElement;
+
+    const optimizedSvg = await processSvgToImage(svgElement);
+
+    if (!optimizedSvg) return;
+
+    optimizedRootElement.current = optimizedSvg;
+
+    return optimizedSvg;
+  }, [svgElement]);
+
+  const restoreRootElement = useCallback(() => {
+    if (!svgElement) return;
+    if (originalRootElement.current) {
+      svgElement.replaceWith(originalRootElement.current);
+      return originalRootElement.current;
+    }
+
+    return svgElement;
+  }, [svgElement]);
 
   return {
     replaceWithOptimized,
     restoreOriginal,
     optimizeAllElements,
     optimizeLevelElements,
+    optimizeRootElement,
+    restoreRootElement,
   };
 };

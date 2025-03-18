@@ -51,7 +51,6 @@ const FormInput:
           <LabeledTextArea
             id={name}
             name={name}
-            type={type}
             value={value}
             disabled={disabled}
             {...rest}

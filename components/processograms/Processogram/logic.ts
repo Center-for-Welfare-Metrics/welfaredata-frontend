@@ -41,7 +41,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
       bruteOptimization: enableBruteOptimization,
     });
     setLoadingOptimization(false);
-  }, [svgElement]);
+  }, [optimizeAllElements, optimizeLevelElements]);
 
   const changeLevelTo = useCallback(
     (target: SVGElement) => {
@@ -148,6 +148,7 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
     svgElement,
     initializeOptimization,
     cleanupStyleSheet,
+    // initialized,
   ]);
 
   return {

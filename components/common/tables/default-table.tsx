@@ -24,7 +24,7 @@ const DefaultTable = ({ data, columns, rowClick, options }: IDefaultTable) => {
     rowClick(row);
   };
 
-  const onRowContextMenu = (row) => (event: MouseEvent) => {
+  const onRowContextMenu = (row) => (event: any) => {
     DefaultEventComportamentOnContextMenuOpen(event);
     let { clientX, clientY } = event;
     setContextMenu({

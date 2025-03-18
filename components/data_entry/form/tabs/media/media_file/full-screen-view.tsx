@@ -4,8 +4,8 @@ import { FadedModalBackground } from "@/components/common/modal/modal-styled";
 
 interface IFullScreenView {
   children?: React.ReactNode;
-  onClose(evt?: Event): void;
-  onContextMenu?(evt: MouseEvent): void;
+  onClose(evt?: any): void;
+  onContextMenu?(evt: any): void;
 }
 
 const FullScreenView = ({
@@ -15,9 +15,9 @@ const FullScreenView = ({
 }: IFullScreenView) => {
   return (
     <>
-      <Content onClick={(e: Event) => e.stopPropagation()}>
+      <Content onClick={(e: any) => e.stopPropagation()}>
         <InnerContent
-          onContextMenu={(e: Event) => {
+          onContextMenu={(e: any) => {
             e.stopPropagation();
           }}
         >

@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import { styled, css } from "styled-components";
 import SVG from "react-inlinesvg";
 import Loader from "react-loader-spinner";
 import { lighten } from "polished";
@@ -17,7 +17,11 @@ export const FetchingDiv = styled.div`
   align-items: center;
 `;
 
-export const Tab = styled.div`
+type TabProps = {
+  active: boolean;
+};
+
+export const Tab = styled.div<TabProps>`
   color: ${({ theme, active }) =>
     !active ? ThemeColors.blue : ThemeColors.yellow};
   font-size: ${({ theme }) => theme.fontSize.normal1};
@@ -25,7 +29,11 @@ export const Tab = styled.div`
   transition: transform 500ms, color 500ms;
 `;
 
-export const Warning = styled(SVG)`
+type WarningProps = {
+  warning: boolean;
+};
+
+export const Warning = styled(SVG)<WarningProps>`
   path {
     ${({ warning, theme }) =>
       warning &&
@@ -40,7 +48,11 @@ export const Tabs = styled.div`
   margin-top: 2rem;
 `;
 
-export const Body = styled.div`
+type Props = {
+  load: boolean;
+};
+
+export const Body = styled.div<Props>`
   width: 70%;
   max-height: 50rem;
   position: ${({ load }) => (load ? "relative" : "static")};

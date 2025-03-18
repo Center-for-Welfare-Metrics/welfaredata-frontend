@@ -172,11 +172,7 @@ const MenuTabs = ({ content, state }: IMenutabs) => {
         tab={tab}
         TabIconClick={TabIconClick}
       />
-      <Body
-        tab={tab}
-        onClick={(e) => e.stopPropagation()}
-        onTouchStart={BodyTouchStart}
-      >
+      <Body onClick={(e) => e.stopPropagation()} onTouchStart={BodyTouchStart}>
         {tab === "description" && (
           <DescriptionTab
             ref_description={global}

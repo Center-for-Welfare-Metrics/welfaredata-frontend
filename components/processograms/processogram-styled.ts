@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import { styled, css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 
 export const Subtitle = styled.h2`

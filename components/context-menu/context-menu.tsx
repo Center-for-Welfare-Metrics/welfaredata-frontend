@@ -23,11 +23,11 @@ gsap.registerPlugin(TweenLite);
 
 interface IContextMenuComponent {
   isOpen: boolean;
-  onClose(event: Event): void;
+  onClose(event: any): void;
 }
 
 const ContextMenu = ({ onClose, isOpen }: IContextMenuComponent) => {
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<any>(null);
 
   const { contextMenu, setLoading, setTemporary } =
     useContext(ContextMenuContext);
@@ -103,12 +103,12 @@ const ContextMenu = ({ onClose, isOpen }: IContextMenuComponent) => {
     }
   };
 
-  const innerContextMenu = (e: Event) => {
+  const innerContextMenu = (e: any) => {
     e.stopPropagation();
     e.preventDefault();
   };
 
-  const innerOnClick = (e: Event) => {
+  const innerOnClick = (e: any) => {
     if (contextMenu.type === "options") {
       onClose(e);
     } else {

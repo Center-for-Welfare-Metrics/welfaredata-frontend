@@ -104,7 +104,7 @@ const ProcessogramDataEntry = ({ specie }: IProcessogramDataEntry) => {
           />
         }
       </ProcessogramSpace>
-      <FormSpace onClick={(e: Event) => e.stopPropagation()}>
+      <FormSpace onClick={(e: any) => e.stopPropagation()}>
         <DataEntryContext.Provider
           value={{
             contentInformation: content,

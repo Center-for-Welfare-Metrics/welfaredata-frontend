@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import { styled, keyframes } from "styled-components";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { lighten } from "polished";

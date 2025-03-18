@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
 
 import { useProcessogramLogic } from "./logic";
@@ -13,9 +13,11 @@ const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
 
 type Props = {
   src: string;
+  open?: boolean;
+  onClose?: () => void;
 };
 
-export const NewProcessogram = ({ src }: Props) => {
+export const NewProcessogram = ({ src, open, onClose }: Props) => {
   const {
     setSvgElement,
     svgElement,
@@ -27,17 +29,29 @@ export const NewProcessogram = ({ src }: Props) => {
     enableBruteOptimization: src.includes("chicken"),
   });
 
-  const {} = useBeforeStart({
+  const { optimize, restore } = useBeforeStart({
     svgElement,
+    updateSvgElement: setSvgElement,
   });
 
   useEffect(() => {
-    start();
-  }, []);
+    if (!svgElement) return;
+
+    if (!open) {
+      optimize();
+    } else {
+      restore();
+      start();
+    }
+  }, [open, optimize, restore, svgElement]);
 
   return (
     <>
-      <SvgContainer>
+      <SvgContainer
+        style={{
+          pointerEvents: open ? "auto" : "none",
+        }}
+      >
         <ProcessogramSVG
           ref={setSvgElement}
           src={src}

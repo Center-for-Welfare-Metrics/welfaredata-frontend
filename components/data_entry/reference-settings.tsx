@@ -7,7 +7,7 @@ import { useRef } from "react";
 import processogramApi from "queries/processogram";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 
 const COLLECTION_LINK =

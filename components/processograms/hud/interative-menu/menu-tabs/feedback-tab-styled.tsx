@@ -6,7 +6,11 @@ export const HeaderText = styled.div`
   margin-inline: auto;
 `;
 
-export const CheckButton = styled.label`
+type InputProps = {
+  ischecked: boolean;
+};
+
+export const CheckButton = styled.label<InputProps>`
   width: 1rem;
   height: 1rem;
   border: 1px solid ${({ theme }) => theme.colors.blue};

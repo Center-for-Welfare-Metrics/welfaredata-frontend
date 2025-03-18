@@ -1,5 +1,4 @@
-import { lighten, transparentize } from "polished";
-import styled, { css, keyframes } from "styled-components";
+import { styled, keyframes } from "styled-components";
 
 let fade = keyframes`
     0%{opacity:0}

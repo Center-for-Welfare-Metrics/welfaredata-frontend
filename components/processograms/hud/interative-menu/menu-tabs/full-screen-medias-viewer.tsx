@@ -10,7 +10,7 @@ import ImageGallery from "react-image-gallery";
 const FullScreenMediasViewer = () => {
   const { mediasViewer, setMediasViewer } = useContext(ProcessogramContext);
 
-  const clickOut = (e: Event) => {
+  const clickOut = (e: any) => {
     e.stopPropagation();
     setMediasViewer({ medias: [], index: 0 });
   };

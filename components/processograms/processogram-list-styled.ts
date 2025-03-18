@@ -1,5 +1,5 @@
 import { lighten, transparentize } from "polished";
-import styled, { css } from "styled-components";
+import { styled, css } from "styled-components";
 
 const scrollBar = (color, size = ".5rem") => css`
   ::-webkit-scrollbar {

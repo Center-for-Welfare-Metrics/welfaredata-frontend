@@ -15,14 +15,14 @@ import {
 import Dialog from "@/components/common/dialog/dialog";
 import { IMedia } from "@/utils/processogram";
 import { PlayCircleFilled } from "@material-ui/icons";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import queryString from "query-string";
 
 export interface IMediaFile {
   media: IMedia;
   disabledContext?: boolean;
   onDelete?(media: IMedia): void;
-  onClick?(e: Event): void;
+  onClick?(e: any): void;
   onlyImage?: boolean;
 }
 
@@ -39,7 +39,7 @@ const MediaFile = ({
 
   const { setContextMenu } = useContext(ContextMenu);
 
-  const onContextMenu = (event: MouseEvent) => {
+  const onContextMenu = (event: any) => {
     if (!disabledContext) {
       DefaultEventComportamentOnContextMenuOpen(event);
       setContextMenu({

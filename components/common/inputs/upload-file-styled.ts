@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from "styled-components";
 import SVG from "react-inlinesvg";
 
 import Loader from "react-loader-spinner";

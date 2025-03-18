@@ -1,5 +1,5 @@
-import { lighten, transparentize } from "polished";
-import styled, { css } from "styled-components";
+import { lighten } from "polished";
+import { styled, css } from "styled-components";
 
 import ShareOutlined from "@material-ui/icons/ShareOutlined";
 
@@ -20,7 +20,11 @@ export const Share = styled(ShareOutlined)`
   }
 `;
 
-export const Minimize = styled.div`
+type MinimizeProps = {
+  state: string;
+};
+
+export const Minimize = styled.div<MinimizeProps>`
   transition: height 500ms;
   border-radius: 0.25rem;
   position: absolute;
@@ -53,7 +57,7 @@ export const Minimize = styled.div`
   -webkit-tap-highlight-color: transparent;
 `;
 
-export const Container = styled.div`
+export const Container = styled.div<MinimizeProps>`
   position: fixed;
   bottom: 0;
   left: 0;

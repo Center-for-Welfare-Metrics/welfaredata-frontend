@@ -1,46 +1,54 @@
-import NavItem from './nav-item'
-import React from 'react'
-import UserContext from '@/context/user'
-import { useContext } from 'react'
-import { Containter, LogOut, NavItems, UserName, UserSection } from './index-styled'
+import NavItem from "./nav-item";
+import React from "react";
+import UserContext from "@/context/user";
+import { useContext } from "react";
+import {
+  Containter,
+  LogOut,
+  NavItems,
+  UserName,
+  UserSection,
+} from "./index-styled";
 
-const NavMap : any[] = require('./nav-map.json')
+const NavMap: any[] = require("./nav-map.json");
 
 const NavBar = () => {
+  const { user, logOut } = useContext(UserContext);
 
-    const {user,logOut} = useContext(UserContext)
+  return (
+    <Containter id="main-nav-menu" onClick={(e: any) => e.stopPropagation()}>
+      <NavItems>
+        {NavMap.map((nav_item) =>
+          nav_item.auth ? (
+            user && (
+              <NavItem
+                prefix={nav_item.prefix}
+                name={nav_item.name}
+                key={nav_item.prefix}
+              >
+                {nav_item.childrens}
+              </NavItem>
+            )
+          ) : (
+            <NavItem
+              prefix={nav_item.prefix}
+              name={nav_item.name}
+              key={nav_item.prefix}
+            >
+              {nav_item.childrens}
+            </NavItem>
+          )
+        )}
+      </NavItems>
 
-    return (
-        <Containter id='main-nav-menu' onClick={(e:Event)=>e.stopPropagation()}>
-            <NavItems>
-                {
-                    NavMap.map((nav_item) => (
-                        nav_item.auth?
-                        (
-                            user && <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
-                                {nav_item.childrens}
-                            </NavItem>
-                        )
-                        :
-                        (
-                            <NavItem prefix={nav_item.prefix} name={nav_item.name} key={nav_item.prefix}>
-                                {nav_item.childrens}
-                            </NavItem>
-                        )
-                        
-                    ))
-                }
-            </NavItems>
-            
-            {
-                user && <UserSection>
-                    <UserName>user: {user.name.split(' ')[0]}</UserName>
-                    <LogOut onClick={logOut}>logout</LogOut>
-                </UserSection>
-            }
-        </Containter>
-    )
-}
+      {user && (
+        <UserSection>
+          <UserName>user: {user.name.split(" ")[0]}</UserName>
+          <LogOut onClick={logOut}>logout</LogOut>
+        </UserSection>
+      )}
+    </Containter>
+  );
+};
 
-
-export default React.memo(NavBar)
+export default React.memo(NavBar);
