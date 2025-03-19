@@ -1,29 +1,28 @@
 import React from "react";
-import { styled } from "styled-components";
 import SVG, { Props as SVGProps } from "react-inlinesvg";
+import { styled } from "styled-components";
 
 import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
-
-const ProcessogramSVG = React.forwardRef<SVGElement, SVGProps>((props, ref) => (
-  <SVG innerRef={ref} {...props} />
-));
+import { SvgRenderer } from "../SvgRenderer";
 
 type Props = {
   src: string;
+  onClose: () => void;
 };
 
-export const NewProcessogram = ({ src }: Props) => {
+export const Processogram = ({ src, onClose }: Props) => {
   const { setSvgElement, focusedElementId, onTransition, loadingOptimization } =
     useProcessogramLogic({
-      enableBruteOptimization: false,
+      onClose,
+      path: src,
     });
 
   return (
     <>
       <SvgContainer>
-        <ProcessogramSVG
+        <SvgRenderer
           ref={setSvgElement}
           src={src}
           className={`${focusedElementId} ${

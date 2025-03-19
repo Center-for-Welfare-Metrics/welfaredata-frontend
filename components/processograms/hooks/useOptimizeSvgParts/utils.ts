@@ -98,8 +98,8 @@ const getRelativeSize = (first: Size, second: Size): number => {
  * Process an SVG object into an image element
  */
 export const processSvgToImage = async (
-  svgElement: SVGElement
-): Promise<SVGElement | SVGGraphicsElement> => {
+  svgElement: SVGGraphicsElement
+): Promise<SVGGraphicsElement> => {
   // Get the dimensions from the SVG viewBox or attributes
   let width = svgElement.clientWidth;
   let height = svgElement.clientHeight;
@@ -136,7 +136,7 @@ export const processSvgToImage = async (
   const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
   const url = URL.createObjectURL(svgBlob);
 
-  return new Promise<SVGElement | SVGGraphicsElement>((resolve) => {
+  return new Promise<SVGGraphicsElement>((resolve) => {
     const img = new Image();
 
     img.onload = () => {
@@ -307,11 +307,15 @@ const processGroupToImage = async (
 const optimizeSvgBase = async (
   svgElement: SVGElement,
   selector: string,
-  optimizedMap: Map<string, SVGElement>
-): Promise<{ originalItemsMap: Map<string, SVGGraphicsElement> }> => {
-  if (!svgElement) return { originalItemsMap: new Map() };
+  originalItemsMap: Map<string, SVGGraphicsElement>,
+  optimizedMap: Map<string, SVGGraphicsElement>
+): Promise<{
+  originalItemsMap: Map<string, SVGGraphicsElement>;
+  optimizedMap: Map<string, SVGGraphicsElement>;
+}> => {
+  if (!svgElement)
+    return { originalItemsMap: new Map(), optimizedMap: new Map() };
 
-  const originalItemsMap = new Map<string, SVGGraphicsElement>();
   const groups = Array.from(
     svgElement.querySelectorAll(selector)
   ) as SVGGraphicsElement[];
@@ -344,21 +348,25 @@ const optimizeSvgBase = async (
   // Wait for all images to be processed
   await Promise.all(processingPromises);
 
-  return { originalItemsMap };
+  return { originalItemsMap, optimizedMap };
 };
 
 export const optimizeSvg = async (
-  svgElement: SVGElement,
+  svgElement: SVGGraphicsElement,
   selector: string,
-  optimizedMap: Map<string, SVGElement>
-): Promise<{ originalItemsMap: Map<string, SVGGraphicsElement> }> => {
-  return optimizeSvgBase(svgElement, selector, optimizedMap);
+  originalItemsMap: Map<string, SVGGraphicsElement>,
+  optimizedMap: Map<string, SVGGraphicsElement>
+): Promise<{
+  originalItemsMap: Map<string, SVGGraphicsElement>;
+  optimizedMap: Map<string, SVGGraphicsElement>;
+}> => {
+  return optimizeSvgBase(svgElement, selector, originalItemsMap, optimizedMap);
 };
 
 export const optimizeItself = async (
-  svgElement: SVGElement,
-  selector: string,
-  optimizedMap: Map<string, SVGElement>
-): Promise<{ originalItemsMap: Map<string, SVGGraphicsElement> }> => {
-  return optimizeSvgBase(svgElement, selector, optimizedMap);
+  svgElement: SVGGraphicsElement
+): Promise<{ svgElement: SVGGraphicsElement }> => {
+  const optimizedSvg = await processSvgToImage(svgElement);
+
+  return { svgElement: optimizedSvg as SVGGraphicsElement };
 };

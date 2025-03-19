@@ -3,7 +3,7 @@ import { getElementViewBox } from "../processogram-helpers";
 import { INVERSE_DICT, MAX_LEVEL } from "./consts";
 import { getLevelById } from "./utils";
 import { gsap } from "gsap";
-import { useOptimizeSvgParts } from "../useOptimizeSvgParts";
+import { useOptimizeSvgParts } from "../hooks/useOptimizeSvgParts";
 import { useSvgCssRules } from "./useSvgCssRules";
 
 type HistoryLevel = {
@@ -14,11 +14,17 @@ type HistoryLevel = {
 
 type Props = {
   enableBruteOptimization?: boolean;
+  path: string;
+  onClose: () => void;
 };
 
-export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
+export const useProcessogramLogic = ({
+  enableBruteOptimization,
+  path,
+  onClose,
+}: Props) => {
   // Refs
-  const [svgElement, setSvgElement] = useState<SVGElement | null>(null);
+  const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
   const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
   const [onTransition, setOnTransition] = useState<boolean>(false);
   const [loadingOptimization, setLoadingOptimization] =
@@ -27,8 +33,10 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
   const currentLevel = useRef<number>(0);
   const isReady = useRef<boolean>(false);
 
-  const { optimizeAllElements, optimizeLevelElements } =
-    useOptimizeSvgParts(svgElement);
+  const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts(
+    svgElement,
+    path
+  );
 
   const { initializeStyleSheet, cleanupStyleSheet } = useSvgCssRules();
 
@@ -97,6 +105,10 @@ export const useProcessogramLogic = ({ enableBruteOptimization }: Props) => {
       // Navigate back
       const previousLevel = currentLevel.current - 1;
       if (previousLevel < 1) {
+        if (previousLevel < 0) {
+          onClose();
+          return;
+        }
         changeLevelTo(svgElement);
         return;
       }

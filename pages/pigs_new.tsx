@@ -1,6 +1,5 @@
 import { Container } from "@/components/layouts/default-processogram-page-styled";
 import Head from "next/head";
-import { NewProcessogram } from "@/components/processograms/Processogram";
 import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
 
 const paths = [

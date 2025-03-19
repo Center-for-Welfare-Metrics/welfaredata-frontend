@@ -1,7 +1,15 @@
 import { useCallback, useRef } from "react";
 import { optimizeSvg, processSvgToImage } from "./utils";
-import { INVERSE_DICT, MAX_LEVEL } from "../Processogram/consts";
-import { getLevelById } from "../Processogram/utils";
+import { INVERSE_DICT, MAX_LEVEL } from "../../Processogram/consts";
+import { getLevelById } from "../../Processogram/utils";
+import {
+  getCacheOptimizedInstance,
+  getCacheOriginalInstance,
+  getCacheRootOptimizedInstance,
+  getCacheRootOriginalInstance,
+  setCacheOptimizedInstance,
+  setCacheOriginalInstance,
+} from "./cache";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -17,11 +25,22 @@ type OptimizeLevelElementsParams = {
   bruteOptimization?: boolean;
 };
 
-export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
-  const originalGElements = useRef<Map<string, SVGElement>>(new Map());
-  const optimizedGElements = useRef<Map<string, SVGElement>>(new Map());
-  const originalRootElement = useRef<SVGElement | null>(null);
-  const optimizedRootElement = useRef<SVGElement | null>(null);
+export const useOptimizeSvgParts = (
+  svgElement: SVGGraphicsElement | null,
+  instance: string
+) => {
+  const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
+    getCacheOriginalInstance(instance)
+  );
+  const optimizedGElements = useRef<Map<string, SVGGraphicsElement>>(
+    getCacheOptimizedInstance(instance)
+  );
+  const originalRootElement = useRef<SVGGraphicsElement | null>(
+    getCacheRootOriginalInstance(instance)
+  );
+  const optimizedRootElement = useRef<SVGGraphicsElement | null>(
+    getCacheRootOptimizedInstance(instance)
+  );
 
   const replaceWithOptimized = useCallback(
     ({ selector }: ReplaceWithOptimizedParams) => {
@@ -73,14 +92,22 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
 
     const dashedElementSelector = '[id*="--"]';
 
-    const { originalItemsMap } = await optimizeSvg(
+    const { originalItemsMap, optimizedMap } = await optimizeSvg(
       svgElement,
       dashedElementSelector,
+      originalGElements.current,
       optimizedGElements.current
     );
 
+    // Store original elements in the cache
+
     originalItemsMap.forEach((value, key) => {
       originalGElements.current.set(key, value);
+      setCacheOriginalInstance(instance, key, value);
+    });
+
+    optimizedMap.forEach((value, key) => {
+      setCacheOptimizedInstance(instance, key, value);
     });
   }, [svgElement]);
 
@@ -130,13 +157,20 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
       return optimizedRootElement.current;
     }
 
-    originalRootElement.current = svgElement.cloneNode(true) as SVGElement;
+    originalRootElement.current = svgElement.cloneNode(
+      true
+    ) as SVGGraphicsElement;
 
     const optimizedSvg = await processSvgToImage(svgElement);
 
     if (!optimizedSvg) return;
 
     optimizedRootElement.current = optimizedSvg;
+
+    const firstChild = optimizedSvg.firstChild;
+
+    svgElement.replaceChildren(firstChild);
+    svgElement.setAttribute("data-optimized", "true");
 
     return optimizedSvg;
   }, [svgElement]);
@@ -147,6 +181,8 @@ export const useOptimizeSvgParts = (svgElement: SVGElement | null) => {
       svgElement.replaceWith(originalRootElement.current);
       return originalRootElement.current;
     }
+
+    svgElement.replaceWith(svgElement.cloneNode(true) as SVGElement);
 
     return svgElement;
   }, [svgElement]);
