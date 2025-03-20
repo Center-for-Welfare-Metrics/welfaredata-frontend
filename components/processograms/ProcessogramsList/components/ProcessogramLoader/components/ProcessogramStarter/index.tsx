@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useOptimizeSvgParts } from "../hooks/useOptimizeSvgParts";
-import { SvgRenderer } from "../SvgRenderer";
+import { useOptimizeSvgParts } from "../../../../../hooks/useOptimizeSvgParts";
+import { SvgRenderer } from "../../../../../SvgRenderer";
 
 type Props = {
   src: string;

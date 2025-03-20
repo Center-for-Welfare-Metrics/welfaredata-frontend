@@ -196,6 +196,7 @@ type Params = {
   dataUrl: string;
   group: SVGGraphicsElement;
   instance: string;
+  canvas?: HTMLCanvasElement;
 };
 
 const replaceByRasterized = ({
@@ -322,6 +323,7 @@ const processGroupToImage = async (
         dataUrl,
         group,
         instance,
+        canvas,
       });
 
       resolve(optimizedSvgElement);

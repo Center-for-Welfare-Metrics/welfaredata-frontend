@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getElementViewBox } from "../processogram-helpers";
 import { INVERSE_DICT, MAX_LEVEL } from "./consts";
 import { getLevelById } from "./utils";
 import { gsap } from "gsap";
-import { useOptimizeSvgParts } from "../hooks/useOptimizeSvgParts";
 import { useSvgCssRules } from "./useSvgCssRules";
+import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
+import { getElementViewBox } from "@/components/processograms/processogram-helpers";
 
 type HistoryLevel = {
   [key: number]: {
@@ -26,7 +26,6 @@ export const useProcessogramLogic = ({
   // Refs
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
   const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
-  const [onTransition, setOnTransition] = useState<boolean>(false);
   const [loadingOptimization, setLoadingOptimization] =
     useState<boolean>(false);
   const historyLevel = useRef<HistoryLevel>({});
@@ -50,8 +49,11 @@ export const useProcessogramLogic = ({
     setLoadingOptimization(false);
   }, [optimizeAllElements, optimizeLevelElements]);
 
+  const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
+
   const changeLevelTo = useCallback(
     (target: SVGElement) => {
+      if (!svgElement) return;
       const viewBox = getElementViewBox(target);
       const id = target.id;
       const currentLevelById = getLevelById(id);
@@ -60,22 +62,60 @@ export const useProcessogramLogic = ({
       };
 
       currentLevel.current = currentLevelById;
-      setOnTransition(true);
       setFocusedElementId(id);
-      gsap.to(svgElement, {
-        attr: {
-          viewBox,
-        },
-        duration: 0.7,
-        ease: "power1.inOut",
-        onComplete: () => {
-          setOnTransition(false);
-          optimizeLevelElements({
-            currentElementId: id,
-            bruteOptimization: enableBruteOptimization,
-          });
-        },
-      });
+
+      const isMaxLevel = currentLevelById === MAX_LEVEL;
+
+      let outOfFocusSelector: string | null = null;
+
+      if (isMaxLevel) {
+        const levelID = INVERSE_DICT[currentLevelById];
+        outOfFocusSelector = `[id*="${levelID}"]:not([id="${id}"])`;
+        console.log(outOfFocusSelector);
+      } else {
+        outOfFocusSelector = `[data-optimized="true"]:not([id^="${id}"] *):not([id="${id}"])`;
+      }
+
+      const outOfFocusElements =
+        svgElement.querySelectorAll(outOfFocusSelector);
+
+      console.log(outOfFocusElements);
+
+      if (outOfFocusAnimation.current) {
+        outOfFocusAnimation.current.revert();
+      }
+
+      if (outOfFocusElements.length > 0) {
+        outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
+          filter: "brightness(0.5)",
+          duration: 0.7,
+          ease: "power1.inOut",
+        });
+      }
+
+      // Set the viewBox of the SVG element to the new viewBox
+      gsap.fromTo(
+        svgElement,
+        { pointerEvents: "none", duration: 0 },
+        {
+          attr: {
+            viewBox,
+          },
+          duration: 0.7,
+          ease: "power1.inOut",
+          onComplete: () => {
+            gsap.set(svgElement, {
+              pointerEvents: "auto",
+              onComplete: () => {
+                optimizeLevelElements({
+                  currentElementId: id,
+                  bruteOptimization: enableBruteOptimization,
+                });
+              },
+            });
+          },
+        }
+      );
     },
     [svgElement, optimizeLevelElements, setFocusedElementId]
   );
@@ -160,7 +200,6 @@ export const useProcessogramLogic = ({
     setSvgElement,
     svgElement,
     focusedElementId,
-    onTransition,
     loadingOptimization,
   };
 };

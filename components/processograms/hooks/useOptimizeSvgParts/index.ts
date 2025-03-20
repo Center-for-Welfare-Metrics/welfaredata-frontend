@@ -1,7 +1,10 @@
 import { useCallback, useRef } from "react";
 import { optimizeSvg, processSvgToImage } from "./utils";
-import { INVERSE_DICT, MAX_LEVEL } from "../../Processogram/consts";
-import { getLevelById } from "../../Processogram/utils";
+import { getLevelById } from "../../ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete/utils";
+import {
+  INVERSE_DICT,
+  MAX_LEVEL,
+} from "../../ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete/consts";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -116,7 +119,7 @@ export const useOptimizeSvgParts = (
         });
 
         // If we're at max level, no need to optimize next level
-        if (levelNum >= MAX_LEVEL) return;
+        if (levelNum > MAX_LEVEL) return;
       }
 
       // Get next level selector

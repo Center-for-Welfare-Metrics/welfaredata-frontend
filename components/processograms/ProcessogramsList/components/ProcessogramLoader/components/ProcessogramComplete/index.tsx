@@ -1,19 +1,18 @@
 import React from "react";
-import SVG, { Props as SVGProps } from "react-inlinesvg";
 import { styled } from "styled-components";
 
 import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
-import { SvgRenderer } from "../SvgRenderer";
+import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 
 type Props = {
   src: string;
   onClose: () => void;
 };
 
-export const Processogram = ({ src, onClose }: Props) => {
-  const { setSvgElement, focusedElementId, onTransition, loadingOptimization } =
+export const ProcessogramComplete = ({ src, onClose }: Props) => {
+  const { setSvgElement, focusedElementId, loadingOptimization } =
     useProcessogramLogic({
       onClose,
       path: src,
@@ -25,9 +24,7 @@ export const Processogram = ({ src, onClose }: Props) => {
         <SvgRenderer
           ref={setSvgElement}
           src={src}
-          className={`${focusedElementId} ${
-            onTransition ? "onTransition" : ""
-          }`}
+          className={`${focusedElementId}`}
         />
       </SvgContainer>
       {loadingOptimization && (
@@ -67,9 +64,6 @@ const SvgContainer = styled.div`
       transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
     }
     max-height: 60vh;
-    &.onTransition {
-      pointer-events: none;
-    }
 
     [id*="--"] {
       cursor: pointer;
