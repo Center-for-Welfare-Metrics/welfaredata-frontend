@@ -1,3 +1,5 @@
+import { getCacheOptimizedItem, setCacheOptimizedItem } from "./cache";
+
 interface Size {
   w: number;
   h: number;
@@ -186,6 +188,54 @@ export const processSvgToImage = async (
   });
 };
 
+type Params = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  dataUrl: string;
+  group: SVGGraphicsElement;
+  instance: string;
+};
+
+const replaceByRasterized = ({
+  x,
+  y,
+  width,
+  height,
+  dataUrl,
+  group,
+  instance,
+}: Params): SVGGraphicsElement => {
+  const imgElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "image"
+  );
+
+  imgElement.setAttribute("x", x.toString());
+  imgElement.setAttribute("y", y.toString());
+  imgElement.setAttribute("width", width.toString());
+  imgElement.setAttribute("height", height.toString());
+  imgElement.setAttribute("href", dataUrl);
+
+  if (group.tagName === "path") {
+    const gElement = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "g"
+    );
+    gElement.setAttribute("id", group.id);
+    gElement.appendChild(imgElement);
+    gElement.setAttribute("data-optimized", "true");
+    setCacheOptimizedItem(instance, group.id, gElement);
+    return gElement;
+  } else {
+    const gClone = group.cloneNode(false) as SVGGraphicsElement;
+    gClone.setAttribute("data-optimized", "true");
+    gClone.appendChild(imgElement);
+    setCacheOptimizedItem(instance, group.id, gClone);
+    return gClone;
+  }
+};
 /**
  * Processes an SVG group element into an image element
  */
@@ -193,8 +243,8 @@ const processGroupToImage = async (
   group: SVGGraphicsElement,
   svgElement: SVGElement,
   originalItemsMap: Map<string, SVGGraphicsElement>,
-  optimizedMap: Map<string, SVGElement>
-): Promise<void> => {
+  instance: string
+): Promise<SVGGraphicsElement | null> => {
   const bbox = group.getBBox();
   if (bbox.width === 0 || bbox.height === 0) return;
 
@@ -203,7 +253,14 @@ const processGroupToImage = async (
 
   // Clone the element to preserve the original structure
   const clonedGroup = group.cloneNode(true) as SVGGraphicsElement;
-  originalItemsMap.set(group.id, clonedGroup);
+  if (!originalItemsMap.has(group.id)) {
+    originalItemsMap.set(group.id, clonedGroup);
+  }
+
+  const optimizedGroup = getCacheOptimizedItem(instance, group.id);
+  if (optimizedGroup) {
+    return optimizedGroup;
+  }
 
   // Function to recursively remove the attribute from an element and its children
   const removeAttributeRecursively = (element: Element, attribute: string) => {
@@ -232,7 +289,7 @@ const processGroupToImage = async (
   const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
   const url = URL.createObjectURL(svgBlob);
 
-  return new Promise<void>((resolve) => {
+  return new Promise<SVGGraphicsElement | null>((resolve) => {
     const img = new Image();
 
     img.crossOrigin = "anonymous";
@@ -255,36 +312,19 @@ const processGroupToImage = async (
       ctx?.drawImage(img, 0, 0);
       URL.revokeObjectURL(url);
 
-      const imgElement = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "image"
-      );
-
       const dataUrl = canvas.toDataURL("image/png", 1.0);
 
-      imgElement.setAttribute("x", x.toString());
-      imgElement.setAttribute("y", y.toString());
-      imgElement.setAttribute("width", width.toString());
-      imgElement.setAttribute("height", height.toString());
-      imgElement.setAttribute("href", dataUrl);
+      const optimizedSvgElement = replaceByRasterized({
+        x,
+        y,
+        width,
+        height,
+        dataUrl,
+        group,
+        instance,
+      });
 
-      if (group.tagName === "path") {
-        const gElement = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "g"
-        );
-        gElement.setAttribute("id", group.id);
-        gElement.appendChild(imgElement);
-        gElement.setAttribute("data-optimized", "true");
-        optimizedMap.set(group.id, gElement);
-      } else {
-        const gClone = group.cloneNode(false) as SVGGraphicsElement;
-        gClone.setAttribute("data-optimized", "true");
-        gClone.appendChild(imgElement);
-        optimizedMap.set(group.id, gClone);
-      }
-
-      resolve();
+      resolve(optimizedSvgElement);
     };
 
     // Handle errors in image loading
@@ -294,7 +334,7 @@ const processGroupToImage = async (
         dimensions: { width, height, x, y, scale },
         svgString: svgString, // Log part of the SVG string
       });
-      resolve(); // Resolve anyway to avoid blocking other operations
+      resolve(null); // Resolve anyway to avoid blocking other operations
     };
 
     img.src = url;
@@ -308,59 +348,56 @@ const optimizeSvgBase = async (
   svgElement: SVGElement,
   selector: string,
   originalItemsMap: Map<string, SVGGraphicsElement>,
-  optimizedMap: Map<string, SVGGraphicsElement>
+  instance: string
 ): Promise<{
   originalItemsMap: Map<string, SVGGraphicsElement>;
-  optimizedMap: Map<string, SVGGraphicsElement>;
+  allOptimizedGroups: Map<string, SVGGraphicsElement>;
 }> => {
   if (!svgElement)
-    return { originalItemsMap: new Map(), optimizedMap: new Map() };
+    return { originalItemsMap: new Map(), allOptimizedGroups: new Map() };
 
   const groups = Array.from(
     svgElement.querySelectorAll(selector)
   ) as SVGGraphicsElement[];
 
-  const processingPromises: Promise<void>[] = [];
+  const processingPromises: Promise<SVGGraphicsElement | null>[] = [];
 
   for (const group of groups) {
     if (group.getAttribute("data-optimized") === "true") continue;
-
-    const groupId = group.id;
-
-    if (groupId && optimizedMap.has(groupId)) {
-      const optimizedGroup = optimizedMap.get(groupId);
-      if (optimizedGroup) {
-        group.replaceWith(optimizedGroup);
-        continue;
-      }
-    }
 
     const processPromise = processGroupToImage(
       group,
       svgElement,
       originalItemsMap,
-      optimizedMap
+      instance
     );
 
     processingPromises.push(processPromise);
   }
 
-  // Wait for all images to be processed
-  await Promise.all(processingPromises);
+  const results = await Promise.all(processingPromises);
 
-  return { originalItemsMap, optimizedMap };
+  const allOptimizedGroups = new Map<string, SVGGraphicsElement>();
+
+  for (const result of results) {
+    if (result) {
+      allOptimizedGroups.set(result.id, result);
+    }
+  }
+
+  return { originalItemsMap, allOptimizedGroups };
 };
 
 export const optimizeSvg = async (
   svgElement: SVGGraphicsElement,
   selector: string,
   originalItemsMap: Map<string, SVGGraphicsElement>,
-  optimizedMap: Map<string, SVGGraphicsElement>
+  instance: string
 ): Promise<{
   originalItemsMap: Map<string, SVGGraphicsElement>;
-  optimizedMap: Map<string, SVGGraphicsElement>;
+  allOptimizedGroups: Map<string, SVGGraphicsElement>;
 }> => {
-  return optimizeSvgBase(svgElement, selector, originalItemsMap, optimizedMap);
+  return optimizeSvgBase(svgElement, selector, originalItemsMap, instance);
 };
 
 export const optimizeItself = async (

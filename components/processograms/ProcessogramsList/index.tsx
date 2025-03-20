@@ -149,6 +149,8 @@ const ProcessogramComponent = ({
                 onComplete: () => {
                   gsap.set(svgContainerRef.current, {
                     position: "relative",
+                    width: "100%",
+                    height: "100%",
                     top: "unset",
                     left: "unset",
                     onComplete: () => {
@@ -182,7 +184,7 @@ const ProcessogramComponent = ({
     >
       <SvgContainer ref={svgContainerRef}>
         {renderOptimized ? (
-          <ProcessogramStarter src={baseUrl + path} />
+          <ProcessogramStarter src={baseUrl + path} maxHeight="50vh" />
         ) : (
           <Processogram src={baseUrl + path} onClose={onClose} />
         )}
@@ -201,14 +203,19 @@ const ProcessogramComponent = ({
   );
 };
 
-const SvgContainer = styled.div``;
+const SvgContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const FakeBoxStyled = styled.div``;
 
 const ProcessogramContainer = styled.div`
   width: 100%;
+  /* max-height: 50vh; */
   height: fit-content;
-  overflow: visible;
+  /* overflow: visible; */
   transition: filter 500ms, opacity 500ms;
   cursor: pointer;
 `;
@@ -255,7 +262,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding: 6rem;
+  /* padding: 6rem; */
+  /* padding-block: 8rem; */
   height: 100%;
-  gap: 5rem;
+  gap: 10rem;
 `;

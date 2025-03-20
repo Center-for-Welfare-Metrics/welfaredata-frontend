@@ -4,9 +4,10 @@ import { SvgRenderer } from "../SvgRenderer";
 
 type Props = {
   src: string;
+  maxHeight?: string;
 };
 
-export const ProcessogramStarter = ({ src }: Props) => {
+export const ProcessogramStarter = ({ src, maxHeight }: Props) => {
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
 
   const { optimizeRootElement } = useOptimizeSvgParts(svgElement, src);
@@ -15,5 +16,13 @@ export const ProcessogramStarter = ({ src }: Props) => {
     optimizeRootElement();
   }, [optimizeRootElement, svgElement]);
 
-  return <SvgRenderer ref={setSvgElement} src={src} />;
+  return (
+    <SvgRenderer
+      ref={setSvgElement}
+      src={src}
+      style={{
+        maxHeight: maxHeight,
+      }}
+    />
+  );
 };

@@ -2,14 +2,6 @@ import { useCallback, useRef } from "react";
 import { optimizeSvg, processSvgToImage } from "./utils";
 import { INVERSE_DICT, MAX_LEVEL } from "../../Processogram/consts";
 import { getLevelById } from "../../Processogram/utils";
-import {
-  getCacheOptimizedInstance,
-  getCacheOriginalInstance,
-  getCacheRootOptimizedInstance,
-  getCacheRootOriginalInstance,
-  setCacheOptimizedInstance,
-  setCacheOriginalInstance,
-} from "./cache";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -30,16 +22,16 @@ export const useOptimizeSvgParts = (
   instance: string
 ) => {
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
-    getCacheOriginalInstance(instance)
+    new Map<string, SVGGraphicsElement>()
   );
   const optimizedGElements = useRef<Map<string, SVGGraphicsElement>>(
-    getCacheOptimizedInstance(instance)
+    // getCacheOptimizedInstance(instance)
+    new Map<string, SVGGraphicsElement>()
   );
-  const originalRootElement = useRef<SVGGraphicsElement | null>(
-    getCacheRootOriginalInstance(instance)
-  );
+  const originalRootElement = useRef<SVGGraphicsElement | null>(null);
   const optimizedRootElement = useRef<SVGGraphicsElement | null>(
-    getCacheRootOptimizedInstance(instance)
+    //getCacheRootOptimizedInstance(instance)
+    null
   );
 
   const replaceWithOptimized = useCallback(
@@ -70,7 +62,6 @@ export const useOptimizeSvgParts = (
       if (!svgElement) return;
 
       const gElements = Array.from(svgElement.querySelectorAll(selector));
-
       for (const gElement of gElements) {
         const id = gElement.id;
         if (!gElement.getAttribute("data-optimized")) continue;
@@ -81,6 +72,7 @@ export const useOptimizeSvgParts = (
         if (bruteOptimization) {
           if (originalG.tagName === "g") continue;
         }
+
         gElement.replaceWith(originalG);
       }
     },
@@ -92,22 +84,19 @@ export const useOptimizeSvgParts = (
 
     const dashedElementSelector = '[id*="--"]';
 
-    const { originalItemsMap, optimizedMap } = await optimizeSvg(
+    const { originalItemsMap, allOptimizedGroups } = await optimizeSvg(
       svgElement,
       dashedElementSelector,
       originalGElements.current,
-      optimizedGElements.current
+      instance
     );
-
-    // Store original elements in the cache
 
     originalItemsMap.forEach((value, key) => {
       originalGElements.current.set(key, value);
-      setCacheOriginalInstance(instance, key, value);
     });
 
-    optimizedMap.forEach((value, key) => {
-      setCacheOptimizedInstance(instance, key, value);
+    allOptimizedGroups.forEach((value, key) => {
+      optimizedGElements.current.set(key, value);
     });
   }, [svgElement]);
 
