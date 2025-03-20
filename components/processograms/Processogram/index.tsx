@@ -70,6 +70,10 @@ const SvgContainer = styled.div`
     &.onTransition {
       pointer-events: none;
     }
+
+    [id*="--"] {
+      cursor: pointer;
+    }
   }
   @media (max-width: 800px) {
     > svg {

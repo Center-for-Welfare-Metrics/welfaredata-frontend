@@ -17,8 +17,9 @@ type ProcessogramComponentProps = {
 };
 
 type BBox = {
-  x: number;
-  y: number;
+  top: number;
+  topWithScroll: number;
+  left: number;
   width: number;
   height: number;
 };
@@ -45,9 +46,18 @@ const ProcessogramComponent = ({
   const [renderOptimized, setRenderOptimized] = useState(true);
   const [BBox, setBBox] = useState<BBox | null>(null);
 
+  const anotherIsActive = useMemo(() => {
+    if (!active) return false;
+
+    return active !== path;
+  }, [active, path]);
+
   const style = useMemo((): React.CSSProperties => {
     if (!!active) {
-      if (isActive) return undefined;
+      if (isActive)
+        return {
+          cursor: "default",
+        };
 
       return {
         opacity: 0,
@@ -62,18 +72,6 @@ const ProcessogramComponent = ({
     return { filter: "brightness(0.5)" };
   }, [isOver, over, isActive, active]);
 
-  const svgBoxStyle = useMemo((): React.CSSProperties => {
-    if (!BBox) return undefined;
-
-    return {
-      width: BBox.width,
-      height: BBox.height,
-      top: BBox.y,
-      left: BBox.x,
-      position: "fixed",
-    };
-  }, [BBox]);
-
   useEffect(() => {
     const onInitialized = () => {
       if (initialized.current) return;
@@ -82,20 +80,46 @@ const ProcessogramComponent = ({
 
       const clientRect = containerRef.current.getBoundingClientRect();
 
-      const { x, y, width, height } = clientRect;
+      const { top, left, width, height } = clientRect;
 
-      setBBox({ x, y, width, height });
+      const topWithScroll = top + window.scrollY;
 
-      gsap.to(svgContainerRef.current, {
-        top: "50%",
-        left: "50%",
-        translateX: "-50%",
-        translateY: "-50%",
-        ease: "power1.inOut",
-        duration: 0.5,
+      setBBox({ top, topWithScroll, left, width, height });
+
+      gsap.set(svgContainerRef.current, {
+        position: "absolute",
+        width,
+        height,
+        top: topWithScroll,
+        left,
+        translateX: 0,
+        translateY: 0,
         onComplete: () => {
-          setRenderOptimized(false);
-          initialized.current = true;
+          gsap.set(document.body, {
+            overflow: "hidden",
+            onComplete: () => {
+              gsap.fromTo(
+                svgContainerRef.current,
+                {
+                  position: "fixed",
+                  top,
+                  left,
+                  duration: 0,
+                },
+                {
+                  top: "50%",
+                  left: "50%",
+                  translateX: "-50%",
+                  translateY: "-50%",
+                  duration: 0.5,
+                  onComplete: () => {
+                    setRenderOptimized(false);
+                    initialized.current = true;
+                  },
+                }
+              );
+            },
+          });
         },
       });
     };
@@ -106,18 +130,35 @@ const ProcessogramComponent = ({
       if (!BBox) return;
 
       gsap.to(svgContainerRef.current, {
-        top: BBox.y,
-        left: BBox.x,
-        width: BBox.width,
-        height: BBox.height,
+        position: "fixed",
+        top: BBox.top,
+        left: BBox.left,
         translateX: 0,
         translateY: 0,
-        ease: "power1.inOut",
         duration: 0.5,
         onComplete: () => {
-          setBBox(null);
           setRenderOptimized(true);
           initialized.current = false;
+          gsap.set(document.body, {
+            overflow: "auto",
+            onComplete: () => {
+              gsap.set(svgContainerRef.current, {
+                position: "absolute",
+                top: BBox.topWithScroll,
+                left: BBox.left,
+                onComplete: () => {
+                  gsap.set(svgContainerRef.current, {
+                    position: "relative",
+                    top: "unset",
+                    left: "unset",
+                    onComplete: () => {
+                      setBBox(null);
+                    },
+                  });
+                },
+              });
+            },
+          });
         },
       });
     };
@@ -136,10 +177,10 @@ const ProcessogramComponent = ({
       ref={containerRef}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={onClick}
+      onClick={anotherIsActive ? undefined : onClick}
       style={style}
     >
-      <SvgContainer style={svgBoxStyle} ref={svgContainerRef}>
+      <SvgContainer ref={svgContainerRef}>
         {renderOptimized ? (
           <ProcessogramStarter src={baseUrl + path} />
         ) : (
@@ -152,6 +193,7 @@ const ProcessogramComponent = ({
           style={{
             width: BBox.width,
             height: BBox.height,
+            pointerEvents: "none",
           }}
         />
       )}
@@ -169,7 +211,6 @@ const ProcessogramContainer = styled.div`
   overflow: visible;
   transition: filter 500ms, opacity 500ms;
   cursor: pointer;
-  position: relative;
 `;
 
 const baseUrl = "assets/svg/zoo/";
@@ -213,6 +254,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
   padding: 6rem;
   height: 100%;
   gap: 5rem;
