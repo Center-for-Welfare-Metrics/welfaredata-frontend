@@ -5,17 +5,20 @@ import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
+import { Portal } from "@material-ui/core";
 
 type Props = {
   src: string;
-  enableBruteOptimization?: boolean;
   onClose: () => void;
+  enableBruteOptimization?: boolean;
+  maxHeight?: string;
 };
 
 export const ProcessogramComplete = ({
   src,
   onClose,
   enableBruteOptimization,
+  maxHeight,
 }: Props) => {
   const { setSvgElement, focusedElementId, loadingOptimization } =
     useProcessogramLogic({
@@ -26,25 +29,31 @@ export const ProcessogramComplete = ({
 
   return (
     <>
-      <SvgContainer>
-        <SvgRenderer
-          ref={setSvgElement}
-          src={src}
-          className={`${focusedElementId}`}
-        />
-      </SvgContainer>
-      {loadingOptimization && (
-        <LoadingBackdrop>
-          {" "}
-          <Loader type="Oval" color={ThemeColors.white} />
-        </LoadingBackdrop>
-      )}
+      {/* <SvgContainer> */}
+      <SvgRenderer
+        ref={setSvgElement}
+        src={src}
+        className={`${focusedElementId}`}
+        style={{
+          maxHeight: maxHeight,
+          overflow: "visible",
+        }}
+      />
+      {/* </SvgContainer> */}
+      <Portal>
+        {loadingOptimization && (
+          <LoadingBackdrop>
+            {" "}
+            <Loader type="Oval" color={ThemeColors.white} />
+          </LoadingBackdrop>
+        )}
+      </Portal>
     </>
   );
 };
 
 const LoadingBackdrop = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -58,22 +67,13 @@ const LoadingBackdrop = styled.div`
 `;
 
 const SvgContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  > svg {
-    height: auto;
-    overflow: visible;
-    margin-inline: auto;
-    opacity: 1;
-    display: block;
-    * {
-      transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out;
-    }
-    max-height: 60vh;
+  /* width: 100%;
+  height: 100%; */
 
-    [id*="--"] {
+  /* > svg {[id*="--"] {
       cursor: pointer;
     }
+    overflow: visible;
   }
   @media (max-width: 800px) {
     > svg {
@@ -90,5 +90,5 @@ const SvgContainer = styled.div`
 
   @media (max-width: 800px) {
     margin: 1rem 0;
-  }
+  } */
 `;

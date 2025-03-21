@@ -4,8 +4,8 @@ import { ProcessogramsList } from "@/components/processograms/ProcessogramsList"
 
 const paths = [
   "pig/conventional intensive.svg",
-  "pig/enhanced intensive.svg",
   "pig/european intensive.svg",
+  "pig/enhanced intensive.svg",
   "pig/outdoor semi-intensive.svg",
 ];
 

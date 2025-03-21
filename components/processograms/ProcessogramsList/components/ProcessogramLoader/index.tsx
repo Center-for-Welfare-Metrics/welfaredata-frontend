@@ -203,12 +203,13 @@ export const ProcessogramLoader = ({
     >
       <SvgContainer ref={svgContainerRef} style={overStyle}>
         {renderOptimized ? (
-          <ProcessogramStarter src={baseUrl + path} maxHeight="50vh" />
+          <ProcessogramStarter src={baseUrl + path} maxHeight="90vh" />
         ) : (
           <ProcessogramComplete
             src={baseUrl + path}
             onClose={onClose}
             enableBruteOptimization={enabledBruteOptimization}
+            maxHeight="90vh"
           />
         )}
       </SvgContainer>
