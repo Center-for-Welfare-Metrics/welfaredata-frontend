@@ -15,7 +15,10 @@ const PublicPigsPage = ({ data, specie }) => {
       <Head>
         <title>Welfare Data - Pigs</title>
       </Head>
-      <ProcessogramsList paths={paths} />
+      <ProcessogramsList
+        paths={paths}
+        title="The life of market pigs in four production systems"
+      />
     </Container>
   );
 };

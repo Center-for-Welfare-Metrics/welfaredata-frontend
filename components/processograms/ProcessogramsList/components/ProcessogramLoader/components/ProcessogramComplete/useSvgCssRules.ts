@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
-import { INVERSE_DICT, MAX_LEVEL } from "./consts";
-import { getLevelById } from "./utils";
+import { INVERSE_DICT, MAX_LEVEL } from "../../../../consts";
+import { getLevelById } from "../../../../utils";
 
 export const useSvgCssRules = () => {
   const styleSheet = useRef<CSSStyleSheet | null>(null);

@@ -1,10 +1,7 @@
 import { useCallback, useRef } from "react";
 import { optimizeSvg, processSvgToImage } from "./utils";
-import { getLevelById } from "../../ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete/utils";
-import {
-  INVERSE_DICT,
-  MAX_LEVEL,
-} from "../../ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete/consts";
+import { getLevelById } from "../../ProcessogramsList/utils";
+import { INVERSE_DICT, MAX_LEVEL } from "../../ProcessogramsList/consts";
 
 type ReplaceWithOptimizedParams = {
   selector: string;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ProcessogramStarter } from "./components/ProcessogramStarter";
 import { ProcessogramComplete } from "./components/ProcessogramComplete";
 import { gsap } from "gsap";
+import { ANIMATION_DURATION, ANIMATION_EASE } from "../../consts";
 
 type ProcessogramComponentProps = {
   path: string;
@@ -10,6 +11,8 @@ type ProcessogramComponentProps = {
   onMouseLeave: () => void;
   onClick: () => void;
   onClose: () => void;
+  onCloseAnimationEnded: () => void;
+  waitingForClose: boolean;
   isOver: boolean;
   over: string | null;
   isActive: boolean;
@@ -27,14 +30,14 @@ type BBox = {
 
 const baseUrl = "assets/svg/zoo/";
 
-const animationDuration = 0.7;
-
 export const ProcessogramLoader = ({
   path,
   onMouseEnter,
   onMouseLeave,
   onClick,
   onClose,
+  onCloseAnimationEnded,
+  waitingForClose,
   isOver,
   over,
   isActive,
@@ -70,7 +73,13 @@ export const ProcessogramLoader = ({
         pointerEvents: "none",
       };
     }
-  }, [isActive, active]);
+
+    if (waitingForClose) {
+      return {
+        pointerEvents: "none",
+      };
+    }
+  }, [isActive, active, waitingForClose]);
 
   const overStyle = useMemo((): CSSProperties => {
     if (!over) return {};
@@ -121,7 +130,8 @@ export const ProcessogramLoader = ({
                   left: "50%",
                   translateX: "-50%",
                   translateY: "-50%",
-                  duration: animationDuration,
+                  duration: ANIMATION_DURATION,
+                  ease: ANIMATION_EASE,
                   onComplete: () => {
                     setRenderOptimized(false);
                     initialized.current = true;
@@ -145,7 +155,8 @@ export const ProcessogramLoader = ({
         left: BBox.left,
         translateX: 0,
         translateY: 0,
-        duration: animationDuration,
+        duration: ANIMATION_DURATION,
+        ease: ANIMATION_EASE,
         onComplete: () => {
           gsap.set(svgContainerRef.current, {
             top: BBox.topWithScroll,
@@ -164,6 +175,7 @@ export const ProcessogramLoader = ({
                   gsap.set(document.body, {
                     overflow: "auto",
                   });
+                  onCloseAnimationEnded();
                 },
               });
             },

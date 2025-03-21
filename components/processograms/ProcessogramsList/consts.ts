@@ -1,3 +1,5 @@
+import { gsap } from "gsap";
+
 export const LEVELS_DICT: {
   [key: string]: number;
 } = {
@@ -12,3 +14,7 @@ export const INVERSE_DICT = Object.fromEntries(
 ) as Record<number, string>;
 
 export const MAX_LEVEL = Object.keys(LEVELS_DICT).length - 1;
+
+export const ANIMATION_DURATION = 0.7; // seconds
+
+export const ANIMATION_EASE: gsap.EaseString = "power1.inOut";

@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { INVERSE_DICT, MAX_LEVEL } from "./consts";
-import { getLevelById } from "./utils";
+import {
+  ANIMATION_DURATION,
+  ANIMATION_EASE,
+  INVERSE_DICT,
+  MAX_LEVEL,
+} from "../../../../consts";
+import { getLevelById } from "../../../../utils";
 import { gsap } from "gsap";
 import { useSvgCssRules } from "./useSvgCssRules";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
@@ -78,8 +83,6 @@ export const useProcessogramLogic = ({
       const outOfFocusElements =
         svgElement.querySelectorAll(outOfFocusSelector);
 
-      console.log(outOfFocusElements);
-
       if (outOfFocusAnimation.current) {
         outOfFocusAnimation.current.revert();
       }
@@ -87,8 +90,8 @@ export const useProcessogramLogic = ({
       if (outOfFocusElements.length > 0) {
         outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
           filter: "brightness(0.5)",
-          duration: 0.7,
-          ease: "power1.inOut",
+          duration: ANIMATION_DURATION,
+          ease: ANIMATION_EASE,
         });
       }
 
@@ -100,8 +103,8 @@ export const useProcessogramLogic = ({
           attr: {
             viewBox,
           },
-          duration: 0.7,
-          ease: "power1.inOut",
+          duration: ANIMATION_DURATION,
+          ease: ANIMATION_EASE,
           onComplete: () => {
             gsap.set(svgElement, {
               pointerEvents: "auto",
