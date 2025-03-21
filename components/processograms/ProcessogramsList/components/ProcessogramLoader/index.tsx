@@ -11,6 +11,7 @@ type ProcessogramComponentProps = {
   onMouseLeave: () => void;
   onClick: () => void;
   onClose: () => void;
+  onChange: (id: string) => void;
   onCloseAnimationEnded: () => void;
   waitingForClose: boolean;
   isOver: boolean;
@@ -36,6 +37,7 @@ export const ProcessogramLoader = ({
   onMouseLeave,
   onClick,
   onClose,
+  onChange,
   onCloseAnimationEnded,
   waitingForClose,
   isOver,
@@ -208,6 +210,7 @@ export const ProcessogramLoader = ({
           <ProcessogramComplete
             src={baseUrl + path}
             onClose={onClose}
+            onChange={onChange}
             enableBruteOptimization={enabledBruteOptimization}
             maxHeight="90vh"
           />

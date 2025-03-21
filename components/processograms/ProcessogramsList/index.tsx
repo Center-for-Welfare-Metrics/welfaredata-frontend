@@ -24,6 +24,10 @@ export const ProcessogramsList = ({ title, paths }: Props) => {
     setWaitingForClose(false);
   };
 
+  const onChange = (id: string) => {
+    console.log(id);
+  };
+
   return (
     <Container>
       <TitleContainer
@@ -41,6 +45,7 @@ export const ProcessogramsList = ({ title, paths }: Props) => {
           // Event handlers
           onMouseEnter={() => setOver(path)}
           onMouseLeave={() => setOver(null)}
+          onChange={onChange}
           onClick={() => handleClick(path)}
           onClose={() => setActive(null)}
           onCloseAnimationEnded={handleClose}

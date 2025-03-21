@@ -10,6 +10,7 @@ import { Portal } from "@material-ui/core";
 type Props = {
   src: string;
   onClose: () => void;
+  onChange: (id: string) => void;
   enableBruteOptimization?: boolean;
   maxHeight?: string;
 };
@@ -17,6 +18,7 @@ type Props = {
 export const ProcessogramComplete = ({
   src,
   onClose,
+  onChange,
   enableBruteOptimization,
   maxHeight,
 }: Props) => {
@@ -25,6 +27,7 @@ export const ProcessogramComplete = ({
       onClose,
       path: src,
       enableBruteOptimization,
+      onChange,
     });
 
   return (

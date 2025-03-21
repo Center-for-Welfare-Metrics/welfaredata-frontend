@@ -7,7 +7,6 @@ import {
 } from "../../../../consts";
 import { getLevelById } from "../../../../utils";
 import { gsap } from "gsap";
-import { useSvgCssRules } from "./useSvgCssRules";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
 import { getElementViewBox } from "@/components/processograms/processogram-helpers";
 
@@ -21,12 +20,14 @@ type Props = {
   enableBruteOptimization?: boolean;
   path: string;
   onClose: () => void;
+  onChange: (id: string) => void;
 };
 
 export const useProcessogramLogic = ({
   enableBruteOptimization,
   path,
   onClose,
+  onChange,
 }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
@@ -93,6 +94,7 @@ export const useProcessogramLogic = ({
       if (!svgElement) return;
       const viewBox = getElementViewBox(target);
       const id = target.id;
+      onChange(id);
       const currentLevelById = getLevelById(id);
       historyLevel.current[currentLevelById] = {
         id,
@@ -231,8 +233,6 @@ export const useProcessogramLogic = ({
 
       const hoverElements = svgElement.querySelectorAll(hoverSelector);
 
-      console.log("hoverElements", hoverElements);
-
       gsap.to(hoverElements, {
         filter: "brightness(1)",
         duration: ANIMATION_DURATION / 2,
@@ -269,7 +269,6 @@ export const useProcessogramLogic = ({
     window.addEventListener("click", handleClick, { passive: false });
 
     return () => {
-      console.log("cleanup");
       window.removeEventListener("click", handleClick);
     };
   }, [handleClick]);
