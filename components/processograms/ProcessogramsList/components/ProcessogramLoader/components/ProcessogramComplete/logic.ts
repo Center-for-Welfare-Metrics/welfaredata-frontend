@@ -30,9 +30,10 @@ export const useProcessogramLogic = ({
 }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
-  const [focusedElementId, setFocusedElementId] = useState<string | null>(null);
   const [loadingOptimization, setLoadingOptimization] =
     useState<boolean>(false);
+
+  const [onHover, setOnHover] = useState<string | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
   const isReady = useRef<boolean>(false);
@@ -42,7 +43,32 @@ export const useProcessogramLogic = ({
     path
   );
 
-  const { initializeStyleSheet, cleanupStyleSheet } = useSvgCssRules();
+  const setFullBrightnessToCurrentLevel = useCallback(
+    (toPrevious: boolean) => {
+      if (!svgElement) return;
+      const nextLevel = currentLevel.current + 1;
+
+      if (nextLevel > MAX_LEVEL) return;
+
+      const levelID = INVERSE_DICT[nextLevel];
+      const currentLevelElements = svgElement.querySelectorAll(
+        `[id*="${levelID}"]`
+      );
+
+      if (toPrevious) {
+        gsap.to(currentLevelElements, {
+          filter: "brightness(1)",
+          duration: ANIMATION_DURATION / 2,
+          ease: ANIMATION_EASE,
+        });
+      } else {
+        gsap.set(currentLevelElements, {
+          filter: "brightness(1)",
+        });
+      }
+    },
+    [svgElement]
+  );
 
   const initializeOptimization = useCallback(async () => {
     setLoadingOptimization(true);
@@ -51,13 +77,19 @@ export const useProcessogramLogic = ({
       currentElementId: null,
       bruteOptimization: enableBruteOptimization,
     });
+    setFullBrightnessToCurrentLevel(false);
     setLoadingOptimization(false);
-  }, [optimizeAllElements, optimizeLevelElements]);
+  }, [
+    optimizeAllElements,
+    optimizeLevelElements,
+    enableBruteOptimization,
+    setFullBrightnessToCurrentLevel,
+  ]);
 
   const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
 
   const changeLevelTo = useCallback(
-    (target: SVGElement) => {
+    (target: SVGElement, toPrevious: boolean) => {
       if (!svgElement) return;
       const viewBox = getElementViewBox(target);
       const id = target.id;
@@ -67,7 +99,6 @@ export const useProcessogramLogic = ({
       };
 
       currentLevel.current = currentLevelById;
-      setFocusedElementId(id);
 
       const isMaxLevel = currentLevelById === MAX_LEVEL;
 
@@ -89,7 +120,8 @@ export const useProcessogramLogic = ({
 
       if (outOfFocusElements.length > 0) {
         outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
-          filter: "brightness(0.5)",
+          filter: "brightness(0.3)",
+          cursor: "default",
           duration: ANIMATION_DURATION,
           ease: ANIMATION_EASE,
         });
@@ -113,13 +145,14 @@ export const useProcessogramLogic = ({
                   currentElementId: id,
                   bruteOptimization: enableBruteOptimization,
                 });
+                setFullBrightnessToCurrentLevel(toPrevious);
               },
             });
           },
         }
       );
     },
-    [svgElement, optimizeLevelElements, setFocusedElementId]
+    [svgElement, optimizeLevelElements, setFullBrightnessToCurrentLevel]
   );
 
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
@@ -140,7 +173,7 @@ export const useProcessogramLogic = ({
 
       if (clickedStage) {
         // Navigate deeper
-        changeLevelTo(clickedStage);
+        changeLevelTo(clickedStage, false);
         return;
       }
 
@@ -151,7 +184,7 @@ export const useProcessogramLogic = ({
           onClose();
           return;
         }
-        changeLevelTo(svgElement);
+        changeLevelTo(svgElement, true);
         return;
       }
       const previousLevelData = historyLevel.current[previousLevel];
@@ -163,10 +196,74 @@ export const useProcessogramLogic = ({
 
       if (!element) return;
 
-      changeLevelTo(element);
+      changeLevelTo(element, true);
     },
     [changeLevelTo, getClickedStage, svgElement]
   );
+
+  const onMouseMove = useCallback(
+    (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+      const target = event.target as SVGElement;
+
+      const nextLevel = currentLevel.current + 1;
+      const levelID = INVERSE_DICT[nextLevel];
+
+      const closest = target.closest(`[id*="${levelID}"]`) as SVGElement | null;
+
+      if (!closest) {
+        setOnHover(null);
+        return;
+      }
+
+      setOnHover(closest.id);
+    },
+    []
+  );
+
+  const onMouseLeave = useCallback(() => {
+    setOnHover(null);
+  }, []);
+
+  useEffect(() => {
+    if (!svgElement) return;
+    if (!onHover) {
+      const hoverSelector = `[id*="${INVERSE_DICT[currentLevel.current + 1]}"]`;
+
+      const hoverElements = svgElement.querySelectorAll(hoverSelector);
+
+      console.log("hoverElements", hoverElements);
+
+      gsap.to(hoverElements, {
+        filter: "brightness(1)",
+        duration: ANIMATION_DURATION / 2,
+        ease: ANIMATION_EASE,
+      });
+
+      return;
+    }
+
+    const level = getLevelById(onHover);
+    const levelID = INVERSE_DICT[level];
+
+    const onHoverSelector = `[id*="${onHover}"]`;
+    const onHoverElements = svgElement.querySelectorAll(onHoverSelector);
+
+    const hoverSelector = `[id*="${levelID}"]:not([id="${onHover}"])`;
+
+    const hoverElements = svgElement.querySelectorAll(hoverSelector);
+
+    gsap.to(hoverElements, {
+      filter: "brightness(0.3)",
+      duration: ANIMATION_DURATION / 2,
+      ease: ANIMATION_EASE,
+    });
+
+    gsap.to(onHoverElements, {
+      filter: "brightness(1)",
+      duration: ANIMATION_DURATION / 2,
+      ease: ANIMATION_EASE,
+    });
+  }, [onHover]);
 
   useEffect(() => {
     window.addEventListener("click", handleClick, { passive: false });
@@ -174,34 +271,24 @@ export const useProcessogramLogic = ({
     return () => {
       console.log("cleanup");
       window.removeEventListener("click", handleClick);
-
-      cleanupStyleSheet();
     };
   }, [handleClick]);
 
   useEffect(() => {
     if (isReady.current || !svgElement) return;
 
-    initializeStyleSheet(svgElement);
-    setFocusedElementId(svgElement.id);
     initializeOptimization();
     isReady.current = true;
     return () => {
       isReady.current = false;
-      cleanupStyleSheet();
     };
-  }, [
-    initializeStyleSheet,
-    setFocusedElementId,
-    svgElement,
-    initializeOptimization,
-    cleanupStyleSheet,
-  ]);
+  }, [svgElement, initializeOptimization]);
 
   return {
     setSvgElement,
     svgElement,
-    focusedElementId,
     loadingOptimization,
+    onMouseMove,
+    onMouseLeave,
   };
 };

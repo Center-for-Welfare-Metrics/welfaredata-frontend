@@ -84,6 +84,7 @@ export const TitleContainer = styled.div`
   transition: opacity 0.5s ease-in-out;
   @media (max-width: 800px) {
     padding-inline: 1rem;
+    margin-top: 2rem;
   }
 `;
 
@@ -94,7 +95,23 @@ const Container = styled.div`
   box-sizing: border-box;
   padding-inline: 8rem;
   padding-bottom: 8rem;
-  /* padding-top: 0rem; */
   height: 100%;
   gap: 5rem;
+
+  svg {
+    [id*="--"] {
+      cursor: pointer;
+    }
+  }
+
+  @media (max-width: 800px) {
+    padding-inline: 1rem;
+    padding-bottom: 1rem;
+    gap: 3rem;
+
+    svg {
+      shape-rendering: optimizeSpeed;
+      text-rendering: optimizeSpeed;
+    }
+  }
 `;

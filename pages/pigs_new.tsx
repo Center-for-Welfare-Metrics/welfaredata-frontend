@@ -9,7 +9,7 @@ const paths = [
   "pig/outdoor semi-intensive.svg",
 ];
 
-const PublicPigsPage = ({ data, specie }) => {
+const PublicPigsPage = () => {
   return (
     <Container>
       <Head>

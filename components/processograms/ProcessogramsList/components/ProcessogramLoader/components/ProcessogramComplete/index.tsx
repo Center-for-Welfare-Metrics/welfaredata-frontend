@@ -20,7 +20,7 @@ export const ProcessogramComplete = ({
   enableBruteOptimization,
   maxHeight,
 }: Props) => {
-  const { setSvgElement, focusedElementId, loadingOptimization } =
+  const { setSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
       onClose,
       path: src,
@@ -33,11 +33,12 @@ export const ProcessogramComplete = ({
       <SvgRenderer
         ref={setSvgElement}
         src={src}
-        className={`${focusedElementId}`}
         style={{
           maxHeight: maxHeight,
           overflow: "visible",
         }}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
       />
       {/* </SvgContainer> */}
       <Portal>
