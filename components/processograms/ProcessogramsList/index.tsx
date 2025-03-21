@@ -32,6 +32,7 @@ export const ProcessogramsList = ({ paths }: Props) => {
           over={over}
           isActive={active === path}
           active={active}
+          enabledBruteOptimization={path.includes("chicken")}
         />
       ))}
     </Container>
@@ -43,8 +44,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding: 6rem;
+  padding: 8rem;
   padding-block: 8rem;
   height: 100%;
-  gap: 10rem;
+  gap: 5rem;
 `;

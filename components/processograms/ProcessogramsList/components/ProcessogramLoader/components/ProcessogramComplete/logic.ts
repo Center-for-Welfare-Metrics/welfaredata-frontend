@@ -71,7 +71,6 @@ export const useProcessogramLogic = ({
       if (isMaxLevel) {
         const levelID = INVERSE_DICT[currentLevelById];
         outOfFocusSelector = `[id*="${levelID}"]:not([id="${id}"])`;
-        console.log(outOfFocusSelector);
       } else {
         outOfFocusSelector = `[data-optimized="true"]:not([id^="${id}"] *):not([id="${id}"])`;
       }

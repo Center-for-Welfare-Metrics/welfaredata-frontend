@@ -8,14 +8,20 @@ import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 
 type Props = {
   src: string;
+  enableBruteOptimization?: boolean;
   onClose: () => void;
 };
 
-export const ProcessogramComplete = ({ src, onClose }: Props) => {
+export const ProcessogramComplete = ({
+  src,
+  onClose,
+  enableBruteOptimization,
+}: Props) => {
   const { setSvgElement, focusedElementId, loadingOptimization } =
     useProcessogramLogic({
       onClose,
       path: src,
+      enableBruteOptimization,
     });
 
   return (

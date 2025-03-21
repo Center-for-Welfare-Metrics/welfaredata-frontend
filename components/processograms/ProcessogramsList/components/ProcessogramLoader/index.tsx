@@ -14,6 +14,7 @@ type ProcessogramComponentProps = {
   over: string | null;
   isActive: boolean;
   active: string | null;
+  enabledBruteOptimization?: boolean;
 };
 
 type BBox = {
@@ -26,6 +27,8 @@ type BBox = {
 
 const baseUrl = "assets/svg/zoo/";
 
+const animationDuration = 0.7;
+
 export const ProcessogramLoader = ({
   path,
   onMouseEnter,
@@ -36,6 +39,7 @@ export const ProcessogramLoader = ({
   over,
   isActive,
   active,
+  enabledBruteOptimization,
 }: ProcessogramComponentProps) => {
   // Element refs
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +58,7 @@ export const ProcessogramLoader = ({
     return active !== path;
   }, [active, path]);
 
-  const style = useMemo((): CSSProperties => {
+  const activeStyle = useMemo((): CSSProperties => {
     if (!!active) {
       if (isActive)
         return {
@@ -66,13 +70,17 @@ export const ProcessogramLoader = ({
         pointerEvents: "none",
       };
     }
+  }, [isActive, active]);
 
-    if (!over) return undefined;
+  const overStyle = useMemo((): CSSProperties => {
+    if (!over) return {};
 
-    if (isOver) return undefined;
+    if (isOver) return {};
 
-    return { filter: "brightness(0.5)" };
-  }, [isOver, over, isActive, active]);
+    return {
+      filter: "brightness(0.5)",
+    };
+  }, [isOver, over]);
 
   useEffect(() => {
     const onInitialized = () => {
@@ -113,7 +121,7 @@ export const ProcessogramLoader = ({
                   left: "50%",
                   translateX: "-50%",
                   translateY: "-50%",
-                  duration: 0.5,
+                  duration: animationDuration,
                   onComplete: () => {
                     setRenderOptimized(false);
                     initialized.current = true;
@@ -137,27 +145,24 @@ export const ProcessogramLoader = ({
         left: BBox.left,
         translateX: 0,
         translateY: 0,
-        duration: 0.5,
+        duration: animationDuration,
         onComplete: () => {
-          setRenderOptimized(true);
-          initialized.current = false;
-          gsap.set(document.body, {
-            overflow: "auto",
+          gsap.set(svgContainerRef.current, {
+            top: BBox.topWithScroll,
+            left: BBox.left,
             onComplete: () => {
               gsap.set(svgContainerRef.current, {
-                position: "absolute",
-                top: BBox.topWithScroll,
-                left: BBox.left,
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                top: "unset",
+                left: "unset",
                 onComplete: () => {
-                  gsap.set(svgContainerRef.current, {
-                    position: "relative",
-                    width: "100%",
-                    height: "100%",
-                    top: "unset",
-                    left: "unset",
-                    onComplete: () => {
-                      setBBox(null);
-                    },
+                  setBBox(null);
+                  setRenderOptimized(true);
+                  initialized.current = false;
+                  gsap.set(document.body, {
+                    overflow: "auto",
                   });
                 },
               });
@@ -182,13 +187,17 @@ export const ProcessogramLoader = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={anotherIsActive ? undefined : onClick}
-      style={style}
+      style={activeStyle}
     >
-      <SvgContainer ref={svgContainerRef}>
+      <SvgContainer ref={svgContainerRef} style={overStyle}>
         {renderOptimized ? (
           <ProcessogramStarter src={baseUrl + path} maxHeight="50vh" />
         ) : (
-          <ProcessogramComplete src={baseUrl + path} onClose={onClose} />
+          <ProcessogramComplete
+            src={baseUrl + path}
+            onClose={onClose}
+            enableBruteOptimization={enabledBruteOptimization}
+          />
         )}
       </SvgContainer>
       {BBox && (
@@ -209,6 +218,8 @@ const SvgContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  transition: filter 500ms;
 `;
 
 const FakeBoxStyled = styled.div``;
