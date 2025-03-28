@@ -55,7 +55,7 @@ export const ProcessogramsList = ({ title, paths }: Props) => {
           over={over}
           isActive={active === path}
           active={active}
-          enabledBruteOptimization={path.includes("chicken")}
+          enabledBruteOptimization={true}
         />
       ))}
     </Container>

@@ -16,11 +16,21 @@ const NavBar = () => {
   const { user, logOut } = useContext(UserContext);
 
   return (
-    <Containter id="main-nav-menu" onClick={(e: any) => e.stopPropagation()}>
+    <Containter id="main-nav-menu">
       <NavItems>
-        {NavMap.map((nav_item) =>
-          nav_item.auth ? (
-            user && (
+        {NavMap.map((nav_item) => (
+          <React.Fragment key={`${nav_item.name}_${nav_item.prefix}`}>
+            {nav_item.auth ? (
+              user && (
+                <NavItem
+                  prefix={nav_item.prefix}
+                  name={nav_item.name}
+                  key={nav_item.prefix}
+                >
+                  {nav_item.childrens}
+                </NavItem>
+              )
+            ) : (
               <NavItem
                 prefix={nav_item.prefix}
                 name={nav_item.name}
@@ -28,17 +38,9 @@ const NavBar = () => {
               >
                 {nav_item.childrens}
               </NavItem>
-            )
-          ) : (
-            <NavItem
-              prefix={nav_item.prefix}
-              name={nav_item.name}
-              key={nav_item.prefix}
-            >
-              {nav_item.childrens}
-            </NavItem>
-          )
-        )}
+            )}
+          </React.Fragment>
+        ))}
       </NavItems>
 
       {user && (

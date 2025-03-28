@@ -75,3 +75,5 @@ export const ThemeColors = {
   black: "#000000",
   gray: "#919191",
 };
+
+export type ThemeColorsType = keyof typeof ThemeColors;
