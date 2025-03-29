@@ -12,7 +12,7 @@ export const UploadSvg = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
-      setMessage(null); // Clear any previous messages
+      setMessage(null);
     }
   };
 
