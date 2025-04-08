@@ -4,9 +4,10 @@ import { ProcessogramStarter } from "./components/ProcessogramStarter";
 import { ProcessogramComplete } from "./components/ProcessogramComplete";
 import { gsap } from "gsap";
 import { ANIMATION_DURATION, ANIMATION_EASE } from "../../consts";
+import { Element } from "types/elements";
 
 type ProcessogramComponentProps = {
-  path: string;
+  element: Element;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
   onClick: () => void;
@@ -29,10 +30,8 @@ type BBox = {
   height: number;
 };
 
-const baseUrl = "assets/svg/zoo/";
-
 export const ProcessogramLoader = ({
-  path,
+  element,
   onMouseEnter,
   onMouseLeave,
   onClick,
@@ -60,8 +59,8 @@ export const ProcessogramLoader = ({
   const anotherIsActive = useMemo(() => {
     if (!active) return false;
 
-    return active !== path;
-  }, [active, path]);
+    return active !== element._id;
+  }, [active, element._id]);
 
   const activeStyle = useMemo((): CSSProperties => {
     if (!!active) {
@@ -205,10 +204,13 @@ export const ProcessogramLoader = ({
     >
       <SvgContainer ref={svgContainerRef} style={overStyle}>
         {renderOptimized ? (
-          <ProcessogramStarter src={baseUrl + path} maxHeight="90vh" />
+          <ProcessogramStarter
+            maxHeight="90vh"
+            src={element.raster_images[element.identifier]}
+          />
         ) : (
           <ProcessogramComplete
-            src={baseUrl + path}
+            src={element.svg_url}
             onClose={onClose}
             onChange={onChange}
             enableBruteOptimization={enabledBruteOptimization}

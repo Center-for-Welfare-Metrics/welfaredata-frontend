@@ -3,11 +3,15 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import adminApi from "queries/admin/svg";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import FormInput from "@/components/common/inputs/form-input";
+import { ThemeColors } from "theme/globalStyle";
 
 export const UploadSvg = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const [specie, setSpecie] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -17,6 +21,11 @@ export const UploadSvg = () => {
   };
 
   const handleUpload = async () => {
+    if (!specie) {
+      setMessage("Please enter a specie");
+      return;
+    }
+
     if (!file) {
       setMessage("Please select a file first");
       return;
@@ -28,6 +37,7 @@ export const UploadSvg = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("specie", specie);
 
       const response = await adminApi.uploadSvg(formData);
 
@@ -51,14 +61,21 @@ export const UploadSvg = () => {
 
   return (
     <FlexColumn gap={8}>
-      <Text variant="h1">Página de upload</Text>
+      <Text variant="h1">Upload Svg</Text>
 
       <FlexRow>
         <FlexColumn align="flex-start">
+          <FormInput
+            label="Specie"
+            placeholder="e.g., Pig"
+            value={specie || ""}
+            onChange={(e) => setSpecie(e.target.value)}
+            style={{ width: "300px" }}
+          />
           <input type="file" onChange={handleFileChange} accept=".svg" />
           <button
             onClick={handleUpload}
-            disabled={isLoading || !file}
+            disabled={isLoading}
             style={{
               padding: "5px 15px",
               backgroundColor: isLoading ? "#cccccc" : "#4CAF50",
@@ -83,7 +100,7 @@ export const UploadSvg = () => {
         <div
           style={{
             padding: "10px",
-            backgroundColor: message.includes("Failed") ? "#ffcccc" : "#ccffcc",
+            backgroundColor: ThemeColors.red,
             borderRadius: "4px",
             marginTop: "10px",
           }}

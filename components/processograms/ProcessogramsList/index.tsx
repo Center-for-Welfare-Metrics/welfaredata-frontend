@@ -3,13 +3,15 @@ import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "./components/ProcessogramLoader";
 import { ThemeColors } from "theme/globalStyle";
+import { Element } from "types/elements";
 
 type Props = {
   title: string;
+  elements: Element[];
   paths: string[];
 };
 
-export const ProcessogramsList = ({ title, paths }: Props) => {
+export const ProcessogramsList = ({ title, paths, elements }: Props) => {
   const [over, setOver] = useState<string | null>(null);
 
   const [active, setActive] = useState<string | null>(null);
@@ -38,22 +40,22 @@ export const ProcessogramsList = ({ title, paths }: Props) => {
           (click on the components to zoom in/out the different levels)
         </Subtitle>
       </TitleContainer>
-      {paths.map((path) => (
+      {elements.map((element) => (
         <ProcessogramLoader
-          key={path}
-          path={path}
+          key={element._id}
+          element={element}
           // Event handlers
-          onMouseEnter={() => setOver(path)}
+          onMouseEnter={() => setOver(element._id)}
           onMouseLeave={() => setOver(null)}
           onChange={onChange}
-          onClick={() => handleClick(path)}
+          onClick={() => handleClick(element._id)}
           onClose={() => setActive(null)}
           onCloseAnimationEnded={handleClose}
           waitingForClose={waitingForClose}
           // State
-          isOver={over === path}
+          isOver={over === element._id}
           over={over}
-          isActive={active === path}
+          isActive={active === element._id}
           active={active}
           enabledBruteOptimization={true}
         />

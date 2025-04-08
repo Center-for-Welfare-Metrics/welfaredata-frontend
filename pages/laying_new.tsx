@@ -17,10 +17,10 @@ const PublicHensPage = ({ data, specie }) => {
       <Head>
         <title>Welfare Data - Laying Hens</title>
       </Head>
-      <ProcessogramsList
+      {/* <ProcessogramsList
         title="The life of sows in four production systems"
         paths={paths}
-      />
+      /> */}
     </Container>
   );
 };
