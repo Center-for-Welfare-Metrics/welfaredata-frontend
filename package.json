@@ -21,6 +21,7 @@
     "lodash": "^4.17.21",
     "luxon": "^1.26.0",
     "next": "12.2.5",
+    "node-fetch": "^3.3.2",
     "password-validator": "^5.1.1",
     "polished": "^4.1.0",
     "query-string": "^7.1.1",

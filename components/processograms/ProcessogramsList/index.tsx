@@ -8,10 +8,9 @@ import { Element } from "types/elements";
 type Props = {
   title: string;
   elements: Element[];
-  paths: string[];
 };
 
-export const ProcessogramsList = ({ title, paths, elements }: Props) => {
+export const ProcessogramsList = ({ title, elements }: Props) => {
   const [over, setOver] = useState<string | null>(null);
 
   const [active, setActive] = useState<string | null>(null);
@@ -57,7 +56,7 @@ export const ProcessogramsList = ({ title, paths, elements }: Props) => {
           over={over}
           isActive={active === element._id}
           active={active}
-          enabledBruteOptimization={true}
+          enabledBruteOptimization={false}
         />
       ))}
     </Container>
