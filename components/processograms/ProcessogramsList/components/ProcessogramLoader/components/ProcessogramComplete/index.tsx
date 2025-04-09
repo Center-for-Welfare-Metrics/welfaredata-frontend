@@ -11,6 +11,15 @@ type Props = {
   src: string;
   onClose: () => void;
   onChange: (id: string) => void;
+  rasterImages: {
+    [key: string]: {
+      src: string;
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+    };
+  };
   enableBruteOptimization?: boolean;
   maxHeight?: string;
 };
@@ -19,6 +28,7 @@ export const ProcessogramComplete = ({
   src,
   onClose,
   onChange,
+  rasterImages,
   enableBruteOptimization,
   maxHeight,
 }: Props) => {
@@ -28,11 +38,11 @@ export const ProcessogramComplete = ({
       path: src,
       enableBruteOptimization,
       onChange,
+      rasterImages,
     });
 
   return (
     <>
-      {/* <SvgContainer> */}
       <SvgRenderer
         ref={setSvgElement}
         src={src}
@@ -43,7 +53,6 @@ export const ProcessogramComplete = ({
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
       />
-      {/* </SvgContainer> */}
       <Portal>
         {loadingOptimization && (
           <LoadingBackdrop>
@@ -68,31 +77,4 @@ const LoadingBackdrop = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const SvgContainer = styled.div`
-  /* width: 100%;
-  height: 100%; */
-
-  /* > svg {[id*="--"] {
-      cursor: pointer;
-    }
-    overflow: visible;
-  }
-  @media (max-width: 800px) {
-    > svg {
-      shape-rendering: optimizeSpeed;
-      text-rendering: optimizeSpeed;
-    }
-    :first-child {
-      margin-top: 2rem;
-    }
-    :last-child {
-      margin-bottom: 2rem;
-    }
-  }
-
-  @media (max-width: 800px) {
-    margin: 1rem 0;
-  } */
 `;

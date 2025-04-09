@@ -206,7 +206,7 @@ export const ProcessogramLoader = ({
         {renderOptimized ? (
           <ProcessogramStarter
             maxHeight="90vh"
-            src={element.raster_images[element.identifier]}
+            src={element.raster_images[element.identifier]?.src}
           />
         ) : (
           <ProcessogramComplete
@@ -214,6 +214,7 @@ export const ProcessogramLoader = ({
             onClose={onClose}
             onChange={onChange}
             enableBruteOptimization={enabledBruteOptimization}
+            rasterImages={element.raster_images}
             maxHeight="90vh"
           />
         )}

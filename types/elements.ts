@@ -8,7 +8,13 @@ export type Element = {
   levelName: string;
   svg_url: string;
   raster_images: {
-    [key: string]: string;
+    [key: string]: {
+      src: string;
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+    };
   };
   createdAt: string;
   updatedAt: string;

@@ -21,6 +21,15 @@ type Props = {
   path: string;
   onClose: () => void;
   onChange: (id: string) => void;
+  rasterImages: {
+    [key: string]: {
+      src: string;
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+    };
+  };
 };
 
 export const useProcessogramLogic = ({
@@ -28,6 +37,7 @@ export const useProcessogramLogic = ({
   path,
   onClose,
   onChange,
+  rasterImages,
 }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
@@ -39,9 +49,9 @@ export const useProcessogramLogic = ({
   const currentLevel = useRef<number>(0);
   const isReady = useRef<boolean>(false);
 
-  const { optimizeAllElements, optimizeLevelElements } = useOptimizeSvgParts(
+  const { optimizeLevelElements } = useOptimizeSvgParts(
     svgElement,
-    path
+    rasterImages
   );
 
   const setFullBrightnessToCurrentLevel = useCallback(
@@ -73,7 +83,6 @@ export const useProcessogramLogic = ({
 
   const initializeOptimization = useCallback(async () => {
     setLoadingOptimization(true);
-    await optimizeAllElements();
     optimizeLevelElements({
       currentElementId: null,
       bruteOptimization: enableBruteOptimization,
@@ -81,7 +90,6 @@ export const useProcessogramLogic = ({
     setFullBrightnessToCurrentLevel(false);
     setLoadingOptimization(false);
   }, [
-    optimizeAllElements,
     optimizeLevelElements,
     enableBruteOptimization,
     setFullBrightnessToCurrentLevel,

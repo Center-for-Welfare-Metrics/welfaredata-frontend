@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
-import { optimizeSvg, processSvgToImage } from "./utils";
 import { getLevelById } from "../../ProcessogramsList/utils";
 import { INVERSE_DICT, MAX_LEVEL } from "../../ProcessogramsList/consts";
+import { generateRasterSvgElement } from "./utils";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -19,7 +19,15 @@ type OptimizeLevelElementsParams = {
 
 export const useOptimizeSvgParts = (
   svgElement: SVGGraphicsElement | null,
-  instance: string
+  rasterImages: {
+    [key: string]: {
+      src: string;
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+    };
+  }
 ) => {
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
     new Map<string, SVGGraphicsElement>()
@@ -38,7 +46,9 @@ export const useOptimizeSvgParts = (
     ({ selector }: ReplaceWithOptimizedParams) => {
       if (!svgElement) return;
 
-      const gElements = Array.from(svgElement.querySelectorAll(selector));
+      const gElements = Array.from(
+        svgElement.querySelectorAll(selector)
+      ) as SVGGraphicsElement[];
 
       for (const gElement of gElements) {
         const id = gElement.id;
@@ -51,10 +61,29 @@ export const useOptimizeSvgParts = (
           if (optimizedG) {
             gElement.replaceWith(optimizedG);
           }
+        } else {
+          const imageUrl = rasterImages[id];
+          if (!imageUrl) continue;
+
+          const optimizedElement = generateRasterSvgElement({
+            dataUrl: imageUrl.src,
+            width: imageUrl.width,
+            height: imageUrl.height,
+            x: imageUrl.x,
+            y: imageUrl.y,
+            group: gElement,
+          });
+
+          originalGElements.current.set(id, gElement);
+
+          if (optimizedElement) {
+            gElement.replaceWith(optimizedElement);
+            optimizedGElements.current.set(id, optimizedElement);
+          }
         }
       }
     },
-    [svgElement]
+    [svgElement, rasterImages]
   );
 
   const restoreOriginal = useCallback(
@@ -78,27 +107,6 @@ export const useOptimizeSvgParts = (
     },
     [svgElement]
   );
-
-  const optimizeAllElements = useCallback(async () => {
-    if (!svgElement) return;
-
-    const dashedElementSelector = '[id*="--"]';
-
-    const { originalItemsMap, allOptimizedGroups } = await optimizeSvg(
-      svgElement,
-      dashedElementSelector,
-      originalGElements.current,
-      instance
-    );
-
-    originalItemsMap.forEach((value, key) => {
-      originalGElements.current.set(key, value);
-    });
-
-    allOptimizedGroups.forEach((value, key) => {
-      optimizedGElements.current.set(key, value);
-    });
-  }, [svgElement]);
 
   const optimizeLevelElements = useCallback(
     ({ currentElementId, bruteOptimization }: OptimizeLevelElementsParams) => {
@@ -138,50 +146,9 @@ export const useOptimizeSvgParts = (
     [restoreOriginal, replaceWithOptimized, svgElement]
   );
 
-  const optimizeRootElement = useCallback(async () => {
-    if (!svgElement) return;
-
-    if (optimizedRootElement.current) {
-      svgElement.replaceWith(optimizedRootElement.current);
-      return optimizedRootElement.current;
-    }
-
-    originalRootElement.current = svgElement.cloneNode(
-      true
-    ) as SVGGraphicsElement;
-
-    const optimizedSvg = await processSvgToImage(svgElement);
-
-    if (!optimizedSvg) return;
-
-    optimizedRootElement.current = optimizedSvg;
-
-    const firstChild = optimizedSvg.firstChild;
-
-    svgElement.replaceChildren(firstChild);
-    svgElement.setAttribute("data-optimized", "true");
-
-    return optimizedSvg;
-  }, [svgElement]);
-
-  const restoreRootElement = useCallback(() => {
-    if (!svgElement) return;
-    if (originalRootElement.current) {
-      svgElement.replaceWith(originalRootElement.current);
-      return originalRootElement.current;
-    }
-
-    svgElement.replaceWith(svgElement.cloneNode(true) as SVGElement);
-
-    return svgElement;
-  }, [svgElement]);
-
   return {
     replaceWithOptimized,
     restoreOriginal,
-    optimizeAllElements,
     optimizeLevelElements,
-    optimizeRootElement,
-    restoreRootElement,
   };
 };
