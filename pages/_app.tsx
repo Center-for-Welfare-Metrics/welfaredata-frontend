@@ -12,8 +12,14 @@ import { Toaster } from "react-hot-toast";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "theme/fast.css";
 import { useRouter } from "next/router";
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { AxiosError } from "axios";
 
-function MyApp({ Component, pageProps }) {
+type ApplicationProps = {
+  children: React.ReactNode;
+};
+
+const Application = ({ children }: ApplicationProps) => {
   const [user, setUser] = useState<IUser>(null);
   const [firstLoad, setFirstLoad] = useState(false);
 
@@ -136,9 +142,8 @@ function MyApp({ Component, pageProps }) {
             toastOptions={{ duration: 5000 }}
           />
           <ContextMenuContext.Provider value={contextMenuValues}>
-            <RecoilRoot>
-              <Component {...pageProps} />
-            </RecoilRoot>
+            {children}
+
             <ContextMenu
               isOpen={contextMenu.open}
               onClose={closeCustomContextMenu}
@@ -147,6 +152,38 @@ function MyApp({ Component, pageProps }) {
         </UserContext.Provider>
       </ThemeProvider>
     )
+  );
+};
+
+function MyApp({ Component, pageProps }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: (count, error: AxiosError) => {
+              const status = error?.response?.status;
+              if (status === 404) return false;
+
+              if (count >= 2) return false;
+
+              return true;
+            },
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <RecoilRoot>
+          <Application>
+            <Component {...pageProps} />
+          </Application>
+        </RecoilRoot>
+      </Hydrate>
+    </QueryClientProvider>
   );
 }
 

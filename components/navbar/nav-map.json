@@ -5,10 +5,6 @@
     "auth": true,
     "childrens": [
       {
-        "name": "users and privileges",
-        "href": "/users_and_privileges"
-      },
-      {
         "name": "upload svg",
         "href": "/upload_svg"
       }
