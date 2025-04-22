@@ -1,10 +1,11 @@
 import axios, { Method, ResponseType } from "axios";
 
-export type RequestService = "admin" | "admin-species";
+export type RequestService = "admin" | "admin-species" | "admin-elements";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
   admin: "admin",
   "admin-species": "admin/species",
+  "admin-elements": "admin/elements",
 };
 
 type IRequest = {

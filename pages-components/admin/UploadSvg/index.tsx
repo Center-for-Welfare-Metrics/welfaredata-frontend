@@ -1,9 +1,10 @@
-import { Text } from "@/components/Text";
 import { useState } from "react";
 import toast from "react-hot-toast";
+
+import { ThemeColors } from "theme/globalStyle";
+import { Text } from "@/components/Text";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { FormInput } from "@/components/common/inputs/form-input";
-import { ThemeColors } from "theme/globalStyle";
 import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
 
 export const UploadSvg = () => {
@@ -39,7 +40,7 @@ export const UploadSvg = () => {
       formData.append("file", file);
       formData.append("specie", specie);
 
-      const response = await uploadSvgElement(formData);
+      await uploadSvgElement(formData);
 
       toast.success("File uploaded successfully!");
       // setFile(null); // Reset file input

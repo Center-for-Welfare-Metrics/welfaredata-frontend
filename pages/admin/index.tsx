@@ -14,8 +14,4 @@ const AdminIndex = () => {
   );
 };
 
-const Container = styled.div`
-  padding: 2rem;
-`;
-
 export default withAuth(AdminIndex);

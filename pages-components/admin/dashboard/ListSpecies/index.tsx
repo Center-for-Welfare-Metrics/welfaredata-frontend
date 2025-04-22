@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { Skeleton } from "@mui/material";
 
 import { useGetSpecies } from "@/api/react-query/species/useGetSpecies";
@@ -8,9 +7,10 @@ import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { useSetCreateSpecieModal } from "modals/CreateSpecieModal/hooks";
 import { ThemeColors } from "theme/globalStyle";
+import { CtaCreate } from "@/components/CtaCreate";
 
 export const ListSpecies = () => {
-  const { data: species } = useGetSpecies();
+  const { data: species, isLoading } = useGetSpecies();
 
   const speciesList = species ?? [];
 
@@ -21,8 +21,6 @@ export const ListSpecies = () => {
   const createSpecie = () => {
     setCreateSpecie({});
   };
-
-  const isLoading = true;
 
   return (
     <FlexColumn align="flex-start" width="100%" px={4} mt={4}>
@@ -36,6 +34,10 @@ export const ListSpecies = () => {
             <Skeleton
               key={index}
               variant="rectangular"
+              animation="wave"
+              sx={{
+                bgcolor: ThemeColors.deep_blue,
+              }}
               width={200}
               height={150}
             />
@@ -57,12 +59,12 @@ export const ListSpecies = () => {
             </FlexRow>
           ) : (
             <>
-              <CreateSpecieCta onClick={createSpecie}>
+              <CtaCreate onClick={createSpecie}>
                 <Text>
                   No species found. <br />
                   Click here to create your first species!
                 </Text>
-              </CreateSpecieCta>
+              </CtaCreate>
             </>
           )}
         </>
@@ -70,18 +72,3 @@ export const ListSpecies = () => {
     </FlexColumn>
   );
 };
-
-const CreateSpecieCta = styled.button`
-  margin-top: 1rem;
-  background-color: transparent;
-  height: auto;
-  width: 200px;
-  border: 1px solid ${ThemeColors.deep_blue};
-  padding: 1rem;
-  cursor: pointer;
-  transition: transform 0.25s ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;

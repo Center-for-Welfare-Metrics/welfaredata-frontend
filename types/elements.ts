@@ -16,6 +16,7 @@ export type Element = {
       y: number;
     };
   };
+  status: "processing" | "ready" | "error";
   createdAt: string;
   updatedAt: string;
 };

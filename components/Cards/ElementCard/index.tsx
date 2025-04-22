@@ -4,19 +4,28 @@ import Link from "next/link";
 import { transparentize } from "polished";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { SpecieCardSize } from "./const";
+import { ElementCardSize } from "./const";
+import { useMemo } from "react";
 
 type Props = {
   _id: string;
   name: string;
-  pathname: string;
+  status: "processing" | "ready" | "error";
   image_url: string | undefined;
 };
 
-export const SpecieCard = ({ _id, name, pathname, image_url }: Props) => {
+export const ElementCard = ({ _id, name, image_url, status }: Props) => {
+  const statusColor = useMemo(() => {
+    if (status === "error") return ThemeColors.red;
+
+    if (status === "ready") return ThemeColors.green;
+
+    if (status === "processing") return ThemeColors.yellow;
+  }, [status]);
+
   return (
     <Link
-      href={`/admin/species/${_id}`}
+      href={`/admin/elements/${_id}`}
       style={{
         textDecoration: "none",
       }}
@@ -33,7 +42,9 @@ export const SpecieCard = ({ _id, name, pathname, image_url }: Props) => {
         <Info>
           <FlexColumn gap={0}>
             <Text variant="body2">{name}</Text>
-            <Text variant="body2">/{pathname}</Text>
+            <Text variant="body2" customColor={statusColor}>
+              Status : {status}
+            </Text>
           </FlexColumn>
         </Info>
       </Container>
@@ -50,8 +61,8 @@ const Info = styled.div`
 `;
 
 const Container = styled.div`
-  width: ${SpecieCardSize.width}px;
-  height: ${SpecieCardSize.height}px;
+  width: ${ElementCardSize.width}px;
+  height: ${ElementCardSize.height}px;
   border-radius: 4px;
   border: 1px solid ${ThemeColors.deep_blue};
   padding: 1rem;

@@ -37,7 +37,7 @@ const getSpecieById = async ({ params }: GetSpecieByIdPayload) => {
   return data as Specie;
 };
 
-export const useGetEpisodeById = (
+export const useGetSpecieById = (
   params: GetSpecieByIdPayload["params"],
   enabled = true
 ) => {

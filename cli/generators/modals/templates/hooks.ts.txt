@@ -4,10 +4,7 @@ import { {{NAME}}ModalProps } from '.';
 const atom{{NAME}}Modal = atom<Omit<
   {{NAME}}ModalProps,
   'onClose'
-> | null>({
-  key: 'atom{{NAME}}Modal',
-  default: null,
-});
+> | null>(null);
 
 export const use{{NAME}}Modal = () =>
   useAtom(atom{{NAME}}Modal);
