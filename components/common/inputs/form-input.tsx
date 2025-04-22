@@ -11,9 +11,8 @@ import { LabeledInput, LabeledTextArea } from "./inputs";
 import React from "react";
 import { Box } from "@material-ui/core";
 
-export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
+export interface IFormInputBase {
   name: string;
-  type?: string;
   error?: string;
   label: string;
   icon?: string;
@@ -21,14 +20,28 @@ export interface IFormInput extends InputHTMLAttributes<HTMLInputElement> {
   multiline?: boolean;
   disabled?: boolean;
   defaultValue?: any;
-  customStyle?: any;
-  minRows?: number;
-  maxRows?: number;
+  customStyle?: React.CSSProperties;
 }
 
-const FormInput:
-  | FC<IFormInput>
-  | FC<TextareaHTMLAttributes<HTMLTextAreaElement>> = ({
+export interface IFormInputAsInput
+  extends IFormInputBase,
+    Omit<InputHTMLAttributes<HTMLInputElement>, keyof IFormInputBase> {
+  multiline?: false;
+  type?: string;
+}
+
+export interface IFormInputAsTextarea
+  extends IFormInputBase,
+    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof IFormInputBase> {
+  multiline?: boolean;
+  minRows?: number;
+  maxRows?: number;
+  type?: string;
+}
+
+export type IFormInput = IFormInputAsInput | IFormInputAsTextarea;
+
+const FormInput: FC<IFormInput> = ({
   name,
   multiline = false,
   type = "text",
@@ -53,7 +66,7 @@ const FormInput:
             name={name}
             value={value}
             disabled={disabled}
-            {...rest}
+            {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement> as any)}
           />
         ) : (
           <LabeledInput
@@ -62,7 +75,7 @@ const FormInput:
             type={type}
             value={value}
             disabled={disabled}
-            {...rest}
+            {...(rest as InputHTMLAttributes<HTMLInputElement>)}
           />
         )}
 

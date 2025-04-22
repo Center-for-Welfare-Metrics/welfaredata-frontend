@@ -80,6 +80,8 @@ export const ProcessogramLoader = ({
         pointerEvents: "none",
       };
     }
+
+    return {};
   }, [isActive, active, waitingForClose]);
 
   const overStyle = useMemo((): CSSProperties => {

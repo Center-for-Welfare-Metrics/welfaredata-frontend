@@ -241,7 +241,7 @@ const processGroupToImage = async (
   instance: string
 ): Promise<SVGGraphicsElement | null> => {
   const bbox = group.getBBox();
-  if (bbox.width === 0 || bbox.height === 0) return;
+  if (bbox.width === 0 || bbox.height === 0) return null;
 
   // Get the transformed bounding box of the group, some elements might be rotated
   const { width, height, x, y } = getTransformedBBox(group);

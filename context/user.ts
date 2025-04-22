@@ -1,21 +1,22 @@
 import { createContext } from "react";
-import { IRole } from "./roles";
 
-export interface IUser{
-    name:string,
-    _id:string,
-    email:string,
-    __v:number,
-    role?:IRole
+export interface IUser {
+  name: string;
+  _id: string;
+  email: string;
+  __v: number;
 }
 
 export interface IUserContext {
-    user:IUser,
-    setUser(user:IUser):void,
-    logOut():void
+  user: IUser | null;
+  setUser(user: IUser): void;
+  logOut(): void;
 }
 
-const UserContext = createContext<IUserContext>(null)
+const UserContext = createContext<IUserContext>({
+  user: null,
+  setUser: () => {},
+  logOut: () => {},
+});
 
-
-export default UserContext
+export default UserContext;

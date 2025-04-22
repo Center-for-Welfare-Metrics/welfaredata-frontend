@@ -1,10 +1,10 @@
 import { Text } from "@/components/Text";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import adminApi from "queries/admin/svg";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import FormInput from "@/components/common/inputs/form-input";
 import { ThemeColors } from "theme/globalStyle";
+import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
 
 export const UploadSvg = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -39,9 +39,7 @@ export const UploadSvg = () => {
       formData.append("file", file);
       formData.append("specie", specie);
 
-      const response = await adminApi.uploadSvg(formData);
-
-      console.log(response);
+      const response = await uploadSvgElement(formData);
 
       toast.success("File uploaded successfully!");
       // setFile(null); // Reset file input
@@ -66,10 +64,11 @@ export const UploadSvg = () => {
       <FlexRow>
         <FlexColumn align="flex-start">
           <FormInput
+            name="Specie"
             label="Specie"
             placeholder="e.g., Pig"
             value={specie || ""}
-            onChange={(e) => setSpecie(e.target.value)}
+            onChange={(e: any) => setSpecie(e.target.value)}
             style={{ width: "300px" }}
           />
           <input type="file" onChange={handleFileChange} accept=".svg" />

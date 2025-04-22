@@ -16,7 +16,7 @@ export const useDetectClickOutside = ({
 }: Props) => {
   const debounceEnabled = useDebounce(enabled, 100);
 
-  function handleClick(event) {
+  function handleClick(event: MouseEvent) {
     if (strategy === "rect") {
       const rect = element?.getBoundingClientRect();
       if (!rect) return;
@@ -42,9 +42,11 @@ export const useDetectClickOutside = ({
 
       if (!body) return;
 
-      if (!body.contains(event.target)) return;
+      const target = event.target as Node;
 
-      if (element && !element.contains(event.target)) {
+      if (!body.contains(target)) return;
+
+      if (element && !element.contains(target)) {
         onClickOutSide();
       }
 

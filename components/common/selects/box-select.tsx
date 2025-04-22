@@ -6,31 +6,33 @@ interface IPrepare {
   render: string;
 }
 
-interface IBoxSelect {
-  options: any[];
+interface IBoxSelect<T> {
+  options: T[];
   prepare: IPrepare;
-  value: any;
-  onChoose(option: any): void;
-  error?: any;
+  value: T | null;
+  onChoose(option: T): void;
+  error?: string;
 }
 
-const BoxSelect = ({
+const BoxSelect = <T extends Record<string, any>>({
   value,
   options,
   prepare,
   onChoose,
   error,
-}: IBoxSelect) => {
-  const isSelected = (option) => {
+}: IBoxSelect<T>) => {
+  const isSelected = (option: T): boolean => {
     if (value) {
       return value[prepare.key] === option[prepare.key];
     }
     return false;
   };
 
-  const choose = (option: any) => (event: any) => {
-    onChoose(option);
-  };
+  const choose =
+    (option: T) =>
+    (event: React.MouseEvent<HTMLDivElement>): void => {
+      onChoose(option);
+    };
 
   return (
     <Container>
@@ -50,4 +52,4 @@ const BoxSelect = ({
   );
 };
 
-export default React.memo(BoxSelect);
+export default React.memo(BoxSelect) as typeof BoxSelect;

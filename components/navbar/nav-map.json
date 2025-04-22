@@ -1,13 +1,8 @@
 [
   {
-    "name": "admin",
+    "name": "Dashboard",
     "prefix": "/admin",
     "auth": true,
-    "childrens": [
-      {
-        "name": "upload svg",
-        "href": "/upload_svg"
-      }
-    ]
+    "childrens": []
   }
 ]

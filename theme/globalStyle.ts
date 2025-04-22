@@ -1,7 +1,7 @@
 import { lighten } from "polished";
 import { createGlobalStyle, css } from "styled-components";
 
-const scrollBar = (color, size = ".5rem") => css`
+const scrollBar = (color: string, size = ".5rem") => css`
   ::-webkit-scrollbar {
     width: ${size};
     height: ${size};

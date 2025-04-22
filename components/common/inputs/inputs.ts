@@ -3,7 +3,7 @@ import { styled, keyframes } from "styled-components";
 import TextareaAutosize from "react-textarea-autosize";
 import { lighten } from "polished";
 
-const globalColor = (theme) => theme.colors.white;
+const globalColor = (theme: any) => theme.colors.white;
 
 export const LabeledInput = styled.input`
   padding: 0.5rem 0 0.5rem 0;

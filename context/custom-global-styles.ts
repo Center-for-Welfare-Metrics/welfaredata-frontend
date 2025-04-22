@@ -1,12 +1,13 @@
-import { createContext } from "react"
+import { createContext } from "react";
 
 export interface ICustomGlobalStyles {
-    needFixedBody:boolean,
-    setNeedFixedBody(needFixedBody:boolean):void
+  needFixedBody: boolean;
+  setNeedFixedBody(needFixedBody: boolean): void;
 }
 
+const CustomGlobalStyles = createContext<ICustomGlobalStyles>({
+  needFixedBody: false,
+  setNeedFixedBody: () => {},
+});
 
-const CustomGlobalStyles = createContext<ICustomGlobalStyles>(null)
-
-
-export default CustomGlobalStyles
+export default CustomGlobalStyles;

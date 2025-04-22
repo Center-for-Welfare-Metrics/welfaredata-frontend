@@ -1,4 +1,4 @@
-import { StyleTypes } from "./enum_types";
+import { StyleTypes } from "@/components/common/dialog/dialog";
 
 export interface IColorType {
   theme: any;

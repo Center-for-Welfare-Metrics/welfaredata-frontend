@@ -3,15 +3,6 @@ import { useQuery } from "react-query";
 import { QueryKeys } from "../keys";
 import { Specie } from "types/species";
 
-type GetEpisodsListPayload = {
-  query: {
-    patient_id: string;
-    page: number;
-    limit: number;
-    [key: string]: any;
-  };
-};
-
 const getSpecies = async () => {
   const { data } = await request({
     method: "GET",
@@ -26,12 +17,6 @@ export const useGetSpecies = (enabled = true) => {
   return useQuery([QueryKeys.SPECIES.List], () => getSpecies(), {
     enabled,
   });
-};
-
-type GetEpisodeByIdPayload = {
-  params: {
-    episode_id: string;
-  };
 };
 
 export type GetSpecieByIdPayload = {

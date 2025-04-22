@@ -1,13 +1,13 @@
 import { createContext } from "react";
 
-
-
 export interface IThemeContext {
-    theme:any,
-    setTheme(theme:any):void
+  theme: any;
+  setTheme(theme: any): void;
 }
 
-const ThemeContext = createContext<IThemeContext>(null)
+const ThemeContext = createContext<IThemeContext>({
+  theme: null,
+  setTheme: () => {},
+});
 
-
-export default ThemeContext
+export default ThemeContext;

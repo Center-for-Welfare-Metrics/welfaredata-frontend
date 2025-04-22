@@ -1,8 +1,14 @@
 import React from "react";
 import Modal, { IModal } from "@/components/common/modal";
-import { StyleTypes } from "@/utils/enum_types";
 import { DangerButton, DefaultButton } from "../buttons/default-button-styled";
 import { Container, SubTitle, Title, ActionButtons } from "./dialog-styled";
+
+export type StyleTypes =
+  | "primary"
+  | "success"
+  | "warning"
+  | "danger"
+  | "default";
 
 interface IDialog extends IModal {
   type: StyleTypes;

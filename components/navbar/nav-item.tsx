@@ -6,8 +6,14 @@ import { Popper } from "@material-ui/core";
 import zIndex from "@material-ui/core/styles/zIndex";
 import { useDetectClickOutside } from "@/utils/hooks/useDetectClickOutside";
 
+interface NavItemChild {
+  name: string;
+  href: string;
+  reload?: boolean;
+}
+
 interface INavItem {
-  children: any[];
+  children: NavItemChild[];
   name: string;
   prefix: string;
 }
@@ -21,7 +27,7 @@ const NavItem = ({ children, name, prefix }: INavItem) => {
     setActive((prev) => !prev);
   }, []);
 
-  const sort_children = (a, b) => {
+  const sort_children = (a: NavItemChild, b: NavItemChild) => {
     if (Router.pathname.includes(prefix)) {
       let full_url_a = prefix + a.href;
       let full_url_b = prefix + b.href;

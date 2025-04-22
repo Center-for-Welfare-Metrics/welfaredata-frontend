@@ -55,6 +55,8 @@ export const DefaultButton = styled.button<ButtonProps>`
     load
       ? css`
           animation: ${spin} 1s infinite linear;
+          pointer-events: none;
+          opacity: 0.5;
         `
       : ""}
 `;

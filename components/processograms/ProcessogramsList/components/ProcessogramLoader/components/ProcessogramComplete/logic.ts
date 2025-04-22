@@ -8,7 +8,7 @@ import {
 import { getLevelById } from "../../../../utils";
 import { gsap } from "gsap";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
-import { getElementViewBox } from "@/components/processograms/processogram-helpers";
+import { getElementViewBox } from "@/components/processograms/ProcessogramsList/utils/getElementViewBox";
 
 type HistoryLevel = {
   [key: number]: {
@@ -101,6 +101,7 @@ export const useProcessogramLogic = ({
     (target: SVGElement, toPrevious: boolean) => {
       if (!svgElement) return;
       const viewBox = getElementViewBox(target);
+      if (!viewBox) return;
       const id = target.id;
       onChange(id);
       const currentLevelById = getLevelById(id);

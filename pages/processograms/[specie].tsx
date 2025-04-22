@@ -1,10 +1,11 @@
 import { Buffer } from "buffer";
 import fetch from "node-fetch";
-import { Container } from "@/components/layouts/default-processogram-page-styled";
 import publicApi from "queries/public";
 import Head from "next/head";
 import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
 import { Element } from "types/elements";
+import styled from "styled-components";
+import { GetStaticPropsContext } from "next";
 
 type Props = {
   specie: string;
@@ -25,6 +26,11 @@ const PublicSpeciePage = ({ elements, specie }: Props) => {
   );
 };
 
+const Container = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
 export default PublicSpeciePage;
 
 export async function getStaticPaths() {
@@ -34,8 +40,8 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps(context) {
-  const { specie } = context.params;
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const { specie } = context.params as { specie: string };
 
   let elements: Element[] = await (await publicApi.getElements(specie)).data;
 

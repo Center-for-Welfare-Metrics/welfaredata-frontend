@@ -98,6 +98,9 @@ export const useOptimizeSvgParts = (
         if (!id || !originalGElements.current.has(id)) continue;
 
         const originalG = originalGElements.current.get(id);
+
+        if (!originalG) continue;
+
         if (bruteOptimization) {
           if (originalG.tagName === "g") continue;
         }

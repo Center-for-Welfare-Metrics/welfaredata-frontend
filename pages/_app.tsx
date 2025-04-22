@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "styled-components";
 import { RecoilRoot } from "recoil";
-import { useTheme } from "../theme/useTheme";
+import { Theme, useTheme } from "../theme/useTheme";
 import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
-import ContextMenuContext, { IContextMenu } from "@/context/context-menu";
 import authApi from "queries/auth";
-import ContextMenu from "@/components/context-menu/context-menu";
 import { Toaster } from "react-hot-toast";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "theme/fast.css";
@@ -20,34 +18,13 @@ type ApplicationProps = {
 };
 
 const Application = ({ children }: ApplicationProps) => {
-  const [user, setUser] = useState<IUser>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const [firstLoad, setFirstLoad] = useState(false);
 
   const { theme, themeLoaded } = useTheme();
-  const [selectedTheme, setSelectedTheme] = useState(null);
-
-  const [contextMenu, setContextMenu] = useState<IContextMenu>({
-    open: false,
-    x: 0,
-    y: 0,
-    type: "none",
-    position: "mouse-oriented",
-  });
-
-  const [loading, setLoading] = useState(false);
-
-  const [temporary, setTemporary] = useState<any>(null);
+  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
 
   const { pathname } = useRouter();
-
-  const contextMenuValues = {
-    contextMenu,
-    setContextMenu,
-    loading,
-    setLoading,
-    temporary,
-    setTemporary,
-  };
 
   useEffect(() => {
     setSelectedTheme(theme);
@@ -61,32 +38,7 @@ const Application = ({ children }: ApplicationProps) => {
 
   const userValue: IUserContext = { user, setUser, logOut };
 
-  const handleCustomContextMenu = (event: MouseEvent) => {
-    // event.preventDefault();
-    let match = window.matchMedia("(hover)").matches;
-    if (match) {
-      let { clientX, clientY } = event;
-      // setContextMenu({
-      //   open: true,
-      //   x: clientX,
-      //   y: clientY + window.scrollY,
-      //   type: "none",
-      //   position: "mouse-oriented",
-      // });
-    }
-  };
-
-  const closeCustomContextMenu = (event: MouseEvent) => {
-    event.stopPropagation();
-    setContextMenu({
-      open: false,
-      type: "none",
-      position: "mouse-oriented",
-    });
-  };
-
   useEffect(() => {
-    document.oncontextmenu = handleCustomContextMenu;
     if (!user) {
       if (pathname !== "/pigs" && pathname !== "/") {
         authApi
@@ -114,54 +66,54 @@ const Application = ({ children }: ApplicationProps) => {
     }
   }, [user]);
 
+  if (!firstLoad) return null;
+
+  if (!selectedTheme) return null;
+
   return (
-    firstLoad &&
-    selectedTheme && (
-      <ThemeProvider theme={selectedTheme}>
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <script
-            src="https://kit.fontawesome.com/07fc634891.js"
-            crossOrigin="anonymous"
-          ></script>
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap"
-            rel="stylesheet"
-          />
-        </Head>
+    <ThemeProvider theme={selectedTheme}>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+          src="https://kit.fontawesome.com/07fc634891.js"
+          crossOrigin="anonymous"
+        ></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
 
-        <GlobalStyles />
-        <UserContext.Provider value={userValue}>
-          <Toaster
-            position="top-right"
-            reverseOrder={false}
-            toastOptions={{ duration: 5000 }}
-          />
-          <ContextMenuContext.Provider value={contextMenuValues}>
-            {children}
+      <GlobalStyles />
+      <UserContext.Provider value={userValue}>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{ duration: 5000 }}
+        />
 
-            <ContextMenu
-              isOpen={contextMenu.open}
-              onClose={closeCustomContextMenu}
-            />
-          </ContextMenuContext.Provider>
-        </UserContext.Provider>
-      </ThemeProvider>
-    )
+        {children}
+      </UserContext.Provider>
+    </ThemeProvider>
   );
 };
 
-function MyApp({ Component, pageProps }) {
+function MyApp({
+  Component,
+  pageProps,
+}: {
+  Component: any;
+  pageProps: {
+    dehydratedState: any;
+  };
+}) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            retry: (count, error: AxiosError) => {
+            retry: (count, error: any) => {
               const status = error?.response?.status;
               if (status === 404) return false;
 

@@ -14,7 +14,7 @@
     "@material-ui/icons": "^4.11.2",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
-    "check-password-strength": "^1.0.15",
+    "check-password-strength": "^3.0.0",
     "email-validator": "^2.0.4",
     "gsap": "^3.12.7",
     "immutability-helper": "^3.1.1",
@@ -31,6 +31,7 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "17.0.2",
     "react-feather": "^2.0.10",
+    "react-hook-form": "^7.55.0",
     "react-hot-toast": "^1.0.2",
     "react-image-gallery": "^1.2.4",
     "react-inlinesvg": "^2.3.0",
@@ -43,7 +44,8 @@
     "styled-components": "^6.1.16",
     "typescript": "^4.8.2",
     "validatorjs": "^3.22.1",
-    "voca": "^1.4.0"
+    "voca": "^1.4.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",

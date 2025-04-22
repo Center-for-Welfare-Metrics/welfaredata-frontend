@@ -1,7 +1,7 @@
-import { StyleTypes } from "@/utils/enum_types";
 import { useEffect, useState } from "react";
 import { Container, FadedModalBackground } from "./modal-styled";
 import React from "react";
+import { StyleTypes } from "../dialog/dialog";
 
 export interface IModal {
   onClose(evt?: any): void;
@@ -46,20 +46,20 @@ const Modal = ({
     }
   }, [internalOpen]);
 
-  return (
-    internalOpen && (
-      <>
-        <Container
-          overflowY={overflowY}
-          isDialog={isDialog}
-          type={type}
-          isOpen={fadeOpen}
-        >
-          {children}
-        </Container>
-        <FadedModalBackground isOpen={fadeOpen} onClick={onClose} />
-      </>
-    )
+  return internalOpen ? (
+    <>
+      <Container
+        overflowY={overflowY}
+        isDialog={!!isDialog}
+        type={type}
+        isOpen={fadeOpen}
+      >
+        {children}
+      </Container>
+      <FadedModalBackground isOpen={fadeOpen} onClick={onClose} />
+    </>
+  ) : (
+    <></>
   );
 };
 
