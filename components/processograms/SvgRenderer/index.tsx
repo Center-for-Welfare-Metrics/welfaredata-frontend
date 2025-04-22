@@ -1,6 +1,8 @@
 import React from "react";
-import SVG, { Props as SVGProps } from "react-inlinesvg";
+import SVG from "react-inlinesvg";
 
-export const SvgRenderer = React.forwardRef<SVGGraphicsElement, SVGProps>(
-  (props, ref) => <SVG innerRef={ref} {...props} />
-);
+const SVGComponent = SVG as React.FC<any>;
+
+export const SvgRenderer = ({ innerRef, ...rest }: any) => {
+  return <SVGComponent {...rest} innerRef={innerRef} />;
+};

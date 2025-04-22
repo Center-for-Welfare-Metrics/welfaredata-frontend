@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { SuccessButton } from "@/components/common/buttons/default-button-styled";
-import FormInput from "@/components/common/inputs/form-input";
+import { FormInput } from "@/components/common/inputs/form-input";
 import { Container, Form, LinkTo } from "./auth-styled";
+import { Button } from "../Button";
 
 interface LoginProps {
   email: string;
@@ -49,9 +49,14 @@ const Login = ({
           type="password"
           icon="fa-key"
         />
-        <SuccessButton disabled={onFetch} load={onFetch} type="submit">
+        <Button
+          disabled={onFetch}
+          loading={onFetch}
+          type="submit"
+          buttonStyle="success"
+        >
           Login
-        </SuccessButton>
+        </Button>
       </Form>
       <LinkTo>
         Don't have an account?<Link href="/register">Register now!</Link>

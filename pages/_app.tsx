@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "styled-components";
-import { RecoilRoot } from "recoil";
+import { Provider } from "jotai";
 import { Theme, useTheme } from "../theme/useTheme";
 import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
@@ -10,8 +10,8 @@ import { Toaster } from "react-hot-toast";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "theme/fast.css";
 import { useRouter } from "next/router";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
-import { AxiosError } from "axios";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Modals } from "modals";
 
 type ApplicationProps = {
   children: React.ReactNode;
@@ -92,8 +92,8 @@ const Application = ({ children }: ApplicationProps) => {
           reverseOrder={false}
           toastOptions={{ duration: 5000 }}
         />
-
         {children}
+        <Modals />
       </UserContext.Provider>
     </ThemeProvider>
   );
@@ -128,13 +128,11 @@ function MyApp({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <RecoilRoot>
-          <Application>
-            <Component {...pageProps} />
-          </Application>
-        </RecoilRoot>
-      </Hydrate>
+      <Provider>
+        <Application>
+          <Component {...pageProps} />
+        </Application>
+      </Provider>
     </QueryClientProvider>
   );
 }

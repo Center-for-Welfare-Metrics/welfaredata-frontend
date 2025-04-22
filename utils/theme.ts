@@ -1,4 +1,9 @@
-import { StyleTypes } from "@/components/common/dialog/dialog";
+export type StyleTypes =
+  | "primary"
+  | "success"
+  | "danger"
+  | "warning"
+  | "default";
 
 export interface IColorType {
   theme: any;

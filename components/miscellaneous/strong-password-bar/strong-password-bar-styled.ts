@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { darken, lighten } from "polished";
+import { ThemeColors } from "theme/globalStyle";
 
 let baseLine = "0.05rem";
 
@@ -23,13 +24,13 @@ export const Line = styled.div<Props>`
   width: 2rem;
   height: 0.5rem;
   background-color: ${({ theme, current, strength }) => {
-    let color = theme.colors.red;
+    let color = ThemeColors.red;
     if (strength > 1) {
-      color = darken(0.1, theme.colors.green);
+      color = darken(0.1, ThemeColors.green);
     }
 
     if (strength >= current) {
-      color = lighten(0.1, theme.colors.green);
+      color = lighten(0.1, ThemeColors.green);
     }
     return color;
   }};
@@ -43,18 +44,18 @@ type TextProps = {
 
 export const StrengthText = styled.span<TextProps>`
   color: ${({ theme, strength }) => {
-    let color = theme.colors.red;
+    let color = ThemeColors.red;
 
     if (strength == 1) {
-      color = lighten(0.05, theme.colors.red);
+      color = lighten(0.05, ThemeColors.red);
     }
 
     if (strength > 1) {
-      color = darken(0.1, theme.colors.green);
+      color = darken(0.1, ThemeColors.green);
     }
 
     if (strength > 2) {
-      color = lighten(0.1, theme.colors.green);
+      color = lighten(0.1, ThemeColors.green);
     }
     return color;
   }};

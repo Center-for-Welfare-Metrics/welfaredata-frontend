@@ -2,8 +2,7 @@ import Link from "next/link";
 import { Container, Name, Childrens, Children } from "./nav-item-styled";
 import Router from "next/router";
 import React, { useCallback, useRef } from "react";
-import { Popper } from "@material-ui/core";
-import zIndex from "@material-ui/core/styles/zIndex";
+import { Popper } from "@mui/material";
 import { useDetectClickOutside } from "@/utils/hooks/useDetectClickOutside";
 
 interface NavItemChild {
@@ -61,7 +60,7 @@ const NavItem = ({ children, name, prefix }: INavItem) => {
         open={active}
         anchorEl={navItemRef.current}
         style={{
-          zIndex: zIndex.modal + 1,
+          zIndex: 1200,
         }}
         placement="bottom-start"
       >

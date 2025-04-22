@@ -5,7 +5,7 @@ import { useProcessogramLogic } from "./logic";
 import Loader from "react-loader-spinner";
 import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
-import { Portal } from "@material-ui/core";
+import { Portal } from "@mui/material";
 
 type Props = {
   src: string;
@@ -44,7 +44,7 @@ export const ProcessogramComplete = ({
   return (
     <>
       <SvgRenderer
-        ref={setSvgElement}
+        innerRef={setSvgElement}
         src={src}
         style={{
           maxHeight: maxHeight,

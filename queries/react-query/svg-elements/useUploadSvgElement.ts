@@ -1,4 +1,3 @@
-import { useMutation } from "react-query";
 import { request } from "../request";
 
 export const uploadSvgElement = async (formData: FormData) => {

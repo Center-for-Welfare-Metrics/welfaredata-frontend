@@ -1,8 +1,9 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { request } from "../request";
 import { Specie } from "types/species";
 import toast from "react-hot-toast";
+import { QueryKeys } from "../keys";
 
 type CreateSpeciePayload = {
   body: {
@@ -23,7 +24,23 @@ const createSpecie = async ({ body }: CreateSpeciePayload) => {
 };
 
 export const useCreateSpecie = () => {
-  return useMutation(createSpecie);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createSpecie,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SPECIES.List],
+      });
+      toast.success("Specie created successfully");
+    },
+    onError: (error: AxiosError) => {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+      toast.error("Error creating specie");
+    },
+  });
 };
 
 type UpdateSpecie = Partial<Omit<Specie, "_id">>;
@@ -47,7 +64,8 @@ const updateSpecie = async ({ params, body }: UpdateSpeciePayload) => {
 };
 
 export const useUpdateSpecie = () => {
-  return useMutation(updateSpecie, {
+  return useMutation({
+    mutationFn: updateSpecie,
     onSuccess: () => {
       toast.success("Specie updated successfully");
     },
@@ -77,15 +95,18 @@ const deleteSpecie = async ({ params }: DeleteSpeciePayload) => {
 export const useDeleteSpecie = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(deleteSpecie, {
+  return useMutation({
+    mutationFn: deleteSpecie,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SPECIES.List],
+      });
       toast.success("Specie deleted successfully");
     },
     onError: (error: AxiosError) => {
       if (process.env.NODE_ENV === "development") {
         console.error(error);
       }
-
       toast.error("Error deleting specie");
     },
   });

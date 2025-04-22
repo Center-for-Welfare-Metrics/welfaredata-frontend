@@ -27,7 +27,8 @@ export const request = ({
   headers = {},
 }: IRequest) =>
   axios.request({
-    baseURL: process.env.NEXT_PUBLIC_API_URL + "/" + servicesKeyPair[service],
+    baseURL:
+      process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/" + servicesKeyPair[service],
     headers: {
       "Content-Type": "application/json",
       ...headers,

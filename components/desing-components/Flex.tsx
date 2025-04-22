@@ -15,6 +15,7 @@ type FlexProps = {
   pb?: number;
   px?: number;
   py?: number;
+  flexWrap?: CSSProperties["flexWrap"];
 };
 
 const writeSizeProperty = (size?: number) => (size ? `${size}rem` : "unset");
@@ -35,6 +36,7 @@ export const FlexRow = styled.div<FlexProps>`
   padding-bottom: ${(props) => writeSizeProperty(props.pb)};
   padding-inline: ${(props) => writeSizeProperty(props.px)};
   padding-block: ${(props) => writeSizeProperty(props.py)};
+  flex-wrap: ${(props) => props.flexWrap ?? "unset"};
 `;
 
 export const FlexColumn = styled.div<FlexProps>`

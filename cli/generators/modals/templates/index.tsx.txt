@@ -1,0 +1,32 @@
+import { ModalContainer } from "modals/ModalContainer";
+import { use{{NAME}}Modal } from './hooks';
+
+export type {{NAME}}ModalProps = {
+  onClose: () => void;
+};
+
+const {{NAME}}Modal = ({
+  onClose,
+}: {{NAME}}ModalProps) => {
+  return (
+    <ModalContainer
+      open={true}
+      onClose={onClose}
+      title="Modal de exemplo: {{NAME}}"
+    >
+      <></>
+    </ModalContainer>
+  );
+};
+
+export const {{NAME}}ModalWrapper = () => {
+  const [modalProps, setModalProps] = use{{NAME}}Modal();
+
+  if (!modalProps) return null;
+
+  const onClose = () => {
+    setModalProps(null);
+  };
+
+  return <{{NAME}}Modal {...modalProps} onClose={onClose} />;
+};

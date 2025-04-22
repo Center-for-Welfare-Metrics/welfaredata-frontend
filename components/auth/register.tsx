@@ -1,11 +1,11 @@
 import Link from "next/link";
-import FormInput from "@/components/common/inputs/form-input";
-import { SuccessButton } from "@/components/common/buttons/default-button-styled";
+import { FormInput } from "@/components/common/inputs/form-input";
 import { Container, Form, LinkTo } from "./auth-styled";
 import StrongPasswordBar, {
   PasswordStrength,
 } from "../miscellaneous/strong-password-bar";
 import React, { ChangeEvent, FormEvent } from "react";
+import { Button } from "../Button";
 
 interface RegisterProps {
   name: string;
@@ -87,9 +87,9 @@ const Register: React.FC<RegisterProps> = ({
           type="password"
           icon="fa-lock"
         />
-        <SuccessButton load={onFetch} type="submit">
+        <Button loading={onFetch} type="submit" buttonStyle="success">
           Register
-        </SuccessButton>
+        </Button>
       </Form>
       <LinkTo>
         Already have an account? <Link href="/login">Login!</Link>

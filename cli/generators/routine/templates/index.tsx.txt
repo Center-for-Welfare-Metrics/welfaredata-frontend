@@ -1,0 +1,9 @@
+import { useEffect } from 'react';
+
+export const {{NAME}}Routine = () => {
+  useEffect(() => {
+    console.warn('{{NAME}} Routine Not defined');
+  }, []);
+
+  return <></>;
+};

@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { lighten } from "polished";
+import { ThemeColors } from "theme/globalStyle";
 
 type Props = {
   $active: boolean;
@@ -17,11 +18,11 @@ export const Name = styled.div<Props>`
   ${({ $isCurrentRoute }) =>
     $isCurrentRoute
       ? css`
-          color: ${({ theme }) => lighten(0.25, theme.colors.blue)};
+          color: ${lighten(0.25, ThemeColors.blue)};
           text-decoration: underline;
         `
       : css`
-          color: ${({ theme }) => theme.colors.blue};
+          color: ${ThemeColors.blue};
         `}
 
   ${({ $active }) =>
@@ -51,11 +52,11 @@ export const Children = styled.a<ChildrenProps>`
   ${({ $isCurrentRoute }) =>
     $isCurrentRoute
       ? css`
-          color: ${({ theme }) => lighten(0.25, theme.colors.blue)};
+          color: ${lighten(0.25, ThemeColors.blue)};
           text-decoration: underline;
         `
       : css`
-          color: ${({ theme }) => theme.colors.blue};
+          color: ${ThemeColors.blue};
         `}
 
   &:hover {

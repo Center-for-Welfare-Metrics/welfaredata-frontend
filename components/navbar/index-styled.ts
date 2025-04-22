@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { lighten } from "polished";
+import { ThemeColors } from "theme/globalStyle";
 
 export const Containter = styled.div`
   position: sticky;
@@ -10,7 +11,7 @@ export const Containter = styled.div`
   z-index: 90;
   justify-content: space-between;
   padding: 1rem 0 1rem 0;
-  background-color: ${({ theme }) => theme.colors.black};
+  background-color: ${ThemeColors.black};
 `;
 
 export const NavItems = styled.div`
@@ -25,15 +26,15 @@ export const UserSection = styled.div`
 `;
 
 export const UserName = styled.div`
-  color: ${({ theme }) => theme.colors.green};
+  color: ${ThemeColors.green};
 `;
 
 export const LogOut = styled.div`
   cursor: pointer;
-  color: ${({ theme }) => theme.colors.blue};
+  color: ${ThemeColors.blue};
   transition: all 500ms;
   :hover {
-    color: ${({ theme }) => lighten(0.25, theme.colors.blue)};
+    color: ${lighten(0.25, ThemeColors.blue)};
     transition: all 500ms;
   }
 `;

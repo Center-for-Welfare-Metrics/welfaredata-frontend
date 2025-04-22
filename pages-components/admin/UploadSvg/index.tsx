@@ -2,7 +2,7 @@ import { Text } from "@/components/Text";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
-import FormInput from "@/components/common/inputs/form-input";
+import { FormInput } from "@/components/common/inputs/form-input";
 import { ThemeColors } from "theme/globalStyle";
 import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
 

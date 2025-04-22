@@ -1,18 +1,32 @@
 import { lighten } from "polished";
 import { createGlobalStyle, css } from "styled-components";
 
-const scrollBar = (color: string, size = ".5rem") => css`
+export const ThemeColors = {
+  blue: "#ffebff",
+  deep_blue: "#0c1a27",
+  yellow: "#FFE74C",
+  white: "#FFFFFF",
+  pink: "#730e28",
+  red: "#9C3848",
+  green: "#4DA167",
+  black: "#000000",
+  gray: "#919191",
+};
+
+export type ThemeColorsType = keyof typeof ThemeColors;
+
+const scrollBar = (color: ThemeColorsType, size = ".5rem") => css`
   ::-webkit-scrollbar {
     width: ${size};
     height: ${size};
   }
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors[color]};
+    background-color: ${ThemeColors[color]};
     transition: background-color 500ms;
     border-radius: 2rem;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: ${({ theme }) => lighten(0.1, theme.colors[color])};
+    background-color: ${lighten(0.1, ThemeColors[color])};
     transition: background-color 500ms;
   }
 `;
@@ -28,13 +42,13 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     html{
-        background-color: ${({ theme }) => theme.colors.black};          
+        background-color: ${ThemeColors.black};          
     }
     html,body,div,textarea{        
         ${scrollBar("gray")}
     }
     body{
-        background-color: ${({ theme }) => theme.colors.black};        
+        background-color: ${ThemeColors.black};        
         width:100%;
         height: 100%;
         font-family: 'Titillium Web', sans-serif;         
@@ -63,17 +77,3 @@ export const GlobalStyles = createGlobalStyle`
 
     /* --------------------- hack | gambiarra ---------------- */
 `;
-
-export const ThemeColors = {
-  blue: "#ffebff",
-  deep_blue: "#0c1a27",
-  yellow: "#FFE74C",
-  white: "#FFFFFF",
-  pink: "#730e28",
-  red: "#9C3848",
-  green: "#4DA167",
-  black: "#000000",
-  gray: "#919191",
-};
-
-export type ThemeColorsType = keyof typeof ThemeColors;

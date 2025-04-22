@@ -1,5 +1,5 @@
 import { request } from "../request";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../keys";
 import { Specie } from "types/species";
 
@@ -14,7 +14,9 @@ const getSpecies = async () => {
 };
 
 export const useGetSpecies = (enabled = true) => {
-  return useQuery([QueryKeys.SPECIES.List], () => getSpecies(), {
+  return useQuery({
+    queryKey: [QueryKeys.SPECIES.List],
+    queryFn: () => getSpecies(),
     enabled,
   });
 };
@@ -39,11 +41,9 @@ export const useGetEpisodeById = (
   params: GetSpecieByIdPayload["params"],
   enabled = true
 ) => {
-  return useQuery(
-    [QueryKeys.SPECIES.ByID, params],
-    () => getSpecieById({ params }),
-    {
-      enabled,
-    }
-  );
+  return useQuery({
+    queryKey: [QueryKeys.SPECIES.ByID, params],
+    queryFn: () => getSpecieById({ params }),
+    enabled,
+  });
 };
