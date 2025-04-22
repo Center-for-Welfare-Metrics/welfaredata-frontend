@@ -1,0 +1,22 @@
+import withAuth from "@/components/HOC/with-auth";
+import DefaultLayout from "@/components/layouts";
+import { AdminLayout } from "@/components/admin/admin-layout";
+import styled from "styled-components";
+import { Text } from "@/components/Text";
+import { useRouter } from "next/router";
+import { ListElements } from "pages-components/admin/dashboard/ListElements";
+
+const AdminSpeciePage = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  console.log(id);
+  return (
+    <DefaultLayout>
+      <AdminLayout>
+        {!!id && <ListElements specie_id={String(id)} />}
+      </AdminLayout>
+    </DefaultLayout>
+  );
+};
+
+export default withAuth(AdminSpeciePage);

@@ -1,44 +1,8 @@
 [
-    {
-        "name":"data entry",
-        "prefix":"/data_entry",
-        "auth":true,
-        "childrens":[
-            {
-                "name":"pigs",
-                "href":"/pigs",
-                "reload":true
-            },
-            {
-                "name":"egg production chickens",
-                "href":"/laying_hens",
-                "reload":true
-            }
-        ]
-    },
-    {
-        "name":"processograms",
-        "prefix":"/processograms",
-        "childrens":[
-            {
-                "name":"pigs",
-                "href":"/pigs"
-            },
-            {
-                "name":"egg production chickens",
-                "href":"/laying_hens"
-            }
-        ]
-    },
-    {
-        "name":"admin",
-        "prefix":"/admin",
-        "auth":true,
-        "childrens":[
-            {
-                "name":"users and privileges",
-                "href":"/users_and_privileges"
-            }
-        ]
-    }
+  {
+    "name": "Dashboard",
+    "prefix": "/admin",
+    "auth": true,
+    "childrens": []
+  }
 ]

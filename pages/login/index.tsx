@@ -7,18 +7,30 @@ import Head from "next/head";
 
 const Validator = require("validatorjs");
 
+interface ErrorState {
+  email: string[];
+  password: string[];
+  [key: string]: string[];
+}
+
+// Interface to match what the Login component expects
+interface LoginErrorProps {
+  email?: string;
+  password?: string;
+}
+
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
 
-  const [error, setError] = useState({ email: [], password: [] });
+  const [error, setError] = useState<ErrorState>({ email: [], password: [] });
 
-  const [onFetch, setOnFetch] = useState(false);
+  const [onFetch, setOnFetch] = useState<boolean>(false);
 
   const { setUser } = useContext(UserContext);
 
-  const login = (event) => {
+  const login = (event: React.FormEvent) => {
     event.preventDefault();
     let validation = new Validator(
       { email, password },
@@ -32,11 +44,11 @@ const LoginPage = () => {
       setOnFetch(true);
       auth
         .login({ email, password })
-        .then((response) => {
+        .then((response: { data: any }) => {
           setOnFetch(false);
           setUser(response.data);
         })
-        .catch(({ response }) => {
+        .catch(({ response }: { response?: { data: ErrorState } }) => {
           setOnFetch(false);
           if (response) {
             setError(response.data);
@@ -49,6 +61,12 @@ const LoginPage = () => {
     });
   };
 
+  // Transform error state to match LoginErrorProps
+  const transformedError: LoginErrorProps = {
+    email: error.email.length > 0 ? error.email[0] : undefined,
+    password: error.password.length > 0 ? error.password[0] : undefined,
+  };
+
   return (
     <>
       <Head>
@@ -59,7 +77,7 @@ const LoginPage = () => {
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
-        error={error}
+        error={transformedError}
         login={login}
         onFetch={onFetch}
       />

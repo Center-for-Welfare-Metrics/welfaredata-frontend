@@ -1,47 +1,69 @@
-import styled from 'styled-components'
-import { lighten} from 'polished'
+import styled, { css } from "styled-components";
+import { lighten } from "polished";
+import { ThemeColors } from "theme/globalStyle";
 
-export const Name = styled.div`
-    color:${({active,theme}) => active? lighten(0.25,theme.colors.blue):theme.colors.blue};
-    cursor: pointer;
-    transition: color 500ms;
-    font-weight: bold;
-`
+type Props = {
+  $active: boolean;
+  $isCurrentRoute: boolean;
+};
+
+export const Name = styled.div<Props>`
+  cursor: pointer;
+  transition: color 500ms;
+  font-weight: bold;
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  ${({ $isCurrentRoute }) =>
+    $isCurrentRoute
+      ? css`
+          color: ${lighten(0.25, ThemeColors.blue)};
+          text-decoration: underline;
+        `
+      : css`
+          color: ${ThemeColors.blue};
+        `}
+
+  ${({ $active }) =>
+    $active &&
+    css`
+      transform: scale(1.1);
+    `}
+
+    &:hover {
+    transform: scale(1.1);
+  }
+`;
 
 export const Childrens = styled.div`
-    position: absolute;
-    left:1rem;
-    display:flex;
-    flex-direction: column;
-    overflow-y: hidden;
-    transition: all 500ms;
-    
-`
+  display: flex;
+  flex-direction: column;
+`;
 
-export const Children = styled.a`
-    color: ${({active,theme}) => active?lighten(0.25,theme.colors.blue):theme.colors.blue}; 
-    cursor: pointer;
-    white-space: nowrap;
-    opacity: ${({active}) => active?1:0};
-    :hover{
-        color: ${({theme}) => lighten(0.25,theme.colors.blue)};
-    }
-    text-decoration:none;
-    transition: all 500ms;
-`
+type ChildrenProps = {
+  $isCurrentRoute: boolean;
+};
+
+export const Children = styled.a<ChildrenProps>`
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  ${({ $isCurrentRoute }) =>
+    $isCurrentRoute
+      ? css`
+          color: ${lighten(0.25, ThemeColors.blue)};
+          text-decoration: underline;
+        `
+      : css`
+          color: ${ThemeColors.blue};
+        `}
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
 
 export const Container = styled.div`
-    position:relative;
-    margin:0 1rem 0 1rem;
-    :first-child{
-        margin-left:2rem;
-    }
-    :hover ${Name}{
-        color:${({theme})=> lighten(0.25,theme.colors.blue) };
-        transition: color 500ms;
-    }
-    :hover ${Children}{
-        opacity:1;
-        transition: all 500ms;
-    }
-`
+  position: relative;
+`;

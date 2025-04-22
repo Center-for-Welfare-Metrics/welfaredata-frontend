@@ -1,24 +1,25 @@
-import styled, { keyframes } from "styled-components";
+import { styled, keyframes } from "styled-components";
 
 import TextareaAutosize from "react-textarea-autosize";
 import { lighten } from "polished";
+import { ThemeColors } from "theme/globalStyle";
 
-const globalColor = (theme) => theme.colors.white;
+const globalColor = (theme: any) => theme.colors.white;
 
 export const LabeledInput = styled.input`
   padding: 0.5rem 0 0.5rem 0;
   border: none;
   background-color: transparent;
   color: ${({ theme }) => globalColor(theme)};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.blue};
+  border-bottom: 1px solid ${ThemeColors.blue};
   outline: none;
-  :disabled {
+  &:disabled {
     cursor: not-allowed;
   }
-  :focus {
-    border-bottom: 1px solid ${({ theme }) => lighten(0.3, theme.colors.blue)};
+  &:focus {
+    border-bottom: 1px solid ${({ theme }) => lighten(0.3, ThemeColors.blue)};
   }
-  font-size: ${({ theme }) => theme.fontSize.normal};
+  font-size: 14px;
 `;
 
 export const CleanInput = styled.input`
@@ -49,6 +50,6 @@ export const LabeledTextArea = styled(CleanTextArea)`
   border: none;
   background-color: transparent;
   color: ${({ theme }) => globalColor(theme)};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.blue};
+  border-bottom: 1px solid ${ThemeColors.blue};
   outline: none;
 `;

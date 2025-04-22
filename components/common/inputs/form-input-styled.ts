@@ -1,5 +1,6 @@
 import { lighten, transparentize } from "polished";
-import styled, { css } from "styled-components";
+import { styled, css } from "styled-components";
+import { ThemeColors } from "theme/globalStyle";
 
 export const Container = styled.div`
   position: relative;
@@ -13,8 +14,8 @@ export const Icon = styled.i`
   position: absolute;
   top: 2.5rem;
   left: 2rem;
-  color: ${({ theme }) => theme.colors.yellow};
-  font-size: ${({ theme }) => theme.fontSize.large};
+  color: ${ThemeColors.yellow};
+  font-size: 20px;
 `;
 
 type LabelProps = {
@@ -23,20 +24,19 @@ type LabelProps = {
 };
 
 export const Label = styled.label<LabelProps>`
-  color: ${({ theme }) => transparentize(0.5, theme.colors.blue)};
+  color: ${({ theme }) => transparentize(0.5, ThemeColors.blue)};
   position: absolute;
   transform: translateY(105%);
   ${({ theme }) => css`
     bottom: 0;
     z-index: auto;
-    font-size: ${theme.fontSize.small};
-    color: ${({ theme }) => theme.colors.blue};
+    font-size: 12px;
+    color: ${ThemeColors.blue};
   `}
 `;
 export const Error = styled.span`
-  font-size: ${({ theme }) => theme.fontSize.small};
-  color: ${({ theme }) => theme.colors.red};
+  font-size: 12px;
+  color: ${ThemeColors.red};
   white-space: pre-wrap;
-  text-align: center;
   font-weight: bold;
 `;

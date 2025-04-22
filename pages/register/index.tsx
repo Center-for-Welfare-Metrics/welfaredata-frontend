@@ -1,46 +1,55 @@
 import Register from "../../components/auth/register";
 import onlyGuest from "@/components/HOC/only-guest";
 import auth from "queries/auth";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, FormEvent } from "react";
 import UserContext from "@/context/user";
 
-import ErrorPage from "next/error";
-
-import CheckPasswordStrength from "check-password-strength";
-import { opacify } from "polished";
+import { passwordStrength as checkPasswordStrength } from "check-password-strength";
 import Head from "next/head";
+import { PasswordStrength } from "@/components/miscellaneous/strong-password-bar";
 
 const Validator = require("validatorjs");
 
+type ErrorType = {
+  [key: string]: string[];
+};
+
+// Define a type for password strength values from check-password-strength
+
 const RegisterPage = () => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
 
-  const [password_confirmation, setPasswordConfirmation] = useState("");
+  const [password_confirmation, setPasswordConfirmation] = useState<string>("");
 
-  const [error, setError] = useState<any>({});
+  const [error, setError] = useState<ErrorType>({});
 
-  const [onFetch, setOnFetch] = useState(false);
+  const [onFetch, setOnFetch] = useState<boolean>(false);
 
   const { setUser } = useContext(UserContext);
 
-  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState<
+    PasswordStrength | ""
+  >("");
 
   useEffect(() => {
     if (password) {
-      setPasswordStrength(CheckPasswordStrength(password).value);
+      // Cast the string value to the PasswordStrengthValue type
+      const strength = checkPasswordStrength(password)
+        .value as PasswordStrength;
+      setPasswordStrength(strength);
     } else {
       setPasswordStrength("");
     }
   }, [password]);
 
-  const register = (event) => {
+  const register = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (passwordStrength === "Weak") {
-      setError({ password: "Password too weak!" });
+      setError({ password: ["Password too weak!"] });
     } else {
       let validation = new Validator(
         { name, email, password, password_confirmation },
@@ -61,6 +70,7 @@ const RegisterPage = () => {
           })
           .catch((error) => {
             console.error(error);
+            setOnFetch(false);
           });
       });
 
@@ -86,7 +96,7 @@ const RegisterPage = () => {
         setPasswordConfirmation={setPasswordConfirmation}
         error={error}
         register={register}
-        passwordStrength={passwordStrength}
+        passwordStrength={passwordStrength as any}
       />
     </>
   );

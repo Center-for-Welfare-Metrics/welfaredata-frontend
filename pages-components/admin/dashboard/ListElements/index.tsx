@@ -1,0 +1,98 @@
+import Link from "next/link";
+
+import { AddButton } from "@/components/AddButton";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { Text } from "@/components/Text";
+import { useGetElements } from "@/api/react-query/svg-elements/useGetSvgElements";
+import { ElementCard } from "@/components/Cards/ElementCard";
+import { ElementCardSkeleton } from "@/components/Cards/ElementCard/skeleton";
+import { CtaCreate } from "@/components/CtaCreate";
+import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
+import { useSetCreateElementModal } from "modals/CreateElementModal/hooks";
+
+type Props = {
+  specie_id: string;
+};
+
+export const ListElements = ({ specie_id }: Props) => {
+  const { data: elements, isLoading } = useGetElements({
+    specie_id,
+  });
+
+  const { data: specie } = useGetSpecieById({
+    specie_id,
+  });
+
+  const setCreateElement = useSetCreateElementModal();
+
+  const elementsList = elements ?? [];
+
+  const hasElements = elementsList.length > 0;
+
+  const createElement = () => {
+    if (!specie) return;
+
+    setCreateElement({
+      specie_id,
+      pathname: specie.pathname,
+    });
+  };
+
+  return (
+    <FlexColumn
+      justify="flex-start"
+      align="flex-start"
+      width="100%"
+      px={4}
+      mt={2}
+    >
+      <FlexRow>
+        <Link href="/admin">
+          <Text variant="h2">Species</Text>
+        </Link>
+        <Text variant="h2">{">"}</Text>
+        <Text variant="h2">{specie?.name}</Text>
+      </FlexRow>
+      <FlexColumn align="flex-start" width="100%" mt={2}>
+        <FlexRow>
+          <Text>Elements {hasElements ? `(${elementsList.length})` : ``}</Text>
+          {!!specie && <AddButton onClick={createElement} />}
+        </FlexRow>
+        {isLoading ? (
+          <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <ElementCardSkeleton key={index} />
+            ))}
+          </FlexRow>
+        ) : (
+          <>
+            {hasElements ? (
+              <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
+                {elementsList.map((element) => (
+                  <ElementCard
+                    key={element._id}
+                    _id={element._id}
+                    name={element.name}
+                    status={element.status}
+                    image_url=""
+                  />
+                ))}
+              </FlexRow>
+            ) : (
+              <>
+                {!!specie && (
+                  <CtaCreate onClick={createElement}>
+                    <Text>
+                      No elements found. <br />
+                      Click here to create your first element!
+                    </Text>
+                  </CtaCreate>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </FlexColumn>
+    </FlexColumn>
+  );
+};

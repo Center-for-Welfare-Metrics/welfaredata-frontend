@@ -1,13 +1,8 @@
-import withAuth from "@/components/HOC/with-auth"
-import DefaultLayout from "@/components/layouts"
+import withAuth from "@/components/HOC/with-auth";
+import DefaultLayout from "@/components/layouts";
 
 const Home = () => {
-    return (
-        <DefaultLayout>
-            
-        </DefaultLayout>
-    )
-}
+  return <DefaultLayout />;
+};
 
-
-export default withAuth(Home)
+export default withAuth(Home);
