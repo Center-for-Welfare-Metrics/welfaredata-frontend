@@ -12,6 +12,8 @@ import { FlexColumn } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
 import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
+import { useQueryClient } from "@tanstack/react-query";
+import { QueryKeys } from "@/api/react-query/keys";
 
 const CreateElementSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -33,6 +35,9 @@ const CreateElementModal = ({
   specie_id,
   pathname,
 }: CreateElementModalProps) => {
+
+  const queryClient  = useQueryClient();
+
   const { handleSubmit, register, formState, setValue, watch, reset } =
     useForm<CreateElementForm>({
       resolver: zodResolver(CreateElementSchema),
@@ -63,11 +68,17 @@ const CreateElementModal = ({
       formData.append("specie_id", specie_id);
       formData.append("path", pathname);
 
+      
       await uploadSvgElement(formData);
+
+      queryClient.invalidateQueries({
+        queryKey:[QueryKeys.ELEMENTS.List]
+      })
 
       toast.success("File uploaded successfully!");
 
       reset();
+      onClose();
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Upload failed. Please try again.");

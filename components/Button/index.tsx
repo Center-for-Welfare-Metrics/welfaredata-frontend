@@ -1,6 +1,6 @@
 import { darken } from "polished";
 import styled, { css, keyframes } from "styled-components";
-import ReactLoading from "react-loading";
+import { ClipLoader } from "react-spinners";
 
 import { GetColorType } from "@/utils/theme";
 import { ThemeColors } from "theme/globalStyle";
@@ -45,11 +45,10 @@ export const Button = ({
       </DefaultButton>
       {loading && (
         <LoadingContainer>
-          <ReactLoading
-            type="spin"
+          <ClipLoader            
             color={ThemeColors.deep_blue}
-            height={20}
-            width={20}
+            size={20}
+            loading
           />
         </LoadingContainer>
       )}

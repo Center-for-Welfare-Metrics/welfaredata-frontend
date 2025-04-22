@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 const Home = () => {
 
   useEffect(()=>{
-    Router.push('/pigs')
+    Router.push('/login')
   },[])
 
   return <></>

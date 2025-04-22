@@ -7,7 +7,6 @@ import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
 import authApi from "queries/auth";
 import { Toaster } from "react-hot-toast";
-import "react-image-gallery/styles/css/image-gallery.css";
 import "theme/fast.css";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -54,10 +53,7 @@ const Application = ({ children }: ApplicationProps) => {
       }
     } else {
       setFirstLoad(true);
-    }
-    return () => {
-      document.oncontextmenu = null;
-    };
+    } 
   }, []);
 
   useEffect(() => {

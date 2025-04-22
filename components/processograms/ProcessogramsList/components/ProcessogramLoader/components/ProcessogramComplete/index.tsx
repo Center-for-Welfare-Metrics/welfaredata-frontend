@@ -2,7 +2,7 @@ import React from "react";
 import { styled } from "styled-components";
 
 import { useProcessogramLogic } from "./logic";
-import Loader from "react-loader-spinner";
+import { ClipLoader } from "react-spinners";
 import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 import { Portal } from "@mui/material";
@@ -57,7 +57,10 @@ export const ProcessogramComplete = ({
         {loadingOptimization && (
           <LoadingBackdrop>
             {" "}
-            <Loader type="Oval" color={ThemeColors.white} />
+            <ClipLoader              
+              color={ThemeColors.deep_blue}
+              size={40}
+            />          
           </LoadingBackdrop>
         )}
       </Portal>
