@@ -19,7 +19,7 @@ const PublicSpeciePage = ({ elements, specie }: Props) => {
         <title>Welfare Data - {specie}</title>
       </Head>
       <ProcessogramsList
-        title="The life of market pigs in four production systems (this will be dynamic)"
+        title="Dynamic title and description (under development)"
         elements={elements}
       />
     </Container>

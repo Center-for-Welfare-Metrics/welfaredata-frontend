@@ -46,13 +46,31 @@ export const ListElements = ({ specie_id }: Props) => {
       px={4}
       mt={2}
     >
-      <FlexRow>
-        <Link href="/admin">
-          <Text variant="h2">Species</Text>
-        </Link>
-        <Text variant="h2">{">"}</Text>
-        <Text variant="h2">{specie?.name}</Text>
-      </FlexRow>
+      <FlexColumn>
+        <FlexRow justify="flex-start">
+          <Link href="/admin">
+            <Text variant="h2">Species</Text>
+          </Link>
+          <Text variant="h2">{">"}</Text>
+          <Text variant="h2">{specie?.name ?? "--"}</Text>
+        </FlexRow>
+        {specie && (
+          <Text variant="body1">
+            Visit page:{" "}
+            <a
+              href={`/processograms/${specie?.pathname}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                textDecoration: "underline",
+                color: "#0070f3",
+              }}
+            >
+              {`/processograms/${specie?.pathname}`}
+            </a>
+          </Text>
+        )}
+      </FlexColumn>
       <FlexColumn align="flex-start" width="100%" mt={2}>
         <FlexRow>
           <Text>Elements {hasElements ? `(${elementsList.length})` : ``}</Text>
