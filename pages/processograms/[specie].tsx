@@ -56,7 +56,8 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       for (const [key, img] of Object.entries(el.raster_images)) {
         try {
           const res = await fetch(img.src);
-          const buffer = await res.buffer();
+          const arrayBuffer = await res.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
 
           if (buffer.length > MAX_IMAGE_SIZE_BYTES) {
             console.warn(
