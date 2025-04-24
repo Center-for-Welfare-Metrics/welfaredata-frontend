@@ -9,13 +9,21 @@ import { ElementCardSkeleton } from "@/components/Cards/ElementCard/skeleton";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
 import { useSetCreateElementModal } from "modals/CreateElementModal/hooks";
+import { RefreshCw } from "react-feather";
+import { ThemeColors } from "theme/globalStyle";
+import { ClipLoader } from "react-spinners";
 
 type Props = {
   specie_id: string;
 };
 
 export const ListElements = ({ specie_id }: Props) => {
-  const { data: elements, isLoading } = useGetElements({
+  const {
+    data: elements,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetElements({
     specie_id,
   });
 
@@ -36,6 +44,10 @@ export const ListElements = ({ specie_id }: Props) => {
       specie_id,
       pathname: specie.pathname,
     });
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   return (
@@ -75,7 +87,18 @@ export const ListElements = ({ specie_id }: Props) => {
         <FlexRow>
           <Text>Elements {hasElements ? `(${elementsList.length})` : ``}</Text>
           {!!specie && <AddButton onClick={createElement} />}
+          {isFetching ? (
+            <ClipLoader size={18} color={ThemeColors.white} loading />
+          ) : (
+            <RefreshCw
+              color={ThemeColors.white}
+              cursor="pointer"
+              size={18}
+              onClick={handleRefresh}
+            />
+          )}
         </FlexRow>
+
         {isLoading ? (
           <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
             {Array.from({ length: 3 }).map((_, index) => (

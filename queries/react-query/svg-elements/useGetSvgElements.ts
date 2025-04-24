@@ -1,7 +1,7 @@
 import { request } from "../request";
 import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../keys";
-import { Element } from "types/elements";
+import { Element, ElementById } from "types/elements";
 
 type GetElementsParams = {
   specie_id: string;
@@ -39,7 +39,7 @@ const getElementById = async ({ params }: GetElementByIdPayload) => {
     url: `/${params.element_id}`,
   });
 
-  return data as Element;
+  return data as ElementById;
 };
 
 export const useGetElementById = (

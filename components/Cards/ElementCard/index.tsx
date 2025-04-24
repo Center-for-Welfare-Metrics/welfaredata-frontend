@@ -6,11 +6,12 @@ import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ElementCardSize } from "./const";
 import { useMemo } from "react";
+import { ElementStatus } from "types/elements";
 
 type Props = {
   _id: string;
   name: string;
-  status: "processing" | "ready" | "error";
+  status: ElementStatus;
   image_url: string | undefined;
 };
 
@@ -21,6 +22,23 @@ export const ElementCard = ({ _id, name, image_url, status }: Props) => {
     if (status === "ready") return ThemeColors.green;
 
     if (status === "processing") return ThemeColors.yellow;
+
+    if (status === "generating") return ThemeColors.gray;
+  }, [status]);
+
+  const statusText = useMemo(() => {
+    switch (status) {
+      case "processing":
+        return "Processing elements";
+      case "ready":
+        return "Ready to use";
+      case "error":
+        return "Error";
+      case "generating":
+        return "Generating AI content";
+      default:
+        return "";
+    }
   }, [status]);
 
   return (
@@ -43,7 +61,7 @@ export const ElementCard = ({ _id, name, image_url, status }: Props) => {
           <FlexColumn gap={0}>
             <Text variant="body2">{name}</Text>
             <Text variant="body2" customColor={statusColor}>
-              Status : {status}
+              Status : {statusText}
             </Text>
           </FlexColumn>
         </Info>

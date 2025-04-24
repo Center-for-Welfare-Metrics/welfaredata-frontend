@@ -9,7 +9,7 @@ import { ListElements } from "pages-components/admin/dashboard/ListElements";
 const AdminSpeciePage = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(id);
+
   return (
     <DefaultLayout>
       <AdminLayout>

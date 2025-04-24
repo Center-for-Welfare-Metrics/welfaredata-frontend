@@ -35,8 +35,7 @@ const CreateElementModal = ({
   specie_id,
   pathname,
 }: CreateElementModalProps) => {
-
-  const queryClient  = useQueryClient();
+  const queryClient = useQueryClient();
 
   const { handleSubmit, register, formState, setValue, watch, reset } =
     useForm<CreateElementForm>({
@@ -68,12 +67,11 @@ const CreateElementModal = ({
       formData.append("specie_id", specie_id);
       formData.append("path", pathname);
 
-      
       await uploadSvgElement(formData);
 
       queryClient.invalidateQueries({
-        queryKey:[QueryKeys.ELEMENTS.List]
-      })
+        queryKey: [QueryKeys.ELEMENTS.List],
+      });
 
       toast.success("File uploaded successfully!");
 
@@ -99,6 +97,12 @@ const CreateElementModal = ({
               error={errors.name?.message}
               {...register("name")}
             />
+            {file && (
+              <FlexColumn gap={0}>
+                <Text variant="body2">File: {file.name}</Text>
+                <Text variant="body2">Size: {filesize(file.size)}</Text>
+              </FlexColumn>
+            )}
             <FlexColumn>
               <Dropzone onFileAccepted={onFileAccepted} />
               {errors.file?.message && (
@@ -107,12 +111,6 @@ const CreateElementModal = ({
                 </Text>
               )}
             </FlexColumn>
-            {file && (
-              <FlexColumn gap={0}>
-                <Text variant="body2">File: {file.name}</Text>
-                <Text variant="body2">Size: {filesize(file.size)}</Text>
-              </FlexColumn>
-            )}
           </FormBody>
           <Button buttonStyle="success" loading={isLoading}>
             Create Element

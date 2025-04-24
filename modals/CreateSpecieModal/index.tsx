@@ -59,7 +59,9 @@ const CreateSpecieModal = ({ onClose }: CreateSpecieModalProps) => {
           {...register("pathname")}
         />
 
-        <Button loading={createSpecie.isPending}>Create Specie</Button>
+        <Button buttonStyle="success" loading={createSpecie.isPending}>
+          Create Specie
+        </Button>
       </Form>
     </ModalContainer>
   );

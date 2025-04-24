@@ -1,5 +1,5 @@
-import { Buffer } from "buffer";
-import fetch from "node-fetch";
+// import { Buffer } from "buffer";
+// import fetch from "node-fetch";
 import publicApi from "queries/public";
 import Head from "next/head";
 import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
@@ -43,7 +43,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { specie } = context.params as { specie: string };
 
-  let elements: Element[] = await (await publicApi.getElements(specie)).data;
+  const elements: Element[] = await (await publicApi.getElements(specie)).data;
 
   //const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 
