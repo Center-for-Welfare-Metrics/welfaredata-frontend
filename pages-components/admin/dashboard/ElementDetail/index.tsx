@@ -1,8 +1,12 @@
+import { useGetElementDataBySvgElementID } from "@/api/react-query/elements-data/useGetElementsData";
 import { useGetElementById } from "@/api/react-query/svg-elements/useGetSvgElements";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { ProgressogramHud } from "@/components/processograms/Hud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
 import { Text } from "@/components/Text";
+import { Portal } from "@mui/material";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
@@ -17,6 +21,16 @@ export const ElementDetail = ({ element_id }: Props) => {
   const { data, isLoading, refetch, isFetching } = useGetElementById({
     element_id,
   });
+
+  const { data: elementData } = useGetElementDataBySvgElementID({
+    element_id,
+  });
+
+  const [currentElement, setCurrentElement] = useState<string | null>(null);
+
+  const handleChange = (id: string) => {
+    setCurrentElement(id);
+  };
 
   const handleRefetch = () => {
     refetch();
@@ -82,10 +96,17 @@ export const ElementDetail = ({ element_id }: Props) => {
                 src={data.svg_url}
                 rasterImages={data.raster_images}
                 enableBruteOptimization={false}
-                onChange={() => {}}
+                onChange={handleChange}
                 onClose={() => {}}
                 maxHeight="70vh"
               />
+              <Portal>
+                <ProgressogramHud
+                  notReady={data.status === "generating"}
+                  currentElement={currentElement || data.identifier}
+                  data={elementData?.data ?? {}}
+                />
+              </Portal>
             </div>
           </div>
         </>

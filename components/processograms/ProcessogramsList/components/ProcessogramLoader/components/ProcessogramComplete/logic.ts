@@ -18,7 +18,6 @@ type HistoryLevel = {
 
 type Props = {
   enableBruteOptimization?: boolean;
-  path: string;
   onClose: () => void;
   onChange: (id: string) => void;
   rasterImages: {
@@ -34,7 +33,6 @@ type Props = {
 
 export const useProcessogramLogic = ({
   enableBruteOptimization,
-  path,
   onClose,
   onChange,
   rasterImages,
@@ -47,6 +45,7 @@ export const useProcessogramLogic = ({
   const [onHover, setOnHover] = useState<string | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
+  const currentElementId = useRef<string | null>(null);
   const isReady = useRef<boolean>(false);
 
   const { optimizeLevelElements } = useOptimizeSvgParts(
@@ -109,6 +108,7 @@ export const useProcessogramLogic = ({
         id,
       };
 
+      currentElementId.current = id;
       currentLevel.current = currentLevelById;
 
       const isMaxLevel = currentLevelById === MAX_LEVEL;
@@ -227,6 +227,7 @@ export const useProcessogramLogic = ({
       }
 
       setOnHover(closest.id);
+      onChange(closest.id);
     },
     []
   );
@@ -291,6 +292,14 @@ export const useProcessogramLogic = ({
       isReady.current = false;
     };
   }, [svgElement, initializeOptimization]);
+
+  useEffect(() => {
+    if (onHover) {
+      onChange(onHover);
+    } else {
+      onChange(currentElementId.current ?? "");
+    }
+  }, [onHover]);
 
   return {
     setSvgElement,

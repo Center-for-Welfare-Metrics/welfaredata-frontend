@@ -1,11 +1,16 @@
 import axios, { Method, ResponseType } from "axios";
 
-export type RequestService = "admin" | "admin-species" | "admin-elements";
+export type RequestService =
+  | "admin"
+  | "admin-species"
+  | "admin-elements"
+  | "admin-element-data";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
   admin: "admin",
   "admin-species": "admin/species",
   "admin-elements": "admin/elements",
+  "admin-element-data": "admin/element-data",
 };
 
 type IRequest = {
@@ -18,7 +23,7 @@ type IRequest = {
   headers?: { [key: string]: any };
 };
 
-export const request = ({
+export const request = <T = any>({
   url = "",
   method,
   data,
@@ -27,7 +32,7 @@ export const request = ({
   responseType,
   headers = {},
 }: IRequest) =>
-  axios.request({
+  axios.request<T>({
     baseURL:
       process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/" + servicesKeyPair[service],
     headers: {

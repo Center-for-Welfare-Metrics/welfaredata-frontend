@@ -35,7 +35,6 @@ export const ProcessogramComplete = ({
   const { setSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
       onClose,
-      path: src,
       enableBruteOptimization,
       onChange,
       rasterImages,
@@ -57,10 +56,7 @@ export const ProcessogramComplete = ({
         {loadingOptimization && (
           <LoadingBackdrop>
             {" "}
-            <ClipLoader              
-              color={ThemeColors.deep_blue}
-              size={40}
-            />          
+            <ClipLoader color={ThemeColors.deep_blue} size={40} />
           </LoadingBackdrop>
         )}
       </Portal>

@@ -7,4 +7,8 @@ export const QueryKeys = {
     List: "elements",
     ByID: "elements-by-id",
   },
+  ELEMENT_DATA: {
+    List: "element-data",
+    ByID: "element-data-by-id",
+  },
 };
