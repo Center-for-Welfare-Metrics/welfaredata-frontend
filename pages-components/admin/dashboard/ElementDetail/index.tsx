@@ -23,7 +23,11 @@ export const ElementDetail = ({ element_id }: Props) => {
     element_id,
   });
 
-  const { data: elementData } = useGetElementDataBySvgElementID({
+  const {
+    data: elementData,
+    refetch: dataRefetch,
+    isFetching: isFetchingData,
+  } = useGetElementDataBySvgElementID({
     element_id,
   });
 
@@ -33,8 +37,14 @@ export const ElementDetail = ({ element_id }: Props) => {
     setCurrentElement(id);
   };
 
-  const handleRefetch = () => {
+  const handleRefetch = (e: React.MouseEvent) => {
+    e.stopPropagation();
     refetch();
+  };
+
+  const handleDataRefetch = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dataRefetch();
   };
 
   const getStatusText = (status: ElementStatus) => {
@@ -73,16 +83,36 @@ export const ElementDetail = ({ element_id }: Props) => {
         </Link>
         <Text variant="h2">{">"}</Text>
         <Text variant="h3">{data.name}</Text>
+        <FlexColumn>
+          {isFetchingData ? (
+            <ClipLoader size={18} color={ThemeColors.white} loading />
+          ) : (
+            <RefreshCw
+              color={ThemeColors.white}
+              cursor="pointer"
+              size={18}
+              onClick={handleDataRefetch}
+            />
+          )}
+        </FlexColumn>
       </FlexRow>
       {data.status === "ready" || data.status === "generating" ? (
         <>
           <div
             style={{
+              marginTop: "2rem",
               height: "70vh",
               position: "relative",
             }}
           >
             <FlexRow height={"100%"}>
+              <ProgressogramHud
+                notReady={data.status === "generating"}
+                currentElement={
+                  currentElement || getElementNameFromId(data.identifier)
+                }
+                data={elementData?.data ?? {}}
+              />
               <FlexColumn
                 height="100%"
                 width="100%"
@@ -100,13 +130,6 @@ export const ElementDetail = ({ element_id }: Props) => {
                   maxHeight="70vh"
                 />
               </FlexColumn>
-              <ProgressogramHud
-                notReady={data.status === "generating"}
-                currentElement={
-                  currentElement || getElementNameFromId(data.identifier)
-                }
-                data={elementData?.data ?? {}}
-              />
             </FlexRow>
           </div>
         </>

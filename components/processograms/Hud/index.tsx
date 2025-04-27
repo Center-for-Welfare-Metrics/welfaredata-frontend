@@ -7,7 +7,7 @@ import { getElementNameFromId } from "../utils/extractInfoFromId";
 import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";
 import { FlexColumn } from "@/components/desing-components/Flex";
-import { NAV_HEIGHT } from "@/components/navbar/const";
+import useDebounce from "@/utils/hooks/useDebounce";
 
 type Props = {
   currentElement: string;
@@ -15,7 +15,13 @@ type Props = {
   notReady: boolean;
 };
 
-export const ProgressogramHud = ({ currentElement, data, notReady }: Props) => {
+export const ProgressogramHud = ({
+  currentElement: realTimeElement,
+  data,
+  notReady,
+}: Props) => {
+  const currentElement = useDebounce(realTimeElement, 250);
+
   const title = useMemo(() => {
     const lastString = currentElement.split(".").pop();
 
@@ -25,8 +31,6 @@ export const ProgressogramHud = ({ currentElement, data, notReady }: Props) => {
   }, [currentElement]);
 
   const text = useMemo(() => {
-    if (notReady) return "";
-
     return data[currentElement]?.description || "";
   }, [currentElement, data, notReady]);
 
@@ -39,7 +43,7 @@ export const ProgressogramHud = ({ currentElement, data, notReady }: Props) => {
       <FlexColumn>
         <Text variant="h3">{title}</Text>
 
-        {notReady ? (
+        {notReady && !text ? (
           <Text>Not ready yet, generating AI content</Text>
         ) : (
           <Text variant="body1">{text}</Text>
@@ -56,5 +60,8 @@ const Container = styled.div`
   height: 100%;
   border: 2px ${ThemeColors.deep_blue} solid;
   background-color: ${transparentize(0.3, ThemeColors.black)};
+  backdrop-filter: blur(5px);
   overflow: auto;
+  position: relative;
+  z-index: 1000;
 `;

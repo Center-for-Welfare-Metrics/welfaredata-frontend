@@ -133,6 +133,7 @@ export const ProcessogramLoader = ({
                   left: "50%",
                   translateX: "-50%",
                   translateY: "-50%",
+                  paddingLeft: 400,
                   duration: ANIMATION_DURATION,
                   ease: ANIMATION_EASE,
                   onComplete: () => {
@@ -160,6 +161,7 @@ export const ProcessogramLoader = ({
         translateY: 0,
         duration: ANIMATION_DURATION,
         ease: ANIMATION_EASE,
+        paddingLeft: 0,
         onComplete: () => {
           gsap.set(svgContainerRef.current, {
             top: BBox.topWithScroll,
@@ -248,6 +250,8 @@ const FakeBoxStyled = styled.div``;
 const ProcessogramContainer = styled.div`
   width: 100%;
   height: fit-content;
-  transition: filter 500ms, opacity 500ms;
+  transition:
+    filter 500ms,
+    opacity 500ms;
   cursor: pointer;
 `;

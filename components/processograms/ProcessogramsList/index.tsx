@@ -1,32 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "./components/ProcessogramLoader";
 import { ThemeColors } from "theme/globalStyle";
 import { Element } from "types/elements";
+import { ElementData } from "types/element-data";
 
 type Props = {
   title: string;
   elements: Element[];
+  elementsData: ElementData[];
+  onChange: (id: string | null) => void;
+  onSelect: (id: string | null) => void;
 };
 
-export const ProcessogramsList = ({ title, elements }: Props) => {
+export const ProcessogramsList = ({
+  title,
+  elements,
+  elementsData,
+  onSelect,
+  onChange: onChangeProps,
+}: Props) => {
   const [over, setOver] = useState<string | null>(null);
 
   const [active, setActive] = useState<string | null>(null);
   const [waitingForClose, setWaitingForClose] = useState(false);
 
-  const handleClick = (path: string) => {
-    setActive(path);
+  const handleClick = (id: string) => {
+    setActive(id);
+    onSelect(id);
+    onChangeProps(null);
     setWaitingForClose(true);
+  };
+
+  const onClose = () => {
+    setActive(null);
+    onSelect(null);
   };
 
   const handleClose = () => {
     setWaitingForClose(false);
   };
 
+  const handleOver = (id: string | null) => {
+    setOver(id);
+
+    if (!active) {
+      onChangeProps(id);
+    }
+  };
+
   const onChange = (id: string) => {
-    console.log(id);
+    onChangeProps(id);
   };
 
   return (
@@ -44,11 +69,11 @@ export const ProcessogramsList = ({ title, elements }: Props) => {
           key={element._id}
           element={element}
           // Event handlers
-          onMouseEnter={() => setOver(element._id)}
-          onMouseLeave={() => setOver(null)}
+          onMouseEnter={() => handleOver(element._id)}
+          onMouseLeave={() => handleOver(null)}
           onChange={onChange}
           onClick={() => handleClick(element._id)}
-          onClose={() => setActive(null)}
+          onClose={onClose}
           onCloseAnimationEnded={handleClose}
           waitingForClose={waitingForClose}
           // State
@@ -99,7 +124,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding-inline: 8rem;
+  padding-inline: 2rem;
   padding-bottom: 8rem;
   height: 100%;
   gap: 5rem;

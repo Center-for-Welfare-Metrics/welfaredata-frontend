@@ -4,13 +4,15 @@ export type RequestService =
   | "admin"
   | "admin-species"
   | "admin-elements"
-  | "admin-element-data";
+  | "admin-element-data"
+  | "public";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
   admin: "admin",
   "admin-species": "admin/species",
   "admin-elements": "admin/elements",
   "admin-element-data": "admin/element-data",
+  public: "public",
 };
 
 type IRequest = {
