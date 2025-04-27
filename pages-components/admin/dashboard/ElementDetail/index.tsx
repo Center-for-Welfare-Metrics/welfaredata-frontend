@@ -3,6 +3,7 @@ import { useGetElementById } from "@/api/react-query/svg-elements/useGetSvgEleme
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { ProgressogramHud } from "@/components/processograms/Hud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
+import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
 import { Portal } from "@mui/material";
 import Link from "next/link";
@@ -79,35 +80,34 @@ export const ElementDetail = ({ element_id }: Props) => {
             style={{
               height: "70vh",
               position: "relative",
-              overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                transform: "translateY(-50%)",
-                overflowY: "auto",
-                width: "100%",
-                height: "fit-content",
-              }}
-            >
-              <ProcessogramComplete
-                src={data.svg_url}
-                rasterImages={data.raster_images}
-                enableBruteOptimization={false}
-                onChange={handleChange}
-                onClose={() => {}}
-                maxHeight="70vh"
-              />
-              <Portal>
-                <ProgressogramHud
-                  notReady={data.status === "generating"}
-                  currentElement={currentElement || data.identifier}
-                  data={elementData?.data ?? {}}
+            <FlexRow height={"100%"}>
+              <FlexColumn
+                height="100%"
+                width="100%"
+                justify="center"
+                style={{
+                  overflow: "hidden",
+                }}
+              >
+                <ProcessogramComplete
+                  src={data.svg_url}
+                  rasterImages={data.raster_images}
+                  enableBruteOptimization={false}
+                  onChange={handleChange}
+                  onClose={() => {}}
+                  maxHeight="70vh"
                 />
-              </Portal>
-            </div>
+              </FlexColumn>
+              <ProgressogramHud
+                notReady={data.status === "generating"}
+                currentElement={
+                  currentElement || getElementNameFromId(data.identifier)
+                }
+                data={elementData?.data ?? {}}
+              />
+            </FlexRow>
           </div>
         </>
       ) : (

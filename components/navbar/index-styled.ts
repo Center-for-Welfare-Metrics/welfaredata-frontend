@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { lighten } from "polished";
 import { ThemeColors } from "theme/globalStyle";
+import { NAV_HEIGHT } from "./const";
 
 export const Containter = styled.div`
   position: sticky;
@@ -12,6 +13,8 @@ export const Containter = styled.div`
   justify-content: space-between;
   padding: 1rem 0 1rem 0;
   background-color: ${ThemeColors.black};
+  box-sizing: border-box;
+  height: ${NAV_HEIGHT}px;
 `;
 
 export const NavItems = styled.div`

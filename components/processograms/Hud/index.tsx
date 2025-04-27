@@ -7,6 +7,7 @@ import { getElementNameFromId } from "../utils/extractInfoFromId";
 import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";
 import { FlexColumn } from "@/components/desing-components/Flex";
+import { NAV_HEIGHT } from "@/components/navbar/const";
 
 type Props = {
   currentElement: string;
@@ -15,29 +16,33 @@ type Props = {
 };
 
 export const ProgressogramHud = ({ currentElement, data, notReady }: Props) => {
-  const elementName = useMemo(() => {
-    return getElementNameFromId(currentElement);
-  }, [currentElement]);
-
   const title = useMemo(() => {
-    return deslugify(elementName);
-  }, [elementName]);
+    const lastString = currentElement.split(".").pop();
+
+    const id = lastString ?? currentElement;
+
+    return deslugify(getElementNameFromId(id));
+  }, [currentElement]);
 
   const text = useMemo(() => {
     if (notReady) return "";
 
-    return data[elementName]?.description || "";
-  }, [elementName, data, notReady]);
+    return data[currentElement]?.description || "";
+  }, [currentElement, data, notReady]);
 
   return (
-    <Container>
+    <Container
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseUp={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
       <FlexColumn>
-        <Text variant="body1">{title}</Text>
+        <Text variant="h3">{title}</Text>
 
         {notReady ? (
           <Text>Not ready yet, generating AI content</Text>
         ) : (
-          <Text variant="body2">{text}</Text>
+          <Text variant="body1">{text}</Text>
         )}
       </FlexColumn>
     </Container>
@@ -45,13 +50,11 @@ export const ProgressogramHud = ({ currentElement, data, notReady }: Props) => {
 };
 
 const Container = styled.div`
-  position: fixed;
   padding: 2rem;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  width: 400px;
   box-sizing: border-box;
-  height: 200px;
+  height: 100%;
   border: 2px ${ThemeColors.deep_blue} solid;
   background-color: ${transparentize(0.3, ThemeColors.black)};
+  overflow: auto;
 `;

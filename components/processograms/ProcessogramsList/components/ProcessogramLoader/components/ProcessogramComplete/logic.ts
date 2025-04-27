@@ -9,6 +9,10 @@ import { getLevelById } from "../../../../utils";
 import { gsap } from "gsap";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
 import { getElementViewBox } from "@/components/processograms/ProcessogramsList/utils/getElementViewBox";
+import {
+  getElementIdentifier,
+  getHierarchy,
+} from "@/components/processograms/ProcessogramsList/utils/hierarchy";
 
 type HistoryLevel = {
   [key: number]: {
@@ -45,7 +49,9 @@ export const useProcessogramLogic = ({
   const [onHover, setOnHover] = useState<string | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
+  const lockMouseMove = useRef<boolean>(false);
   const currentElementId = useRef<string | null>(null);
+
   const isReady = useRef<boolean>(false);
 
   const { optimizeLevelElements } = useOptimizeSvgParts(
@@ -102,7 +108,6 @@ export const useProcessogramLogic = ({
       const viewBox = getElementViewBox(target);
       if (!viewBox) return;
       const id = target.id;
-      onChange(id);
       const currentLevelById = getLevelById(id);
       historyLevel.current[currentLevelById] = {
         id,
@@ -138,6 +143,12 @@ export const useProcessogramLogic = ({
         });
       }
 
+      const identifier = getElementIdentifierWithHierarchy(id);
+
+      onChange(identifier);
+
+      lockMouseMove.current = true;
+
       // Set the viewBox of the SVG element to the new viewBox
       gsap.fromTo(
         svgElement,
@@ -157,6 +168,7 @@ export const useProcessogramLogic = ({
                   bruteOptimization: enableBruteOptimization,
                 });
                 setFullBrightnessToCurrentLevel(toPrevious);
+                lockMouseMove.current = false;
               },
             });
           },
@@ -214,6 +226,8 @@ export const useProcessogramLogic = ({
 
   const onMouseMove = useCallback(
     (event: React.MouseEvent<SVGElement, MouseEvent>) => {
+      if (lockMouseMove.current) return;
+
       const target = event.target as SVGElement;
 
       const nextLevel = currentLevel.current + 1;
@@ -227,7 +241,6 @@ export const useProcessogramLogic = ({
       }
 
       setOnHover(closest.id);
-      onChange(closest.id);
     },
     []
   );
@@ -275,6 +288,31 @@ export const useProcessogramLogic = ({
     });
   }, [onHover]);
 
+  const getElementIdentifierWithHierarchy = useCallback(
+    (elementId: string) => {
+      if (!svgElement) return "";
+
+      if (!elementId || svgElement.id === elementId) {
+        return "";
+      }
+
+      const element = svgElement.querySelector<SVGElement>(`#${elementId}`);
+
+      if (element) {
+        const hierarchy = getHierarchy(element);
+
+        if (hierarchy.length > 0) {
+          const elementIdentifier = getElementIdentifier(elementId, hierarchy);
+
+          return elementIdentifier;
+        }
+      }
+
+      return "";
+    },
+    [svgElement]
+  );
+
   useEffect(() => {
     window.addEventListener("click", handleClick, { passive: false });
 
@@ -294,11 +332,18 @@ export const useProcessogramLogic = ({
   }, [svgElement, initializeOptimization]);
 
   useEffect(() => {
-    if (onHover) {
-      onChange(onHover);
-    } else {
-      onChange(currentElementId.current ?? "");
+    if (!svgElement) return;
+
+    const elementId = onHover || currentElementId.current;
+
+    if (!elementId) {
+      onChange("");
+      return;
     }
+
+    const identifier = getElementIdentifierWithHierarchy(elementId);
+
+    onChange(identifier);
   }, [onHover]);
 
   return {

@@ -54,3 +54,10 @@ export type ElementById = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ElementHierarchy = {
+  levelNumber: number;
+  level: string;
+  name: string;
+  id: string;
+};
