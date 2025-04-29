@@ -2,10 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ANIMATION_DURATION,
   ANIMATION_EASE,
-  INVERSE_DICT,
   MAX_LEVEL,
 } from "../../../../consts";
-import { getLevelById } from "../../../../utils";
 import { gsap } from "gsap";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
 import { getElementViewBox } from "@/components/processograms/ProcessogramsList/utils/getElementViewBox";
@@ -13,6 +11,10 @@ import {
   getElementIdentifier,
   getHierarchy,
 } from "@/components/processograms/ProcessogramsList/utils/hierarchy";
+import {
+  getLevelNumberById,
+  INVERSE_DICT,
+} from "@/components/processograms/utils/extractInfoFromId";
 
 type HistoryLevel = {
   [key: number]: {
@@ -108,7 +110,7 @@ export const useProcessogramLogic = ({
       const viewBox = getElementViewBox(target);
       if (!viewBox) return;
       const id = target.id;
-      const currentLevelById = getLevelById(id);
+      const currentLevelById = getLevelNumberById(id);
       historyLevel.current[currentLevelById] = {
         id,
       };
@@ -265,7 +267,7 @@ export const useProcessogramLogic = ({
       return;
     }
 
-    const level = getLevelById(onHover);
+    const level = getLevelNumberById(onHover);
     const levelID = INVERSE_DICT[level];
 
     const onHoverSelector = `[id*="${onHover}"]`;

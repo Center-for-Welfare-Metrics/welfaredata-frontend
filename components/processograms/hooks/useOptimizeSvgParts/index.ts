@@ -1,7 +1,10 @@
 import { useCallback, useRef } from "react";
-import { getLevelById } from "../../ProcessogramsList/utils";
-import { INVERSE_DICT, MAX_LEVEL } from "../../ProcessogramsList/consts";
+import { MAX_LEVEL } from "../../ProcessogramsList/consts";
 import { generateRasterSvgElement } from "./utils";
+import {
+  getLevelNumberById,
+  INVERSE_DICT,
+} from "../../utils/extractInfoFromId";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -115,7 +118,9 @@ export const useOptimizeSvgParts = (
     ({ currentElementId, bruteOptimization }: OptimizeLevelElementsParams) => {
       if (!svgElement) return;
 
-      const levelNum = currentElementId ? getLevelById(currentElementId) : 0;
+      const levelNum = currentElementId
+        ? getLevelNumberById(currentElementId)
+        : 0;
 
       if (levelNum > 0) {
         const currentLevelSelector = `[id="${currentElementId}"]`;

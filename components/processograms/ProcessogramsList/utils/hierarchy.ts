@@ -2,7 +2,7 @@ import { deslugify } from "@/utils/string";
 import {
   getElementLevelFromId,
   getElementNameFromId,
-  getLevelFromId,
+  getLevelAliasFromId,
 } from "../../utils/extractInfoFromId";
 import { ElementHierarchy } from "types/elements";
 
@@ -21,7 +21,7 @@ const levels_inverted = {
 };
 
 export const getHierarchy = (element: Element) => {
-  const level = getLevelFromId(element.id);
+  const level = getLevelAliasFromId(element.id);
   const levelNumber = levels[level as keyof typeof levels];
 
   if (!levelNumber) {

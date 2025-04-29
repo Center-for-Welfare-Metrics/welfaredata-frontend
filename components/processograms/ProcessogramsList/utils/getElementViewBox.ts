@@ -90,7 +90,7 @@ export const getElementViewBox = (element: Element): string | null => {
 
     return viewBox;
   } catch (error) {
-    console.log("Dear dev..." + error);
+    console.error("Dear dev..." + error);
     return null;
   }
 };

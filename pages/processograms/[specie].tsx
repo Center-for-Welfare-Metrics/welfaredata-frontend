@@ -59,8 +59,6 @@ const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
   const currentElement = useMemo(() => {
     if (!over) return currentActiveElement;
 
-    console.log("over", over);
-
     if (!!active) return over;
 
     const element = elementsMap.get(over);
@@ -91,14 +89,6 @@ const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
 
     return allData;
   }, [elementsData, active, elements, currentElement]);
-
-  useEffect(() => {
-    console.log(currentElement);
-  }, [currentElement]);
-
-  useEffect(() => {
-    console.log(currentActiveElement);
-  }, [currentActiveElement]);
 
   return (
     <Container>
@@ -162,51 +152,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     getPublicElements({ specie }),
     getElementsData({ specie }),
   ]);
-
-  //const MAX_IMAGE_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
-
-  // console.log("Converting images to base64...");
-
-  // const elementsWithBase64 = await Promise.all(
-  //   elements.map(async (el) => {
-  //     const newRasterImages: Element["raster_images"] = {};
-
-  //     for (const [key, img] of Object.entries(el.raster_images)) {
-  //       try {
-  //         const res = await fetch(img.src);
-  //         const arrayBuffer = await res.arrayBuffer();
-  //         const buffer = Buffer.from(arrayBuffer);
-
-  //         if (buffer.length > MAX_IMAGE_SIZE_BYTES) {
-  //           console.warn(
-  //             `Imagem ignorada por ser muito grande (${(
-  //               buffer.length /
-  //               1024 /
-  //               1024
-  //             ).toFixed(2)} MB):`,
-  //             img.src
-  //           );
-  //           newRasterImages[key] = img; // mantém o src original
-  //           continue;
-  //         }
-
-  //         const base64 = `data:image/png;base64,${buffer.toString("base64")}`;
-  //         newRasterImages[key] = {
-  //           ...img,
-  //           src: base64,
-  //         };
-  //       } catch (error) {
-  //         console.error("Erro ao converter imagem:", img.src, error);
-  //         newRasterImages[key] = img; // fallback pro original
-  //       }
-  //     }
-
-  //     return {
-  //       ...el,
-  //       raster_images: newRasterImages,
-  //     };
-  //   })
-  // );
 
   return {
     props: {
