@@ -51,6 +51,8 @@ export type ElementById = {
     };
   };
   status: ElementStatus;
+  originalSize: number;
+  finalSize: number;
   createdAt: string;
   updatedAt: string;
 };

@@ -5,10 +5,10 @@ import { ProgressogramHud } from "@/components/processograms/Hud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
-import { Portal } from "@mui/material";
+import { useSetElementDetailsModal } from "modals/ElementDetailsModal/hooks";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { RefreshCw } from "react-feather";
+import { useState } from "react";
+import { Info, RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
@@ -19,7 +19,14 @@ type Props = {
 };
 
 export const ElementDetail = ({ element_id }: Props) => {
-  const { data, isLoading, refetch, isFetching } = useGetElementById({
+  const [currentElement, setCurrentElement] = useState<string | null>(null);
+
+  const {
+    data: element,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetElementById({
     element_id,
   });
 
@@ -31,7 +38,21 @@ export const ElementDetail = ({ element_id }: Props) => {
     element_id,
   });
 
-  const [currentElement, setCurrentElement] = useState<string | null>(null);
+  const setElementDetailsModal = useSetElementDetailsModal();
+
+  const openElementDetailsModal = () => {
+    if (!element) return;
+    if (!elementData) return;
+
+    setElementDetailsModal({
+      element: {
+        finalSize: element.finalSize,
+        originalSize: element.originalSize,
+        elementsCount: Object.keys(elementData.data).length,
+        createdAt: element.createdAt,
+      },
+    });
+  };
 
   const handleChange = (id: string) => {
     setCurrentElement(id);
@@ -69,7 +90,7 @@ export const ElementDetail = ({ element_id }: Props) => {
       </>
     );
 
-  if (!data) return <></>;
+  if (!element) return <></>;
 
   return (
     <Container width="100%" gap={0} mt={2}>
@@ -78,25 +99,35 @@ export const ElementDetail = ({ element_id }: Props) => {
           <Text variant="h2">Species</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
-        <Link href={`/admin/species/${data.specie_id}`}>
-          <Text variant="h2">{data?.specie?.name ?? "--"}</Text>
+        <Link href={`/admin/species/${element.specie_id}`}>
+          <Text variant="h2">{element.specie?.name ?? "--"}</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
-        <Text variant="h3">{data.name}</Text>
+        <Text variant="h3">{element.name}</Text>
         <FlexColumn>
           {isFetchingData ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />
           ) : (
-            <RefreshCw
-              color={ThemeColors.white}
-              cursor="pointer"
-              size={18}
-              onClick={handleDataRefetch}
-            />
+            <IconWrapper>
+              <RefreshCw
+                color={ThemeColors.white}
+                cursor="pointer"
+                size={18}
+                onClick={handleDataRefetch}
+              />
+            </IconWrapper>
           )}
         </FlexColumn>
+        <IconWrapper>
+          <Info
+            size={18}
+            color={ThemeColors.white}
+            cursor="pointer"
+            onClick={openElementDetailsModal}
+          />
+        </IconWrapper>
       </FlexRow>
-      {data.status === "ready" || data.status === "generating" ? (
+      {element.status === "ready" || element.status === "generating" ? (
         <>
           <div
             style={{
@@ -107,9 +138,9 @@ export const ElementDetail = ({ element_id }: Props) => {
           >
             <FlexRow height={"100%"}>
               <ProgressogramHud
-                notReady={data.status === "generating"}
+                notReady={element.status === "generating"}
                 currentElement={
-                  currentElement || getElementNameFromId(data.identifier)
+                  currentElement || getElementNameFromId(element.identifier)
                 }
                 data={elementData?.data ?? {}}
               />
@@ -122,8 +153,8 @@ export const ElementDetail = ({ element_id }: Props) => {
                 }}
               >
                 <ProcessogramComplete
-                  src={data.svg_url}
-                  rasterImages={data.raster_images}
+                  src={element.svg_url}
+                  rasterImages={element.raster_images}
                   enableBruteOptimization={false}
                   onChange={handleChange}
                   onClose={() => {}}
@@ -136,16 +167,18 @@ export const ElementDetail = ({ element_id }: Props) => {
       ) : (
         <>
           <FlexRow justify="flex-start" align="center" mt={2}>
-            <Text variant="h3">{getStatusText(data.status)}</Text>
+            <Text variant="h3">{getStatusText(element.status)}</Text>
             {isFetching ? (
               <ClipLoader size={18} color={ThemeColors.white} loading />
             ) : (
-              <RefreshCw
-                color={ThemeColors.white}
-                cursor="pointer"
-                size={18}
-                onClick={handleRefetch}
-              />
+              <IconWrapper>
+                <RefreshCw
+                  color={ThemeColors.white}
+                  cursor="pointer"
+                  size={18}
+                  onClick={handleRefetch}
+                />
+              </IconWrapper>
             )}
           </FlexRow>
         </>
@@ -153,6 +186,18 @@ export const ElementDetail = ({ element_id }: Props) => {
     </Container>
   );
 };
+
+const IconWrapper = styled.div`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
 
 const Container = styled(FlexColumn)`
   padding-inline: 4rem;
