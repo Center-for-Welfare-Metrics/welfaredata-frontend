@@ -3,7 +3,6 @@ import { lighten } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 
 type Props = {
-  $active: boolean;
   $isCurrentRoute: boolean;
 };
 
@@ -24,16 +23,6 @@ export const Name = styled.div<Props>`
       : css`
           color: ${ThemeColors.blue};
         `}
-
-  ${({ $active }) =>
-    $active &&
-    css`
-      transform: scale(1.1);
-    `}
-
-    &:hover {
-    transform: scale(1.1);
-  }
 `;
 
 export const Childrens = styled.div`

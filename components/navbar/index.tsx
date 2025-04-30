@@ -9,8 +9,7 @@ import {
   UserName,
   UserSection,
 } from "./index-styled";
-
-const NavMap: any[] = require("./nav-map.json");
+import { NavItens } from "./nav-map";
 
 const NavBar = () => {
   const { user, logOut } = useContext(UserContext);
@@ -18,26 +17,22 @@ const NavBar = () => {
   return (
     <Containter id="main-nav-menu">
       <NavItems>
-        {NavMap.map((nav_item) => (
-          <React.Fragment key={`${nav_item.name}_${nav_item.prefix}`}>
+        {NavItens.map((nav_item) => (
+          <React.Fragment key={`${nav_item.name}_${nav_item.route}`}>
             {nav_item.auth ? (
               user && (
                 <NavItem
-                  prefix={nav_item.prefix}
+                  route={nav_item.route}
                   name={nav_item.name}
-                  key={nav_item.prefix}
-                >
-                  {nav_item.childrens}
-                </NavItem>
+                  key={nav_item.route}
+                />
               )
             ) : (
               <NavItem
-                prefix={nav_item.prefix}
+                route={nav_item.route}
                 name={nav_item.name}
-                key={nav_item.prefix}
-              >
-                {nav_item.childrens}
-              </NavItem>
+                key={nav_item.route}
+              />
             )}
           </React.Fragment>
         ))}

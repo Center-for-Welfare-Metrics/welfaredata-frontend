@@ -9,19 +9,27 @@ import { ElementData } from "types/element-data";
 import {
   getElementsData,
   getPublicElements,
+  getSpecieByPathname,
 } from "@/api/react-query/public/useGetPublicElements";
 import { FlexRow } from "@/components/desing-components/Flex";
 import { ProgressogramHud } from "@/components/processograms/Hud";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
+import { Specie } from "types/species";
 
 type Props = {
   specie: string;
+  specieData: Specie;
   elements: Element[];
   elementsData: ElementData[];
 };
 
-const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
+const PublicSpeciePage = ({
+  elements,
+  specie,
+  elementsData,
+  specieData,
+}: Props) => {
   const [active, setActive] = useState<string | null>(null);
 
   const [over, setOver] = useState<string | null>(null);
@@ -77,7 +85,11 @@ const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
       return elementData.data;
     }
 
-    const allData = elementsData.reduce((acc, el) => {
+    const allData: {
+      [key: string]: {
+        description: string;
+      };
+    } = elementsData.reduce((acc, el) => {
       const id = el.production_system_name;
       const dataValue = el.data[id];
 
@@ -87,8 +99,10 @@ const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
       };
     }, {});
 
+    allData[specieData.pathname] = { description: specieData.description };
+
     return allData;
-  }, [elementsData, active, elements, currentElement]);
+  }, [elementsData, active, elements, currentElement, specieData]);
 
   return (
     <Container>
@@ -107,7 +121,7 @@ const PublicSpeciePage = ({ elements, specie, elementsData }: Props) => {
           }}
         >
           <ProgressogramHud
-            currentElement={currentElement ?? ""}
+            currentElement={currentElement ?? specieData.pathname}
             data={elementsDataContent}
             notReady={false}
           />
@@ -148,15 +162,17 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { specie } = context.params as { specie: string };
 
-  const [elements, elementsData] = await Promise.all([
+  const [elements, elementsData, specieData] = await Promise.all([
     getPublicElements({ specie }),
     getElementsData({ specie }),
+    getSpecieByPathname({ pathname: specie }),
   ]);
 
   return {
     props: {
       elements: elements,
       elementsData,
+      specieData,
       specie,
     },
   };

@@ -1,3 +1,4 @@
+import { Specie } from "types/species";
 import { request } from "../request";
 import { ElementData } from "types/element-data";
 
@@ -26,6 +27,22 @@ export const getElementsData = async (params: GetElementsDataParams) => {
     service: "public",
     url: "elements/data",
     query: params,
+  });
+
+  return data;
+};
+
+type GetSpecieByPathnameParams = {
+  pathname: string;
+};
+
+export const getSpecieByPathname = async ({
+  pathname,
+}: GetSpecieByPathnameParams) => {
+  const { data } = await request<Specie>({
+    method: "GET",
+    service: "public",
+    url: `/species/pathname/${pathname}`,
   });
 
   return data;

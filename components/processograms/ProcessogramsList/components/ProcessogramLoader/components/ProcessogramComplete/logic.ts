@@ -51,7 +51,7 @@ export const useProcessogramLogic = ({
   const [onHover, setOnHover] = useState<string | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
   const currentLevel = useRef<number>(0);
-  const lockMouseMove = useRef<boolean>(false);
+  const lockInteraction = useRef<boolean>(false);
   const currentElementId = useRef<string | null>(null);
 
   const isReady = useRef<boolean>(false);
@@ -149,7 +149,7 @@ export const useProcessogramLogic = ({
 
       onChange(identifier);
 
-      lockMouseMove.current = true;
+      lockInteraction.current = true;
 
       // Set the viewBox of the SVG element to the new viewBox
       gsap.fromTo(
@@ -170,7 +170,7 @@ export const useProcessogramLogic = ({
                   bruteOptimization: enableBruteOptimization,
                 });
                 setFullBrightnessToCurrentLevel(toPrevious);
-                lockMouseMove.current = false;
+                lockInteraction.current = false;
               },
             });
           },
@@ -189,6 +189,8 @@ export const useProcessogramLogic = ({
   const handleClick = useCallback(
     async (event: MouseEvent) => {
       if (!svgElement) return;
+
+      if (lockInteraction.current) return;
 
       event.stopPropagation();
 
@@ -228,7 +230,7 @@ export const useProcessogramLogic = ({
 
   const onMouseMove = useCallback(
     (event: React.MouseEvent<SVGElement, MouseEvent>) => {
-      if (lockMouseMove.current) return;
+      if (lockInteraction.current) return;
 
       const target = event.target as SVGElement;
 

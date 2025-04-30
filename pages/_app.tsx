@@ -39,7 +39,7 @@ const Application = ({ children }: ApplicationProps) => {
 
   useEffect(() => {
     if (!user) {
-      if (pathname !== "/pigs" && pathname !== "/") {
+      if (pathname !== "/processograms/[specie]" && pathname !== "/") {
         authApi
           .get_user()
           .then(({ data }) => {
@@ -53,7 +53,7 @@ const Application = ({ children }: ApplicationProps) => {
       }
     } else {
       setFirstLoad(true);
-    } 
+    }
   }, []);
 
   useEffect(() => {

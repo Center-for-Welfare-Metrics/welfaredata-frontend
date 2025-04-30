@@ -11,7 +11,11 @@ import useDebounce from "@/utils/hooks/useDebounce";
 
 type Props = {
   currentElement: string;
-  data: ElementData["data"];
+  data: {
+    [key: string]: {
+      description: string;
+    };
+  };
   notReady: boolean;
 };
 

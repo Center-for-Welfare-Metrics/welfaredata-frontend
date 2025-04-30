@@ -16,7 +16,12 @@ type Props = {
 export const SpecieCard = ({ _id, name, pathname, image_url }: Props) => {
   return (
     <Link
-      href={`/admin/species/${_id}`}
+      href={{
+        pathname: "/admin/species/[id]",
+        query: {
+          id: _id,
+        },
+      }}
       style={{
         textDecoration: "none",
       }}

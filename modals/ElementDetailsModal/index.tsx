@@ -44,7 +44,8 @@ const ElementDetailsModal = ({
           <Text variant="h3">Information</Text>
           <FlexColumn gap={0}>
             <Text>
-              This processogram has {element.elementsCount} unique elements
+              This processogram has {element.elementsCount} unique elements with
+              generated data
             </Text>
             <Text>
               Created at {dayjs(element.createdAt).format("MM/DD/YYYY")}

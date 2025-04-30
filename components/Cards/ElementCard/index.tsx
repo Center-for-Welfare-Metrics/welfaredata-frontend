@@ -43,7 +43,12 @@ export const ElementCard = ({ _id, name, image_url, status }: Props) => {
 
   return (
     <Link
-      href={`/admin/elements/${_id}`}
+      href={{
+        pathname: "/admin/elements/[id]",
+        query: {
+          id: _id,
+        },
+      }}
       style={{
         textDecoration: "none",
       }}

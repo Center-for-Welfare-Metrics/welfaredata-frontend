@@ -9,9 +9,11 @@ import { ElementCardSkeleton } from "@/components/Cards/ElementCard/skeleton";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
 import { useSetCreateElementModal } from "modals/CreateElementModal/hooks";
-import { RefreshCw } from "react-feather";
+import { Info, RefreshCw } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
+import styled from "styled-components";
+import { useSetSpecieDetailsModal } from "modals/SpecieDetailsModal/hooks";
 
 type Props = {
   specie_id: string;
@@ -50,6 +52,18 @@ export const ListElements = ({ specie_id }: Props) => {
     refetch();
   };
 
+  const setSpecieDetailsModal = useSetSpecieDetailsModal();
+
+  const openElementDetailsModal = () => {
+    if (!specie) return;
+
+    setSpecieDetailsModal({
+      specie: {
+        description: specie.description,
+      },
+    });
+  };
+
   return (
     <FlexColumn
       justify="flex-start"
@@ -69,8 +83,13 @@ export const ListElements = ({ specie_id }: Props) => {
         {specie && (
           <Text variant="body1">
             Visit page:{" "}
-            <a
-              href={`/processograms/${specie?.pathname}`}
+            <Link
+              href={{
+                pathname: "/processograms/[specie]",
+                query: {
+                  specie: specie.pathname,
+                },
+              }}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -79,7 +98,7 @@ export const ListElements = ({ specie_id }: Props) => {
               }}
             >
               {`/processograms/${specie?.pathname}`}
-            </a>
+            </Link>
           </Text>
         )}
       </FlexColumn>
@@ -90,13 +109,23 @@ export const ListElements = ({ specie_id }: Props) => {
           {isFetching ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />
           ) : (
-            <RefreshCw
+            <IconWrapper>
+              <RefreshCw
+                color={ThemeColors.white}
+                cursor="pointer"
+                size={18}
+                onClick={handleRefresh}
+              />
+            </IconWrapper>
+          )}
+          <IconWrapper>
+            <Info
+              size={18}
               color={ThemeColors.white}
               cursor="pointer"
-              size={18}
-              onClick={handleRefresh}
+              onClick={openElementDetailsModal}
             />
-          )}
+          </IconWrapper>
         </FlexRow>
 
         {isLoading ? (
@@ -137,3 +166,15 @@ export const ListElements = ({ specie_id }: Props) => {
     </FlexColumn>
   );
 };
+
+const IconWrapper = styled.div`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;

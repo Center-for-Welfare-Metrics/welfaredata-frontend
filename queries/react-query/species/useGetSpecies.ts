@@ -4,13 +4,13 @@ import { QueryKeys } from "../keys";
 import { Specie } from "types/species";
 
 const getSpecies = async () => {
-  const { data } = await request({
+  const { data } = await request<Specie[]>({
     method: "GET",
     service: "admin-species",
     url: `/`,
   });
 
-  return data as Specie[];
+  return data;
 };
 
 export const useGetSpecies = (enabled = true) => {
@@ -28,13 +28,13 @@ export type GetSpecieByIdPayload = {
 };
 
 const getSpecieById = async ({ params }: GetSpecieByIdPayload) => {
-  const { data } = await request({
+  const { data } = await request<Specie>({
     method: "GET",
     service: "admin-species",
     url: `/${params.specie_id}`,
   });
 
-  return data as Specie;
+  return data;
 };
 
 export const useGetSpecieById = (

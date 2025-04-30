@@ -99,7 +99,14 @@ export const ElementDetail = ({ element_id }: Props) => {
           <Text variant="h2">Species</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
-        <Link href={`/admin/species/${element.specie_id}`}>
+        <Link
+          href={{
+            pathname: "/admin/species/[id]",
+            query: {
+              id: element.specie_id,
+            },
+          }}
+        >
           <Text variant="h2">{element.specie?.name ?? "--"}</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
