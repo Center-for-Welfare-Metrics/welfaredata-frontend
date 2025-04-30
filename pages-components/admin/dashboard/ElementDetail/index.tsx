@@ -45,6 +45,7 @@ export const ElementDetail = ({ element_id }: Props) => {
         level: "Production System",
         levelNumber: 1,
         name: element.name,
+        rawId: element.identifier,
       },
     ];
   }, [currentHierarchy, element]);
@@ -172,6 +173,7 @@ export const ElementDetail = ({ element_id }: Props) => {
                       level: "Production System",
                       levelNumber: 1,
                       name: element.name,
+                      rawId: element.identifier,
                     },
                   ]
                 }

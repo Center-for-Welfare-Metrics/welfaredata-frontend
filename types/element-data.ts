@@ -19,5 +19,6 @@ export type Hierarchy = {
   levelNumber: number;
   level: string;
   name: string;
+  rawId: string;
   id: string;
 }[];

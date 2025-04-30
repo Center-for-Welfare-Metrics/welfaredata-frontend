@@ -66,6 +66,7 @@ export const getHierarchy = (element: Element): GetHierarchy => {
       level: levelName,
       name: readableName,
       id: elementName,
+      rawId: closest.id,
     });
 
     currentElement = closest;
@@ -83,6 +84,7 @@ export const getHierarchy = (element: Element): GetHierarchy => {
         level: getElementLevelFromId(element.id),
         name: deslugify(getElementNameFromId(element.id)),
         id: getElementNameFromId(element.id),
+        rawId: element.id,
       },
     ],
   };

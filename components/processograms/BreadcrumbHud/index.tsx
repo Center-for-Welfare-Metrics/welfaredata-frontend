@@ -18,7 +18,7 @@ export const BreadcrumbHud = ({ hierarchy }: Props) => {
           <FlexRow key={item.id} gap={0.25} justify="flex-start">
             <ClickableName
               onClick={() => {
-                alert(`Clicked on ${item.name} | under development`);
+                alert(`Clicked on ${item.rawId} | under development`);
               }}
             >
               <Text variant="body1">{item.name}</Text>

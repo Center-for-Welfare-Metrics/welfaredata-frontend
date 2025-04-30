@@ -55,6 +55,7 @@ const PublicSpeciePage = ({
       level: "species",
       levelNumber: -1,
       name: specieData.name,
+      rawId: specieData.pathname,
     };
 
     if (!active) {
@@ -65,6 +66,7 @@ const PublicSpeciePage = ({
             level: "species",
             levelNumber: 0,
             name: specieData.name,
+            rawId: specieData.pathname,
           },
         ];
       } else {

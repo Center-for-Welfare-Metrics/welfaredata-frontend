@@ -40,6 +40,7 @@ export const ProcessogramsList = ({
         level: levelName,
         levelNumber: 0,
         name: readableName,
+        rawId: identifier,
       },
     ];
   }, []);
