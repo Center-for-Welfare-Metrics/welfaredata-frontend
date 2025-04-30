@@ -15,6 +15,7 @@ import {
   getLevelNumberById,
   INVERSE_DICT,
 } from "@/components/processograms/utils/extractInfoFromId";
+import { Hierarchy } from "types/element-data";
 
 type HistoryLevel = {
   [key: number]: {
@@ -25,7 +26,7 @@ type HistoryLevel = {
 type Props = {
   enableBruteOptimization?: boolean;
   onClose: () => void;
-  onChange: (id: string) => void;
+  onChange: (id: string, hierarchy: Hierarchy) => void;
   rasterImages: {
     [key: string]: {
       src: string;
@@ -102,6 +103,34 @@ export const useProcessogramLogic = ({
     setFullBrightnessToCurrentLevel,
   ]);
 
+  const getElementIdentifierWithHierarchy = useCallback(
+    (elementId: string): [string, Hierarchy] => {
+      if (!svgElement) return ["", []];
+
+      if (!elementId || svgElement.id === elementId) {
+        return ["", []];
+      }
+
+      const element = svgElement.querySelector<SVGElement>(`#${elementId}`);
+
+      if (element) {
+        const hierarchy = getHierarchy(element);
+
+        if (hierarchy.hierarchy.length > 0) {
+          const elementIdentifier = getElementIdentifier(
+            elementId,
+            hierarchy.hierarchy
+          );
+
+          return [elementIdentifier, hierarchy.hierarchyPath];
+        }
+      }
+
+      return ["", []];
+    },
+    [svgElement]
+  );
+
   const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
 
   const changeLevelTo = useCallback(
@@ -145,9 +174,9 @@ export const useProcessogramLogic = ({
         });
       }
 
-      const identifier = getElementIdentifierWithHierarchy(id);
+      const [identifier, hierarchy] = getElementIdentifierWithHierarchy(id);
 
-      onChange(identifier);
+      onChange(identifier, hierarchy);
 
       lockInteraction.current = true;
 
@@ -292,31 +321,6 @@ export const useProcessogramLogic = ({
     });
   }, [onHover]);
 
-  const getElementIdentifierWithHierarchy = useCallback(
-    (elementId: string) => {
-      if (!svgElement) return "";
-
-      if (!elementId || svgElement.id === elementId) {
-        return "";
-      }
-
-      const element = svgElement.querySelector<SVGElement>(`#${elementId}`);
-
-      if (element) {
-        const hierarchy = getHierarchy(element);
-
-        if (hierarchy.length > 0) {
-          const elementIdentifier = getElementIdentifier(elementId, hierarchy);
-
-          return elementIdentifier;
-        }
-      }
-
-      return "";
-    },
-    [svgElement]
-  );
-
   useEffect(() => {
     window.addEventListener("click", handleClick, { passive: false });
 
@@ -341,13 +345,14 @@ export const useProcessogramLogic = ({
     const elementId = onHover || currentElementId.current;
 
     if (!elementId) {
-      onChange("");
+      onChange("", []);
       return;
     }
 
-    const identifier = getElementIdentifierWithHierarchy(elementId);
+    const [identifier, hierarchy] =
+      getElementIdentifierWithHierarchy(elementId);
 
-    onChange(identifier);
+    onChange(identifier, hierarchy);
   }, [onHover]);
 
   return {

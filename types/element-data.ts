@@ -14,3 +14,10 @@ export type ElementData = {
     };
   };
 };
+
+export type Hierarchy = {
+  levelNumber: number;
+  level: string;
+  name: string;
+  id: string;
+}[];

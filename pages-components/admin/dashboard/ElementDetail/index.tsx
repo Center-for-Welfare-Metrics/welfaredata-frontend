@@ -1,17 +1,19 @@
 import { useGetElementDataBySvgElementID } from "@/api/react-query/elements-data/useGetElementsData";
 import { useGetElementById } from "@/api/react-query/svg-elements/useGetSvgElements";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
 import { ProgressogramHud } from "@/components/processograms/Hud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
 import { useSetElementDetailsModal } from "modals/ElementDetailsModal/hooks";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Info, RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
+import { Hierarchy } from "types/element-data";
 import { ElementStatus } from "types/elements";
 
 type Props = {
@@ -21,6 +23,8 @@ type Props = {
 export const ElementDetail = ({ element_id }: Props) => {
   const [currentElement, setCurrentElement] = useState<string | null>(null);
 
+  const [currentHierarchy, setHierarchy] = useState<Hierarchy>([]);
+
   const {
     data: element,
     isLoading,
@@ -29,6 +33,21 @@ export const ElementDetail = ({ element_id }: Props) => {
   } = useGetElementById({
     element_id,
   });
+
+  const hierarchy = useMemo(() => {
+    if (currentHierarchy.length > 0) return currentHierarchy;
+
+    if (!element) return [];
+
+    return [
+      {
+        id: element.identifier,
+        level: "Production System",
+        levelNumber: 1,
+        name: element.name,
+      },
+    ];
+  }, [currentHierarchy, element]);
 
   const {
     data: elementData,
@@ -54,8 +73,9 @@ export const ElementDetail = ({ element_id }: Props) => {
     });
   };
 
-  const handleChange = (id: string) => {
+  const handleChange = (id: string, hierarchy: Hierarchy) => {
     setCurrentElement(id);
+    setHierarchy(hierarchy);
   };
 
   const handleRefetch = (e: React.MouseEvent) => {
@@ -143,6 +163,20 @@ export const ElementDetail = ({ element_id }: Props) => {
               position: "relative",
             }}
           >
+            <BreadcrumbsContainer>
+              <BreadcrumbHud
+                hierarchy={
+                  hierarchy ?? [
+                    {
+                      id: element.identifier,
+                      level: "Production System",
+                      levelNumber: 1,
+                      name: element.name,
+                    },
+                  ]
+                }
+              />
+            </BreadcrumbsContainer>
             <FlexRow height={"100%"}>
               <ProgressogramHud
                 notReady={element.status === "generating"}
@@ -193,6 +227,14 @@ export const ElementDetail = ({ element_id }: Props) => {
     </Container>
   );
 };
+
+const BreadcrumbsContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 300px;
+  padding-left: 2rem;
+  z-index: 1000;
+`;
 
 const IconWrapper = styled.div`
   width: fit-content;

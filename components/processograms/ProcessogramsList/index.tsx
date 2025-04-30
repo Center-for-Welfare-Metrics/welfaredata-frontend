@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "./components/ProcessogramLoader";
 import { ThemeColors } from "theme/globalStyle";
 import { Element } from "types/elements";
-import { ElementData } from "types/element-data";
+import { Hierarchy } from "types/element-data";
+import {
+  getElementLevelFromId,
+  getElementNameFromId,
+} from "../utils/extractInfoFromId";
+import { deslugify } from "@/utils/string";
 
 type Props = {
   title: string;
   elements: Element[];
-  elementsData: ElementData[];
-  onChange: (id: string | null) => void;
-  onSelect: (id: string | null) => void;
+  onChange: (id: string | null, hierarchy: Hierarchy) => void;
+  onSelect: (id: string | null, hierarchy: Hierarchy) => void;
 };
 
 export const ProcessogramsList = ({
   title,
   elements,
-  elementsData,
   onSelect,
   onChange: onChangeProps,
 }: Props) => {
@@ -26,32 +29,57 @@ export const ProcessogramsList = ({
   const [active, setActive] = useState<string | null>(null);
   const [waitingForClose, setWaitingForClose] = useState(false);
 
-  const handleClick = (id: string) => {
+  const getHierarchyByIdentifier = useCallback((identifier: string) => {
+    const elementName = getElementNameFromId(identifier);
+    const readableName = deslugify(elementName);
+    const levelName = getElementLevelFromId(identifier);
+
+    return [
+      {
+        id: elementName,
+        level: levelName,
+        levelNumber: 0,
+        name: readableName,
+      },
+    ];
+  }, []);
+
+  const handleClick = (id: string, identifier: string | null) => {
     setActive(id);
-    onSelect(id);
-    onChangeProps(null);
+    if (!!identifier) {
+      const hierarchy = getHierarchyByIdentifier(identifier);
+      onSelect(id, hierarchy);
+    } else {
+      onSelect(id, []);
+    }
+    onChangeProps(null, []);
     setWaitingForClose(true);
   };
 
   const onClose = () => {
     setActive(null);
-    onSelect(null);
+    onSelect(null, []);
   };
 
   const handleClose = () => {
     setWaitingForClose(false);
   };
 
-  const handleOver = (id: string | null) => {
+  const handleOver = (id: string | null, identifier: string | null) => {
     setOver(id);
 
     if (!active) {
-      onChangeProps(id);
+      if (!!identifier) {
+        const hierarchy = getHierarchyByIdentifier(identifier);
+        onChangeProps(identifier, hierarchy);
+      } else {
+        onChangeProps(null, []);
+      }
     }
   };
 
-  const onChange = (id: string) => {
-    onChangeProps(id);
+  const onChange = (id: string, hierarchy: Hierarchy) => {
+    onChangeProps(id, hierarchy);
   };
 
   return (
@@ -69,10 +97,10 @@ export const ProcessogramsList = ({
           key={element._id}
           element={element}
           // Event handlers
-          onMouseEnter={() => handleOver(element._id)}
-          onMouseLeave={() => handleOver(null)}
+          onMouseEnter={() => handleOver(element._id, element.identifier)}
+          onMouseLeave={() => handleOver(null, null)}
           onChange={onChange}
-          onClick={() => handleClick(element._id)}
+          onClick={() => handleClick(element._id, element.identifier)}
           onClose={onClose}
           onCloseAnimationEnded={handleClose}
           waitingForClose={waitingForClose}

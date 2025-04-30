@@ -6,11 +6,12 @@ import { ClipLoader } from "react-spinners";
 import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 import { Portal } from "@mui/material";
+import { Hierarchy } from "types/element-data";
 
 type Props = {
   src: string;
   onClose: () => void;
-  onChange: (id: string) => void;
+  onChange: (id: string, hierarchy: Hierarchy) => void;
   rasterImages: {
     [key: string]: {
       src: string;

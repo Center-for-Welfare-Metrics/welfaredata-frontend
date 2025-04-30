@@ -5,6 +5,7 @@ import { ProcessogramComplete } from "./components/ProcessogramComplete";
 import { gsap } from "gsap";
 import { ANIMATION_DURATION, ANIMATION_EASE } from "../../consts";
 import { Element } from "types/elements";
+import { Hierarchy } from "types/element-data";
 
 type ProcessogramComponentProps = {
   element: Element;
@@ -12,7 +13,7 @@ type ProcessogramComponentProps = {
   onMouseLeave: () => void;
   onClick: () => void;
   onClose: () => void;
-  onChange: (id: string) => void;
+  onChange: (id: string, hierarchy: Hierarchy) => void;
   onCloseAnimationEnded: () => void;
   waitingForClose: boolean;
   isOver: boolean;

@@ -5,6 +5,7 @@ import {
   getLevelAliasFromId,
 } from "../../utils/extractInfoFromId";
 import { ElementHierarchy } from "types/elements";
+import { Hierarchy } from "types/element-data";
 
 const levels = {
   ps: 0,
@@ -20,22 +21,25 @@ const levels_inverted = {
   3: "ci",
 };
 
-export const getHierarchy = (element: Element) => {
+type GetHierarchy = {
+  hierarchy: Hierarchy;
+  hierarchyPath: Hierarchy;
+};
+
+export const getHierarchy = (element: Element): GetHierarchy => {
   const level = getLevelAliasFromId(element.id);
   const levelNumber = levels[level as keyof typeof levels];
 
   if (!levelNumber) {
-    return [];
+    return {
+      hierarchy: [],
+      hierarchyPath: [],
+    };
   }
 
   let previousLevel = levelNumber - 1;
 
-  const hierarchy: {
-    levelNumber: number;
-    level: string;
-    name: string;
-    id: string;
-  }[] = [];
+  const hierarchy: Hierarchy = [];
 
   let currentElement = element;
 
@@ -68,7 +72,20 @@ export const getHierarchy = (element: Element) => {
     previousLevel--;
   }
 
-  return hierarchy.reverse();
+  const reverseHierarchy = hierarchy.reverse();
+
+  return {
+    hierarchy: reverseHierarchy,
+    hierarchyPath: [
+      ...reverseHierarchy,
+      {
+        levelNumber,
+        level: getElementLevelFromId(element.id),
+        name: deslugify(getElementNameFromId(element.id)),
+        id: getElementNameFromId(element.id),
+      },
+    ],
+  };
 };
 
 export const getElementIdentifier = (

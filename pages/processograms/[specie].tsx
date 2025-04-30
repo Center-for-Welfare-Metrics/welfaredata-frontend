@@ -5,7 +5,7 @@ import { ProcessogramsList } from "@/components/processograms/ProcessogramsList"
 import { Element } from "types/elements";
 import styled from "styled-components";
 import { GetStaticPropsContext } from "next";
-import { ElementData } from "types/element-data";
+import { ElementData, Hierarchy } from "types/element-data";
 import {
   getElementsData,
   getPublicElements,
@@ -16,6 +16,7 @@ import { ProgressogramHud } from "@/components/processograms/Hud";
 import { useMemo, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Specie } from "types/species";
+import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
 
 type Props = {
   specie: string;
@@ -33,6 +34,50 @@ const PublicSpeciePage = ({
   const [active, setActive] = useState<string | null>(null);
 
   const [over, setOver] = useState<string | null>(null);
+
+  const [overHierarchy, setOverHierarchy] = useState<Hierarchy>([]);
+
+  const [activeHierarchy, setActiveHierarchy] = useState<Hierarchy>([]);
+
+  const onChangeOverItem = (id: string | null, hierarchy: Hierarchy) => {
+    setOverHierarchy(hierarchy);
+    setOver(id);
+  };
+
+  const onSelectItem = (id: string | null, hierarchy: Hierarchy) => {
+    setActiveHierarchy(hierarchy);
+    setActive(id);
+  };
+
+  const hierarchy = useMemo(() => {
+    const specieHierarchy = {
+      id: specieData.pathname,
+      level: "species",
+      levelNumber: -1,
+      name: specieData.name,
+    };
+
+    if (!active) {
+      if (overHierarchy.length === 0) {
+        return [
+          {
+            id: specieData.pathname,
+            level: "species",
+            levelNumber: 0,
+            name: specieData.name,
+          },
+        ];
+      } else {
+        return [specieHierarchy, ...overHierarchy];
+      }
+    }
+
+    if (overHierarchy.length > 0) {
+      return [specieHierarchy, ...overHierarchy];
+    }
+
+    return [specieHierarchy, ...activeHierarchy];
+  }, [overHierarchy, activeHierarchy, active]);
 
   const elementsMap = useMemo(() => {
     const map = new Map<string, Element>();
@@ -110,22 +155,16 @@ const PublicSpeciePage = ({
         <title>Welfare Data - {specie}</title>
       </Head>
       <FlexRow>
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100%",
-            width: "400px",
-            zIndex: 1000,
-          }}
-        >
+        <BreadcrumbsContainer>
+          <BreadcrumbHud hierarchy={hierarchy} />
+        </BreadcrumbsContainer>
+        <HudContainer>
           <ProgressogramHud
             currentElement={currentElement ?? specieData.pathname}
             data={elementsDataContent}
             notReady={false}
           />
-        </div>
+        </HudContainer>
         <div
           style={{
             paddingLeft: "400px",
@@ -135,15 +174,31 @@ const PublicSpeciePage = ({
           <ProcessogramsList
             title="Dynamic title and description (under development)"
             elements={elements}
-            elementsData={elementsData}
-            onChange={setOver}
-            onSelect={setActive}
+            onChange={onChangeOverItem}
+            onSelect={onSelectItem}
           />
         </div>
       </FlexRow>
     </Container>
   );
 };
+
+const BreadcrumbsContainer = styled.div`
+  position: fixed;
+  top: 1rem;
+  left: 400px;
+  padding-left: 2rem;
+  z-index: 1000;
+`;
+
+const HudContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 100%;
+  z-index: 1000;
+`;
 
 const Container = styled.div`
   height: 100%;
