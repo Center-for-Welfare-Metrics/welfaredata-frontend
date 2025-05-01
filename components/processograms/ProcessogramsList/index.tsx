@@ -71,7 +71,7 @@ export const ProcessogramsList = ({
     if (!active) {
       if (!!identifier) {
         const hierarchy = getHierarchyByIdentifier(identifier);
-        onChangeProps(identifier, hierarchy);
+        onChangeProps(id, hierarchy);
       } else {
         onChangeProps(null, []);
       }

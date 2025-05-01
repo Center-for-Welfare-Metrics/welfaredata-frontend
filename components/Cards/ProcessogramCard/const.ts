@@ -1,0 +1,4 @@
+export const ProcessogramCardSize = {
+  width: 300,
+  height: 150,
+};

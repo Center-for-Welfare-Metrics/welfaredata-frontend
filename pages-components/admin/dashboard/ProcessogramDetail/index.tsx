@@ -132,7 +132,18 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
           <Text variant="h2">{element.specie?.name ?? "--"}</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
-        <Text variant="h3">{element.name}</Text>
+        <Link
+          href={{
+            pathname: "/admin/production_modules/[id]",
+            query: {
+              id: element.production_module_id,
+            },
+          }}
+        >
+          <Text variant="h2">{element.production_module?.name ?? "--"}</Text>
+        </Link>
+        <Text variant="h2">{">"}</Text>
+        <Text variant="h2">{element.name}</Text>
         <FlexColumn>
           {isFetchingData ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />

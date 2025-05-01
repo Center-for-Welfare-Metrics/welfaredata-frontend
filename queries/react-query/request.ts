@@ -5,6 +5,7 @@ export type RequestService =
   | "admin-species"
   | "admin-processograms"
   | "admin-processogram-datas"
+  | "admin-production-modules"
   | "public";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
@@ -12,6 +13,7 @@ const servicesKeyPair: { [key in RequestService]: string } = {
   "admin-species": "admin/species",
   "admin-processograms": "admin/processograms",
   "admin-processogram-datas": "admin/processogram-datas",
+  "admin-production-modules": "admin/production-modules",
   public: "public",
 };
 

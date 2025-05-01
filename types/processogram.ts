@@ -8,6 +8,7 @@ export type Processogram = {
   _id: string;
   identifier: string;
   specie_id: string;
+  production_module_id: string;
   root_id: string | null;
   element_type: string;
   name: string;
@@ -53,6 +54,14 @@ export type ProcessogramById = {
       x: number;
       y: number;
     };
+  };
+  production_module_id: string;
+  production_module: {
+    _id: string;
+    name: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
   };
   status: ProcessogramStatus;
   originalSize: number;

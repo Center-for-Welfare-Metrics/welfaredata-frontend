@@ -1,7 +1,8 @@
-import { CreateSpecieModalWrapper } from "./CreateSpecieModal";
-import { CreateProcessogramModalWrapper } from "./CreateProcessogramModal";
-import { ProcessogramDetailsModalWrapper } from "./ProcessogramDetailsModal";
-import { SpecieDetailsModalWrapper } from "./SpecieDetailsModal";
+import { CreateSpecieModalWrapper } from './CreateSpecieModal';
+import { CreateProcessogramModalWrapper } from './CreateProcessogramModal';
+import { ProcessogramDetailsModalWrapper } from './ProcessogramDetailsModal';
+import { SpecieDetailsModalWrapper } from './SpecieDetailsModal';
+import { CreateProductionModuleModalWrapper } from './CreateProductionModuleModal';
 
 export const Modals = () => {
   return (
@@ -10,6 +11,7 @@ export const Modals = () => {
       <CreateProcessogramModalWrapper />
       <ProcessogramDetailsModalWrapper />
       <SpecieDetailsModalWrapper />
+      <CreateProductionModuleModalWrapper />
     </>
   );
 };

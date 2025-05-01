@@ -1,8 +1,8 @@
 import { Skeleton } from "@mui/material";
 import { ThemeColors } from "theme/globalStyle";
-import { ElementCardSize } from "./const";
+import { ProductionModuleCardSize } from "./const";
 
-export const ElementCardSkeleton = () => {
+export const ProductionModuleCardSkeleton = () => {
   return (
     <Skeleton
       variant="rectangular"
@@ -10,8 +10,8 @@ export const ElementCardSkeleton = () => {
       sx={{
         bgcolor: ThemeColors.deep_blue,
       }}
-      width={ElementCardSize.width}
-      height={ElementCardSize.height}
+      width={ProductionModuleCardSize.width}
+      height={ProductionModuleCardSize.height}
     />
   );
 };

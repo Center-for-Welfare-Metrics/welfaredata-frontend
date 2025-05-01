@@ -27,12 +27,14 @@ type CreateProcessogramForm = z.infer<typeof CreateProcessogramSchema>;
 export type CreateProcessogramModalProps = {
   onClose: () => void;
   specie_id: string;
+  production_module_id: string;
   pathname: string;
 };
 
 const CreateProcessogramModal = ({
   onClose,
   specie_id,
+  production_module_id,
   pathname,
 }: CreateProcessogramModalProps) => {
   const queryClient = useQueryClient();
@@ -65,6 +67,7 @@ const CreateProcessogramModal = ({
       formData.append("name", data.name);
       formData.append("file", data.file);
       formData.append("specie_id", specie_id);
+      formData.append("production_module_id", production_module_id);
       formData.append("path", pathname);
 
       await uploadSvgElement(formData);

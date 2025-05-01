@@ -4,47 +4,19 @@ import Link from "next/link";
 import { transparentize } from "polished";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { ElementCardSize } from "./const";
-import { useMemo } from "react";
-import { ProcessogramStatus } from "types/processogram";
+import { ProductionModuleCardSize } from "./const";
 
 type Props = {
   _id: string;
   name: string;
-  status: ProcessogramStatus;
   image_url: string | undefined;
 };
 
-export const ElementCard = ({ _id, name, image_url, status }: Props) => {
-  const statusColor = useMemo(() => {
-    if (status === "error") return ThemeColors.red;
-
-    if (status === "ready") return ThemeColors.green;
-
-    if (status === "processing") return ThemeColors.yellow;
-
-    if (status === "generating") return ThemeColors.gray;
-  }, [status]);
-
-  const statusText = useMemo(() => {
-    switch (status) {
-      case "processing":
-        return "Processing elements";
-      case "ready":
-        return "Ready to use";
-      case "error":
-        return "Error";
-      case "generating":
-        return "Generating AI content";
-      default:
-        return "";
-    }
-  }, [status]);
-
+export const ProductionModuleCard = ({ _id, name, image_url }: Props) => {
   return (
     <Link
       href={{
-        pathname: "/admin/processograms/[id]",
+        pathname: "/admin/production_modules/[id]",
         query: {
           id: _id,
         },
@@ -65,9 +37,6 @@ export const ElementCard = ({ _id, name, image_url, status }: Props) => {
         <Info>
           <FlexColumn gap={0}>
             <Text variant="body2">{name}</Text>
-            <Text variant="body2" customColor={statusColor}>
-              Status : {statusText}
-            </Text>
           </FlexColumn>
         </Info>
       </Container>
@@ -84,8 +53,8 @@ const Info = styled.div`
 `;
 
 const Container = styled.div`
-  width: ${ElementCardSize.width}px;
-  height: ${ElementCardSize.height}px;
+  width: ${ProductionModuleCardSize.width}px;
+  height: ${ProductionModuleCardSize.height}px;
   border-radius: 4px;
   border: 1px solid ${ThemeColors.deep_blue};
   padding: 1rem;

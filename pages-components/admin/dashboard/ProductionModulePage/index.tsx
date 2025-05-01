@@ -3,48 +3,48 @@ import Link from "next/link";
 import { AddButton } from "@/components/AddButton";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
+import { useGetProcessograms } from "@/api/react-query/processograms/useGetProcessograms";
 import { CtaCreate } from "@/components/CtaCreate";
-import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
 import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
-import { Info, RefreshCw } from "react-feather";
+import { RefreshCw } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
-import { useSetSpecieDetailsModal } from "modals/SpecieDetailsModal/hooks";
-import { useGetProductionModules } from "@/api/react-query/production-modules/useGetProductionModules";
-import { ProductionModuleCard } from "@/components/Cards/ProductionModuleCard";
-import { ProductionModuleCardSkeleton } from "@/components/Cards/ProductionModuleCard/skeleton";
-import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
+import { ProcessogramCardSkeleton } from "@/components/Cards/ProcessogramCard/skeleton";
+import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
+import { useGetProductionModuleById } from "@/api/react-query/production-modules/useGetProductionModules";
 
 type Props = {
-  specie_id: string;
+  productionModuleId: string;
 };
 
-export const SpeciesPage = ({ specie_id }: Props) => {
+export const ProductionModulePage = ({ productionModuleId }: Props) => {
+  const { data: productionModule } = useGetProductionModuleById({
+    production_module_id: productionModuleId,
+  });
+
   const {
-    data: productionModules,
+    data: processograms,
     isLoading,
     refetch,
     isFetching,
-  } = useGetProductionModules({
-    specie_id,
+  } = useGetProcessograms({
+    production_module_id: productionModuleId,
   });
 
-  const { data: specie } = useGetSpecieById({
-    specie_id,
-  });
+  const setCreateElement = useSetCreateElementModal();
 
-  const setCreateProductionModule = useSetCreateProductionModuleModal();
+  const processogramsList = processograms ?? [];
 
-  const productionModulesList = productionModules ?? [];
+  const hasProcessograms = processogramsList.length > 0;
 
-  const hasProductionModules = productionModulesList.length > 0;
+  const createElement = () => {
+    if (!productionModule) return;
 
-  const createProductionModule = () => {
-    if (!specie) return;
-
-    setCreateProductionModule({
-      specie_id,
+    setCreateElement({
+      specie_id: productionModule.specie_id,
+      pathname: productionModule.specie.pathname,
+      production_module_id: productionModuleId,
     });
   };
 
@@ -52,17 +52,17 @@ export const SpeciesPage = ({ specie_id }: Props) => {
     refetch();
   };
 
-  const setSpecieDetailsModal = useSetSpecieDetailsModal();
+  // const setSpecieDetailsModal = useSetSpecieDetailsModal();
 
-  const openElementDetailsModal = () => {
-    if (!specie) return;
+  // const openElementDetailsModal = () => {
+  //   if (!productionModule) return;
 
-    setSpecieDetailsModal({
-      specie: {
-        description: specie.description,
-      },
-    });
-  };
+  //   setSpecieDetailsModal({
+  //     specie: {
+  //       description: specie.description,
+  //     },
+  //   });
+  // };
 
   return (
     <FlexColumn
@@ -78,17 +78,32 @@ export const SpeciesPage = ({ specie_id }: Props) => {
             <Text variant="h2">Species</Text>
           </Link>
           <Text variant="h2">{">"}</Text>
-          <Text variant="h2">{specie?.name ?? "--"}</Text>
-          <IconWrapper>
+          {!!productionModule ? (
+            <Link
+              href={{
+                pathname: "/admin/species/[id]",
+                query: {
+                  id: productionModule?.specie_id,
+                },
+              }}
+            >
+              <Text variant="h2">{productionModule.specie.name}</Text>
+            </Link>
+          ) : (
+            <Text variant="h2">--</Text>
+          )}
+          <Text variant="h2">{">"}</Text>
+          <Text variant="h2">{productionModule?.name ?? "--"}</Text>
+          {/* <IconWrapper>
             <Info
               size={18}
               color={ThemeColors.white}
               cursor="pointer"
               onClick={openElementDetailsModal}
             />
-          </IconWrapper>
+          </IconWrapper> */}
         </FlexRow>
-        {specie && (
+        {/* {productionModule && (
           <Text variant="body1">
             Visit page:{" "}
             <Link
@@ -108,15 +123,15 @@ export const SpeciesPage = ({ specie_id }: Props) => {
               {`/processograms/${specie?.pathname}`}
             </Link>
           </Text>
-        )}
+        )} */}
       </FlexColumn>
       <FlexColumn align="flex-start" width="100%" mt={2}>
         <FlexRow>
           <Text>
-            Production Modules{" "}
-            {hasProductionModules ? `(${productionModulesList.length})` : ``}
+            Processograms{" "}
+            {hasProcessograms ? `(${processogramsList.length})` : ``}
           </Text>
-          {!!specie && <AddButton onClick={createProductionModule} />}
+          {!!productionModule && <AddButton onClick={createElement} />}
           {isFetching ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />
           ) : (
@@ -134,29 +149,30 @@ export const SpeciesPage = ({ specie_id }: Props) => {
         {isLoading ? (
           <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
             {Array.from({ length: 3 }).map((_, index) => (
-              <ProductionModuleCardSkeleton key={index} />
+              <ProcessogramCardSkeleton key={index} />
             ))}
           </FlexRow>
         ) : (
           <>
-            {hasProductionModules ? (
+            {hasProcessograms ? (
               <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
-                {productionModulesList.map((productionModule) => (
-                  <ProductionModuleCard
-                    key={productionModule._id}
-                    _id={productionModule._id}
-                    name={productionModule.name}
+                {processogramsList.map((element) => (
+                  <ProcessogramCard
+                    key={element._id}
+                    _id={element._id}
+                    name={element.name}
+                    status={element.status}
                     image_url=""
                   />
                 ))}
               </FlexRow>
             ) : (
               <>
-                {!!specie && (
-                  <CtaCreate onClick={createProductionModule}>
+                {!!productionModule && (
+                  <CtaCreate onClick={createElement}>
                     <Text>
-                      No production modules found. <br />
-                      Click here to create your first production module!
+                      No elements found. <br />
+                      Click here to create your first element!
                     </Text>
                   </CtaCreate>
                 )}

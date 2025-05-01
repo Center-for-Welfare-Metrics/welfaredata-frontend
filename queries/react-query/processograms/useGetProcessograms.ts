@@ -4,7 +4,8 @@ import { QueryKeys } from "../keys";
 import { Processogram, ProcessogramById } from "types/processogram";
 
 type GetProcessogramsParams = {
-  specie_id: string;
+  specie_id?: string;
+  production_module_id?: string;
 };
 
 const getProcessograms = async (params: GetProcessogramsParams) => {
