@@ -2,7 +2,7 @@ import withAuth from "@/components/HOC/with-auth";
 import DefaultLayout from "@/components/layouts";
 import { AdminLayout } from "@/components/admin/admin-layout";
 import { useRouter } from "next/router";
-import { ListElements } from "pages-components/admin/dashboard/ListElements";
+import { SpeciesPage } from "pages-components/admin/dashboard/SpeciesPage";
 
 const AdminSpeciePage = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const AdminSpeciePage = () => {
   return (
     <DefaultLayout>
       <AdminLayout>
-        {!!id && <ListElements specie_id={String(id)} />}
+        {!!id && <SpeciesPage specie_id={String(id)} />}
       </AdminLayout>
     </DefaultLayout>
   );

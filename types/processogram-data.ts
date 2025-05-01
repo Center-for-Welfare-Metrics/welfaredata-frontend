@@ -1,4 +1,4 @@
-export type ElementData = {
+export type ProcessogramData = {
   _id: string;
   production_system_name: string;
   specie_id: string;
@@ -14,11 +14,3 @@ export type ElementData = {
     };
   };
 };
-
-export type Hierarchy = {
-  levelNumber: number;
-  level: string;
-  name: string;
-  rawId: string;
-  id: string;
-}[];

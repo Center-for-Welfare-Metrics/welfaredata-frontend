@@ -3,8 +3,7 @@ import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "./components/ProcessogramLoader";
 import { ThemeColors } from "theme/globalStyle";
-import { Element } from "types/elements";
-import { Hierarchy } from "types/element-data";
+import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import {
   getElementLevelFromId,
   getElementNameFromId,
@@ -13,9 +12,9 @@ import { deslugify } from "@/utils/string";
 
 type Props = {
   title: string;
-  elements: Element[];
-  onChange: (id: string | null, hierarchy: Hierarchy) => void;
-  onSelect: (id: string | null, hierarchy: Hierarchy) => void;
+  elements: Processogram[];
+  onChange: (id: string | null, hierarchy: ProcessogramHierarchy[]) => void;
+  onSelect: (id: string | null, hierarchy: ProcessogramHierarchy[]) => void;
 };
 
 export const ProcessogramsList = ({
@@ -79,7 +78,7 @@ export const ProcessogramsList = ({
     }
   };
 
-  const onChange = (id: string, hierarchy: Hierarchy) => {
+  const onChange = (id: string, hierarchy: ProcessogramHierarchy[]) => {
     onChangeProps(id, hierarchy);
   };
 

@@ -11,35 +11,35 @@ import Dropzone from "@/components/Dropzone";
 import { FlexColumn } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
-import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
+import { uploadSvgElement } from "@/api/react-query/processograms/useUploadSvgElement";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKeys } from "@/api/react-query/keys";
 
-const CreateElementSchema = z.object({
+const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
   file: z.custom<File>().refine((file) => !!file, {
     message: "File is required",
   }),
 });
 
-type CreateElementForm = z.infer<typeof CreateElementSchema>;
+type CreateProcessogramForm = z.infer<typeof CreateProcessogramSchema>;
 
-export type CreateElementModalProps = {
+export type CreateProcessogramModalProps = {
   onClose: () => void;
   specie_id: string;
   pathname: string;
 };
 
-const CreateElementModal = ({
+const CreateProcessogramModal = ({
   onClose,
   specie_id,
   pathname,
-}: CreateElementModalProps) => {
+}: CreateProcessogramModalProps) => {
   const queryClient = useQueryClient();
 
   const { handleSubmit, register, formState, setValue, watch, reset } =
-    useForm<CreateElementForm>({
-      resolver: zodResolver(CreateElementSchema),
+    useForm<CreateProcessogramForm>({
+      resolver: zodResolver(CreateProcessogramSchema),
       defaultValues: {
         name: "",
       },
@@ -57,7 +57,7 @@ const CreateElementModal = ({
     });
   };
 
-  const onSubmit = async (data: CreateElementForm) => {
+  const onSubmit = async (data: CreateProcessogramForm) => {
     setIsLoading(true);
 
     try {
@@ -70,7 +70,7 @@ const CreateElementModal = ({
       await uploadSvgElement(formData);
 
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ELEMENTS.List],
+        queryKey: [QueryKeys.PROCESSOGRAMS.List],
       });
 
       toast.success("File uploaded successfully!");
@@ -86,13 +86,13 @@ const CreateElementModal = ({
   };
 
   return (
-    <ModalContainer open={true} onClose={onClose} title="Upload a SVG Element">
+    <ModalContainer open={true} onClose={onClose} title="Upload a Processogram">
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn align="flex-end" width="100%">
           <FormBody gap={2} width="100%">
             <FormInput
               label="Name"
-              placeholder="Enter the name of the element"
+              placeholder="Enter the name of the processogram"
               type="text"
               error={errors.name?.message}
               {...register("name")}
@@ -129,7 +129,7 @@ const FormBody = styled(FlexColumn)`
 
 const Form = styled.form``;
 
-export const CreateElementModalWrapper = () => {
+export const CreateProcessogramModalWrapper = () => {
   const [modalProps, setModalProps] = useCreateElementModal();
 
   if (!modalProps) return null;
@@ -138,5 +138,5 @@ export const CreateElementModalWrapper = () => {
     setModalProps(null);
   };
 
-  return <CreateElementModal {...modalProps} onClose={onClose} />;
+  return <CreateProcessogramModal {...modalProps} onClose={onClose} />;
 };

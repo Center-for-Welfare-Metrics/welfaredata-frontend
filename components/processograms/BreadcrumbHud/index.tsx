@@ -4,10 +4,10 @@ import { transparentize } from "polished";
 import { ChevronRight } from "react-feather";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { Hierarchy } from "types/element-data";
+import { ProcessogramHierarchy } from "types/processogram";
 
 type Props = {
-  hierarchy: Hierarchy;
+  hierarchy: ProcessogramHierarchy[];
 };
 
 export const BreadcrumbHud = ({ hierarchy }: Props) => {

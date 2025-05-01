@@ -3,12 +3,12 @@ import Link from "next/link";
 import { AddButton } from "@/components/AddButton";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
-import { useGetElements } from "@/api/react-query/svg-elements/useGetSvgElements";
+import { useGetProcessograms } from "@/api/react-query/processograms/useGetProcessograms";
 import { ElementCard } from "@/components/Cards/ElementCard";
 import { ElementCardSkeleton } from "@/components/Cards/ElementCard/skeleton";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
-import { useSetCreateElementModal } from "modals/CreateElementModal/hooks";
+import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
 import { Info, RefreshCw } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
@@ -19,13 +19,13 @@ type Props = {
   specie_id: string;
 };
 
-export const ListElements = ({ specie_id }: Props) => {
+export const SpeciesPage = ({ specie_id }: Props) => {
   const {
     data: elements,
     isLoading,
     refetch,
     isFetching,
-  } = useGetElements({
+  } = useGetProcessograms({
     specie_id,
   });
 
@@ -104,7 +104,9 @@ export const ListElements = ({ specie_id }: Props) => {
       </FlexColumn>
       <FlexColumn align="flex-start" width="100%" mt={2}>
         <FlexRow>
-          <Text>Elements {hasElements ? `(${elementsList.length})` : ``}</Text>
+          <Text>
+            Processograms {hasElements ? `(${elementsList.length})` : ``}
+          </Text>
           {!!specie && <AddButton onClick={createElement} />}
           {isFetching ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />

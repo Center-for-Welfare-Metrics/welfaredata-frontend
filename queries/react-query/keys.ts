@@ -3,11 +3,11 @@ export const QueryKeys = {
     List: "species",
     ByID: "species-by-id",
   },
-  ELEMENTS: {
+  PROCESSOGRAMS: {
     List: "elements",
     ByID: "elements-by-id",
   },
-  ELEMENT_DATA: {
+  PROCESSOGRAM_DATAS: {
     List: "element-data",
     ByID: "element-data-by-id",
   },

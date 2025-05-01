@@ -4,8 +4,7 @@ import {
   getElementNameFromId,
   getLevelAliasFromId,
 } from "../../utils/extractInfoFromId";
-import { ElementHierarchy } from "types/elements";
-import { Hierarchy } from "types/element-data";
+import { ProcessogramHierarchy } from "types/processogram";
 
 const levels = {
   ps: 0,
@@ -22,8 +21,8 @@ const levels_inverted = {
 };
 
 type GetHierarchy = {
-  hierarchy: Hierarchy;
-  hierarchyPath: Hierarchy;
+  hierarchy: ProcessogramHierarchy[];
+  hierarchyPath: ProcessogramHierarchy[];
 };
 
 export const getHierarchy = (element: Element): GetHierarchy => {
@@ -39,7 +38,7 @@ export const getHierarchy = (element: Element): GetHierarchy => {
 
   let previousLevel = levelNumber - 1;
 
-  const hierarchy: Hierarchy = [];
+  const hierarchy: ProcessogramHierarchy[] = [];
 
   let currentElement = element;
 
@@ -92,7 +91,7 @@ export const getHierarchy = (element: Element): GetHierarchy => {
 
 export const getElementIdentifier = (
   id: string,
-  hierarchy: ElementHierarchy[]
+  hierarchy: ProcessogramHierarchy[]
 ) => {
   const name = getElementNameFromId(id);
 

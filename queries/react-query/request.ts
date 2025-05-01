@@ -3,15 +3,15 @@ import axios, { Method, ResponseType } from "axios";
 export type RequestService =
   | "admin"
   | "admin-species"
-  | "admin-elements"
-  | "admin-element-data"
+  | "admin-processograms"
+  | "admin-processogram-datas"
   | "public";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
   admin: "admin",
   "admin-species": "admin/species",
-  "admin-elements": "admin/elements",
-  "admin-element-data": "admin/element-data",
+  "admin-processograms": "admin/processograms",
+  "admin-processogram-datas": "admin/processogram-datas",
   public: "public",
 };
 

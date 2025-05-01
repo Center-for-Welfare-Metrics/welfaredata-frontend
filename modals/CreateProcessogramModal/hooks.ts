@@ -1,8 +1,8 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { CreateElementModalProps } from ".";
+import { CreateProcessogramModalProps } from ".";
 
 const atomCreateElementModal = atom<Omit<
-  CreateElementModalProps,
+  CreateProcessogramModalProps,
   "onClose"
 > | null>(null);
 

@@ -1,14 +1,14 @@
-import { CreateSpecieModalWrapper } from './CreateSpecieModal';
-import { CreateElementModalWrapper } from './CreateElementModal';
-import { ElementDetailsModalWrapper } from './ElementDetailsModal';
-import { SpecieDetailsModalWrapper } from './SpecieDetailsModal';
+import { CreateSpecieModalWrapper } from "./CreateSpecieModal";
+import { CreateProcessogramModalWrapper } from "./CreateProcessogramModal";
+import { ProcessogramDetailsModalWrapper } from "./ProcessogramDetailsModal";
+import { SpecieDetailsModalWrapper } from "./SpecieDetailsModal";
 
 export const Modals = () => {
   return (
     <>
       <CreateSpecieModalWrapper />
-      <CreateElementModalWrapper />
-      <ElementDetailsModalWrapper />
+      <CreateProcessogramModalWrapper />
+      <ProcessogramDetailsModalWrapper />
       <SpecieDetailsModalWrapper />
     </>
   );

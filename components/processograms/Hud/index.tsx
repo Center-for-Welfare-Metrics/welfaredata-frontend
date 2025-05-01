@@ -2,7 +2,6 @@ import { Text } from "@/components/Text";
 import { useMemo } from "react";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { ElementData } from "types/element-data";
 import { getElementNameFromId } from "../utils/extractInfoFromId";
 import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";

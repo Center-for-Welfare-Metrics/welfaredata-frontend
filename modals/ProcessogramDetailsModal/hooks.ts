@@ -1,13 +1,12 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { ElementDetailsModalProps } from '.';
+import { ProcessogramDetailsModalProps } from ".";
 
 const atomElementDetailsModal = atom<Omit<
-  ElementDetailsModalProps,
-  'onClose'
+  ProcessogramDetailsModalProps,
+  "onClose"
 > | null>(null);
 
-export const useElementDetailsModal = () =>
-  useAtom(atomElementDetailsModal);
+export const useElementDetailsModal = () => useAtom(atomElementDetailsModal);
 
 export const useElementDetailsModalValue = () =>
   useAtomValue(atomElementDetailsModal);

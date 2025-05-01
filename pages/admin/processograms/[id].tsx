@@ -2,7 +2,7 @@ import withAuth from "@/components/HOC/with-auth";
 import DefaultLayout from "@/components/layouts";
 import { AdminLayout } from "@/components/admin/admin-layout";
 import { useRouter } from "next/router";
-import { ElementDetail } from "pages-components/admin/dashboard/ElementDetail";
+import { ProcessogramDetail } from "pages-components/admin/dashboard/ProcessogramDetail";
 
 const AdminElementPage = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const AdminElementPage = () => {
   return (
     <DefaultLayout>
       <AdminLayout>
-        {!!id && <ElementDetail element_id={String(id)} />}
+        {!!id && <ProcessogramDetail processogram_id={String(id)} />}
       </AdminLayout>
     </DefaultLayout>
   );

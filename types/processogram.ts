@@ -1,6 +1,10 @@
-export type ElementStatus = "processing" | "ready" | "error" | "generating";
+export type ProcessogramStatus =
+  | "processing"
+  | "ready"
+  | "error"
+  | "generating";
 
-export type Element = {
+export type Processogram = {
   _id: string;
   identifier: string;
   specie_id: string;
@@ -18,12 +22,12 @@ export type Element = {
       y: number;
     };
   };
-  status: ElementStatus;
+  status: ProcessogramStatus;
   createdAt: string;
   updatedAt: string;
 };
 
-export type ElementById = {
+export type ProcessogramById = {
   _id: string;
   identifier: string;
   specie: {
@@ -50,16 +54,17 @@ export type ElementById = {
       y: number;
     };
   };
-  status: ElementStatus;
+  status: ProcessogramStatus;
   originalSize: number;
   finalSize: number;
   createdAt: string;
   updatedAt: string;
 };
 
-export type ElementHierarchy = {
+export type ProcessogramHierarchy = {
   levelNumber: number;
   level: string;
   name: string;
   id: string;
+  rawId: string;
 };

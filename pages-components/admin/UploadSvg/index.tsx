@@ -5,7 +5,7 @@ import { ThemeColors } from "theme/globalStyle";
 import { Text } from "@/components/Text";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { FormInput } from "@/components/common/inputs/form-input";
-import { uploadSvgElement } from "@/api/react-query/svg-elements/useUploadSvgElement";
+import { uploadSvgElement } from "@/api/react-query/processograms/useUploadSvgElement";
 
 export const UploadSvg = () => {
   const [file, setFile] = useState<File | null>(null);

@@ -1,37 +1,38 @@
-import { useGetElementDataBySvgElementID } from "@/api/react-query/elements-data/useGetElementsData";
-import { useGetElementById } from "@/api/react-query/svg-elements/useGetSvgElements";
+import { useGetProcessogramDataByProcessogramId } from "@/api/react-query/processogram-datas/useGetProcessogramDatas";
+import { useGetProcessogramById } from "@/api/react-query/processograms/useGetProcessograms";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
 import { ProgressogramHud } from "@/components/processograms/Hud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
-import { useSetElementDetailsModal } from "modals/ElementDetailsModal/hooks";
+import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Info, RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { Hierarchy } from "types/element-data";
-import { ElementStatus } from "types/elements";
+import { ProcessogramHierarchy, ProcessogramStatus } from "types/processogram";
 
 type Props = {
-  element_id: string;
+  processogram_id: string;
 };
 
-export const ElementDetail = ({ element_id }: Props) => {
+export const ProcessogramDetail = ({ processogram_id }: Props) => {
   const [currentElement, setCurrentElement] = useState<string | null>(null);
 
-  const [currentHierarchy, setHierarchy] = useState<Hierarchy>([]);
+  const [currentHierarchy, setHierarchy] = useState<ProcessogramHierarchy[]>(
+    []
+  );
 
   const {
     data: element,
     isLoading,
     refetch,
     isFetching,
-  } = useGetElementById({
-    element_id,
+  } = useGetProcessogramById({
+    processogram_id,
   });
 
   const hierarchy = useMemo(() => {
@@ -54,8 +55,8 @@ export const ElementDetail = ({ element_id }: Props) => {
     data: elementData,
     refetch: dataRefetch,
     isFetching: isFetchingData,
-  } = useGetElementDataBySvgElementID({
-    element_id,
+  } = useGetProcessogramDataByProcessogramId({
+    processogram_id,
   });
 
   const setElementDetailsModal = useSetElementDetailsModal();
@@ -74,7 +75,7 @@ export const ElementDetail = ({ element_id }: Props) => {
     });
   };
 
-  const handleChange = (id: string, hierarchy: Hierarchy) => {
+  const handleChange = (id: string, hierarchy: ProcessogramHierarchy[]) => {
     setCurrentElement(id);
     setHierarchy(hierarchy);
   };
@@ -89,16 +90,16 @@ export const ElementDetail = ({ element_id }: Props) => {
     dataRefetch();
   };
 
-  const getStatusText = (status: ElementStatus) => {
+  const getStatusText = (status: ProcessogramStatus) => {
     switch (status) {
       case "processing":
-        return "Element is processing, please wait";
+        return "Processogram is processing, please wait";
       case "ready":
-        return "Element is ready";
+        return "Processogram is ready";
       case "error":
-        return "Something wrong happened with the element";
+        return "Something wrong happened with the Processogram";
       case "generating":
-        return "Element is generating AI content, please wait";
+        return "Processogram is generating AI content, please wait";
       default:
         return "";
     }

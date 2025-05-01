@@ -6,12 +6,12 @@ import { ClipLoader } from "react-spinners";
 import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 import { Portal } from "@mui/material";
-import { Hierarchy } from "types/element-data";
+import { ProcessogramHierarchy } from "types/processogram";
 
 type Props = {
   src: string;
   onClose: () => void;
-  onChange: (id: string, hierarchy: Hierarchy) => void;
+  onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
   rasterImages: {
     [key: string]: {
       src: string;

@@ -5,22 +5,22 @@ import { FlexColumn } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import dayjs from "dayjs";
 
-type ElementDetails = {
+type ProcessogramDetails = {
   originalSize: number;
   finalSize: number;
   elementsCount: number;
   createdAt: string;
 };
 
-export type ElementDetailsModalProps = {
+export type ProcessogramDetailsModalProps = {
   onClose: () => void;
-  element: ElementDetails;
+  element: ProcessogramDetails;
 };
 
-const ElementDetailsModal = ({
+const ProcessogramDetailsModal = ({
   onClose,
   element,
-}: ElementDetailsModalProps) => {
+}: ProcessogramDetailsModalProps) => {
   return (
     <ModalContainer open={true} onClose={onClose} title="Details">
       <FlexColumn gap={2} mt={2}>
@@ -57,7 +57,7 @@ const ElementDetailsModal = ({
   );
 };
 
-export const ElementDetailsModalWrapper = () => {
+export const ProcessogramDetailsModalWrapper = () => {
   const [modalProps, setModalProps] = useElementDetailsModal();
 
   if (!modalProps) return null;
@@ -66,5 +66,5 @@ export const ElementDetailsModalWrapper = () => {
     setModalProps(null);
   };
 
-  return <ElementDetailsModal {...modalProps} onClose={onClose} />;
+  return <ProcessogramDetailsModal {...modalProps} onClose={onClose} />;
 };

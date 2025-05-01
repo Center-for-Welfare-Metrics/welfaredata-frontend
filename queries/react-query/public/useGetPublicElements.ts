@@ -1,6 +1,6 @@
 import { Specie } from "types/species";
 import { request } from "../request";
-import { ElementData } from "types/element-data";
+import { ProcessogramData } from "types/processogram-data";
 
 type GetPublicElementsParams = {
   specie: string;
@@ -22,7 +22,7 @@ type GetElementsDataParams = {
 };
 
 export const getElementsData = async (params: GetElementsDataParams) => {
-  const { data } = await request<ElementData[]>({
+  const { data } = await request<ProcessogramData[]>({
     method: "GET",
     service: "public",
     url: "elements/data",

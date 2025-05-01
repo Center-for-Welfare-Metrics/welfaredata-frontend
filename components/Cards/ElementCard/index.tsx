@@ -6,12 +6,12 @@ import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ElementCardSize } from "./const";
 import { useMemo } from "react";
-import { ElementStatus } from "types/elements";
+import { ProcessogramStatus } from "types/processogram";
 
 type Props = {
   _id: string;
   name: string;
-  status: ElementStatus;
+  status: ProcessogramStatus;
   image_url: string | undefined;
 };
 
@@ -44,7 +44,7 @@ export const ElementCard = ({ _id, name, image_url, status }: Props) => {
   return (
     <Link
       href={{
-        pathname: "/admin/elements/[id]",
+        pathname: "/admin/processograms/[id]",
         query: {
           id: _id,
         },

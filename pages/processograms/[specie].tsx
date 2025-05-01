@@ -2,10 +2,9 @@
 // import fetch from "node-fetch";
 import Head from "next/head";
 import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
-import { Element } from "types/elements";
+import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import styled from "styled-components";
 import { GetStaticPropsContext } from "next";
-import { ElementData, Hierarchy } from "types/element-data";
 import {
   getElementsData,
   getPublicElements,
@@ -17,12 +16,13 @@ import { useMemo, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Specie } from "types/species";
 import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
+import { ProcessogramData } from "types/processogram-data";
 
 type Props = {
   specie: string;
   specieData: Specie;
-  elements: Element[];
-  elementsData: ElementData[];
+  elements: Processogram[];
+  elementsData: ProcessogramData[];
 };
 
 const PublicSpeciePage = ({
@@ -35,16 +35,26 @@ const PublicSpeciePage = ({
 
   const [over, setOver] = useState<string | null>(null);
 
-  const [overHierarchy, setOverHierarchy] = useState<Hierarchy>([]);
+  const [overHierarchy, setOverHierarchy] = useState<ProcessogramHierarchy[]>(
+    []
+  );
 
-  const [activeHierarchy, setActiveHierarchy] = useState<Hierarchy>([]);
+  const [activeHierarchy, setActiveHierarchy] = useState<
+    ProcessogramHierarchy[]
+  >([]);
 
-  const onChangeOverItem = (id: string | null, hierarchy: Hierarchy) => {
+  const onChangeOverItem = (
+    id: string | null,
+    hierarchy: ProcessogramHierarchy[]
+  ) => {
     setOverHierarchy(hierarchy);
     setOver(id);
   };
 
-  const onSelectItem = (id: string | null, hierarchy: Hierarchy) => {
+  const onSelectItem = (
+    id: string | null,
+    hierarchy: ProcessogramHierarchy[]
+  ) => {
     setActiveHierarchy(hierarchy);
     setActive(id);
   };
@@ -82,7 +92,7 @@ const PublicSpeciePage = ({
   }, [overHierarchy, activeHierarchy, active]);
 
   const elementsMap = useMemo(() => {
-    const map = new Map<string, Element>();
+    const map = new Map<string, Processogram>();
 
     elements.forEach((el) => {
       map.set(el._id, el);
@@ -92,7 +102,7 @@ const PublicSpeciePage = ({
   }, [elements]);
 
   const elementsDataMap = useMemo(() => {
-    const map = new Map<string, ElementData>();
+    const map = new Map<string, ProcessogramData>();
 
     elementsData.forEach((el) => {
       map.set(el.svg_element_id, el);

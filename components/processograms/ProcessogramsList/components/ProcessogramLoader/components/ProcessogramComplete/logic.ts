@@ -15,7 +15,7 @@ import {
   getLevelNumberById,
   INVERSE_DICT,
 } from "@/components/processograms/utils/extractInfoFromId";
-import { Hierarchy } from "types/element-data";
+import { ProcessogramHierarchy } from "types/processogram";
 
 type HistoryLevel = {
   [key: number]: {
@@ -26,7 +26,7 @@ type HistoryLevel = {
 type Props = {
   enableBruteOptimization?: boolean;
   onClose: () => void;
-  onChange: (id: string, hierarchy: Hierarchy) => void;
+  onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
   rasterImages: {
     [key: string]: {
       src: string;
@@ -104,7 +104,7 @@ export const useProcessogramLogic = ({
   ]);
 
   const getElementIdentifierWithHierarchy = useCallback(
-    (elementId: string): [string, Hierarchy] => {
+    (elementId: string): [string, ProcessogramHierarchy[]] => {
       if (!svgElement) return ["", []];
 
       if (!elementId || svgElement.id === elementId) {
