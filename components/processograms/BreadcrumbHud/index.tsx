@@ -1,5 +1,6 @@
 import { FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
+import useDebounce from "@/utils/hooks/useDebounce";
 import { transparentize } from "polished";
 import { ChevronRight } from "react-feather";
 import styled from "styled-components";
@@ -11,10 +12,12 @@ type Props = {
 };
 
 export const BreadcrumbHud = ({ hierarchy }: Props) => {
+  const debouncedHierarchy = useDebounce(hierarchy, 250);
+
   return (
     <Container onClick={(e) => e.stopPropagation()}>
       <FlexRow gap={0.25}>
-        {hierarchy.map((item, index) => (
+        {debouncedHierarchy.map((item, index) => (
           <FlexRow key={item.id} gap={0.25} justify="flex-start">
             <ClickableName
               onClick={() => {
@@ -23,7 +26,7 @@ export const BreadcrumbHud = ({ hierarchy }: Props) => {
             >
               <Text variant="body1">{item.name}</Text>
             </ClickableName>
-            {index < hierarchy.length - 1 && (
+            {index < debouncedHierarchy.length - 1 && (
               <ChevronRight size={16} color={ThemeColors.white} />
             )}
           </FlexRow>

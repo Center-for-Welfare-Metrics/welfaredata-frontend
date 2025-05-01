@@ -6,11 +6,13 @@ type GetPublicElementsParams = {
   specie: string;
 };
 
-export const getPublicElements = async (params: GetPublicElementsParams) => {
+export const getPublicProcessograms = async (
+  params: GetPublicElementsParams
+) => {
   const { data } = await request<Element[]>({
     method: "GET",
     service: "public",
-    url: "/elements",
+    url: "/processograms",
     query: params,
   });
 
@@ -21,11 +23,13 @@ type GetElementsDataParams = {
   specie: string;
 };
 
-export const getElementsData = async (params: GetElementsDataParams) => {
+export const getPublicProcessogramDatas = async (
+  params: GetElementsDataParams
+) => {
   const { data } = await request<ProcessogramData[]>({
     method: "GET",
     service: "public",
-    url: "elements/data",
+    url: "processograms/data",
     query: params,
   });
 
@@ -36,7 +40,7 @@ type GetSpecieByPathnameParams = {
   pathname: string;
 };
 
-export const getSpecieByPathname = async ({
+export const getPublicSpeciesByPathname = async ({
   pathname,
 }: GetSpecieByPathnameParams) => {
   const { data } = await request<Specie>({

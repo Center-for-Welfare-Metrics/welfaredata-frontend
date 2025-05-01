@@ -6,9 +6,9 @@ import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import styled from "styled-components";
 import { GetStaticPropsContext } from "next";
 import {
-  getElementsData,
-  getPublicElements,
-  getSpecieByPathname,
+  getPublicProcessograms,
+  getPublicProcessogramDatas,
+  getPublicSpeciesByPathname,
 } from "@/api/react-query/public/useGetPublicElements";
 import { FlexRow } from "@/components/desing-components/Flex";
 import { ProgressogramHud } from "@/components/processograms/Hud";
@@ -20,16 +20,16 @@ import { ProcessogramData } from "types/processogram-data";
 
 type Props = {
   specie: string;
-  specieData: Specie;
-  elements: Processogram[];
-  elementsData: ProcessogramData[];
+  speciesData: Specie;
+  processograms: Processogram[];
+  processogramDatas: ProcessogramData[];
 };
 
 const PublicSpeciePage = ({
-  elements,
+  processograms,
   specie,
-  elementsData,
-  specieData,
+  processogramDatas,
+  speciesData,
 }: Props) => {
   const [active, setActive] = useState<string | null>(null);
 
@@ -61,22 +61,22 @@ const PublicSpeciePage = ({
 
   const hierarchy = useMemo(() => {
     const specieHierarchy = {
-      id: specieData.pathname,
+      id: speciesData.pathname,
       level: "species",
       levelNumber: -1,
-      name: specieData.name,
-      rawId: specieData.pathname,
+      name: speciesData.name,
+      rawId: speciesData.pathname,
     };
 
     if (!active) {
       if (overHierarchy.length === 0) {
         return [
           {
-            id: specieData.pathname,
+            id: speciesData.pathname,
             level: "species",
             levelNumber: 0,
-            name: specieData.name,
-            rawId: specieData.pathname,
+            name: speciesData.name,
+            rawId: speciesData.pathname,
           },
         ];
       } else {
@@ -91,30 +91,30 @@ const PublicSpeciePage = ({
     return [specieHierarchy, ...activeHierarchy];
   }, [overHierarchy, activeHierarchy, active]);
 
-  const elementsMap = useMemo(() => {
+  const processogramsMap = useMemo(() => {
     const map = new Map<string, Processogram>();
 
-    elements.forEach((el) => {
+    processograms.forEach((el) => {
       map.set(el._id, el);
     });
 
     return map;
-  }, [elements]);
+  }, [processograms]);
 
-  const elementsDataMap = useMemo(() => {
+  const processogramDatasMap = useMemo(() => {
     const map = new Map<string, ProcessogramData>();
 
-    elementsData.forEach((el) => {
+    processogramDatas.forEach((el) => {
       map.set(el.svg_element_id, el);
     });
 
     return map;
-  }, [elementsData]);
+  }, [processogramDatas]);
 
   const currentActiveElement = useMemo(() => {
     if (!active) return null;
 
-    const element = elementsMap.get(active);
+    const element = processogramsMap.get(active);
 
     if (!element) return null;
 
@@ -126,16 +126,16 @@ const PublicSpeciePage = ({
 
     if (!!active) return over;
 
-    const element = elementsMap.get(over);
+    const element = processogramsMap.get(over);
 
     if (!element) return null;
 
     return getElementNameFromId(element.identifier);
-  }, [over, active, elementsMap, currentActiveElement]);
+  }, [over, active, processogramsMap, currentActiveElement]);
 
   const elementsDataContent = useMemo(() => {
     if (!!active) {
-      const elementData = elementsDataMap.get(active);
+      const elementData = processogramDatasMap.get(active);
 
       if (!elementData) return {};
 
@@ -146,7 +146,7 @@ const PublicSpeciePage = ({
       [key: string]: {
         description: string;
       };
-    } = elementsData.reduce((acc, el) => {
+    } = processogramDatas.reduce((acc, el) => {
       const id = el.production_system_name;
       const dataValue = el.data[id];
 
@@ -156,10 +156,10 @@ const PublicSpeciePage = ({
       };
     }, {});
 
-    allData[specieData.pathname] = { description: specieData.description };
+    allData[speciesData.pathname] = { description: speciesData.description };
 
     return allData;
-  }, [elementsData, active, elements, currentElement, specieData]);
+  }, [processogramDatas, active, processograms, currentElement, speciesData]);
 
   return (
     <Container>
@@ -172,7 +172,7 @@ const PublicSpeciePage = ({
         </BreadcrumbsContainer>
         <HudContainer>
           <ProgressogramHud
-            currentElement={currentElement ?? specieData.pathname}
+            currentElement={currentElement ?? speciesData.pathname}
             data={elementsDataContent}
             notReady={false}
           />
@@ -185,7 +185,7 @@ const PublicSpeciePage = ({
         >
           <ProcessogramsList
             title="Dynamic title and description (under development)"
-            elements={elements}
+            elements={processograms}
             onChange={onChangeOverItem}
             onSelect={onSelectItem}
           />
@@ -229,17 +229,17 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { specie } = context.params as { specie: string };
 
-  const [elements, elementsData, specieData] = await Promise.all([
-    getPublicElements({ specie }),
-    getElementsData({ specie }),
-    getSpecieByPathname({ pathname: specie }),
+  const [processograms, processogramDatas, speciesData] = await Promise.all([
+    getPublicProcessograms({ specie }),
+    getPublicProcessogramDatas({ specie }),
+    getPublicSpeciesByPathname({ pathname: specie }),
   ]);
 
   return {
     props: {
-      elements: elements,
-      elementsData,
-      specieData,
+      processograms,
+      processogramDatas,
+      speciesData,
       specie,
     },
   };
