@@ -9,21 +9,23 @@ import { ProcessogramHierarchy } from "types/processogram";
 
 type Props = {
   hierarchy: ProcessogramHierarchy[];
+  onClick: (id: string) => void;
 };
 
-export const BreadcrumbHud = ({ hierarchy }: Props) => {
+export const BreadcrumbHud = ({ hierarchy, onClick }: Props) => {
   const debouncedHierarchy = useDebounce(hierarchy, 250);
 
+  const handleClick = (id: string) => (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick(id);
+  };
+
   return (
-    <Container onClick={(e) => e.stopPropagation()}>
+    <Container>
       <FlexRow gap={0.25}>
         {debouncedHierarchy.map((item, index) => (
           <FlexRow key={item.id} gap={0.25} justify="flex-start">
-            <ClickableName
-              onClick={() => {
-                alert(`Clicked on ${item.rawId} | under development`);
-              }}
-            >
+            <ClickableName onClick={handleClick(item.rawId)}>
               <Text variant="body1">{item.name}</Text>
             </ClickableName>
             {index < debouncedHierarchy.length - 1 && (

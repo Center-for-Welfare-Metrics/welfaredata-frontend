@@ -3,7 +3,7 @@ import {
   ANIMATION_DURATION,
   ANIMATION_EASE,
   MAX_LEVEL,
-} from "../../../../consts";
+} from "../ProcessogramsList/consts";
 import { gsap } from "gsap";
 import { useOptimizeSvgParts } from "@/components/processograms/hooks/useOptimizeSvgParts";
 import { getElementViewBox } from "@/components/processograms/ProcessogramsList/utils/getElementViewBox";
@@ -16,6 +16,7 @@ import {
   INVERSE_DICT,
 } from "@/components/processograms/utils/extractInfoFromId";
 import { ProcessogramHierarchy } from "types/processogram";
+import { EventBusHandler, EventBusProps, EventBusTypes } from "./types";
 
 type HistoryLevel = {
   [key: number]: {
@@ -27,6 +28,7 @@ type Props = {
   enableBruteOptimization?: boolean;
   onClose: () => void;
   onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
+  eventBusHandler: EventBusHandler;
   rasterImages: {
     [key: string]: {
       src: string;
@@ -42,6 +44,7 @@ export const useProcessogramLogic = ({
   enableBruteOptimization,
   onClose,
   onChange,
+  eventBusHandler,
   rasterImages,
 }: Props) => {
   // Refs
@@ -134,7 +137,7 @@ export const useProcessogramLogic = ({
   const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
 
   const changeLevelTo = useCallback(
-    (target: SVGElement, toPrevious: boolean) => {
+    (target: SVGElement, toPrevious: boolean, callback?: () => void) => {
       if (!svgElement) return;
       const viewBox = getElementViewBox(target);
       if (!viewBox) return;
@@ -200,6 +203,9 @@ export const useProcessogramLogic = ({
                 });
                 setFullBrightnessToCurrentLevel(toPrevious);
                 lockInteraction.current = false;
+                if (callback) {
+                  callback();
+                }
               },
             });
           },
@@ -282,6 +288,68 @@ export const useProcessogramLogic = ({
     setOnHover(null);
   }, []);
 
+  const changeLevelByEventBus = useCallback(
+    (id: string) => {
+      if (!svgElement) return;
+
+      if (svgElement.id === id) {
+        changeLevelTo(svgElement, true);
+        return;
+      }
+
+      const element = svgElement.querySelector<SVGElement>(`#${id}`);
+      if (!element) return;
+      const level = getLevelNumberById(id);
+
+      const toPrevious = level < currentLevel.current;
+
+      changeLevelTo(element, toPrevious);
+    },
+    [changeLevelTo]
+  );
+
+  const closeByEventBus = useCallback(() => {
+    if (!svgElement) return;
+
+    if (currentLevel.current > 0) {
+      changeLevelTo(svgElement, true, () => {
+        onClose();
+      });
+    } else {
+      onClose();
+    }
+  }, [changeLevelTo, onClose]);
+
+  const attachEventBus = useCallback(
+    (eventBus: EventBusHandler) => {
+      const actions: {
+        [key in EventBusTypes]: (payload: {} | { id: string }) => void;
+      } = {
+        CHANGE_LEVEL: (params) => {
+          if ("id" in params) {
+            const { id } = params;
+            changeLevelByEventBus(id);
+          }
+        },
+        CLOSE: () => {
+          closeByEventBus();
+        },
+      };
+
+      const events = {
+        publish: (event: EventBusProps) => {
+          const action = actions[event.type];
+          if (action) {
+            if (event.type === "CLOSE") action(event.payload);
+          }
+        },
+      };
+
+      eventBus(events);
+    },
+    [changeLevelByEventBus, closeByEventBus]
+  );
+
   useEffect(() => {
     if (!svgElement) return;
     if (!onHover) {
@@ -354,6 +422,12 @@ export const useProcessogramLogic = ({
 
     onChange(identifier, hierarchy);
   }, [onHover]);
+
+  useEffect(() => {
+    if (eventBusHandler) {
+      attachEventBus(eventBusHandler);
+    }
+  }, [attachEventBus, eventBusHandler]);
 
   return {
     setSvgElement,

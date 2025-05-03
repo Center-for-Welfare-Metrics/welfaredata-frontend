@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { ProcessogramLoader } from "./components/ProcessogramLoader";
+import { ProcessogramLoader } from "../ProcessogramLoader";
 import { ThemeColors } from "theme/globalStyle";
 import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import {
@@ -9,12 +9,14 @@ import {
   getElementNameFromId,
 } from "../utils/extractInfoFromId";
 import { deslugify } from "@/utils/string";
+import { EventBusHandler } from "../ProcessogramComplete/types";
 
 type Props = {
   title: string;
   elements: Processogram[];
   onChange: (id: string | null, hierarchy: ProcessogramHierarchy[]) => void;
   onSelect: (id: string | null, hierarchy: ProcessogramHierarchy[]) => void;
+  eventBusHandler: EventBusHandler;
 };
 
 export const ProcessogramsList = ({
@@ -22,6 +24,7 @@ export const ProcessogramsList = ({
   elements,
   onSelect,
   onChange: onChangeProps,
+  eventBusHandler,
 }: Props) => {
   const [over, setOver] = useState<string | null>(null);
 
@@ -104,6 +107,7 @@ export const ProcessogramsList = ({
           onClose={onClose}
           onCloseAnimationEnded={handleClose}
           waitingForClose={waitingForClose}
+          eventBusHandler={eventBusHandler}
           // State
           isOver={over === element._id}
           over={over}

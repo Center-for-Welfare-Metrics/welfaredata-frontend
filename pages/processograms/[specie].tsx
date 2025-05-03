@@ -17,6 +17,7 @@ import { getElementNameFromId } from "@/components/processograms/utils/extractIn
 import { Specie } from "types/species";
 import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
 import { ProcessogramData } from "types/processogram-data";
+import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 
 type Props = {
   specie: string;
@@ -43,6 +44,8 @@ const PublicSpeciePage = ({
     ProcessogramHierarchy[]
   >([]);
 
+  const [eventBus, setEventBus] = useState<EventBus | null>(null);
+
   const onChangeOverItem = (
     id: string | null,
     hierarchy: ProcessogramHierarchy[]
@@ -57,6 +60,23 @@ const PublicSpeciePage = ({
   ) => {
     setActiveHierarchy(hierarchy);
     setActive(id);
+  };
+
+  const onClickBreadcrumb = (id: string) => {
+    if (id === speciesData.pathname) {
+      eventBus?.publish({
+        type: "CLOSE",
+        payload: {},
+      });
+      return;
+    }
+
+    eventBus?.publish({
+      type: "CHANGE_LEVEL",
+      payload: {
+        id,
+      },
+    });
   };
 
   const hierarchy = useMemo(() => {
@@ -168,7 +188,7 @@ const PublicSpeciePage = ({
       </Head>
       <FlexRow>
         <BreadcrumbsContainer>
-          <BreadcrumbHud hierarchy={hierarchy} />
+          <BreadcrumbHud hierarchy={hierarchy} onClick={onClickBreadcrumb} />
         </BreadcrumbsContainer>
         <HudContainer>
           <ProgressogramHud
@@ -188,6 +208,7 @@ const PublicSpeciePage = ({
             elements={processograms}
             onChange={onChangeOverItem}
             onSelect={onSelectItem}
+            eventBusHandler={setEventBus} //TODO-SOS
           />
         </div>
       </FlexRow>

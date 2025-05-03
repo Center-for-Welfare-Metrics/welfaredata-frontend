@@ -3,7 +3,8 @@ import { useGetProcessogramById } from "@/api/react-query/processograms/useGetPr
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
 import { ProgressogramHud } from "@/components/processograms/Hud";
-import { ProcessogramComplete } from "@/components/processograms/ProcessogramsList/components/ProcessogramLoader/components/ProcessogramComplete";
+import { ProcessogramComplete } from "@/components/processograms/ProcessogramComplete";
+import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
@@ -25,6 +26,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   const [currentHierarchy, setHierarchy] = useState<ProcessogramHierarchy[]>(
     []
   );
+
+  const [eventBus, setEventBus] = useState<EventBus | null>(null);
 
   const {
     data: element,
@@ -112,6 +115,15 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
       </>
     );
 
+  const onClickBreadcrumb = (id: string) => {
+    eventBus?.publish({
+      type: "CHANGE_LEVEL",
+      payload: {
+        id,
+      },
+    });
+  };
+
   if (!element) return <></>;
 
   return (
@@ -189,6 +201,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                     },
                   ]
                 }
+                onClick={onClickBreadcrumb}
               />
             </BreadcrumbsContainer>
             <FlexRow height={"100%"}>
@@ -212,6 +225,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   rasterImages={element.raster_images}
                   enableBruteOptimization={false}
                   onChange={handleChange}
+                  eventBusHandler={setEventBus}
                   onClose={() => {}}
                   maxHeight="70vh"
                 />

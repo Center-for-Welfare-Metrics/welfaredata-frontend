@@ -7,6 +7,7 @@ import { ThemeColors } from "theme/globalStyle";
 import { SvgRenderer } from "@/components/processograms/SvgRenderer";
 import { Portal } from "@mui/material";
 import { ProcessogramHierarchy } from "types/processogram";
+import { EventBusHandler } from "./types";
 
 type Props = {
   src: string;
@@ -21,6 +22,7 @@ type Props = {
       y: number;
     };
   };
+  eventBusHandler: EventBusHandler;
   enableBruteOptimization?: boolean;
   maxHeight?: string;
 };
@@ -32,6 +34,7 @@ export const ProcessogramComplete = ({
   rasterImages,
   enableBruteOptimization,
   maxHeight,
+  eventBusHandler,
 }: Props) => {
   const { setSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
@@ -39,6 +42,7 @@ export const ProcessogramComplete = ({
       enableBruteOptimization,
       onChange,
       rasterImages,
+      eventBusHandler,
     });
 
   return (

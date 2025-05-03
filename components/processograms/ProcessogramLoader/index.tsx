@@ -1,10 +1,14 @@
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import { ProcessogramStarter } from "./components/ProcessogramStarter";
-import { ProcessogramComplete } from "./components/ProcessogramComplete";
+import { ProcessogramStarter } from "../ProcessogramStarter";
+import { ProcessogramComplete } from "../ProcessogramComplete";
 import { gsap } from "gsap";
-import { ANIMATION_DURATION, ANIMATION_EASE } from "../../consts";
+import {
+  ANIMATION_DURATION,
+  ANIMATION_EASE,
+} from "../ProcessogramsList/consts";
 import { Processogram, ProcessogramHierarchy } from "types/processogram";
+import { EventBusHandler } from "../ProcessogramComplete/types";
 
 type ProcessogramComponentProps = {
   element: Processogram;
@@ -19,6 +23,7 @@ type ProcessogramComponentProps = {
   over: string | null;
   isActive: boolean;
   active: string | null;
+  eventBusHandler: EventBusHandler;
   enabledBruteOptimization?: boolean;
 };
 
@@ -43,6 +48,7 @@ export const ProcessogramLoader = ({
   over,
   isActive,
   active,
+  eventBusHandler,
   enabledBruteOptimization,
 }: ProcessogramComponentProps) => {
   // Element refs
@@ -219,6 +225,7 @@ export const ProcessogramLoader = ({
             onChange={onChange}
             enableBruteOptimization={enabledBruteOptimization}
             rasterImages={element.raster_images}
+            eventBusHandler={eventBusHandler}
             maxHeight="90vh"
           />
         )}
