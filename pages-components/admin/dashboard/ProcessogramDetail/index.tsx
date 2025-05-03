@@ -9,7 +9,7 @@ import { getElementNameFromId } from "@/components/processograms/utils/extractIn
 import { Text } from "@/components/Text";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Info, RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
@@ -107,6 +107,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         return "";
     }
   };
+
+  const onClose = useCallback(() => {}, []);
 
   if (isLoading)
     return (
@@ -226,7 +228,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   enableBruteOptimization={false}
                   onChange={handleChange}
                   eventBusHandler={setEventBus}
-                  onClose={() => {}}
+                  onClose={onClose}
                   maxHeight="70vh"
                 />
               </FlexColumn>

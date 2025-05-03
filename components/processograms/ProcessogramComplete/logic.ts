@@ -17,8 +17,13 @@ import {
 } from "@/components/processograms/utils/extractInfoFromId";
 import { ProcessogramHierarchy } from "types/processogram";
 import { EventBusHandler, EventBusProps, EventBusTypes } from "./types";
+import { useEventBus } from "./hooks/useEventBus";
+import { useProcessogramNavigator } from "./hooks/useProcessogramNavigator";
+import { useProcessogramEventHanders } from "./hooks/useEventHandlers";
+import { useProcessogramEffects } from "./hooks/useEffects";
+import { useProcessogramHelpers } from "./hooks/useHelpers";
 
-type HistoryLevel = {
+export type HistoryLevel = {
   [key: number]: {
     id: string;
   };
@@ -106,328 +111,53 @@ export const useProcessogramLogic = ({
     setFullBrightnessToCurrentLevel,
   ]);
 
-  const getElementIdentifierWithHierarchy = useCallback(
-    (elementId: string): [string, ProcessogramHierarchy[]] => {
-      if (!svgElement) return ["", []];
+  const { getElementIdentifierWithHierarchy } = useProcessogramHelpers({
+    svgElement,
+  });
 
-      if (!elementId || svgElement.id === elementId) {
-        return ["", []];
-      }
+  const { changeLevelTo } = useProcessogramNavigator({
+    currentElementId,
+    currentLevel,
+    historyLevel,
+    lockInteraction,
+    onChange,
+    optimizeLevelElements,
+    setFullBrightnessToCurrentLevel,
+    svgElement,
+    enableBruteOptimization,
+    getElementIdentifierWithHierarchy,
+  });
 
-      const element = svgElement.querySelector<SVGElement>(`#${elementId}`);
-
-      if (element) {
-        const hierarchy = getHierarchy(element);
-
-        if (hierarchy.hierarchy.length > 0) {
-          const elementIdentifier = getElementIdentifier(
-            elementId,
-            hierarchy.hierarchy
-          );
-
-          return [elementIdentifier, hierarchy.hierarchyPath];
-        }
-      }
-
-      return ["", []];
-    },
-    [svgElement]
-  );
-
-  const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
-
-  const changeLevelTo = useCallback(
-    (target: SVGElement, toPrevious: boolean, callback?: () => void) => {
-      if (!svgElement) return;
-      const viewBox = getElementViewBox(target);
-      if (!viewBox) return;
-      const id = target.id;
-      const currentLevelById = getLevelNumberById(id);
-      historyLevel.current[currentLevelById] = {
-        id,
-      };
-
-      currentElementId.current = id;
-      currentLevel.current = currentLevelById;
-
-      const isMaxLevel = currentLevelById === MAX_LEVEL;
-
-      let outOfFocusSelector: string | null = null;
-
-      if (isMaxLevel) {
-        const levelID = INVERSE_DICT[currentLevelById];
-        outOfFocusSelector = `[id*="${levelID}"]:not([id="${id}"])`;
-      } else {
-        outOfFocusSelector = `[data-optimized="true"]:not([id^="${id}"] *):not([id="${id}"])`;
-      }
-
-      const outOfFocusElements =
-        svgElement.querySelectorAll(outOfFocusSelector);
-
-      if (outOfFocusAnimation.current) {
-        outOfFocusAnimation.current.revert();
-      }
-
-      if (outOfFocusElements.length > 0) {
-        outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
-          filter: "brightness(0.3)",
-          cursor: "default",
-          duration: ANIMATION_DURATION,
-          ease: ANIMATION_EASE,
-        });
-      }
-
-      const [identifier, hierarchy] = getElementIdentifierWithHierarchy(id);
-
-      onChange(identifier, hierarchy);
-
-      lockInteraction.current = true;
-
-      // Set the viewBox of the SVG element to the new viewBox
-      gsap.fromTo(
-        svgElement,
-        { pointerEvents: "none", duration: 0 },
-        {
-          attr: {
-            viewBox,
-          },
-          duration: ANIMATION_DURATION,
-          ease: ANIMATION_EASE,
-          onComplete: () => {
-            gsap.set(svgElement, {
-              pointerEvents: "auto",
-              onComplete: () => {
-                optimizeLevelElements({
-                  currentElementId: id,
-                  bruteOptimization: enableBruteOptimization,
-                });
-                setFullBrightnessToCurrentLevel(toPrevious);
-                lockInteraction.current = false;
-                if (callback) {
-                  callback();
-                }
-              },
-            });
-          },
-        }
-      );
-    },
-    [svgElement, optimizeLevelElements, setFullBrightnessToCurrentLevel]
-  );
-
-  const getClickedStage = useCallback((target: SVGElement, level: number) => {
-    const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
-    const stageClicked = target.closest(selector) as SVGElement | null;
-    return stageClicked;
-  }, []);
-
-  const handleClick = useCallback(
-    async (event: MouseEvent) => {
-      if (!svgElement) return;
-
-      if (lockInteraction.current) return;
-
-      event.stopPropagation();
-
-      const target = event.target as SVGElement;
-
-      const clickedStage = getClickedStage(target, currentLevel.current);
-
-      if (clickedStage) {
-        // Navigate deeper
-        changeLevelTo(clickedStage, false);
-        return;
-      }
-
-      // Navigate back
-      const previousLevel = currentLevel.current - 1;
-      if (previousLevel < 1) {
-        if (previousLevel < 0) {
-          onClose();
-          return;
-        }
-        changeLevelTo(svgElement, true);
-        return;
-      }
-      const previousLevelData = historyLevel.current[previousLevel];
-      if (!previousLevelData) return;
-
-      const element = svgElement.querySelector<SVGElement>(
-        `#${previousLevelData.id}`
-      );
-
-      if (!element) return;
-
-      changeLevelTo(element, true);
-    },
-    [changeLevelTo, getClickedStage, svgElement]
-  );
-
-  const onMouseMove = useCallback(
-    (event: React.MouseEvent<SVGElement, MouseEvent>) => {
-      if (lockInteraction.current) return;
-
-      const target = event.target as SVGElement;
-
-      const nextLevel = currentLevel.current + 1;
-      const levelID = INVERSE_DICT[nextLevel];
-
-      const closest = target.closest(`[id*="${levelID}"]`) as SVGElement | null;
-
-      if (!closest) {
-        setOnHover(null);
-        return;
-      }
-
-      setOnHover(closest.id);
-    },
-    []
-  );
-
-  const onMouseLeave = useCallback(() => {
-    setOnHover(null);
-  }, []);
-
-  const changeLevelByEventBus = useCallback(
-    (id: string) => {
-      if (!svgElement) return;
-
-      if (svgElement.id === id) {
-        changeLevelTo(svgElement, true);
-        return;
-      }
-
-      const element = svgElement.querySelector<SVGElement>(`#${id}`);
-      if (!element) return;
-      const level = getLevelNumberById(id);
-
-      const toPrevious = level < currentLevel.current;
-
-      changeLevelTo(element, toPrevious);
-    },
-    [changeLevelTo]
-  );
-
-  const closeByEventBus = useCallback(() => {
-    if (!svgElement) return;
-
-    if (currentLevel.current > 0) {
-      changeLevelTo(svgElement, true, () => {
-        onClose();
-      });
-    } else {
-      onClose();
-    }
-  }, [changeLevelTo, onClose]);
-
-  const attachEventBus = useCallback(
-    (eventBus: EventBusHandler) => {
-      const actions: {
-        [key in EventBusTypes]: (payload: {} | { id: string }) => void;
-      } = {
-        CHANGE_LEVEL: (params) => {
-          if ("id" in params) {
-            const { id } = params;
-            changeLevelByEventBus(id);
-          }
-        },
-        CLOSE: () => {
-          closeByEventBus();
-        },
-      };
-
-      const events = {
-        publish: (event: EventBusProps) => {
-          const action = actions[event.type];
-          if (action) {
-            if (event.type === "CLOSE") action(event.payload);
-          }
-        },
-      };
-
-      eventBus(events);
-    },
-    [changeLevelByEventBus, closeByEventBus]
-  );
-
-  useEffect(() => {
-    if (!svgElement) return;
-    if (!onHover) {
-      const hoverSelector = `[id*="${INVERSE_DICT[currentLevel.current + 1]}"]`;
-
-      const hoverElements = svgElement.querySelectorAll(hoverSelector);
-
-      gsap.to(hoverElements, {
-        filter: "brightness(1)",
-        duration: ANIMATION_DURATION / 2,
-        ease: ANIMATION_EASE,
-      });
-
-      return;
-    }
-
-    const level = getLevelNumberById(onHover);
-    const levelID = INVERSE_DICT[level];
-
-    const onHoverSelector = `[id*="${onHover}"]`;
-    const onHoverElements = svgElement.querySelectorAll(onHoverSelector);
-
-    const hoverSelector = `[id*="${levelID}"]:not([id="${onHover}"])`;
-
-    const hoverElements = svgElement.querySelectorAll(hoverSelector);
-
-    gsap.to(hoverElements, {
-      filter: "brightness(0.3)",
-      duration: ANIMATION_DURATION / 2,
-      ease: ANIMATION_EASE,
+  const { handleClick, onMouseLeave, onMouseMove } =
+    useProcessogramEventHanders({
+      changeLevelTo,
+      currentLevel,
+      historyLevel,
+      lockInteraction,
+      onClose,
+      setOnHover,
+      svgElement,
     });
 
-    gsap.to(onHoverElements, {
-      filter: "brightness(1)",
-      duration: ANIMATION_DURATION / 2,
-      ease: ANIMATION_EASE,
-    });
-  }, [onHover]);
+  useEventBus({
+    changeLevelTo,
+    currentLevel,
+    svgElement,
+    onClose,
+    eventBusHandler,
+  });
 
-  useEffect(() => {
-    window.addEventListener("click", handleClick, { passive: false });
-
-    return () => {
-      window.removeEventListener("click", handleClick);
-    };
-  }, [handleClick]);
-
-  useEffect(() => {
-    if (isReady.current || !svgElement) return;
-
-    initializeOptimization();
-    isReady.current = true;
-    return () => {
-      isReady.current = false;
-    };
-  }, [svgElement, initializeOptimization]);
-
-  useEffect(() => {
-    if (!svgElement) return;
-
-    const elementId = onHover || currentElementId.current;
-
-    if (!elementId) {
-      onChange("", []);
-      return;
-    }
-
-    const [identifier, hierarchy] =
-      getElementIdentifierWithHierarchy(elementId);
-
-    onChange(identifier, hierarchy);
-  }, [onHover]);
-
-  useEffect(() => {
-    if (eventBusHandler) {
-      attachEventBus(eventBusHandler);
-    }
-  }, [attachEventBus, eventBusHandler]);
+  useProcessogramEffects({
+    currentElementId,
+    currentLevel,
+    getElementIdentifierWithHierarchy,
+    handleClick,
+    initializeOptimization,
+    isReady,
+    onChange,
+    onHover,
+    svgElement,
+  });
 
   return {
     setSvgElement,
