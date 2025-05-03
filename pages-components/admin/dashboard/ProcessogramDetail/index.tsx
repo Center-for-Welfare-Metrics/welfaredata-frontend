@@ -132,7 +132,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
     <Container width="100%" gap={0} mt={2}>
       <FlexRow justify="flex-start">
         <Link href="/admin">
-          <Text variant="h2">Species</Text>
+          <Text variant="h2">Dashboard</Text>
         </Link>
         <Text variant="h2">{">"}</Text>
         <Link

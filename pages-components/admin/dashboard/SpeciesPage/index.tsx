@@ -75,7 +75,7 @@ export const SpeciesPage = ({ specie_id }: Props) => {
       <FlexColumn>
         <FlexRow justify="flex-start">
           <Link href="/admin">
-            <Text variant="h2">Species</Text>
+            <Text variant="h2">Dashboard</Text>
           </Link>
           <Text variant="h2">{">"}</Text>
           <Text variant="h2">{specie?.name ?? "--"}</Text>

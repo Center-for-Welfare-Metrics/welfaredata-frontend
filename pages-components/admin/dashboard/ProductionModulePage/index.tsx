@@ -75,7 +75,7 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
       <FlexColumn>
         <FlexRow justify="flex-start">
           <Link href="/admin">
-            <Text variant="h2">Species</Text>
+            <Text variant="h2">Dashboard</Text>
           </Link>
           <Text variant="h2">{">"}</Text>
           {!!productionModule ? (
@@ -171,8 +171,9 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                 {!!productionModule && (
                   <CtaCreate onClick={createElement}>
                     <Text>
-                      No elements found. <br />
-                      Click here to create your first element!
+                      No processograms found. <br />
+                      Click here to upload your first one.
+                      {`(Each processogram should represent only one production system!)`}
                     </Text>
                   </CtaCreate>
                 )}
