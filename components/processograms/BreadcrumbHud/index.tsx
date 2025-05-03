@@ -23,11 +23,17 @@ export const BreadcrumbHud = ({ hierarchy, onClick }: Props) => {
   return (
     <Container>
       <FlexRow gap={0.25}>
-        {debouncedHierarchy.map((item, index) => (
+        {debouncedHierarchy.map((item, index, array) => (
           <FlexRow key={item.id} gap={0.25} justify="flex-start">
-            <ClickableName onClick={handleClick(item.rawId)}>
-              <Text variant="body1">{item.name}</Text>
-            </ClickableName>
+            {array.length - 1 === index ? (
+              <CurrentName>
+                <Text variant="body1">{item.name}</Text>
+              </CurrentName>
+            ) : (
+              <ClickableName onClick={handleClick(item.rawId)}>
+                <Text variant="body1">{item.name}</Text>
+              </ClickableName>
+            )}
             {index < debouncedHierarchy.length - 1 && (
               <ChevronRight size={16} color={ThemeColors.white} />
             )}
@@ -37,6 +43,10 @@ export const BreadcrumbHud = ({ hierarchy, onClick }: Props) => {
     </Container>
   );
 };
+
+const CurrentName = styled.div`
+  border-bottom: 1px solid ${ThemeColors.white};
+`;
 
 const ClickableName = styled.button`
   background: none;
