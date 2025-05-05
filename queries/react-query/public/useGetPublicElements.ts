@@ -1,6 +1,7 @@
 import { Specie } from "types/species";
 import { request } from "../request";
 import { ProcessogramData } from "types/processogram-data";
+import { ProcessogramQuestion } from "types/processogram-questions";
 
 type GetPublicElementsParams = {
   specie: string;
@@ -30,6 +31,23 @@ export const getPublicProcessogramDatas = async (
     method: "GET",
     service: "public",
     url: "processograms/data",
+    query: params,
+  });
+
+  return data;
+};
+
+type GetElementsQuestionsParams = {
+  specie: string;
+};
+
+export const getPublicProcessogramQuestions = async (
+  params: GetElementsQuestionsParams
+) => {
+  const { data } = await request<ProcessogramQuestion[]>({
+    method: "GET",
+    service: "public",
+    url: "processograms/questions",
     query: params,
   });
 

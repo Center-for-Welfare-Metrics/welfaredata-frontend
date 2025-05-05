@@ -15,4 +15,8 @@ export const QueryKeys = {
     List: "element-data",
     ByID: "element-data-by-id",
   },
+  PROCESSOGRAM_QUESTIONS: {
+    List: "element-questions",
+    ByID: "element-questions-by-id",
+  },
 };

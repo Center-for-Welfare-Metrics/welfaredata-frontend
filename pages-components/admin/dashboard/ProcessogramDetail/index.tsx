@@ -1,8 +1,13 @@
 import { useGetProcessogramDataByProcessogramId } from "@/api/react-query/processogram-datas/useGetProcessogramDatas";
+import { useGetProcessogramQuestionsByProcessogramId } from "@/api/react-query/processogram-questions/useGetProcessogramQuestions";
 import { useGetProcessogramById } from "@/api/react-query/processograms/useGetProcessograms";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
-import { BreadcrumbHud } from "@/components/processograms/BreadcrumbHud";
-import { ProgressogramHud } from "@/components/processograms/Hud";
+import { BreadcrumbHud } from "@/components/processograms/huds/BreadcrumbHud";
+import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
+import {
+  ProgressogramQuestionsHud,
+  QuestionData,
+} from "@/components/processograms/huds/QuestionsHud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramComplete";
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
@@ -62,6 +67,14 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
     processogram_id,
   });
 
+  const {
+    data: questionsData,
+    refetch: questionsRefetch,
+    isFetching: isFetchingQuestions,
+  } = useGetProcessogramQuestionsByProcessogramId({
+    processogram_id,
+  });
+
   const setElementDetailsModal = useSetElementDetailsModal();
 
   const openElementDetailsModal = () => {
@@ -91,6 +104,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   const handleDataRefetch = (e: React.MouseEvent) => {
     e.stopPropagation();
     dataRefetch();
+    questionsRefetch();
   };
 
   const getStatusText = (status: ProcessogramStatus) => {
@@ -159,7 +173,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         <Text variant="h2">{">"}</Text>
         <Text variant="h2">{element.name}</Text>
         <FlexColumn>
-          {isFetchingData ? (
+          {isFetchingData || isFetchingQuestions ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />
           ) : (
             <IconWrapper>
@@ -207,13 +221,24 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
               />
             </BreadcrumbsContainer>
             <FlexRow height={"100%"}>
-              <ProgressogramHud
+              <ProgressogramMainHud
                 notReady={element.status === "generating"}
                 currentElement={
                   currentElement || getElementNameFromId(element.identifier)
                 }
                 data={elementData?.data ?? {}}
               />
+              {questionsData && (
+                <QuestionsHudContainer>
+                  <ProgressogramQuestionsHud
+                    notReady={element.status === "generating"}
+                    currentElement={
+                      currentElement || getElementNameFromId(element.identifier)
+                    }
+                    data={questionsData?.data ?? {}}
+                  />
+                </QuestionsHudContainer>
+              )}
               <FlexColumn
                 height="100%"
                 width="100%"
@@ -257,6 +282,12 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
     </Container>
   );
 };
+
+const QuestionsHudContainer = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+`;
 
 const BreadcrumbsContainer = styled.div`
   position: absolute;
