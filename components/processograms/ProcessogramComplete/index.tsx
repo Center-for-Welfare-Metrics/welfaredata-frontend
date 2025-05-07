@@ -25,6 +25,7 @@ type Props = {
   eventBusHandler: EventBusHandler;
   enableBruteOptimization?: boolean;
   maxHeight?: string;
+  base64Images?: Map<string, string>;
 };
 
 export const ProcessogramComplete = ({
@@ -35,6 +36,7 @@ export const ProcessogramComplete = ({
   enableBruteOptimization,
   maxHeight,
   eventBusHandler,
+  base64Images,
 }: Props) => {
   const { setSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
@@ -43,6 +45,7 @@ export const ProcessogramComplete = ({
       onChange,
       rasterImages,
       eventBusHandler,
+      base64Images,
     });
 
   return (

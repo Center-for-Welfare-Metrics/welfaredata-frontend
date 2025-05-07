@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MAX_LEVEL } from "../../ProcessogramsList/consts";
 import { generateRasterSvgElement } from "./utils";
 import {
@@ -30,19 +30,14 @@ export const useOptimizeSvgParts = (
       x: number;
       y: number;
     };
-  }
+  },
+  base64Images?: Map<string, string>
 ) => {
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
     new Map<string, SVGGraphicsElement>()
   );
   const optimizedGElements = useRef<Map<string, SVGGraphicsElement>>(
-    // getCacheOptimizedInstance(instance)
     new Map<string, SVGGraphicsElement>()
-  );
-  const originalRootElement = useRef<SVGGraphicsElement | null>(null);
-  const optimizedRootElement = useRef<SVGGraphicsElement | null>(
-    //getCacheRootOptimizedInstance(instance)
-    null
   );
 
   const replaceWithOptimized = useCallback(
@@ -68,8 +63,10 @@ export const useOptimizeSvgParts = (
           const imageUrl = rasterImages[id];
           if (!imageUrl) continue;
 
+          const base64Image = base64Images?.get(id);
+
           const optimizedElement = generateRasterSvgElement({
-            dataUrl: imageUrl.src,
+            dataUrl: base64Image ?? imageUrl.src,
             width: imageUrl.width,
             height: imageUrl.height,
             x: imageUrl.x,

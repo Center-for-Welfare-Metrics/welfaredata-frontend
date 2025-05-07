@@ -34,7 +34,6 @@ export const ProgressogramQuestionsHud = ({
   >(null);
 
   const questions = useMemo(() => {
-    console.log(data);
     return data[currentElement]?.questions || [];
   }, [currentElement, data]);
 

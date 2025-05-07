@@ -24,6 +24,7 @@ type ProcessogramComponentProps = {
   isActive: boolean;
   active: string | null;
   eventBusHandler: EventBusHandler;
+  base64Images?: Map<string, string>;
   enabledBruteOptimization?: boolean;
 };
 
@@ -49,6 +50,7 @@ export const ProcessogramLoader = ({
   isActive,
   active,
   eventBusHandler,
+  base64Images,
   enabledBruteOptimization,
 }: ProcessogramComponentProps) => {
   // Element refs
@@ -226,6 +228,7 @@ export const ProcessogramLoader = ({
             enableBruteOptimization={enabledBruteOptimization}
             rasterImages={element.raster_images}
             eventBusHandler={eventBusHandler}
+            base64Images={base64Images}
             maxHeight="90vh"
           />
         )}

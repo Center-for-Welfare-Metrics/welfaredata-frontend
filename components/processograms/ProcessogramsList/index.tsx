@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "../ProcessogramLoader";
@@ -19,6 +19,9 @@ type Props = {
   eventBusHandler: EventBusHandler;
 };
 
+type StringMap = Map<string, string>;
+type StringMapArray = Map<string, StringMap>;
+
 export const ProcessogramsList = ({
   title,
   elements,
@@ -30,6 +33,8 @@ export const ProcessogramsList = ({
 
   const [active, setActive] = useState<string | null>(null);
   const [waitingForClose, setWaitingForClose] = useState(false);
+
+  const base64Images = useRef<StringMapArray>(new Map<string, StringMap>());
 
   const getHierarchyByIdentifier = useCallback((identifier: string) => {
     const elementName = getElementNameFromId(identifier);
@@ -85,6 +90,57 @@ export const ProcessogramsList = ({
     onChangeProps(id, hierarchy);
   };
 
+  useEffect(() => {
+    const fetchBase64Images = async (
+      rasterImages: { [key: string]: { src: string } } = {},
+      _id: string
+    ) => {
+      const promises = Object.entries(rasterImages).map(
+        async ([key, value]) => {
+          const response = await fetch(value.src, {
+            method: "GET",
+            headers: { "Cache-Control": "no-cache" },
+          });
+          const blob = await response.blob();
+          return new Promise<void>((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = () => {
+              const base64data = reader.result as string;
+              if (!base64Images.current.has(_id)) {
+                base64Images.current.set(_id, new Map<string, string>());
+              }
+              base64Images.current.get(_id)?.set(key, base64data ?? value.src);
+              resolve();
+            };
+          });
+        }
+      );
+
+      await Promise.all(promises);
+    };
+
+    const fetchBase64ImagesFromElements = async () => {
+      for (const element of elements) {
+        const rasterImages = element.raster_images;
+        const rasterLength = Object.keys(rasterImages).length;
+
+        const currentBase64ImagesLength =
+          base64Images.current.get(element._id)?.size ?? 0;
+
+        if (rasterLength === currentBase64ImagesLength) {
+          continue;
+        }
+
+        if (rasterImages) {
+          await fetchBase64Images(rasterImages, element._id);
+        }
+      }
+    };
+
+    fetchBase64ImagesFromElements();
+  }, [elements]);
+
   return (
     <Container>
       <TitleContainer
@@ -114,6 +170,8 @@ export const ProcessogramsList = ({
           isActive={active === element._id}
           active={active}
           enabledBruteOptimization={false}
+          // Props
+          base64Images={base64Images.current.get(element._id)}
         />
       ))}
     </Container>

@@ -51,7 +51,7 @@ export const useEventBus = ({
     } else {
       onClose();
     }
-  }, [changeLevelTo, onClose]);
+  }, [changeLevelTo]);
 
   const attachEventBus = useCallback(
     (eventBus: EventBusHandler) => {

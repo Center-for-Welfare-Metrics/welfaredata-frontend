@@ -43,6 +43,7 @@ type Props = {
       y: number;
     };
   };
+  base64Images?: Map<string, string>;
 };
 
 export const useProcessogramLogic = ({
@@ -51,6 +52,7 @@ export const useProcessogramLogic = ({
   onChange,
   eventBusHandler,
   rasterImages,
+  base64Images,
 }: Props) => {
   // Refs
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
@@ -67,7 +69,8 @@ export const useProcessogramLogic = ({
 
   const { optimizeLevelElements } = useOptimizeSvgParts(
     svgElement,
-    rasterImages
+    rasterImages,
+    base64Images
   );
 
   const setFullBrightnessToCurrentLevel = useCallback(
