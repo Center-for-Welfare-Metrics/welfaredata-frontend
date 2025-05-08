@@ -22,6 +22,8 @@ type Props = {
   getElementIdentifierWithHierarchy: (
     elementId: string
   ) => [string, ProcessogramHierarchy[]];
+  startFromSpecie: boolean;
+  isActive: boolean;
 };
 
 export const useProcessogramEffects = ({
@@ -34,6 +36,8 @@ export const useProcessogramEffects = ({
   onHover,
   svgElement,
   getElementIdentifierWithHierarchy,
+  startFromSpecie,
+  isActive,
 }: Props) => {
   useEffect(() => {
     if (!svgElement) return;
@@ -75,15 +79,18 @@ export const useProcessogramEffects = ({
   }, [onHover]);
 
   useEffect(() => {
-    window.addEventListener("click", handleClick, { passive: false });
-
+    if (isActive) {
+      window.addEventListener("click", handleClick, { passive: false });
+    }
     return () => {
       window.removeEventListener("click", handleClick);
     };
-  }, [handleClick]);
+  }, [handleClick, isActive]);
 
   useEffect(() => {
-    if (isReady.current || !svgElement || currentLevel.current > -1) return;
+    if (isReady.current || !svgElement) return;
+
+    if (startFromSpecie && currentLevel.current > -1) return;
 
     initializeOptimization();
     isReady.current = true;

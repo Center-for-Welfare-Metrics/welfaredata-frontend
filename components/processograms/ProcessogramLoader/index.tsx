@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 // import { ProcessogramStarter } from "../ProcessogramStarter";
 import { ProcessogramComplete } from "../ProcessogramComplete";
 import { gsap } from "gsap";
@@ -148,7 +148,6 @@ export const ProcessogramLoader = ({
         position: "absolute",
         width: "calc(100% - 4rem)",
         top: topWithScroll,
-        translateX: 0,
         translateY: 0,
         onComplete: () => {
           gsap.set(listContainerRef.current, {
@@ -176,6 +175,7 @@ export const ProcessogramLoader = ({
       gsap.to(svgContainerRef.current, {
         top: BBox.topWithScroll,
         duration: ANIMATION_DURATION,
+        translateY: 0,
         ease: ANIMATION_EASE,
         onComplete: () => {
           gsap.set(svgContainerRef.current, {
@@ -241,6 +241,7 @@ export const ProcessogramLoader = ({
       onMouseLeave={onMouseLeave}
       onClick={anotherIsActive ? undefined : onClick}
       style={activeStyle}
+      noPointerEvents={!!active && !isActive}
     >
       <SvgContainer ref={svgContainerRef} style={overStyle}>
         <ProcessogramComplete
@@ -252,6 +253,7 @@ export const ProcessogramLoader = ({
           rasterImages={element.raster_images}
           eventBusHandler={eventBusHandler}
           base64ImagesRef={base64ImagesRef}
+          isActive={isActive}
           maxHeight="90vh"
         />
       </SvgContainer>
@@ -279,11 +281,23 @@ const SvgContainer = styled.div`
 
 const FakeBoxStyled = styled.div``;
 
-const ProcessogramContainer = styled.div`
+type Props = {
+  noPointerEvents: boolean;
+};
+
+const ProcessogramContainer = styled.div<Props>`
   width: 100%;
   height: fit-content;
   transition:
     filter 500ms,
     opacity 500ms;
   cursor: pointer;
+
+  ${({ noPointerEvents }) =>
+    noPointerEvents &&
+    css`
+      * {
+        pointer-events: none !important;
+      }
+    `}
 `;

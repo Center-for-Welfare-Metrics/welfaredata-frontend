@@ -44,6 +44,7 @@ type Props = {
       y: number;
     };
   };
+  isActive: boolean;
   base64ImagesRef?: RefObject<Map<string, string>>;
 };
 
@@ -54,6 +55,7 @@ export const useProcessogramLogic = ({
   eventBusHandler,
   startFromSpecie,
   rasterImages,
+  isActive,
   base64ImagesRef,
 }: Props) => {
   // Refs
@@ -118,10 +120,11 @@ export const useProcessogramLogic = ({
 
   const initializeOptimization = useCallback(async () => {
     setLoadingOptimization(true);
+    console.log(currentLevel.current);
     optimizeLevelElements({
       currentElementId: null,
       bruteOptimization: enableBruteOptimization,
-      currentLevel: -1,
+      currentLevel: currentLevel.current,
     });
     setFullBrightnessToCurrentLevel(false);
     setLoadingOptimization(false);
@@ -158,6 +161,7 @@ export const useProcessogramLogic = ({
       setOnHover,
       svgElement,
       optimizeLevelElements,
+      startFromSpecie,
     });
 
   useEventBus({
@@ -167,6 +171,7 @@ export const useProcessogramLogic = ({
     onClose,
     eventBusHandler,
     optimizeLevelElements,
+    startFromSpecie,
   });
 
   useProcessogramEffects({
@@ -179,6 +184,8 @@ export const useProcessogramLogic = ({
     onChange,
     onHover,
     svgElement,
+    startFromSpecie,
+    isActive,
   });
 
   return {

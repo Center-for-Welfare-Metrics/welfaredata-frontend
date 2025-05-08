@@ -24,6 +24,7 @@ type Props = {
   };
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
+  isActive: boolean;
   enableBruteOptimization?: boolean;
   maxHeight?: string;
   base64ImagesRef?: RefObject<Map<string, string>>;
@@ -39,6 +40,7 @@ export const ProcessogramComplete = ({
   maxHeight,
   eventBusHandler,
   base64ImagesRef,
+  isActive,
 }: Props) => {
   const { updateSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
@@ -49,6 +51,7 @@ export const ProcessogramComplete = ({
       startFromSpecie,
       eventBusHandler,
       base64ImagesRef,
+      isActive,
     });
 
   return (
@@ -60,8 +63,8 @@ export const ProcessogramComplete = ({
           maxHeight: maxHeight,
           overflow: "visible",
         }}
-        onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
+        onMouseMove={isActive ? onMouseMove : undefined}
+        onMouseLeave={isActive ? onMouseLeave : undefined}
       />
       <Portal>
         {loadingOptimization && (

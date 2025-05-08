@@ -256,6 +256,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   onClose={onClose}
                   maxHeight="70vh"
                   startFromSpecie={false}
+                  isActive={true}
                 />
               </FlexColumn>
             </FlexRow>
