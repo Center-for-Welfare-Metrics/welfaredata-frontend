@@ -22,6 +22,7 @@ type Props = {
   svgElement: SVGElement | null;
   optimizeLevelElements: (args: {
     currentElementId: string;
+    currentLevel: number;
     bruteOptimization?: boolean;
   }) => void;
   setFullBrightnessToCurrentLevel: (toPrevious: boolean) => void;
@@ -113,6 +114,7 @@ export const useProcessogramNavigator = ({
               onComplete: () => {
                 optimizeLevelElements({
                   currentElementId: id,
+                  currentLevel: currentLevelById,
                   bruteOptimization: enableBruteOptimization,
                 });
                 setFullBrightnessToCurrentLevel(toPrevious);

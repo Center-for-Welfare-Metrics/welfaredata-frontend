@@ -10,6 +10,11 @@ type Props = {
   lockInteraction: RefObject<boolean>;
   currentLevel: RefObject<number>;
   historyLevel: RefObject<HistoryLevel>;
+  optimizeLevelElements: (args: {
+    currentElementId: string | null;
+    currentLevel: number;
+    bruteOptimization?: boolean;
+  }) => void;
 };
 
 export const useProcessogramEventHanders = ({
@@ -20,6 +25,7 @@ export const useProcessogramEventHanders = ({
   lockInteraction,
   currentLevel,
   historyLevel,
+  optimizeLevelElements,
 }: Props) => {
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
     const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
@@ -49,6 +55,12 @@ export const useProcessogramEventHanders = ({
       const previousLevel = currentLevel.current - 1;
       if (previousLevel < 1) {
         if (previousLevel < 0) {
+          currentLevel.current = -1;
+          optimizeLevelElements({
+            currentElementId: null,
+            currentLevel: -1,
+            bruteOptimization: false,
+          });
           onClose();
           return;
         }

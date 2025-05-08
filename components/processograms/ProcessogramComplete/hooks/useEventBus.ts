@@ -12,6 +12,11 @@ type Props = {
   currentLevel: RefObject<number>;
   onClose: () => void;
   eventBusHandler: EventBusHandler;
+  optimizeLevelElements: (args: {
+    currentElementId: string | null;
+    currentLevel: number;
+    bruteOptimization?: boolean;
+  }) => void;
 };
 
 export const useEventBus = ({
@@ -20,6 +25,7 @@ export const useEventBus = ({
   svgElement,
   onClose,
   eventBusHandler,
+  optimizeLevelElements,
 }: Props) => {
   const changeLevelByEventBus = useCallback(
     (id: string) => {
@@ -46,6 +52,12 @@ export const useEventBus = ({
 
     if (currentLevel.current > 0) {
       changeLevelTo(svgElement, true, () => {
+        currentLevel.current = -1;
+        optimizeLevelElements({
+          currentElementId: null,
+          currentLevel: -1,
+          bruteOptimization: false,
+        });
         onClose();
       });
     } else {

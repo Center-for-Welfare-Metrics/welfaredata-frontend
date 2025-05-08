@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { MAX_LEVEL } from "../../ProcessogramsList/consts";
 import { generateRasterSvgElement } from "./utils";
 import {
@@ -8,20 +8,25 @@ import {
 
 type ReplaceWithOptimizedParams = {
   selector: string;
+  replaceRoot: boolean;
 };
 
 type RestoreOriginalParams = {
   selector: string;
+  restoreRoot: boolean;
   bruteOptimization?: boolean;
 };
 
 type OptimizeLevelElementsParams = {
   currentElementId: string | null;
+  currentLevel: number;
   bruteOptimization?: boolean;
 };
 
 export const useOptimizeSvgParts = (
   svgElement: SVGGraphicsElement | null,
+  currentSvgElement: RefObject<SVGGraphicsElement | null>,
+  updateSvgElement: (svgElement: SVGGraphicsElement) => void,
   rasterImages: {
     [key: string]: {
       src: string;
@@ -31,7 +36,7 @@ export const useOptimizeSvgParts = (
       y: number;
     };
   },
-  base64Images?: Map<string, string>
+  base64ImagesRef?: RefObject<Map<string, string>>
 ) => {
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
     new Map<string, SVGGraphicsElement>()
@@ -41,11 +46,51 @@ export const useOptimizeSvgParts = (
   );
 
   const replaceWithOptimized = useCallback(
-    ({ selector }: ReplaceWithOptimizedParams) => {
-      if (!svgElement) return;
+    ({ selector, replaceRoot }: ReplaceWithOptimizedParams) => {
+      if (!currentSvgElement.current) return;
+
+      if (replaceRoot) {
+        const rootId = currentSvgElement.current.id;
+
+        if (currentSvgElement.current.getAttribute("data-optimized")) return;
+
+        if (optimizedGElements.current.has(rootId)) {
+          const optimizedG = optimizedGElements.current.get(rootId);
+          if (optimizedG) {
+            currentSvgElement.current.replaceWith(optimizedG);
+            updateSvgElement(optimizedG);
+          }
+        } else {
+          const imageUrl = rasterImages[rootId];
+          if (!imageUrl) return;
+
+          const base64Image = base64ImagesRef?.current?.get(rootId);
+
+          const optimizedElement = generateRasterSvgElement({
+            dataUrl: base64Image ?? imageUrl.src,
+            width: imageUrl.width,
+            height: imageUrl.height,
+            x: imageUrl.x,
+            y: imageUrl.y,
+            group: currentSvgElement.current,
+          });
+
+          originalGElements.current.set(rootId, currentSvgElement.current);
+
+          if (optimizedElement) {
+            currentSvgElement.current.replaceWith(optimizedElement);
+            updateSvgElement(optimizedElement);
+            optimizedGElements.current.set(rootId, optimizedElement);
+          }
+        }
+
+        if (!rootId) return;
+
+        return;
+      }
 
       const gElements = Array.from(
-        svgElement.querySelectorAll(selector)
+        currentSvgElement.current.querySelectorAll(selector)
       ) as SVGGraphicsElement[];
 
       for (const gElement of gElements) {
@@ -63,7 +108,7 @@ export const useOptimizeSvgParts = (
           const imageUrl = rasterImages[id];
           if (!imageUrl) continue;
 
-          const base64Image = base64Images?.get(id);
+          const base64Image = base64ImagesRef?.current?.get(id);
 
           const optimizedElement = generateRasterSvgElement({
             dataUrl: base64Image ?? imageUrl.src,
@@ -83,14 +128,35 @@ export const useOptimizeSvgParts = (
         }
       }
     },
-    [svgElement, rasterImages]
+    [svgElement, rasterImages, updateSvgElement]
   );
 
   const restoreOriginal = useCallback(
-    ({ selector, bruteOptimization }: RestoreOriginalParams) => {
-      if (!svgElement) return;
+    ({ selector, bruteOptimization, restoreRoot }: RestoreOriginalParams) => {
+      if (!currentSvgElement.current) return;
 
-      const gElements = Array.from(svgElement.querySelectorAll(selector));
+      if (restoreRoot) {
+        const rootId = currentSvgElement.current.id;
+
+        if (!rootId) return;
+
+        if (!currentSvgElement.current.getAttribute("data-optimized")) return;
+
+        if (!originalGElements.current.has(rootId)) return;
+
+        const originalG = originalGElements.current.get(rootId);
+
+        if (!originalG) return;
+
+        currentSvgElement.current.replaceWith(originalG);
+        updateSvgElement(originalG);
+
+        return;
+      }
+
+      const gElements = Array.from(
+        currentSvgElement.current.querySelectorAll(selector)
+      );
       for (const gElement of gElements) {
         const id = gElement.id;
         if (!gElement.getAttribute("data-optimized")) continue;
@@ -108,45 +174,57 @@ export const useOptimizeSvgParts = (
         gElement.replaceWith(originalG);
       }
     },
-    [svgElement]
+    [svgElement, updateSvgElement]
   );
 
   const optimizeLevelElements = useCallback(
-    ({ currentElementId, bruteOptimization }: OptimizeLevelElementsParams) => {
-      if (!svgElement) return;
+    ({
+      currentElementId,
+      currentLevel,
+      bruteOptimization,
+    }: OptimizeLevelElementsParams) => {
+      if (!currentSvgElement.current) return;
 
-      const levelNum = currentElementId
-        ? getLevelNumberById(currentElementId)
-        : 0;
-
-      if (levelNum > 0) {
+      if (currentLevel === 0) {
+        restoreOriginal({
+          selector: "",
+          bruteOptimization: false,
+          restoreRoot: true,
+        });
+      } else {
         const currentLevelSelector = `[id="${currentElementId}"]`;
 
         // Restore current level to original
         restoreOriginal({
           selector: currentLevelSelector,
           bruteOptimization: false,
+          restoreRoot: false,
         });
 
         // If we're at max level, no need to optimize next level
-        if (levelNum > MAX_LEVEL) return;
+        if (currentLevel > MAX_LEVEL) return;
       }
 
-      // Get next level selector
-      const nextLevelNum = levelNum + 1;
-      const nextLevelKey = INVERSE_DICT[nextLevelNum];
-      const nextLevelSelector =
-        levelNum === 0
-          ? `[id*="${nextLevelKey}"]`
-          : `#${currentElementId} [id*="${nextLevelKey}"]`;
+      setTimeout(() => {
+        // Get next level selector
+        const nextLevelNum = currentLevel + 1;
+        const nextLevelKey = INVERSE_DICT[nextLevelNum];
+        const nextLevelSelector =
+          currentLevel === 0
+            ? `[id*="${nextLevelKey}"]`
+            : `#${currentElementId} [id*="${nextLevelKey}"]`;
 
-      // Replace next level with optimized version
+        // Replace next level with optimized version
 
-      const optimizeNextLevel = nextLevelNum < MAX_LEVEL || bruteOptimization;
+        const optimizeNextLevel = nextLevelNum < MAX_LEVEL || bruteOptimization;
 
-      if (optimizeNextLevel) {
-        replaceWithOptimized({ selector: nextLevelSelector });
-      }
+        if (optimizeNextLevel) {
+          replaceWithOptimized({
+            selector: nextLevelSelector,
+            replaceRoot: currentLevel === -1,
+          });
+        }
+      }, 0);
     },
     [restoreOriginal, replaceWithOptimized, svgElement]
   );

@@ -33,36 +33,36 @@ const scrollBar = (color: ThemeColorsType, size = ".5rem") => css`
 
 export const GlobalStyles = createGlobalStyle`
 
-    #__next{
-        height:100%;
+    #__next, html{
+      height:100%;
     }
 
     *{
-        margin:0;
+      margin:0;
     }
 
     html{
-        background-color: ${ThemeColors.black};          
+      background-color: ${ThemeColors.black};          
     }
     html,body,div,textarea{        
-        ${scrollBar("gray")}
+      ${scrollBar("gray")}
     }
     body{
-        background-color: ${ThemeColors.black};        
-        width:100%;
-        height: 100%;
-        font-family: 'Titillium Web', sans-serif;         
+      background-color: ${ThemeColors.black};        
+      width:100%;
+      height: 100%;
+      font-family: 'Titillium Web', sans-serif;         
     }
     div,textarea{
-        ${scrollBar("blue", ".25rem")}
+      ${scrollBar("blue", ".25rem")}
     }
     textarea{
-        font-family : inherit;
-        font-size: 1em;
+      font-family : inherit;
+      font-size: 1em;
     }
     button {
-        font-family : inherit;
-        font-size: 1em;
+      font-family : inherit;
+      font-size: 1em;
     }
 
     /* --------------------- hack | gambiarra ---------------- */

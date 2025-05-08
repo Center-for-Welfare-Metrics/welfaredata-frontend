@@ -83,7 +83,7 @@ export const useProcessogramEffects = ({
   }, [handleClick]);
 
   useEffect(() => {
-    if (isReady.current || !svgElement) return;
+    if (isReady.current || !svgElement || currentLevel.current > -1) return;
 
     initializeOptimization();
     isReady.current = true;

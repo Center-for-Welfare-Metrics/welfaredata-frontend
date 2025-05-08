@@ -12,7 +12,7 @@ import {
   getPublicProcessogramQuestions,
 } from "@/api/react-query/public/useGetPublicElements";
 import { FlexRow } from "@/components/desing-components/Flex";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Specie } from "types/species";
 import { BreadcrumbHud } from "@/components/processograms/huds/BreadcrumbHud";
@@ -50,6 +50,8 @@ const PublicSpeciePage = ({
   >([]);
 
   const [eventBus, setEventBus] = useState<EventBus | null>(null);
+
+  const listContainerRef = useRef<HTMLDivElement | null>(null);
 
   const onChangeOverItem = (
     id: string | null,
@@ -232,42 +234,47 @@ const PublicSpeciePage = ({
       <Head>
         <title>Welfare Data - {specie}</title>
       </Head>
-      <FlexRow>
+      <QuestionsHudContainer>
+        <ProgressogramQuestionsHud
+          currentElement={currentElement ?? speciesData.pathname}
+          data={elementsQuestionsContent}
+          notReady={false}
+        />
+      </QuestionsHudContainer>
+      <FlexRow height="100%">
         <BreadcrumbsContainer>
           <BreadcrumbHud hierarchy={hierarchy} onClick={onClickBreadcrumb} />
         </BreadcrumbsContainer>
-        <HudContainer>
-          <ProgressogramMainHud
-            currentElement={currentElement ?? speciesData.pathname}
-            data={elementsDataContent}
-            notReady={false}
-          />
-        </HudContainer>
-        <QuestionsHudContainer>
-          <ProgressogramQuestionsHud
-            currentElement={currentElement ?? speciesData.pathname}
-            data={elementsQuestionsContent}
-            notReady={false}
-          />
-        </QuestionsHudContainer>
-        <div
-          style={{
-            paddingLeft: "400px",
-            overflow: "hidden",
-          }}
-        >
-          <ProcessogramsList
-            title="Dynamic title and description (under development)"
-            elements={processograms}
-            onChange={onChangeOverItem}
-            onSelect={onSelectItem}
-            eventBusHandler={setEventBus} //TODO-SOS
-          />
-        </div>
+        <FlexRow width="100%" height="100%">
+          <HudContainer>
+            <ProgressogramMainHud
+              currentElement={currentElement ?? speciesData.pathname}
+              data={elementsDataContent}
+              notReady={false}
+            />
+          </HudContainer>
+          <ProcessogramListContainer ref={listContainerRef}>
+            <ProcessogramsList
+              title="Dynamic title and description (under development)"
+              elements={processograms}
+              onChange={onChangeOverItem}
+              onSelect={onSelectItem}
+              eventBusHandler={setEventBus}
+              listContainerRef={listContainerRef}
+            />
+          </ProcessogramListContainer>
+        </FlexRow>
       </FlexRow>
     </Container>
   );
 };
+
+const ProcessogramListContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+`;
 
 const QuestionsHudContainer = styled.div`
   position: fixed;
@@ -285,7 +292,6 @@ const BreadcrumbsContainer = styled.div`
 `;
 
 const HudContainer = styled.div`
-  position: fixed;
   top: 0;
   left: 0;
   width: 400px;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import {
   ANIMATION_DURATION,
   ANIMATION_EASE,
@@ -34,6 +34,7 @@ type Props = {
   onClose: () => void;
   onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
   eventBusHandler: EventBusHandler;
+  startFromSpecie: boolean;
   rasterImages: {
     [key: string]: {
       src: string;
@@ -43,7 +44,7 @@ type Props = {
       y: number;
     };
   };
-  base64Images?: Map<string, string>;
+  base64ImagesRef?: RefObject<Map<string, string>>;
 };
 
 export const useProcessogramLogic = ({
@@ -51,17 +52,30 @@ export const useProcessogramLogic = ({
   onClose,
   onChange,
   eventBusHandler,
+  startFromSpecie,
   rasterImages,
-  base64Images,
+  base64ImagesRef,
 }: Props) => {
   // Refs
+
   const [svgElement, setSvgElement] = useState<SVGGraphicsElement | null>(null);
+
+  const currentSvgElement = useRef<SVGGraphicsElement | null>(null);
+
+  const updateSvgElement = useCallback(
+    (svgElement: SVGGraphicsElement) => {
+      currentSvgElement.current = svgElement;
+      setSvgElement(svgElement);
+    },
+    [setSvgElement]
+  );
+
   const [loadingOptimization, setLoadingOptimization] =
     useState<boolean>(false);
 
   const [onHover, setOnHover] = useState<string | null>(null);
   const historyLevel = useRef<HistoryLevel>({});
-  const currentLevel = useRef<number>(0);
+  const currentLevel = useRef<number>(startFromSpecie ? -1 : 0);
   const lockInteraction = useRef<boolean>(false);
   const currentElementId = useRef<string | null>(null);
 
@@ -69,8 +83,10 @@ export const useProcessogramLogic = ({
 
   const { optimizeLevelElements } = useOptimizeSvgParts(
     svgElement,
+    currentSvgElement,
+    updateSvgElement,
     rasterImages,
-    base64Images
+    base64ImagesRef
   );
 
   const setFullBrightnessToCurrentLevel = useCallback(
@@ -105,6 +121,7 @@ export const useProcessogramLogic = ({
     optimizeLevelElements({
       currentElementId: null,
       bruteOptimization: enableBruteOptimization,
+      currentLevel: -1,
     });
     setFullBrightnessToCurrentLevel(false);
     setLoadingOptimization(false);
@@ -140,6 +157,7 @@ export const useProcessogramLogic = ({
       onClose,
       setOnHover,
       svgElement,
+      optimizeLevelElements,
     });
 
   useEventBus({
@@ -148,6 +166,7 @@ export const useProcessogramLogic = ({
     svgElement,
     onClose,
     eventBusHandler,
+    optimizeLevelElements,
   });
 
   useProcessogramEffects({
@@ -163,7 +182,7 @@ export const useProcessogramLogic = ({
   });
 
   return {
-    setSvgElement,
+    updateSvgElement,
     svgElement,
     loadingOptimization,
     onMouseMove,

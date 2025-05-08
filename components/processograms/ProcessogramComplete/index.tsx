@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { styled } from "styled-components";
 
 import { useProcessogramLogic } from "./logic";
@@ -23,9 +23,10 @@ type Props = {
     };
   };
   eventBusHandler: EventBusHandler;
+  startFromSpecie: boolean;
   enableBruteOptimization?: boolean;
   maxHeight?: string;
-  base64Images?: Map<string, string>;
+  base64ImagesRef?: RefObject<Map<string, string>>;
 };
 
 export const ProcessogramComplete = ({
@@ -33,25 +34,27 @@ export const ProcessogramComplete = ({
   onClose,
   onChange,
   rasterImages,
+  startFromSpecie,
   enableBruteOptimization,
   maxHeight,
   eventBusHandler,
-  base64Images,
+  base64ImagesRef,
 }: Props) => {
-  const { setSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
+  const { updateSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
       onClose,
       enableBruteOptimization,
       onChange,
       rasterImages,
+      startFromSpecie,
       eventBusHandler,
-      base64Images,
+      base64ImagesRef,
     });
 
   return (
     <>
       <SvgRenderer
-        innerRef={setSvgElement}
+        innerRef={updateSvgElement}
         src={src}
         style={{
           maxHeight: maxHeight,
