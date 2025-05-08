@@ -255,6 +255,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   eventBusHandler={setEventBus}
                   onClose={onClose}
                   maxHeight="70vh"
+                  startFromSpecie={false}
                 />
               </FlexColumn>
             </FlexRow>
