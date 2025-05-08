@@ -158,6 +158,12 @@ export const ProcessogramLoader = ({
                 duration: ANIMATION_DURATION,
                 ease: ANIMATION_EASE,
                 onComplete: () => {
+                  gsap.set(svgContainerRef.current, {
+                    position: "fixed",
+                    top: "50%",
+                    translateY: "-50%",
+                    width: "100vh",
+                  });
                   initialized.current = true;
                 },
               });
