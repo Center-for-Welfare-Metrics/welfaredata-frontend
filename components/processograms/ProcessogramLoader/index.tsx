@@ -16,6 +16,7 @@ import {
 } from "../ProcessogramsList/consts";
 import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import { EventBusHandler } from "../ProcessogramComplete/types";
+import { ThemeColors } from "theme/globalStyle";
 
 function calcularTopCentralizado(
   containerEl: HTMLElement | null,
@@ -259,6 +260,7 @@ export const ProcessogramLoader = ({
           rasterImages={element.raster_images}
           eventBusHandler={eventBusHandler}
           base64ImagesRef={base64ImagesRef}
+          theme={element.theme}
           isActive={isActive}
           maxHeight="90vh"
         />

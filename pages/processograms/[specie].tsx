@@ -21,6 +21,7 @@ import { EventBus } from "@/components/processograms/ProcessogramComplete/types"
 import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
 import { ProcessogramQuestionData } from "types/processogram-questions";
 import { ProgressogramQuestionsHud } from "@/components/processograms/huds/QuestionsHud";
+import { ThemeColors } from "theme/globalStyle";
 
 type Props = {
   specie: string;
@@ -127,6 +128,16 @@ const PublicSpeciePage = ({
 
     return map;
   }, [processograms]);
+
+  const selectedItemTheme = useMemo(() => {
+    if (!active) return null;
+
+    const element = processogramsMap.get(active);
+
+    if (!element) return null;
+
+    return element.theme;
+  }, [active, processogramsMap]);
 
   const processogramDatasMap = useMemo(() => {
     const map = new Map<string, ProcessogramData>();
@@ -253,7 +264,13 @@ const PublicSpeciePage = ({
               notReady={false}
             />
           </HudContainer>
-          <ProcessogramListContainer ref={listContainerRef}>
+          <ProcessogramListContainer
+            ref={listContainerRef}
+            style={{
+              backgroundColor:
+                selectedItemTheme === "light" ? ThemeColors.white : undefined,
+            }}
+          >
             <ProcessogramsList
               title="Dynamic title and description (under development)"
               elements={processograms}
@@ -274,6 +291,7 @@ const ProcessogramListContainer = styled.div`
   height: 100%;
   overflow: auto;
   position: relative;
+  transition: background-color 500ms;
 `;
 
 const QuestionsHudContainer = styled.div`

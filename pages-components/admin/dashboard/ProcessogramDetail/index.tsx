@@ -245,6 +245,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                 justify="center"
                 style={{
                   overflow: "hidden",
+                  backgroundColor:
+                    element.theme === "light" ? ThemeColors.white : undefined,
                 }}
               >
                 <ProcessogramComplete
@@ -255,6 +257,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   eventBusHandler={setEventBus}
                   onClose={onClose}
                   maxHeight="70vh"
+                  theme={element.theme}
                   startFromSpecie={false}
                   isActive={true}
                 />

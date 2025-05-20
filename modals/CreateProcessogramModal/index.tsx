@@ -14,9 +14,14 @@ import { Button } from "@/components/Button";
 import { uploadSvgElement } from "@/api/react-query/processograms/useUploadSvgElement";
 import { useQueryClient } from "@tanstack/react-query";
 import { QueryKeys } from "@/api/react-query/keys";
+import { ThemeColors } from "theme/globalStyle";
+import { Controller } from "react-hook-form";
 
 const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  theme: z.enum(["light", "dark"], {
+    message: "Theme is required",
+  }),
   file: z.custom<File>().refine((file) => !!file, {
     message: "File is required",
   }),
@@ -39,7 +44,7 @@ const CreateProcessogramModal = ({
 }: CreateProcessogramModalProps) => {
   const queryClient = useQueryClient();
 
-  const { handleSubmit, register, formState, setValue, watch, reset } =
+  const { handleSubmit, register, formState, setValue, watch, reset, control } =
     useForm<CreateProcessogramForm>({
       resolver: zodResolver(CreateProcessogramSchema),
       defaultValues: {
@@ -69,6 +74,7 @@ const CreateProcessogramModal = ({
       formData.append("specie_id", specie_id);
       formData.append("production_module_id", production_module_id);
       formData.append("path", pathname);
+      formData.append("theme", data.theme);
 
       await uploadSvgElement(formData);
 
@@ -100,6 +106,40 @@ const CreateProcessogramModal = ({
               error={errors.name?.message}
               {...register("name")}
             />
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="theme"
+                render={({ field }) => (
+                  <select
+                    style={{
+                      width: "100%",
+                      padding: "0.5rem",
+                      borderRadius: "0.5rem",
+                      border: `1px solid ${ThemeColors.white}`,
+                      backgroundColor: ThemeColors.deep_blue,
+                      fontSize: "1rem",
+                      color: ThemeColors.white,
+                      cursor: "pointer",
+                    }}
+                    {...field}
+                    value={field.value || ""}
+                  >
+                    <option value={""} disabled>
+                      Select a theme
+                    </option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                )}
+              />
+              {errors.theme?.message && (
+                <Text variant="body2" color="red">
+                  {errors.theme.message}
+                </Text>
+              )}
+            </FlexColumn>
+
             {file && (
               <FlexColumn gap={0}>
                 <Text variant="body2">File: {file.name}</Text>

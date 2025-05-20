@@ -4,6 +4,8 @@ export type ProcessogramStatus =
   | "error"
   | "generating";
 
+type ProcessogramTheme = "light" | "dark";
+
 export type Processogram = {
   _id: string;
   identifier: string;
@@ -24,6 +26,7 @@ export type Processogram = {
     };
   };
   status: ProcessogramStatus;
+  theme: ProcessogramTheme;
   createdAt: string;
   updatedAt: string;
 };
@@ -64,6 +67,7 @@ export type ProcessogramById = {
     updatedAt: string;
   };
   status: ProcessogramStatus;
+  theme: ProcessogramTheme;
   originalSize: number;
   finalSize: number;
   createdAt: string;

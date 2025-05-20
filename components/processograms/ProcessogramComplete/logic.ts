@@ -22,6 +22,7 @@ import { useProcessogramNavigator } from "./hooks/useProcessogramNavigator";
 import { useProcessogramEventHanders } from "./hooks/useEventHandlers";
 import { useProcessogramEffects } from "./hooks/useEffects";
 import { useProcessogramHelpers } from "./hooks/useHelpers";
+import { FOCUSED_FILTER } from "./consts";
 
 export type HistoryLevel = {
   [key: number]: {
@@ -45,6 +46,7 @@ type Props = {
     };
   };
   isActive: boolean;
+  theme: "dark" | "light";
   base64ImagesRef?: RefObject<Map<string, string>>;
 };
 
@@ -56,6 +58,7 @@ export const useProcessogramLogic = ({
   startFromSpecie,
   rasterImages,
   isActive,
+  theme,
   base64ImagesRef,
 }: Props) => {
   // Refs
@@ -88,6 +91,7 @@ export const useProcessogramLogic = ({
     currentSvgElement,
     updateSvgElement,
     rasterImages,
+    theme,
     base64ImagesRef
   );
 
@@ -105,13 +109,13 @@ export const useProcessogramLogic = ({
 
       if (toPrevious) {
         gsap.to(currentLevelElements, {
-          filter: "brightness(1)",
+          filter: FOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
       } else {
         gsap.set(currentLevelElements, {
-          filter: "brightness(1)",
+          filter: FOCUSED_FILTER[theme],
         });
       }
     },
@@ -120,7 +124,6 @@ export const useProcessogramLogic = ({
 
   const initializeOptimization = useCallback(async () => {
     setLoadingOptimization(true);
-    console.log(currentLevel.current);
     optimizeLevelElements({
       currentElementId: null,
       bruteOptimization: enableBruteOptimization,
@@ -149,6 +152,7 @@ export const useProcessogramLogic = ({
     svgElement,
     enableBruteOptimization,
     getElementIdentifierWithHierarchy,
+    theme,
   });
 
   const { handleClick, onMouseLeave, onMouseMove } =
@@ -186,6 +190,7 @@ export const useProcessogramLogic = ({
     svgElement,
     startFromSpecie,
     isActive,
+    theme,
   });
 
   return {

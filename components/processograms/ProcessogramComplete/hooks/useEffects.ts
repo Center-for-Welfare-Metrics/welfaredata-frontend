@@ -9,6 +9,7 @@ import {
   ANIMATION_EASE,
 } from "../../ProcessogramsList/consts";
 import { ProcessogramHierarchy } from "types/processogram";
+import { FOCUSED_FILTER, UNFOCUSED_FILTER } from "../consts";
 
 type Props = {
   svgElement: SVGElement | null;
@@ -24,6 +25,7 @@ type Props = {
   ) => [string, ProcessogramHierarchy[]];
   startFromSpecie: boolean;
   isActive: boolean;
+  theme: "dark" | "light";
 };
 
 export const useProcessogramEffects = ({
@@ -38,6 +40,7 @@ export const useProcessogramEffects = ({
   getElementIdentifierWithHierarchy,
   startFromSpecie,
   isActive,
+  theme,
 }: Props) => {
   useEffect(() => {
     if (!svgElement) return;
@@ -51,7 +54,7 @@ export const useProcessogramEffects = ({
       const notHoverElements = svgElement.querySelectorAll(notHover);
 
       gsap.to(notHoverElements, {
-        filter: "brightness(0.3)",
+        filter: UNFOCUSED_FILTER[theme],
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
@@ -63,7 +66,7 @@ export const useProcessogramEffects = ({
       const hoverElements = svgElement.querySelectorAll(hoverSelector);
 
       gsap.to(hoverElements, {
-        filter: "brightness(1)",
+        filter: FOCUSED_FILTER[theme],
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
@@ -77,7 +80,7 @@ export const useProcessogramEffects = ({
         const hoverSelector = `[id="${onHover}"]`;
         const hoverElements = svgElement.querySelectorAll(hoverSelector);
         gsap.to(hoverElements, {
-          filter: "brightness(1)",
+          filter: FOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
@@ -87,7 +90,7 @@ export const useProcessogramEffects = ({
         const notHoverElement = `[id*="${onHoverKey}"]:not([id="${onHover}"])`;
         const notHoverElements = svgElement.querySelectorAll(notHoverElement);
         gsap.to(notHoverElements, {
-          filter: "brightness(0.3)",
+          filter: UNFOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
@@ -103,12 +106,12 @@ export const useProcessogramEffects = ({
         const notHoverSelector = `[id*="${currentLevelId}"]:not([id="${onHover}"]),[id*="${levelID}"]:not([id="${onHover}"])`;
         const notHoverElements = svgElement.querySelectorAll(notHoverSelector);
         gsap.to(notHoverElements, {
-          filter: "brightness(0.3)",
+          filter: UNFOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
         gsap.to(onHoverElements, {
-          filter: "brightness(1)",
+          filter: FOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
