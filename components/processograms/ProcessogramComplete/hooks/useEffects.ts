@@ -41,8 +41,24 @@ export const useProcessogramEffects = ({
 }: Props) => {
   useEffect(() => {
     if (!svgElement) return;
+
     if (!onHover) {
-      const hoverSelector = `[id*="${INVERSE_DICT[currentLevel.current + 1]}"]`;
+      const currentLevel = getLevelNumberById(currentElementId.current);
+      const currentLevelId = INVERSE_DICT[currentLevel];
+
+      const notHover = `[id*="${currentLevelId}"]:not([id="${currentElementId.current}"])`;
+
+      const notHoverElements = svgElement.querySelectorAll(notHover);
+
+      gsap.to(notHoverElements, {
+        filter: "brightness(0.3)",
+        duration: ANIMATION_DURATION / 2,
+        ease: ANIMATION_EASE,
+      });
+
+      const nextLevelId = INVERSE_DICT[currentLevel + 1];
+
+      const hoverSelector = `[id="${currentElementId.current}"],[id*="${nextLevelId}"]`;
 
       const hoverElements = svgElement.querySelectorAll(hoverSelector);
 
@@ -51,31 +67,53 @@ export const useProcessogramEffects = ({
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
-
-      return;
     }
 
-    const level = getLevelNumberById(onHover);
-    const levelID = INVERSE_DICT[level];
+    if (onHover) {
+      const onHoverLevel = getLevelNumberById(onHover);
+      const currentLevel = getLevelNumberById(currentElementId.current);
 
-    const onHoverSelector = `[id*="${onHover}"]`;
-    const onHoverElements = svgElement.querySelectorAll(onHoverSelector);
+      if (onHoverLevel === currentLevel) {
+        const hoverSelector = `[id="${onHover}"]`;
+        const hoverElements = svgElement.querySelectorAll(hoverSelector);
+        gsap.to(hoverElements, {
+          filter: "brightness(1)",
+          duration: ANIMATION_DURATION / 2,
+          ease: ANIMATION_EASE,
+        });
 
-    const hoverSelector = `[id*="${levelID}"]:not([id="${onHover}"])`;
+        const onHoverKey = INVERSE_DICT[onHoverLevel];
 
-    const hoverElements = svgElement.querySelectorAll(hoverSelector);
-
-    gsap.to(hoverElements, {
-      filter: "brightness(0.3)",
-      duration: ANIMATION_DURATION / 2,
-      ease: ANIMATION_EASE,
-    });
-
-    gsap.to(onHoverElements, {
-      filter: "brightness(1)",
-      duration: ANIMATION_DURATION / 2,
-      ease: ANIMATION_EASE,
-    });
+        const notHoverElement = `[id*="${onHoverKey}"]:not([id="${onHover}"])`;
+        const notHoverElements = svgElement.querySelectorAll(notHoverElement);
+        gsap.to(notHoverElements, {
+          filter: "brightness(0.3)",
+          duration: ANIMATION_DURATION / 2,
+          ease: ANIMATION_EASE,
+        });
+      } else {
+        const level = getLevelNumberById(onHover);
+        const levelID = INVERSE_DICT[level];
+        const currentElementLevel = getLevelNumberById(
+          currentElementId.current
+        );
+        const currentLevelId = INVERSE_DICT[currentElementLevel];
+        const onHoverSelector = `[id="${onHover}"],[id="${currentElementId.current}"]`;
+        const onHoverElements = svgElement.querySelectorAll(onHoverSelector);
+        const notHoverSelector = `[id*="${currentLevelId}"]:not([id="${onHover}"]),[id*="${levelID}"]:not([id="${onHover}"])`;
+        const notHoverElements = svgElement.querySelectorAll(notHoverSelector);
+        gsap.to(notHoverElements, {
+          filter: "brightness(0.3)",
+          duration: ANIMATION_DURATION / 2,
+          ease: ANIMATION_EASE,
+        });
+        gsap.to(onHoverElements, {
+          filter: "brightness(1)",
+          duration: ANIMATION_DURATION / 2,
+          ease: ANIMATION_EASE,
+        });
+      }
+    }
   }, [onHover]);
 
   useEffect(() => {

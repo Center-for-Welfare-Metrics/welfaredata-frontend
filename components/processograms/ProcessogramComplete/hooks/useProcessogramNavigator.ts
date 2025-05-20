@@ -86,7 +86,7 @@ export const useProcessogramNavigator = ({
       if (outOfFocusElements.length > 0) {
         outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
           filter: "brightness(0.3)",
-          cursor: "default",
+          // cursor: "default",
           duration: ANIMATION_DURATION,
           ease: ANIMATION_EASE,
         });

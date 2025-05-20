@@ -9,6 +9,7 @@ import {
 type ReplaceWithOptimizedParams = {
   selector: string;
   replaceRoot: boolean;
+  applyUnfocusedFilter?: boolean;
 };
 
 type RestoreOriginalParams = {
@@ -46,7 +47,11 @@ export const useOptimizeSvgParts = (
   );
 
   const replaceWithOptimized = useCallback(
-    ({ selector, replaceRoot }: ReplaceWithOptimizedParams) => {
+    ({
+      selector,
+      replaceRoot,
+      applyUnfocusedFilter,
+    }: ReplaceWithOptimizedParams) => {
       if (!currentSvgElement.current) return;
 
       if (replaceRoot) {
@@ -57,6 +62,10 @@ export const useOptimizeSvgParts = (
         if (optimizedGElements.current.has(rootId)) {
           const optimizedG = optimizedGElements.current.get(rootId);
           if (optimizedG) {
+            if (applyUnfocusedFilter) {
+              optimizedG.style.filter = "brightness(0.3)";
+              console.log(optimizedG);
+            }
             currentSvgElement.current.replaceWith(optimizedG);
             updateSvgElement(optimizedG);
           }
@@ -78,6 +87,10 @@ export const useOptimizeSvgParts = (
           originalGElements.current.set(rootId, currentSvgElement.current);
 
           if (optimizedElement) {
+            if (applyUnfocusedFilter) {
+              optimizedElement.style.filter = "brightness(0.3)";
+              console.log(optimizedElement);
+            }
             currentSvgElement.current.replaceWith(optimizedElement);
             updateSvgElement(optimizedElement);
             optimizedGElements.current.set(rootId, optimizedElement);
@@ -102,6 +115,9 @@ export const useOptimizeSvgParts = (
         if (optimizedGElements.current.has(id)) {
           const optimizedG = optimizedGElements.current.get(id);
           if (optimizedG) {
+            if (applyUnfocusedFilter) {
+              optimizedG.style.filter = "brightness(0.3)";
+            }
             gElement.replaceWith(optimizedG);
           }
         } else {
@@ -122,6 +138,9 @@ export const useOptimizeSvgParts = (
           originalGElements.current.set(id, gElement);
 
           if (optimizedElement) {
+            if (applyUnfocusedFilter) {
+              optimizedElement.style.filter = "brightness(0.3)";
+            }
             gElement.replaceWith(optimizedElement);
             optimizedGElements.current.set(id, optimizedElement);
           }
@@ -148,6 +167,8 @@ export const useOptimizeSvgParts = (
 
         if (!originalG) return;
 
+        originalG.style.filter = "brightness(1)";
+
         currentSvgElement.current.replaceWith(originalG);
         updateSvgElement(originalG);
 
@@ -170,6 +191,8 @@ export const useOptimizeSvgParts = (
         if (bruteOptimization) {
           if (originalG.tagName === "g") continue;
         }
+
+        originalG.style.filter = "brightness(1)";
 
         gElement.replaceWith(originalG);
       }
@@ -206,15 +229,13 @@ export const useOptimizeSvgParts = (
       }
 
       setTimeout(() => {
-        // Get next level selector
         const nextLevelNum = currentLevel + 1;
         const nextLevelKey = INVERSE_DICT[nextLevelNum];
+
         const nextLevelSelector =
           currentLevel === 0
             ? `[id*="${nextLevelKey}"]`
             : `#${currentElementId} [id*="${nextLevelKey}"]`;
-
-        // Replace next level with optimized version
 
         const optimizeNextLevel = nextLevelNum < MAX_LEVEL || bruteOptimization;
 
@@ -224,6 +245,16 @@ export const useOptimizeSvgParts = (
             replaceRoot: currentLevel === -1,
           });
         }
+
+        const currentLevelKey = INVERSE_DICT[currentLevel];
+
+        const sameLevelSelector = `[id*="${currentLevelKey}"]:not([id="${currentElementId}"])`;
+
+        replaceWithOptimized({
+          selector: sameLevelSelector,
+          replaceRoot: false,
+          applyUnfocusedFilter: true,
+        });
       }, 0);
     },
     [restoreOriginal, replaceWithOptimized, svgElement]

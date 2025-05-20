@@ -30,8 +30,11 @@ export const useProcessogramEventHanders = ({
   startFromSpecie,
 }: Props) => {
   const getClickedStage = useCallback((target: SVGElement, level: number) => {
-    const selector = `[id*="${INVERSE_DICT[level + 1]}"]`;
-    const stageClicked = target.closest(selector) as SVGElement | null;
+    const nextLevelSelector = `[id*="${INVERSE_DICT[level + 1]}"]`;
+    const currentLevelSelector = `[id*="${INVERSE_DICT[level]}"]`;
+    const stageClicked =
+      (target.closest(nextLevelSelector) as SVGElement | null) ||
+      (target.closest(currentLevelSelector) as SVGElement | null);
     return stageClicked;
   }, []);
 
@@ -92,9 +95,12 @@ export const useProcessogramEventHanders = ({
       const target = event.target as SVGElement;
 
       const nextLevel = currentLevel.current + 1;
-      const levelID = INVERSE_DICT[nextLevel];
+      const currentLevelID = INVERSE_DICT[currentLevel.current];
+      const nextLevelID = INVERSE_DICT[nextLevel];
 
-      const closest = target.closest(`[id*="${levelID}"]`) as SVGElement | null;
+      const closest =
+        (target.closest(`[id*="${nextLevelID}"]`) as SVGElement | null) ||
+        (target.closest(`[id*="${currentLevelID}"]`) as SVGElement | null);
 
       if (!closest) {
         setOnHover(null);

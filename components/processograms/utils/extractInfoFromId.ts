@@ -25,7 +25,9 @@ export const getLevelAliasFromId = (id: string): string => {
   return levelWithoutNumbers;
 };
 
-export const getLevelNumberById = (id: string): number => {
+export const getLevelNumberById = (id: string | null): number => {
+  if (!id) return -1;
+
   const levelWithoutNumbers = getLevelAliasFromId(id);
 
   return LEVELS_DICT["--" + levelWithoutNumbers];
