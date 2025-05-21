@@ -43,7 +43,11 @@ export const useCreateSpecie = () => {
   });
 };
 
-type UpdateSpecie = Partial<Omit<Specie, "_id">>;
+type UpdateSpecie = Partial<{
+  name: string;
+  pathname: string;
+  description: string;
+}>;
 
 type UpdateSpeciePayload = {
   params: {
@@ -64,9 +68,17 @@ const updateSpecie = async ({ params, body }: UpdateSpeciePayload) => {
 };
 
 export const useUpdateSpecie = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: updateSpecie,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SPECIES.List],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SPECIES.ByID],
+      });
       toast.success("Specie updated successfully");
     },
     onError: (error: AxiosError) => {

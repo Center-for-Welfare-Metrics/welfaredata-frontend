@@ -3,6 +3,7 @@ import { CreateProcessogramModalWrapper } from './CreateProcessogramModal';
 import { ProcessogramDetailsModalWrapper } from './ProcessogramDetailsModal';
 import { SpecieDetailsModalWrapper } from './SpecieDetailsModal';
 import { CreateProductionModuleModalWrapper } from './CreateProductionModuleModal';
+import { UpdateSpecieModalWrapper } from './UpdateSpecieModal';
 
 export const Modals = () => {
   return (
@@ -12,6 +13,7 @@ export const Modals = () => {
       <ProcessogramDetailsModalWrapper />
       <SpecieDetailsModalWrapper />
       <CreateProductionModuleModalWrapper />
+      <UpdateSpecieModalWrapper />
     </>
   );
 };

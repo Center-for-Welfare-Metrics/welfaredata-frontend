@@ -5,8 +5,7 @@ import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
-import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
-import { Info, RefreshCw } from "react-feather";
+import { Edit, RefreshCw } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
@@ -15,6 +14,7 @@ import { useGetProductionModules } from "@/api/react-query/production-modules/us
 import { ProductionModuleCard } from "@/components/Cards/ProductionModuleCard";
 import { ProductionModuleCardSkeleton } from "@/components/Cards/ProductionModuleCard/skeleton";
 import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
+import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
 
 type Props = {
   specie_id: string;
@@ -52,13 +52,16 @@ export const SpeciesPage = ({ specie_id }: Props) => {
     refetch();
   };
 
-  const setSpecieDetailsModal = useSetSpecieDetailsModal();
+  const setUpdateSpecieModal = useSetUpdateSpecieModal();
 
-  const openElementDetailsModal = () => {
+  const openUpdateSpecieModal = () => {
     if (!specie) return;
 
-    setSpecieDetailsModal({
+    setUpdateSpecieModal({
       specie: {
+        _id: specie._id,
+        name: specie.name,
+        pathname: specie.pathname,
         description: specie.description,
       },
     });
@@ -80,11 +83,11 @@ export const SpeciesPage = ({ specie_id }: Props) => {
           <Text variant="h2">{">"}</Text>
           <Text variant="h2">{specie?.name ?? "--"}</Text>
           <IconWrapper>
-            <Info
+            <Edit
               size={18}
               color={ThemeColors.white}
               cursor="pointer"
-              onClick={openElementDetailsModal}
+              onClick={openUpdateSpecieModal}
             />
           </IconWrapper>
         </FlexRow>
