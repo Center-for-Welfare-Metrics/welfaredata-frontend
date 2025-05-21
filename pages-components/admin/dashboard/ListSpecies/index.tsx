@@ -53,6 +53,7 @@ export const ListSpecies = () => {
                   _id={specie._id}
                   name={specie.name}
                   pathname={specie.pathname}
+                  description={specie.description}
                   image_url=""
                 />
               ))}

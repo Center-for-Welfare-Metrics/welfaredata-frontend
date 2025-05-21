@@ -45,11 +45,7 @@ export const Button = ({
       </DefaultButton>
       {loading && (
         <LoadingContainer>
-          <ClipLoader            
-            color={ThemeColors.deep_blue}
-            size={20}
-            loading
-          />
+          <ClipLoader color={ThemeColors.deep_blue} size={20} loading />
         </LoadingContainer>
       )}
     </Wrapper>
@@ -113,7 +109,7 @@ const shake = keyframes`
 const DangerButton = styled(DefaultButton)`
   background-color: ${({ theme }) =>
     darken(0.15, GetColorType({ theme, type: "danger" }))};
-  color: ${ThemeColors.black};
+  color: ${ThemeColors.white};
   &:hover {
     animation: ${shake} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     transform: translate3d(0, 0, 0);

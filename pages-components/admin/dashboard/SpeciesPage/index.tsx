@@ -1,20 +1,21 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { AddButton } from "@/components/AddButton";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useGetSpecieById } from "@/api/react-query/species/useGetSpecies";
-import { Edit, RefreshCw } from "react-feather";
+import { Edit, RefreshCw, Trash } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
-import { useSetSpecieDetailsModal } from "modals/SpecieDetailsModal/hooks";
 import { useGetProductionModules } from "@/api/react-query/production-modules/useGetProductionModules";
 import { ProductionModuleCard } from "@/components/Cards/ProductionModuleCard";
 import { ProductionModuleCardSkeleton } from "@/components/Cards/ProductionModuleCard/skeleton";
 import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
 import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
+import { useSetDeleteSpecieModal } from "modals/DeleteSpecieModal/hooks";
 
 type Props = {
   specie_id: string;
@@ -29,6 +30,8 @@ export const SpeciesPage = ({ specie_id }: Props) => {
   } = useGetProductionModules({
     specie_id,
   });
+
+  const router = useRouter();
 
   const { data: specie } = useGetSpecieById({
     specie_id,
@@ -67,6 +70,20 @@ export const SpeciesPage = ({ specie_id }: Props) => {
     });
   };
 
+  const setDeleteSpecieModal = useSetDeleteSpecieModal();
+
+  const openDeleteSpecieModal = () => {
+    if (!specie) return;
+
+    setDeleteSpecieModal({
+      specieId: specie._id,
+      specieName: specie.name,
+      onDelete: () => {
+        router.push("/admin");
+      },
+    });
+  };
+
   return (
     <FlexColumn
       justify="flex-start"
@@ -88,6 +105,14 @@ export const SpeciesPage = ({ specie_id }: Props) => {
               color={ThemeColors.white}
               cursor="pointer"
               onClick={openUpdateSpecieModal}
+            />
+          </IconWrapper>
+          <IconWrapper>
+            <Trash
+              size={18}
+              color={ThemeColors.red}
+              cursor="pointer"
+              onClick={openDeleteSpecieModal}
             />
           </IconWrapper>
         </FlexRow>
