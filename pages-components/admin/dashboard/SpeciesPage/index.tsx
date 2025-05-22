@@ -173,6 +173,8 @@ export const SpeciesPage = ({ specie_id }: Props) => {
                   <ProductionModuleCard
                     key={productionModule._id}
                     _id={productionModule._id}
+                    description={productionModule.description}
+                    specie_id={productionModule.specie_id}
                     name={productionModule.name}
                     image_url=""
                   />

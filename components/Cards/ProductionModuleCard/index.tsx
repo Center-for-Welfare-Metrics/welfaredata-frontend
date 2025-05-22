@@ -5,14 +5,51 @@ import { transparentize } from "polished";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ProductionModuleCardSize } from "./const";
+import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
+import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
+import { Edit, Trash } from "react-feather";
 
 type Props = {
   _id: string;
   name: string;
+  specie_id: string;
+  description: string | undefined;
   image_url: string | undefined;
 };
 
-export const ProductionModuleCard = ({ _id, name, image_url }: Props) => {
+export const ProductionModuleCard = ({
+  _id,
+  name,
+  description,
+  specie_id,
+  image_url,
+}: Props) => {
+  const setDeleteProductionModule = useSetDeleteProductionModuleModal();
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setDeleteProductionModule({
+      productionModuleId: _id,
+      productionModuleName: name,
+    });
+  };
+
+  const setUpdateProductionModule = useSetUpdateProductionModuleModal();
+
+  const handleUpdate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setUpdateProductionModule({
+      productionModule: {
+        _id,
+        name,
+        description,
+        specie_id,
+      },
+    });
+  };
+
   return (
     <Link
       href={{
@@ -39,13 +76,40 @@ export const ProductionModuleCard = ({ _id, name, image_url }: Props) => {
             <Text variant="body2">{name}</Text>
           </FlexColumn>
         </Info>
+        <ActionButtons>
+          <FlexRow>
+            <IconWrapper onClick={handleUpdate}>
+              <Edit color={ThemeColors.white} size={16} />
+            </IconWrapper>
+            <IconWrapper onClick={handleDelete}>
+              <Trash color={ThemeColors.red} size={16} />
+            </IconWrapper>
+          </FlexRow>
+        </ActionButtons>
       </Container>
     </Link>
   );
 };
 
-const A = styled.a`
-  text-decoration: none;
+const IconWrapper = styled.div`
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const ActionButtons = styled.div`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-in-out;
 `;
 
 const Info = styled.div`
@@ -68,5 +132,10 @@ const Container = styled.div`
 
   &:hover {
     border: 1px solid ${ThemeColors.blue};
+
+    ${ActionButtons} {
+      opacity: 1;
+      pointer-events: all;
+    }
   }
 `;

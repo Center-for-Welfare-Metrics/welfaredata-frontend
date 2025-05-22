@@ -52,7 +52,6 @@ export const Select = forwardRef<HTMLDivElement, ISelectProps>(
       searchable = true,
       defaultValue,
       customStyle,
-      ...rest
     },
     ref
   ) => {

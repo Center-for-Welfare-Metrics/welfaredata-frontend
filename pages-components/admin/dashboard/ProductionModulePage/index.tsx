@@ -6,7 +6,7 @@ import { Text } from "@/components/Text";
 import { useGetProcessograms } from "@/api/react-query/processograms/useGetProcessograms";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
-import { Edit, RefreshCw } from "react-feather";
+import { Edit, RefreshCw, Trash } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
@@ -14,6 +14,8 @@ import { ProcessogramCardSkeleton } from "@/components/Cards/ProcessogramCard/sk
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
 import { useGetProductionModuleById } from "@/api/react-query/production-modules/useGetProductionModules";
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
+import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
+import { useRouter } from "next/router";
 
 type Props = {
   productionModuleId: string;
@@ -23,6 +25,8 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
   const { data: productionModule } = useGetProductionModuleById({
     production_module_id: productionModuleId,
   });
+
+  const router = useRouter();
 
   const {
     data: processograms,
@@ -68,6 +72,25 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
     });
   };
 
+  const setDeleteProductionModule = useSetDeleteProductionModuleModal();
+
+  const openDeleteProductionModuleModal = () => {
+    if (!productionModule) return;
+
+    setDeleteProductionModule({
+      productionModuleId: productionModule._id,
+      productionModuleName: productionModule.name,
+      onDelete: () => {
+        router.push({
+          pathname: "/admin/species/[id]",
+          query: {
+            id: productionModule.specie_id,
+          },
+        });
+      },
+    });
+  };
+
   return (
     <FlexColumn
       justify="flex-start"
@@ -104,6 +127,14 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
               color={ThemeColors.white}
               cursor="pointer"
               onClick={openUpdateProductionModuleModal}
+            />
+          </IconWrapper>
+          <IconWrapper>
+            <Trash
+              size={18}
+              color={ThemeColors.red}
+              cursor="pointer"
+              onClick={openDeleteProductionModuleModal}
             />
           </IconWrapper>
         </FlexRow>

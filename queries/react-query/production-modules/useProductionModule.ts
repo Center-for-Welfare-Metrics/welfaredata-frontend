@@ -91,3 +91,40 @@ export const useUpdateProductionModule = () => {
     },
   });
 };
+
+type DeleteProductionModulePayload = {
+  params: {
+    id: string;
+  };
+};
+
+const deleteProductionModule = async ({
+  params,
+}: DeleteProductionModulePayload) => {
+  const { data } = await request({
+    method: "DELETE",
+    service: "admin-production-modules",
+    url: `/${params.id}`,
+  });
+  return data as ProductionModule;
+};
+
+export const useDeleteProductionModule = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteProductionModule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PRODUCTION_MODULES.List],
+      });
+      toast.success("Production Module deleted successfully");
+    },
+    onError: (error: AxiosError) => {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+      toast.error("Error deleting production module");
+    },
+  });
+};
