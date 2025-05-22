@@ -6,7 +6,6 @@ import { filesize } from "filesize";
 import { ModalContainer } from "modals/ModalContainer";
 import { useCreateElementModal } from "./hooks";
 import { useForm, z, zodResolver } from "@/utils/validation";
-import { FormInput } from "@/components/common/inputs/form-input";
 import Dropzone from "@/components/Dropzone";
 import { FlexColumn } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
@@ -16,6 +15,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { QueryKeys } from "@/api/react-query/keys";
 import { ThemeColors } from "theme/globalStyle";
 import { Controller } from "react-hook-form";
+import { FormInput } from "@/components/FormInput";
+import { Select } from "@/components/Select";
 
 const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -111,26 +112,17 @@ const CreateProcessogramModal = ({
                 control={control}
                 name="theme"
                 render={({ field }) => (
-                  <select
-                    style={{
-                      width: "100%",
-                      padding: "0.5rem",
-                      borderRadius: "0.5rem",
-                      border: `1px solid ${ThemeColors.white}`,
-                      backgroundColor: ThemeColors.deep_blue,
-                      fontSize: "1rem",
-                      color: ThemeColors.white,
-                      cursor: "pointer",
-                    }}
+                  <Select
+                    label="Theme"
+                    placeholder="Select a theme"
+                    options={[
+                      { label: "Light", value: "light" },
+                      { label: "Dark", value: "dark" },
+                    ]}
+                    error={errors.theme?.message}
                     {...field}
-                    value={field.value || ""}
-                  >
-                    <option value={""} disabled>
-                      Select a theme
-                    </option>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                  </select>
+                    // value={field.value || ""}
+                  />
                 )}
               />
               {errors.theme?.message && (

@@ -1,6 +1,23 @@
-import { transparentize } from "polished";
-import { styled, css } from "styled-components";
+import { css, styled } from "styled-components";
+
+import { lighten, transparentize } from "polished";
 import { ThemeColors } from "theme/globalStyle";
+
+export const LabeledInput = styled.input`
+  padding: 0.5rem 0 0.5rem 0;
+  border: none;
+  background-color: transparent;
+  color: ${ThemeColors.white};
+  border-bottom: 1px solid ${ThemeColors.blue};
+  outline: none;
+  &:disabled {
+    cursor: not-allowed;
+  }
+  &:focus {
+    border-bottom: 1px solid ${lighten(0.3, ThemeColors.blue)};
+  }
+  font-size: 14px;
+`;
 
 export const Container = styled.div`
   position: relative;
@@ -10,24 +27,16 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Icon = styled.i`
-  position: absolute;
-  top: 2.5rem;
-  left: 2rem;
-  color: ${ThemeColors.yellow};
-  font-size: 20px;
-`;
-
 type LabelProps = {
   $hasValue: boolean;
   $multiline: boolean;
 };
 
 export const Label = styled.label<LabelProps>`
-  color: ${({ theme }) => transparentize(0.5, ThemeColors.blue)};
+  color: ${transparentize(0.5, ThemeColors.blue)};
   position: absolute;
   transform: translateY(105%);
-  ${({ theme }) => css`
+  ${css`
     bottom: 0;
     z-index: auto;
     font-size: 12px;

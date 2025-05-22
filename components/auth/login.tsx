@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { Container, Form, LinkTo } from "./auth-styled";
 import { Button } from "../Button";
+import { FormInput } from "../FormInput";
 
 interface LoginProps {
   email: string;

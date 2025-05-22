@@ -5,6 +5,7 @@ import { SpecieDetailsModalWrapper } from './SpecieDetailsModal';
 import { CreateProductionModuleModalWrapper } from './CreateProductionModuleModal';
 import { UpdateSpecieModalWrapper } from './UpdateSpecieModal';
 import { DeleteSpecieModalWrapper } from './DeleteSpecieModal';
+import { UpdateProductionModuleModalWrapper } from './UpdateProductionModuleModal';
 
 export const Modals = () => {
   return (
@@ -16,6 +17,7 @@ export const Modals = () => {
       <CreateProductionModuleModalWrapper />
       <UpdateSpecieModalWrapper />
       <DeleteSpecieModalWrapper />
+      <UpdateProductionModuleModalWrapper />
     </>
   );
 };

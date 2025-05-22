@@ -3,9 +3,9 @@ import { useForm, z, zodResolver } from "@/utils/validation";
 
 import { ModalContainer } from "modals/ModalContainer";
 import { useCreateSpecieModal } from "./hooks";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { Button } from "@/components/Button";
 import { useCreateSpecie } from "@/api/react-query/species/useSpecies";
+import { FormInput } from "@/components/FormInput";
 
 const CreateSpecieSchema = z.object({
   name: z.string().min(1, "Name is required"),

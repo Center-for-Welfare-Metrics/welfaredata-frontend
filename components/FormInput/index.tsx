@@ -1,7 +1,6 @@
-import { FC, InputHTMLAttributes, forwardRef, ForwardedRef } from "react";
+import { InputHTMLAttributes, forwardRef } from "react";
 
-import { Container, Label, Icon, Error } from "./form-input-styled";
-import { LabeledInput } from "./inputs";
+import { LabeledInput, Container, Error, Label } from "./styled";
 import React from "react";
 import { Box } from "@mui/material";
 

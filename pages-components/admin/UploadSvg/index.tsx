@@ -4,8 +4,8 @@ import toast from "react-hot-toast";
 import { ThemeColors } from "theme/globalStyle";
 import { Text } from "@/components/Text";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { uploadSvgElement } from "@/api/react-query/processograms/useUploadSvgElement";
+import { FormInput } from "@/components/FormInput";
 
 export const UploadSvg = () => {
   const [file, setFile] = useState<File | null>(null);

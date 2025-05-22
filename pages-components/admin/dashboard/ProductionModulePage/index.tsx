@@ -6,13 +6,14 @@ import { Text } from "@/components/Text";
 import { useGetProcessograms } from "@/api/react-query/processograms/useGetProcessograms";
 import { CtaCreate } from "@/components/CtaCreate";
 import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
-import { RefreshCw } from "react-feather";
+import { Edit, RefreshCw } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ProcessogramCardSkeleton } from "@/components/Cards/ProcessogramCard/skeleton";
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
 import { useGetProductionModuleById } from "@/api/react-query/production-modules/useGetProductionModules";
+import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 
 type Props = {
   productionModuleId: string;
@@ -52,17 +53,20 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
     refetch();
   };
 
-  // const setSpecieDetailsModal = useSetSpecieDetailsModal();
+  const setUpdateProductionModule = useSetUpdateProductionModuleModal();
 
-  // const openElementDetailsModal = () => {
-  //   if (!productionModule) return;
+  const openUpdateProductionModuleModal = () => {
+    if (!productionModule) return;
 
-  //   setSpecieDetailsModal({
-  //     specie: {
-  //       description: specie.description,
-  //     },
-  //   });
-  // };
+    setUpdateProductionModule({
+      productionModule: {
+        _id: productionModule._id,
+        name: productionModule.name,
+        description: productionModule.description || "",
+        specie_id: productionModule.specie_id,
+      },
+    });
+  };
 
   return (
     <FlexColumn
@@ -94,36 +98,15 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
           )}
           <Text variant="h2">{">"}</Text>
           <Text variant="h2">{productionModule?.name ?? "--"}</Text>
-          {/* <IconWrapper>
-            <Info
+          <IconWrapper>
+            <Edit
               size={18}
               color={ThemeColors.white}
               cursor="pointer"
-              onClick={openElementDetailsModal}
+              onClick={openUpdateProductionModuleModal}
             />
-          </IconWrapper> */}
+          </IconWrapper>
         </FlexRow>
-        {/* {productionModule && (
-          <Text variant="body1">
-            Visit page:{" "}
-            <Link
-              href={{
-                pathname: "/processograms/[specie]",
-                query: {
-                  specie: specie.pathname,
-                },
-              }}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                textDecoration: "underline",
-                color: "#0070f3",
-              }}
-            >
-              {`/processograms/${specie?.pathname}`}
-            </Link>
-          </Text>
-        )} */}
       </FlexColumn>
       <FlexColumn align="flex-start" width="100%" mt={2}>
         <FlexRow>

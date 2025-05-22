@@ -1,10 +1,10 @@
 import { ModalContainer } from "modals/ModalContainer";
 import { useCreateProductionModuleModal } from "./hooks";
 import { useForm, z, zodResolver } from "@/utils/validation";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { Button } from "@/components/Button";
 import { useCreateProductionModule } from "@/api/react-query/production-modules/useProductionModule";
 import styled from "styled-components";
+import { FormInput } from "@/components/FormInput";
 
 const CreateProductionModuleSchema = z.object({
   name: z.string().min(1, "Name is required"),

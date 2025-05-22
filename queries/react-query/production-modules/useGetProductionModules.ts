@@ -55,7 +55,7 @@ export const useGetProductionModuleById = (
   enabled = true
 ) => {
   return useQuery({
-    queryKey: [QueryKeys.PROCESSOGRAMS.ByID, params],
+    queryKey: [QueryKeys.PRODUCTION_MODULES.ByID, params],
     queryFn: () => getProductionModuleById({ params }),
     enabled,
   });

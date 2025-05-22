@@ -3,11 +3,10 @@ import { useForm, z, zodResolver } from "@/utils/validation";
 
 import { ModalContainer } from "modals/ModalContainer";
 import { useUpdateSpecieModal } from "./hooks";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { Button } from "@/components/Button";
 import { useUpdateSpecie } from "@/api/react-query/species/useSpecies";
-import { CleanTextArea } from "@/components/common/inputs/inputs";
-import { TextArea } from "@/components/common/textarea";
+import { TextArea } from "@/components/Textarea";
+import { FormInput } from "@/components/FormInput";
 
 const UpdateSpecieSchema = z.object({
   name: z.string().min(1, "Name is required"),

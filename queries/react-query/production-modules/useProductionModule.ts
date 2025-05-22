@@ -44,3 +44,50 @@ export const useCreateProductionModule = () => {
     },
   });
 };
+
+type UpdateProductionModulePayload = {
+  params: {
+    id: string;
+  };
+  body: {
+    name?: string;
+    description?: string;
+    specie_id?: string;
+  };
+};
+
+const updateProductionModule = async ({
+  params,
+  body,
+}: UpdateProductionModulePayload) => {
+  const { data } = await request({
+    method: "PATCH",
+    service: "admin-production-modules",
+    url: `/${params.id}`,
+    data: body,
+  });
+  return data as ProductionModule;
+};
+
+export const useUpdateProductionModule = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateProductionModule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PRODUCTION_MODULES.List],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PRODUCTION_MODULES.ByID],
+      });
+      toast.success("Production Module updated successfully");
+    },
+    onError: (error: AxiosError) => {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+      toast.error("Error updating production module");
+    },
+  });
+};

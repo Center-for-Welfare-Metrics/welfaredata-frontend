@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { FormInput } from "@/components/common/inputs/form-input";
 import { Container, Form, LinkTo } from "./auth-styled";
 import StrongPasswordBar, {
   PasswordStrength,
 } from "../miscellaneous/strong-password-bar";
 import React, { ChangeEvent, FormEvent } from "react";
 import { Button } from "../Button";
+import { FormInput } from "../FormInput";
 
 interface RegisterProps {
   name: string;
