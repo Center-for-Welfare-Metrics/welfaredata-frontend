@@ -79,7 +79,7 @@ export const SpeciesPage = ({ specie_id }: Props) => {
       specieId: specie._id,
       specieName: specie.name,
       onDelete: () => {
-        router.push("/admin");
+        router.replace("/admin");
       },
     });
   };

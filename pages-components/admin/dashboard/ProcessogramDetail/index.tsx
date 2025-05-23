@@ -12,11 +12,13 @@ import { ProcessogramComplete } from "@/components/processograms/ProcessogramCom
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
+import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
 import { useSetUpdateProcessogramModal } from "modals/UpdateProcessogramModal/hooks";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
-import { Edit, Info, RefreshCw } from "react-feather";
+import { Edit, Info, RefreshCw, Trash } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
@@ -27,6 +29,8 @@ type Props = {
 };
 
 export const ProcessogramDetail = ({ processogram_id }: Props) => {
+  const router = useRouter();
+
   const [currentElement, setCurrentElement] = useState<string | null>(null);
 
   const [currentHierarchy, setHierarchy] = useState<ProcessogramHierarchy[]>(
@@ -105,6 +109,25 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         production_module_id: element.production_module_id,
         theme: element.theme,
         specie_id: element.specie_id,
+      },
+    });
+  };
+
+  const setDeleteProcessogram = useSetDeleteProcessogramModal();
+
+  const openDeleteProcessogramModal = () => {
+    if (!element) return;
+
+    setDeleteProcessogram({
+      processogramId: element._id,
+      processogramName: element.name,
+      onDelete: () => {
+        router.replace({
+          pathname: "/admin/production_modules/[id]",
+          query: {
+            id: element.production_module_id,
+          },
+        });
       },
     });
   };
@@ -218,6 +241,14 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
             color={ThemeColors.white}
             cursor="pointer"
             onClick={openUpdateProcessogramModal}
+          />
+        </IconWrapper>
+        <IconWrapper>
+          <Trash
+            size={18}
+            color={ThemeColors.red}
+            cursor="pointer"
+            onClick={openDeleteProcessogramModal}
           />
         </IconWrapper>
       </FlexRow>

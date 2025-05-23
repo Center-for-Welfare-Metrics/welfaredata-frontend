@@ -81,7 +81,7 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
       productionModuleId: productionModule._id,
       productionModuleName: productionModule.name,
       onDelete: () => {
-        router.push({
+        router.replace({
           pathname: "/admin/species/[id]",
           query: {
             id: productionModule.specie_id,
@@ -175,6 +175,10 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                     key={element._id}
                     _id={element._id}
                     name={element.name}
+                    description={element.description}
+                    production_module_id={element.production_module_id}
+                    specie_id={element.specie_id}
+                    theme={element.theme}
                     status={element.status}
                     image_url=""
                   />
