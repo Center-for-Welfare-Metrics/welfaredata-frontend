@@ -73,58 +73,56 @@ const UpdateProductionModuleModal = ({
       onClose={onClose}
       title="Update production module"
     >
-      <StyledForm onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Name"
-          placeholder="Enter the name of the production module"
-          type="text"
-          error={errors.name?.message}
-          {...register("name")}
-        />
-
-        <TextArea
-          label="Description"
-          placeholder="Enter a description for the production module"
-          error={errors.description?.message}
-          {...register("description")}
-        />
-
-        <FlexColumn>
-          <Controller
-            control={control}
-            name="specie_id"
-            render={({ field }) => (
-              <Select
-                label="Specie"
-                options={
-                  species?.map((specie: Specie) => ({
-                    label: specie.name,
-                    value: specie._id,
-                  })) ?? []
-                }
-                error={errors.specie_id?.message}
-                {...field}
-              />
-            )}
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FlexColumn gap={2} mt={1}>
+          <FormInput
+            label="Name"
+            placeholder="Enter the name of the production module"
+            type="text"
+            error={errors.name?.message}
+            {...register("name")}
           />
-        </FlexColumn>
 
-        <Button
-          buttonStyle="success"
-          loading={updateProductionModule.isPending}
-        >
-          Update Production Module
-        </Button>
-      </StyledForm>
+          <TextArea
+            label="Description"
+            placeholder="Enter a description for the production module"
+            error={errors.description?.message}
+            {...register("description")}
+          />
+
+          <FlexColumn>
+            <Controller
+              control={control}
+              name="specie_id"
+              render={({ field }) => (
+                <Select
+                  label="Specie"
+                  options={
+                    species?.map((specie: Specie) => ({
+                      label: specie.name,
+                      value: specie._id,
+                    })) ?? []
+                  }
+                  error={errors.specie_id?.message}
+                  {...field}
+                />
+              )}
+            />
+          </FlexColumn>
+
+          <Button
+            buttonStyle="success"
+            loading={updateProductionModule.isPending}
+          >
+            Update Production Module
+          </Button>
+        </FlexColumn>
+      </Form>
     </ModalContainer>
   );
 };
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+const Form = styled.form``;
 
 const StyledLabel = styled.label`
   font-size: 0.875rem;

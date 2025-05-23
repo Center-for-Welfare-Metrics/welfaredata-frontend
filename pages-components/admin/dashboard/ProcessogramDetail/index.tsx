@@ -13,9 +13,10 @@ import { EventBus } from "@/components/processograms/ProcessogramComplete/types"
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
+import { useSetUpdateProcessogramModal } from "modals/UpdateProcessogramModal/hooks";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import { Info, RefreshCw } from "react-feather";
+import { Edit, Info, RefreshCw } from "react-feather";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
@@ -87,6 +88,23 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         originalSize: element.originalSize,
         elementsCount: Object.keys(elementData.data).length,
         createdAt: element.createdAt,
+      },
+    });
+  };
+
+  const setUpdateProcessogram = useSetUpdateProcessogramModal();
+
+  const openUpdateProcessogramModal = () => {
+    if (!element) return;
+
+    setUpdateProcessogram({
+      processogram: {
+        _id: element._id,
+        name: element.name,
+        description: element.description || "",
+        production_module_id: element.production_module_id,
+        theme: element.theme,
+        specie_id: element.specie_id,
       },
     });
   };
@@ -192,6 +210,14 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
             color={ThemeColors.white}
             cursor="pointer"
             onClick={openElementDetailsModal}
+          />
+        </IconWrapper>
+        <IconWrapper>
+          <Edit
+            size={18}
+            color={ThemeColors.white}
+            cursor="pointer"
+            onClick={openUpdateProcessogramModal}
           />
         </IconWrapper>
       </FlexRow>

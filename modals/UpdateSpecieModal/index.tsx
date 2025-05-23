@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { useUpdateSpecie } from "@/api/react-query/species/useSpecies";
 import { TextArea } from "@/components/Textarea";
 import { FormInput } from "@/components/FormInput";
+import { FlexColumn } from "@/components/desing-components/Flex";
 
 const UpdateSpecieSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -57,30 +58,32 @@ const UpdateSpecieModal = ({ onClose, specie }: UpdateSpecieModalProps) => {
   return (
     <ModalContainer open={true} onClose={onClose} title="Update specie">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Name"
-          placeholder="Enter the name of the specie"
-          type="text"
-          error={errors.name?.message}
-          {...register("name")}
-        />
-        <FormInput
-          label="Pathname"
-          placeholder="Enter the pathname of the specie"
-          type="text"
-          error={errors.pathname?.message}
-          {...register("pathname")}
-        />
-        <TextArea
-          label="Description"
-          placeholder="Enter a description for the specie"
-          error={errors.description?.message}
-          {...register("description")}
-        />
+        <FlexColumn gap={2} mt={1}>
+          <FormInput
+            label="Name"
+            placeholder="Enter the name of the specie"
+            type="text"
+            error={errors.name?.message}
+            {...register("name")}
+          />
+          <FormInput
+            label="Pathname"
+            placeholder="Enter the pathname of the specie"
+            type="text"
+            error={errors.pathname?.message}
+            {...register("pathname")}
+          />
+          <TextArea
+            label="Description"
+            placeholder="Enter a description for the specie"
+            error={errors.description?.message}
+            {...register("description")}
+          />
 
-        <Button buttonStyle="success" loading={updateSpecie.isPending}>
-          Update Specie
-        </Button>
+          <Button buttonStyle="success" loading={updateSpecie.isPending}>
+            Update Specie
+          </Button>
+        </FlexColumn>
       </Form>
     </ModalContainer>
   );

@@ -37,7 +37,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, IFormInput>(
     ref
   ) => {
     return (
-      <Box py={3} width="100%" style={customStyle}>
+      <Box width="100%" style={customStyle}>
         <Container>
           <Label $hasValue={!!value} htmlFor={name}>
             {label}

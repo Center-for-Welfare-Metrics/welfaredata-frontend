@@ -14,6 +14,7 @@ export type Processogram = {
   root_id: string | null;
   element_type: string;
   name: string;
+  description: string;
   levelName: string;
   svg_url: string;
   raster_images: {
@@ -47,6 +48,7 @@ export type ProcessogramById = {
   root_id: string | null;
   element_type: string;
   name: string;
+  description: string;
   levelName: string;
   svg_url: string;
   raster_images: {
