@@ -4,6 +4,7 @@ import { useDeleteProductionModuleModal } from "./hooks";
 import { Button } from "@/components/Button";
 import { Text } from "@/components/Text";
 import { useDeleteProductionModule } from "queries/react-query/production-modules/useProductionModule";
+import { FlexColumn } from "@/components/desing-components/Flex";
 
 export type DeleteProductionModuleModalProps = {
   onClose: () => void;
@@ -35,20 +36,20 @@ const DeleteProductionModuleModal = ({
       open={true}
       onClose={onClose}
       title="Delete Production Module"
-      style={{
-        height: "200px",
-      }}
+      centerTitle
+      height="250px"
     >
       <Content>
-        <Text variant="body1" align="center">
-          Are you sure you want to delete the production module{" "}
-          <strong>{productionModuleName}</strong>?
-        </Text>
-        <Text variant="body2" align="center" color="gray" mt={1}>
-          This action cannot be undone. All data associated with this production
-          module will be permanently deleted.
-        </Text>
-
+        <FlexColumn gap={1} mt={1}>
+          <Text variant="body1" align="center">
+            Are you sure you want to delete the production module{" "}
+            <strong>{productionModuleName}</strong>?
+          </Text>
+          <Text variant="body2" align="center" color="gray">
+            This action cannot be undone. All data associated with this
+            production module will be permanently deleted.
+          </Text>
+        </FlexColumn>
         <ButtonContainer>
           <ButtonWrapper onClick={handleDelete}>
             <Button
@@ -81,6 +82,9 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  margin-top: 1rem;
+  justify-content: space-between;
+  height: calc(100% - 3rem);
 `;
 
 const ButtonContainer = styled.div`

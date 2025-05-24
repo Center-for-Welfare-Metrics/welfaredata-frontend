@@ -40,9 +40,9 @@ export const CleanTextArea = styled(TextareaAutosize)`
   outline: none;
   resize: none;
   text-indent: 0;
-  font-family: inherit;
+  font-family: Arial;
 
-  font-size: 1rem;
+  font-size: 14px;
   max-height: 15rem;
 
   border-bottom: 1px solid ${ThemeColors.blue};

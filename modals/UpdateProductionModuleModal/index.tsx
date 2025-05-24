@@ -9,7 +9,7 @@ import { TextArea } from "@/components/Textarea";
 import { ThemeColors } from "theme/globalStyle";
 import { Controller } from "react-hook-form";
 import { useGetSpecies } from "queries/react-query/species/useGetSpecies";
-import { FlexColumn } from "@/components/desing-components/Flex";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { Specie } from "types/species";
 import { FormInput } from "@/components/FormInput";
@@ -72,57 +72,63 @@ const UpdateProductionModuleModal = ({
       open={true}
       onClose={onClose}
       title="Update production module"
+      height="400px"
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FlexColumn gap={2} mt={1}>
-          <FormInput
-            label="Name"
-            placeholder="Enter the name of the production module"
-            type="text"
-            error={errors.name?.message}
-            {...register("name")}
-          />
-
-          <TextArea
-            label="Description"
-            placeholder="Enter a description for the production module"
-            error={errors.description?.message}
-            {...register("description")}
-          />
-
-          <FlexColumn>
-            <Controller
-              control={control}
-              name="specie_id"
-              render={({ field }) => (
-                <Select
-                  label="Specie"
-                  options={
-                    species?.map((specie: Specie) => ({
-                      label: specie.name,
-                      value: specie._id,
-                    })) ?? []
-                  }
-                  error={errors.specie_id?.message}
-                  {...field}
-                />
-              )}
+        <FlexColumn gap={2} mt={1} height="100%" justify="space-between">
+          <FlexColumn gap={2}>
+            <FormInput
+              label="Name"
+              placeholder="Enter the name of the production module"
+              type="text"
+              error={errors.name?.message}
+              {...register("name")}
             />
-          </FlexColumn>
 
-          <Button
-            buttonStyle="success"
-            loading={updateProductionModule.isPending}
-          >
-            Update Production Module
-          </Button>
+            <TextArea
+              label="Description"
+              placeholder="Enter a description for the production module"
+              error={errors.description?.message}
+              {...register("description")}
+            />
+
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="specie_id"
+                render={({ field }) => (
+                  <Select
+                    label="Specie"
+                    options={
+                      species?.map((specie: Specie) => ({
+                        label: specie.name,
+                        value: specie._id,
+                      })) ?? []
+                    }
+                    error={errors.specie_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexColumn>
+          </FlexColumn>
+          <FlexRow justify="flex-end">
+            <Button
+              buttonStyle="success"
+              loading={updateProductionModule.isPending}
+            >
+              Update Production Module
+            </Button>
+          </FlexRow>
         </FlexColumn>
       </Form>
     </ModalContainer>
   );
 };
 
-const Form = styled.form``;
+const Form = styled.form`
+  height: calc(100% - 3rem);
+`;
 
 const StyledLabel = styled.label`
   font-size: 0.875rem;

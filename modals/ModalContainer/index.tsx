@@ -6,12 +6,14 @@ import { isEmpty } from "lodash";
 import { Text } from "@/components/Text";
 import { media } from "styles/media";
 import { ThemeColors } from "theme/globalStyle";
+import { FlexRow } from "@/components/desing-components/Flex";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   closeType?: "close" | "minimize" | "both";
   title?: JSX.Element | string;
+  centerTitle?: boolean;
   titleWeigth?: string;
   description?: string | JSX.Element;
   closeButtonTop?: number;
@@ -41,14 +43,17 @@ export const ModalContainer: React.FC<Props> = ({
   closeTooltip,
   closeId,
   checkIfHasUnsavedChanges,
+  centerTitle,
   ...rest
 }) => {
   const handleTitle = () => {
     if (typeof title === "string" && !isEmpty(title.trim())) {
       return (
-        <Text variant="h2" fontWeight={titleWeigth} align="center">
-          {title}
-        </Text>
+        <FlexRow justify={centerTitle ? "center" : "flex-start"}>
+          <Text variant="h2" fontWeight={titleWeigth} align="center">
+            {title}
+          </Text>
+        </FlexRow>
       );
     }
     return title;

@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import { useCreateProductionModule } from "@/api/react-query/production-modules/useProductionModule";
 import styled from "styled-components";
 import { FormInput } from "@/components/FormInput";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 
 const CreateProductionModuleSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -54,28 +55,36 @@ const CreateProductionModuleModal = ({
       open={true}
       onClose={onClose}
       title="Create a new production module"
+      height="250px"
+      width="500px"
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Name"
-          placeholder="Enter the name of the production module"
-          type="text"
-          error={errors.name?.message}
-          {...register("name")}
-        />
+        <FlexColumn justify="space-between" height="100%">
+          <FormInput
+            label="Name"
+            placeholder="Enter the name of the production module"
+            type="text"
+            error={errors.name?.message}
+            {...register("name")}
+          />
 
-        <Button
-          buttonStyle="success"
-          loading={createProductionModule.isPending}
-        >
-          Create Production Module
-        </Button>
+          <FlexRow justify="flex-end">
+            <Button
+              buttonStyle="success"
+              loading={createProductionModule.isPending}
+            >
+              Create Production Module
+            </Button>
+          </FlexRow>
+        </FlexColumn>
       </Form>
     </ModalContainer>
   );
 };
 
-const Form = styled.form``;
+const Form = styled.form`
+  height: calc(100% - 3rem);
+`;
 
 export const CreateProductionModuleModalWrapper = () => {
   const [modalProps, setModalProps] = useCreateProductionModuleModal();

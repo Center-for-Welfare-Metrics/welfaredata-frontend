@@ -7,7 +7,7 @@ import { ModalContainer } from "modals/ModalContainer";
 import { useCreateElementModal } from "./hooks";
 import { useForm, z, zodResolver } from "@/utils/validation";
 import Dropzone from "@/components/Dropzone";
-import { FlexColumn } from "@/components/desing-components/Flex";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import { Button } from "@/components/Button";
 import { uploadSvgElement } from "@/api/react-query/processograms/useUploadSvgElement";
@@ -98,8 +98,8 @@ const CreateProcessogramModal = ({
   return (
     <ModalContainer open={true} onClose={onClose} title="Upload a Processogram">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FlexColumn align="flex-end" width="100%">
-          <FormBody gap={2} width="100%">
+        <FlexColumn>
+          <FormBody mt={1} gap={2} width="100%">
             <FormInput
               label="Name"
               placeholder="Enter the name of the processogram"
@@ -147,20 +147,18 @@ const CreateProcessogramModal = ({
               )}
             </FlexColumn>
           </FormBody>
-          <Button buttonStyle="success" loading={isLoading}>
-            Create Element
-          </Button>
+          <FlexRow justify="flex-end">
+            <Button buttonStyle="success" loading={isLoading}>
+              Create Element
+            </Button>
+          </FlexRow>
         </FlexColumn>
       </Form>
     </ModalContainer>
   );
 };
 
-const FormBody = styled(FlexColumn)`
-  height: 400px;
-  overflow: auto;
-  padding-inline: 0.5rem;
-`;
+const FormBody = styled(FlexColumn)``;
 
 const Form = styled.form``;
 

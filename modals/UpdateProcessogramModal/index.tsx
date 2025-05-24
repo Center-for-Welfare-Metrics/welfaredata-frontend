@@ -9,7 +9,7 @@ import { TextArea } from "@/components/Textarea";
 import { Controller } from "react-hook-form";
 import { useGetSpecies } from "queries/react-query/species/useGetSpecies";
 import { useGetProductionModules } from "queries/react-query/production-modules/useGetProductionModules";
-import { FlexColumn } from "@/components/desing-components/Flex";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { FormInput } from "@/components/FormInput";
 import { Select } from "@/components/Select";
 import { Specie } from "types/species";
@@ -85,85 +85,94 @@ const UpdateProcessogramModal = ({
   return (
     <ModalContainer open={true} onClose={onClose} title="Update processogram">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FlexColumn mt={1} gap={2}>
-          <FormInput
-            label="Name"
-            placeholder="Enter the name of the processogram"
-            type="text"
-            error={errors.name?.message}
-            {...register("name")}
-          />
-          <TextArea
-            label="Description"
-            placeholder="Enter a description for the processogram"
-            error={errors.description?.message}
-            {...register("description")}
-          />
-          <FlexColumn>
-            <Controller
-              control={control}
-              name="theme"
-              render={({ field }) => (
-                <Select
-                  label="Theme"
-                  options={[
-                    { label: "Light", value: "light" },
-                    { label: "Dark", value: "dark" },
-                  ]}
-                  error={errors.theme?.message}
-                  {...field}
-                />
-              )}
+        <FlexColumn mt={1} gap={2} height="100%" justify="space-between">
+          <FlexColumn gap={2}>
+            <FormInput
+              label="Name"
+              placeholder="Enter the name of the processogram"
+              type="text"
+              error={errors.name?.message}
+              {...register("name")}
             />
-          </FlexColumn>
-          <FlexColumn>
-            <Controller
-              control={control}
-              name="specie_id"
-              render={({ field }) => (
-                <Select
-                  label="Specie"
-                  options={
-                    species?.map((specie: Specie) => ({
-                      label: specie.name,
-                      value: specie._id,
-                    })) ?? []
-                  }
-                  error={errors.specie_id?.message}
-                  {...field}
-                />
-              )}
+            <TextArea
+              label="Description"
+              placeholder="Enter a description for the processogram"
+              error={errors.description?.message}
+              {...register("description")}
             />
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="theme"
+                render={({ field }) => (
+                  <Select
+                    label="Theme"
+                    options={[
+                      { label: "Light", value: "light" },
+                      { label: "Dark", value: "dark" },
+                    ]}
+                    error={errors.theme?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexColumn>
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="specie_id"
+                render={({ field }) => (
+                  <Select
+                    label="Specie"
+                    options={
+                      species?.map((specie: Specie) => ({
+                        label: specie.name,
+                        value: specie._id,
+                      })) ?? []
+                    }
+                    error={errors.specie_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexColumn>
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="production_module_id"
+                render={({ field }) => (
+                  <Select
+                    label="Production Module"
+                    options={
+                      productionModules?.map((module: ProductionModule) => ({
+                        label: module.name,
+                        value: module._id,
+                      })) ?? []
+                    }
+                    error={errors.production_module_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexColumn>
           </FlexColumn>
-          <FlexColumn>
-            <Controller
-              control={control}
-              name="production_module_id"
-              render={({ field }) => (
-                <Select
-                  label="Production Module"
-                  options={
-                    productionModules?.map((module: ProductionModule) => ({
-                      label: module.name,
-                      value: module._id,
-                    })) ?? []
-                  }
-                  error={errors.production_module_id?.message}
-                  {...field}
-                />
-              )}
-            />
-          </FlexColumn>
-          <Button buttonStyle="success" loading={updateProcessogram.isPending}>
-            Update Processogram
-          </Button>
+          <FlexRow justify="flex-end">
+            <Button
+              buttonStyle="success"
+              loading={updateProcessogram.isPending}
+            >
+              Update Processogram
+            </Button>
+          </FlexRow>
         </FlexColumn>
       </Form>
     </ModalContainer>
   );
 };
 
-const Form = styled.form``;
+const Form = styled.form`
+  height: calc(100% - 3rem);
+`;
 
 export const UpdateProcessogramModalWrapper = () => {
   const [modalProps, setModalProps] = useUpdateProcessogramModal();
