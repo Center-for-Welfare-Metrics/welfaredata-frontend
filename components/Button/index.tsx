@@ -36,7 +36,7 @@ export const Button = ({
   return (
     <Wrapper>
       <DefaultButton
-        loading={loading}
+        $loading={loading}
         type={type}
         disabled={disabled}
         as={getButtonByStyle()}
@@ -53,7 +53,7 @@ export const Button = ({
 };
 
 type DefaultButtonProps = {
-  loading?: boolean;
+  $loading?: boolean;
 };
 
 const LoadingContainer = styled.div`
@@ -82,8 +82,8 @@ const DefaultButton = styled.button<DefaultButtonProps>`
     cursor: not-allowed;
   }
   transition: transform 500ms;
-  ${({ loading }) =>
-    loading
+  ${({ $loading }) =>
+    $loading
       ? css`
           pointer-events: none;
           opacity: 0.5;

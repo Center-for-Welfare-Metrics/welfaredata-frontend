@@ -49,7 +49,7 @@ const UpdateProductionModuleModal = ({
       },
     });
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
   const { data: species } = useGetSpecies();
   const updateProductionModule = useUpdateProductionModule();
 
@@ -73,6 +73,11 @@ const UpdateProductionModuleModal = ({
       onClose={onClose}
       title="Update production module"
       height="400px"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished updating this production module. If you leave now, your changes will be lost.",
+      }}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn gap={2} mt={1} height="100%" justify="space-between">

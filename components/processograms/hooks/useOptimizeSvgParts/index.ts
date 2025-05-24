@@ -69,7 +69,6 @@ export const useOptimizeSvgParts = (
           if (optimizedG) {
             if (applyUnfocusedFilter) {
               optimizedG.style.filter = UNFOCUSED_FILTER[theme];
-              console.log(optimizedG);
             }
             currentSvgElement.current.replaceWith(optimizedG);
             updateSvgElement(optimizedG);
@@ -94,7 +93,6 @@ export const useOptimizeSvgParts = (
           if (optimizedElement) {
             if (applyUnfocusedFilter) {
               optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
-              console.log(optimizedElement);
             }
             currentSvgElement.current.replaceWith(optimizedElement);
             updateSvgElement(optimizedElement);

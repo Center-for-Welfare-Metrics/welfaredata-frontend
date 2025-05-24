@@ -28,7 +28,7 @@ const CreateSpecieModal = ({ onClose }: CreateSpecieModalProps) => {
     },
   });
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
 
   const createSpecie = useCreateSpecie();
 
@@ -46,9 +46,14 @@ const CreateSpecieModal = ({ onClose }: CreateSpecieModalProps) => {
     <ModalContainer
       open={true}
       onClose={onClose}
-      title="Create a new specie"
+      title="Create a new species"
       width="500px"
       height="350px"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished creating this species. If you leave now, your changes will be lost.",
+      }}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn gap={2} mt={1} justify="space-between" height="100%">

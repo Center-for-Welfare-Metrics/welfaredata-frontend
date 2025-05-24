@@ -36,7 +36,7 @@ const CreateProductionModuleModal = ({
       },
     });
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
 
   const createProductionModule = useCreateProductionModule();
 
@@ -57,6 +57,11 @@ const CreateProductionModuleModal = ({
       title="Create a new production module"
       height="250px"
       width="500px"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished creating this production module. If you leave now, your changes will be lost.",
+      }}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn justify="space-between" height="100%">

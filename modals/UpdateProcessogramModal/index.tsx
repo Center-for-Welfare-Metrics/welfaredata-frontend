@@ -55,7 +55,7 @@ const UpdateProcessogramModal = ({
 
   const specieId = watch("specie_id");
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
 
   const { data: species } = useGetSpecies();
 
@@ -83,7 +83,16 @@ const UpdateProcessogramModal = ({
   };
 
   return (
-    <ModalContainer open={true} onClose={onClose} title="Update processogram">
+    <ModalContainer
+      open={true}
+      onClose={onClose}
+      title="Update processogram"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
+      }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn mt={1} gap={2} height="100%" justify="space-between">
           <FlexColumn gap={2}>
@@ -94,29 +103,6 @@ const UpdateProcessogramModal = ({
               error={errors.name?.message}
               {...register("name")}
             />
-            <TextArea
-              label="Description"
-              placeholder="Enter a description for the processogram"
-              error={errors.description?.message}
-              {...register("description")}
-            />
-            <FlexColumn>
-              <Controller
-                control={control}
-                name="theme"
-                render={({ field }) => (
-                  <Select
-                    label="Theme"
-                    options={[
-                      { label: "Light", value: "light" },
-                      { label: "Dark", value: "dark" },
-                    ]}
-                    error={errors.theme?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </FlexColumn>
             <FlexColumn>
               <Controller
                 control={control}
@@ -136,7 +122,7 @@ const UpdateProcessogramModal = ({
                 )}
               />
             </FlexColumn>
-            <FlexColumn>
+            <FlexColumn mb={1}>
               <Controller
                 control={control}
                 name="production_module_id"
@@ -150,6 +136,29 @@ const UpdateProcessogramModal = ({
                       })) ?? []
                     }
                     error={errors.production_module_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexColumn>
+            <TextArea
+              label="Description"
+              placeholder="Enter a description for the processogram"
+              error={errors.description?.message}
+              {...register("description")}
+            />
+            <FlexColumn>
+              <Controller
+                control={control}
+                name="theme"
+                render={({ field }) => (
+                  <Select
+                    label="Theme"
+                    options={[
+                      { label: "Light", value: "light" },
+                      { label: "Dark", value: "dark" },
+                    ]}
+                    error={errors.theme?.message}
                     {...field}
                   />
                 )}

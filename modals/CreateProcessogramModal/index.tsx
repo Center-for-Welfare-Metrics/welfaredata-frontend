@@ -55,7 +55,7 @@ const CreateProcessogramModal = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
 
   const file = watch("file");
 
@@ -96,7 +96,16 @@ const CreateProcessogramModal = ({
   };
 
   return (
-    <ModalContainer open={true} onClose={onClose} title="Upload a Processogram">
+    <ModalContainer
+      open={true}
+      onClose={onClose}
+      title="Create a Processogram"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
+      }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn>
           <FormBody mt={1} gap={2} width="100%">
@@ -149,7 +158,7 @@ const CreateProcessogramModal = ({
           </FormBody>
           <FlexRow justify="flex-end">
             <Button buttonStyle="success" loading={isLoading}>
-              Create Element
+              Create Processogram
             </Button>
           </FlexRow>
         </FlexColumn>

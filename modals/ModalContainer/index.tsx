@@ -7,6 +7,7 @@ import { Text } from "@/components/Text";
 import { media } from "styles/media";
 import { ThemeColors } from "theme/globalStyle";
 import { FlexRow } from "@/components/desing-components/Flex";
+import { useUnsavedChanges } from "@/utils/hooks/useUnsavedChanges";
 
 type Props = {
   open: boolean;
@@ -23,7 +24,10 @@ type Props = {
   disableOverlay?: boolean;
   closeTooltip?: string;
   closeId?: string;
-  checkIfHasUnsavedChanges?: () => boolean;
+  unsavedChanges?: {
+    enabled: boolean;
+    message?: string;
+  };
 } & Omit<BoxProps, "title">;
 
 export const ModalContainer: React.FC<Props> = ({
@@ -42,10 +46,15 @@ export const ModalContainer: React.FC<Props> = ({
   disableOverlay,
   closeTooltip,
   closeId,
-  checkIfHasUnsavedChanges,
   centerTitle,
+  unsavedChanges,
   ...rest
 }) => {
+  const { triggerDialog } = useUnsavedChanges({
+    enabled: !!unsavedChanges?.enabled,
+    message: unsavedChanges?.message,
+  });
+
   const handleTitle = () => {
     if (typeof title === "string" && !isEmpty(title.trim())) {
       return (
@@ -78,16 +87,8 @@ export const ModalContainer: React.FC<Props> = ({
   const close = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (checkIfHasUnsavedChanges?.()) {
-      // setConfirmActionModal({
-      //   title: '',
-      //   description: '',
-      //   onConfirm: () => {
-      //     onClose();
-      //     setConfirmActionModal(null);
-      //   },
-      //   confirmText: '',
-      // });
+    if (unsavedChanges?.enabled) {
+      triggerDialog(onClose);
       return;
     }
     onClose();

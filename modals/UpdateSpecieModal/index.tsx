@@ -37,7 +37,7 @@ const UpdateSpecieModal = ({ onClose, specie }: UpdateSpecieModalProps) => {
     },
   });
 
-  const { errors } = formState;
+  const { errors, isDirty } = formState;
 
   const updateSpecie = useUpdateSpecie();
 
@@ -56,7 +56,16 @@ const UpdateSpecieModal = ({ onClose, specie }: UpdateSpecieModalProps) => {
   };
 
   return (
-    <ModalContainer open={true} onClose={onClose} title="Update specie">
+    <ModalContainer
+      open={true}
+      onClose={onClose}
+      title="Update specie"
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished updating this species. If you leave now, your changes will be lost.",
+      }}
+    >
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn gap={2} mt={1} justify="space-between" height="100%">
           <FlexColumn gap={2}>
