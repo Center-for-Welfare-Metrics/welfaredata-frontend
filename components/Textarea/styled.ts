@@ -43,7 +43,6 @@ export const CleanTextArea = styled(TextareaAutosize)`
   font-family: Arial;
 
   font-size: 14px;
-  max-height: 15rem;
 
   border-bottom: 1px solid ${ThemeColors.blue};
   outline: none;

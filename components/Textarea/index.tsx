@@ -4,7 +4,16 @@ import { Container, Label, Error, CleanTextArea } from "./styled";
 import React from "react";
 import { Box } from "@mui/material";
 
+type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+
+type Style = Omit<
+  NonNullable<TextareaProps["style"]>,
+  "maxHeight" | "minHeight"
+> & {
+  height?: number;
+};
 export interface ITextAreaBase {
+  style?: Style;
   error?: string;
   label: string;
   icon?: string;
@@ -31,7 +40,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, IFormInput>(
       disabled = false,
       defaultValue = null,
       customStyle,
-      style,
       ...rest
     },
     ref

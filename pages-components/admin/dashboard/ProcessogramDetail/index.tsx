@@ -3,6 +3,7 @@ import { useGetProcessogramQuestionsByProcessogramId } from "@/api/react-query/p
 import { useGetProcessogramById } from "@/api/react-query/processograms/useGetProcessograms";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { BreadcrumbHud } from "@/components/processograms/huds/BreadcrumbHud";
+import { ProgressogramEditableHud } from "@/components/processograms/huds/ProcessogramEditableHud";
 import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
 import {
   ProgressogramQuestionsHud,
@@ -278,13 +279,16 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
               />
             </BreadcrumbsContainer>
             <FlexRow height={"100%"}>
-              <ProgressogramMainHud
-                notReady={element.status === "generating"}
-                currentElement={
-                  currentElement || getElementNameFromId(element.identifier)
-                }
-                data={elementData?.data ?? {}}
-              />
+              {!!elementData && (
+                <ProgressogramEditableHud
+                  notReady={element.status === "generating"}
+                  currentElement={
+                    currentElement || getElementNameFromId(element.identifier)
+                  }
+                  id={elementData._id}
+                  data={elementData.data ?? {}}
+                />
+              )}
               {questionsData && (
                 <QuestionsHudContainer>
                   <ProgressogramQuestionsHud
@@ -354,7 +358,7 @@ const QuestionsHudContainer = styled.div`
 const BreadcrumbsContainer = styled.div`
   position: absolute;
   top: 0;
-  left: 300px;
+  left: 350px;
   padding-left: 2rem;
   z-index: 1000;
 `;
