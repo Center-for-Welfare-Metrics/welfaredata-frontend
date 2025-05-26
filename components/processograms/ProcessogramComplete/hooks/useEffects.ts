@@ -26,6 +26,7 @@ type Props = {
   startFromSpecie: boolean;
   isActive: boolean;
   theme: "dark" | "light";
+  disableHover?: boolean;
 };
 
 export const useProcessogramEffects = ({
@@ -41,6 +42,7 @@ export const useProcessogramEffects = ({
   startFromSpecie,
   isActive,
   theme,
+  disableHover,
 }: Props) => {
   useEffect(() => {
     if (!svgElement) return;
@@ -142,6 +144,7 @@ export const useProcessogramEffects = ({
 
   useEffect(() => {
     if (!svgElement) return;
+    if (disableHover) return;
 
     const elementId = onHover || currentElementId.current;
 
@@ -154,5 +157,5 @@ export const useProcessogramEffects = ({
       getElementIdentifierWithHierarchy(elementId);
 
     onChange(identifier, hierarchy);
-  }, [onHover]);
+  }, [onHover, disableHover]);
 };

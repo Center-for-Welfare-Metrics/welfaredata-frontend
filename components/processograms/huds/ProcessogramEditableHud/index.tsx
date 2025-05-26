@@ -1,16 +1,19 @@
 import { Text } from "@/components/Text";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";
-import { FlexColumn } from "@/components/desing-components/Flex";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { getElementNameFromId } from "../../utils/extractInfoFromId";
 import { useForm, z, zodResolver } from "@/utils/validation";
 import { TextArea } from "@/components/Textarea";
 import { useStopTypingDebounce } from "@/utils/hooks/useStopTypingDebounce";
 import { useUpdateProcessogramData } from "@/api/react-query/processogram-datas/useProcessogramData";
+import { CloudCheckIcon, CloudSnowIcon } from "@phosphor-icons/react";
+import { ClipLoader } from "react-spinners";
+import { Tooltip } from "@mui/material";
 
 const ProcessogramDataSchema = z.object({
   description: z.string().min(1, "Description is required"),
@@ -20,6 +23,7 @@ type ProcessogramDataForm = z.infer<typeof ProcessogramDataSchema>;
 
 type Props = {
   id: string;
+  processogram_id: string;
   currentElement: string;
   data: {
     [key: string]: {
@@ -31,6 +35,7 @@ type Props = {
 
 export const ProgressogramEditableHud = ({
   id,
+  processogram_id,
   currentElement: realTimeElement,
   data,
   notReady,
@@ -62,19 +67,16 @@ export const ProgressogramEditableHud = ({
     return data[currentElement]?.description || "";
   }, [currentElement, data, notReady]);
 
-  const { updateWithouTracking, handleInputChange, debouncedValue } =
-    useStopTypingDebounce();
-
-  useEffect(() => {
-    keyRef.current = realTimeElement;
-  }, [realTimeElement]);
-
   useEffect(() => {
     textRef.current = text;
   }, [text]);
 
   useEffect(() => {
-    if (textRef.current === debouncedValue) {
+    keyRef.current = realTimeElement;
+  }, [realTimeElement]);
+
+  const onChangeDebouncedValues = useCallback((value: string) => {
+    if (textRef.current === value) {
       return;
     }
 
@@ -88,10 +90,21 @@ export const ProgressogramEditableHud = ({
       params: { id },
       body: {
         key,
-        description: debouncedValue,
+        description: value,
+      },
+      helper: {
+        processogram_id,
       },
     });
-  }, [debouncedValue]);
+  }, []);
+
+  const { updateWithouTracking, handleInputChange } = useStopTypingDebounce({
+    onChange: onChangeDebouncedValues,
+  });
+
+  const isPending = useMemo(() => {
+    return updateDescription.isPending;
+  }, [updateDescription.isPending]);
 
   useEffect(() => {
     reset({
@@ -102,8 +115,8 @@ export const ProgressogramEditableHud = ({
   }, [text, updateWithouTracking]);
 
   useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === "description") {
+    const subscription = watch((value, { name, type }) => {
+      if (type === "change" && name === "description") {
         const description = value.description || "";
         handleInputChange(description);
       }
@@ -112,7 +125,7 @@ export const ProgressogramEditableHud = ({
     return () => {
       subscription.unsubscribe();
     };
-  }, [watch]);
+  }, [watch, handleInputChange]);
 
   return (
     <Container
@@ -120,6 +133,21 @@ export const ProgressogramEditableHud = ({
       onMouseUp={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
+      <Tooltip title={isPending ? "Saving changes..." : "Up to date"}>
+        <CloudSyncContainer justify="flex-end">
+          {isPending ? (
+            <CloudSnowIcon size={20} color={ThemeColors.yellow} weight="bold" />
+          ) : (
+            <CloudCheckIcon size={20} color={ThemeColors.green} weight="bold" />
+          )}
+
+          {isPending && (
+            <LoadingContainer>
+              <ClipLoader size={8} color={ThemeColors.blue} />
+            </LoadingContainer>
+          )}
+        </CloudSyncContainer>
+      </Tooltip>
       <FlexColumn>
         <Text variant="h3">{title}</Text>
 
@@ -132,6 +160,20 @@ export const ProgressogramEditableHud = ({
     </Container>
   );
 };
+
+const LoadingContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const CloudSyncContainer = styled(FlexRow)`
+  position: absolute;
+  width: fit-content;
+  top: 1rem;
+  right: 1rem;
+`;
 
 const Container = styled.div`
   padding: 2rem;

@@ -9,6 +9,7 @@ type Props<T = string> = {
   defaultValue?: T;
   baseDelay?: number;
   options?: Options;
+  onChange?: (value: T) => void;
 };
 
 export const useStopTypingDebounce = <T = string>(props?: Props<T>) => {
@@ -76,12 +77,14 @@ export const useStopTypingDebounce = <T = string>(props?: Props<T>) => {
       trackTypingSpeed();
       clearTimer();
       setRealTimeValue(value);
-
       timerRef.current = setTimeout(() => {
         setDebouncedValue(value);
+        if (props?.onChange) {
+          props.onChange(value);
+        }
       }, delay);
     },
-    [delay, clearTimer, trackTypingSpeed]
+    [delay, clearTimer, trackTypingSpeed, props?.onChange]
   );
 
   const updateWithouTracking = useCallback(

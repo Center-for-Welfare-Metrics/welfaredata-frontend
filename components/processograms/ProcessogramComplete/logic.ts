@@ -48,6 +48,7 @@ type Props = {
   isActive: boolean;
   theme: "dark" | "light";
   base64ImagesRef?: RefObject<Map<string, string>>;
+  disableHover?: boolean;
 };
 
 export const useProcessogramLogic = ({
@@ -60,6 +61,7 @@ export const useProcessogramLogic = ({
   isActive,
   theme,
   base64ImagesRef,
+  disableHover,
 }: Props) => {
   // Refs
 
@@ -191,6 +193,7 @@ export const useProcessogramLogic = ({
     startFromSpecie,
     isActive,
     theme,
+    disableHover,
   });
 
   return {

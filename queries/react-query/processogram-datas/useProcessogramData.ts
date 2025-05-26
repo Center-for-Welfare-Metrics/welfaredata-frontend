@@ -4,6 +4,7 @@ import { request } from "../request";
 import { ProcessogramData } from "types/processogram-data";
 import toast from "react-hot-toast";
 import { QueryKeys } from "../keys";
+import { useUpdateProcessogramDataOnCache } from "./hooks/useUpdateProcessogramDataOnCache";
 
 type UpdateProcessogramDataPayload = {
   params: {
@@ -12,6 +13,9 @@ type UpdateProcessogramDataPayload = {
   body: {
     key: string;
     description: string;
+  };
+  helper: {
+    processogram_id: string;
   };
 };
 
@@ -31,22 +35,18 @@ const updateProcessogramData = async ({
 export const useUpdateProcessogramData = () => {
   const queryClient = useQueryClient();
 
+  const { update } = useUpdateProcessogramDataOnCache();
+
   return useMutation({
     mutationFn: updateProcessogramData,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PROCESSOGRAM_DATAS.List],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PROCESSOGRAM_DATAS.ByID],
-      });
-      toast.success("Production Module updated successfully");
-    },
     onError: (error: AxiosError) => {
       if (process.env.NODE_ENV === "development") {
         console.error(error);
       }
       toast.error("Error updating production module");
+    },
+    onMutate: ({ helper: { processogram_id }, body: { key, description } }) => {
+      update(processogram_id, key, description);
     },
   });
 };

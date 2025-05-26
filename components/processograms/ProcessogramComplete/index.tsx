@@ -29,6 +29,7 @@ type Props = {
   enableBruteOptimization?: boolean;
   maxHeight?: string;
   base64ImagesRef?: RefObject<Map<string, string>>;
+  disableHover?: boolean;
 };
 
 export const ProcessogramComplete = ({
@@ -43,6 +44,7 @@ export const ProcessogramComplete = ({
   base64ImagesRef,
   isActive,
   theme,
+  disableHover,
 }: Props) => {
   const { updateSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
     useProcessogramLogic({
@@ -55,6 +57,7 @@ export const ProcessogramComplete = ({
       base64ImagesRef,
       isActive,
       theme,
+      disableHover,
     });
 
   return (

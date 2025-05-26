@@ -73,13 +73,13 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
     processogram_id,
   });
 
-  const {
-    data: questionsData,
-    refetch: questionsRefetch,
-    isFetching: isFetchingQuestions,
-  } = useGetProcessogramQuestionsByProcessogramId({
-    processogram_id,
-  });
+  // const {
+  //   data: questionsData,
+  //   refetch: questionsRefetch,
+  //   isFetching: isFetchingQuestions,
+  // } = useGetProcessogramQuestionsByProcessogramId({
+  //   processogram_id,
+  // });
 
   const setElementDetailsModal = useSetElementDetailsModal();
 
@@ -146,7 +146,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   const handleDataRefetch = (e: React.MouseEvent) => {
     e.stopPropagation();
     dataRefetch();
-    questionsRefetch();
+    // questionsRefetch();
   };
 
   const getStatusText = (status: ProcessogramStatus) => {
@@ -215,7 +215,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         <Text variant="h2">{">"}</Text>
         <Text variant="h2">{element.name}</Text>
         <FlexColumn>
-          {isFetchingData || isFetchingQuestions ? (
+          {isFetchingData /*|| isFetchingQuestions*/ ? (
             <ClipLoader size={18} color={ThemeColors.white} loading />
           ) : (
             <IconWrapper>
@@ -287,9 +287,10 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   }
                   id={elementData._id}
                   data={elementData.data ?? {}}
+                  processogram_id={processogram_id}
                 />
               )}
-              {questionsData && (
+              {/* {questionsData && (
                 <QuestionsHudContainer>
                   <ProgressogramQuestionsHud
                     notReady={element.status === "generating"}
@@ -299,7 +300,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                     data={questionsData?.data ?? {}}
                   />
                 </QuestionsHudContainer>
-              )}
+              )} */}
               <FlexColumn
                 height="100%"
                 width="100%"
@@ -321,6 +322,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   theme={element.theme}
                   startFromSpecie={false}
                   isActive={true}
+                  disableHover
                 />
               </FlexColumn>
             </FlexRow>
