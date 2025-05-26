@@ -1,9 +1,8 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { request } from "../request";
 import { ProcessogramData } from "types/processogram-data";
 import toast from "react-hot-toast";
-import { QueryKeys } from "../keys";
 import { useUpdateProcessogramDataOnCache } from "./hooks/useUpdateProcessogramDataOnCache";
 
 type UpdateProcessogramDataPayload = {
@@ -33,8 +32,6 @@ const updateProcessogramData = async ({
 };
 
 export const useUpdateProcessogramData = () => {
-  const queryClient = useQueryClient();
-
   const { update } = useUpdateProcessogramDataOnCache();
 
   return useMutation({
