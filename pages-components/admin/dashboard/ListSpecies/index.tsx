@@ -54,7 +54,9 @@ export const ListSpecies = () => {
                   name={specie.name}
                   pathname={specie.pathname}
                   description={specie.description}
-                  image_url=""
+                  processogramsCount={specie.processogramsCount}
+                  productionModulesCount={specie.productionModulesCount}
+                  processogram_urls={specie.processograms_urls}
                 />
               ))}
             </FlexRow>

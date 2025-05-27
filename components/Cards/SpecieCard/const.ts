@@ -1,4 +1,4 @@
 export const SpecieCardSize = {
-  width: 200,
+  width: 400,
   height: 150,
 };

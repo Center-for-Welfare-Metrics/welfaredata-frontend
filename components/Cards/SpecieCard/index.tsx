@@ -8,22 +8,29 @@ import { SpecieCardSize } from "./const";
 import { Edit, Trash } from "react-feather";
 import { useSetDeleteSpecieModal } from "modals/DeleteSpecieModal/hooks";
 import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
+import { ImageMosaic } from "@/components/ImageMosaic";
 
 type Props = {
   _id: string;
   name: string;
   pathname: string;
   description: string | undefined;
-  image_url: string | undefined;
+  processogramsCount: number;
+  productionModulesCount: number;
+  processogram_urls: string[] | undefined;
 };
 
 export const SpecieCard = ({
   _id,
   name,
   pathname,
-  image_url,
+  processogramsCount,
+  productionModulesCount,
   description,
+  processogram_urls,
 }: Props) => {
+  console.log(processogram_urls);
+
   const setDeleteSpecieModal = useSetDeleteSpecieModal();
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -51,7 +58,7 @@ export const SpecieCard = ({
   };
 
   return (
-    <Link
+    <LinkContainer
       href={{
         pathname: "/admin/species/[id]",
         query: {
@@ -59,24 +66,36 @@ export const SpecieCard = ({
         },
       }}
       style={{
+        position: "relative",
         textDecoration: "none",
       }}
     >
-      <Container
-        style={
-          image_url
-            ? {
-                backgroundImage: `url(${image_url})`,
-              }
-            : undefined
-        }
-      >
-        <Info>
-          <FlexColumn gap={0}>
-            <Text variant="body2">{name}</Text>
-            <Text variant="body2">/{pathname}</Text>
-          </FlexColumn>
-        </Info>
+      {processogram_urls && (
+        <MosaicWrapper>
+          {" "}
+          <ImageMosaic urls={processogram_urls} className="mosaic" />
+        </MosaicWrapper>
+      )}
+      <BackDrop />
+      <Container>
+        <FlexRow justify="space-between">
+          <Info>
+            <FlexColumn gap={0}>
+              <Text variant="body2">{name}</Text>
+              <Text variant="body2">/{pathname}</Text>
+            </FlexColumn>
+          </Info>
+          <Info>
+            <FlexColumn gap={0} align="flex-end">
+              <Text variant="body2">
+                {processogramsCount} production modules
+              </Text>
+              <Text variant="body2">
+                {productionModulesCount} processograms
+              </Text>
+            </FlexColumn>
+          </Info>
+        </FlexRow>
         <ActionButtons>
           <FlexRow>
             <IconWrapper onClick={handleUpdate}>
@@ -88,9 +107,36 @@ export const SpecieCard = ({
           </FlexRow>
         </ActionButtons>
       </Container>
-    </Link>
+    </LinkContainer>
   );
 };
+
+const LinkContainer = styled(Link)`
+  &:hover {
+    .mosaic {
+      opacity: 1;
+    }
+  }
+`;
+
+const BackDrop = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: ${transparentize(0.5, ThemeColors.black)};
+  backdrop-filter: blur(2px);
+`;
+
+const MosaicWrapper = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+`;
 
 const IconWrapper = styled.div`
   width: fit-content;

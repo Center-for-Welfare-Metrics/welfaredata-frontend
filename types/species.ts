@@ -3,6 +3,9 @@ export type Specie = {
   name: string;
   pathname: string;
   description: string;
+  processogramsCount: number;
+  productionModulesCount: number;
+  processograms_urls?: string[];
   createdAt: string;
   updatedAt: string;
 };
