@@ -88,11 +88,9 @@ export const SpecieCard = ({
           <Info>
             <FlexColumn gap={0} align="flex-end">
               <Text variant="body2">
-                {processogramsCount} production modules
+                {productionModulesCount} production modules
               </Text>
-              <Text variant="body2">
-                {productionModulesCount} processograms
-              </Text>
+              <Text variant="body2">{processogramsCount} processograms</Text>
             </FlexColumn>
           </Info>
         </FlexRow>
