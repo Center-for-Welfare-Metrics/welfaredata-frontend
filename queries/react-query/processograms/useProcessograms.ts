@@ -78,7 +78,7 @@ export const useDeleteProcessogram = () => {
     mutationFn: deleteProcessogram,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PRODUCTION_MODULES.List],
+        queryKey: [QueryKeys.PROCESSOGRAMS.List],
       });
 
       toast.success("Processogram deleted successfully");
