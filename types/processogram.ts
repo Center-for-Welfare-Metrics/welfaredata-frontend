@@ -26,6 +26,7 @@ export type Processogram = {
       y: number;
     };
   };
+  is_published: boolean;
   status: ProcessogramStatus;
   theme: ProcessogramTheme;
   createdAt: string;
@@ -60,6 +61,7 @@ export type ProcessogramById = {
       y: number;
     };
   };
+  is_published: boolean;
   production_module_id: string;
   production_module: {
     _id: string;

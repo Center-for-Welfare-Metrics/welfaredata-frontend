@@ -16,6 +16,7 @@ import { useGetProductionModuleById } from "@/api/react-query/production-modules
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
 import { useRouter } from "next/router";
+import { Switch } from "@mui/material";
 
 type Props = {
   productionModuleId: string;
@@ -180,6 +181,7 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                     specie_id={element.specie_id}
                     theme={element.theme}
                     status={element.status}
+                    is_published={element.is_published}
                     image_url=""
                   />
                 ))}

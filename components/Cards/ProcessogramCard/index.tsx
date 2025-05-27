@@ -20,6 +20,7 @@ type Props = {
   theme: "dark" | "light";
   status: ProcessogramStatus;
   image_url: string | undefined;
+  is_published: boolean;
 };
 
 export const ProcessogramCard = ({
@@ -31,6 +32,7 @@ export const ProcessogramCard = ({
   production_module_id,
   specie_id,
   theme,
+  is_published,
 }: Props) => {
   const statusColor = useMemo(() => {
     if (status === "error") return ThemeColors.red;
@@ -81,6 +83,7 @@ export const ProcessogramCard = ({
         specie_id,
         theme,
         description,
+        is_published,
       },
     });
   };

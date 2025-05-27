@@ -16,6 +16,8 @@ import { QueryKeys } from "@/api/react-query/keys";
 import { Controller } from "react-hook-form";
 import { FormInput } from "@/components/FormInput";
 import { Select } from "@/components/Select";
+import { Switch } from "@mui/material";
+import { ThemeColors } from "theme/globalStyle";
 
 const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -25,6 +27,7 @@ const CreateProcessogramSchema = z.object({
   file: z.custom<File>().refine((file) => !!file, {
     message: "File is required",
   }),
+  is_published: z.boolean().optional(),
 });
 
 type CreateProcessogramForm = z.infer<typeof CreateProcessogramSchema>;
@@ -75,6 +78,7 @@ const CreateProcessogramModal = ({
       formData.append("production_module_id", production_module_id);
       formData.append("path", pathname);
       formData.append("theme", data.theme);
+      formData.append("is_published", String(data.is_published || false));
 
       await uploadSvgElement(formData);
 
@@ -105,6 +109,34 @@ const CreateProcessogramModal = ({
           "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
       }}
     >
+      <PublishContainer>
+        <Text variant="body2">Publish this processogram</Text>
+        <Controller
+          control={control}
+          name="is_published"
+          render={({ field }) => (
+            <Switch
+              sx={{
+                "& .MuiSwitch-switchBase.Mui-checked": {
+                  color: ThemeColors.gray,
+                },
+                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                  backgroundColor: ThemeColors.deep_blue,
+                },
+                "& .MuiSwitch-switchBase": {
+                  color: "white",
+                },
+                "& .MuiSwitch-track": {
+                  backgroundColor: "white",
+                  border: "1px solid grey",
+                },
+              }}
+              checked={field.value || false}
+              {...field}
+            />
+          )}
+        />
+      </PublishContainer>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn>
           <FormBody mt={1} gap={2} width="100%">
@@ -165,6 +197,12 @@ const CreateProcessogramModal = ({
     </ModalContainer>
   );
 };
+
+const PublishContainer = styled(FlexRow)`
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+`;
 
 const FormBody = styled(FlexColumn)``;
 

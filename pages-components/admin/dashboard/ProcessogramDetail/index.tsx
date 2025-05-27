@@ -110,6 +110,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         production_module_id: element.production_module_id,
         theme: element.theme,
         specie_id: element.specie_id,
+        is_published: element.is_published,
       },
     });
   };

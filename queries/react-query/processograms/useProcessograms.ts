@@ -15,6 +15,7 @@ type UpdateProcessogramayload = {
     production_module_id?: string;
     theme?: "light" | "dark";
     specie_id?: string;
+    is_published?: boolean;
   };
 };
 

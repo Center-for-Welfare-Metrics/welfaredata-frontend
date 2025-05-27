@@ -14,6 +14,9 @@ import { FormInput } from "@/components/FormInput";
 import { Select } from "@/components/Select";
 import { Specie } from "types/species";
 import { ProductionModule } from "types/production-module";
+import { Text } from "@/components/Text";
+import { Switch } from "@mui/material";
+import { ThemeColors } from "theme/globalStyle";
 
 const UpdateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -21,6 +24,7 @@ const UpdateProcessogramSchema = z.object({
   production_module_id: z.string().min(1, "Production module is required"),
   theme: z.string().min(1, "Theme is required"),
   specie_id: z.string().min(1, "Specie is required"),
+  is_published: z.boolean().optional(),
 });
 
 export type UpdateProcessogramForm = z.infer<typeof UpdateProcessogramSchema>;
@@ -34,6 +38,7 @@ export type UpdateProcessogramModalProps = {
     production_module_id: string;
     theme: "light" | "dark";
     specie_id: string;
+    is_published: boolean;
   };
 };
 
@@ -50,6 +55,7 @@ const UpdateProcessogramModal = ({
         production_module_id: processogram.production_module_id,
         theme: processogram.theme,
         specie_id: processogram.specie_id,
+        is_published: processogram.is_published || false,
       },
     });
 
@@ -77,6 +83,7 @@ const UpdateProcessogramModal = ({
         production_module_id: data.production_module_id,
         theme: data.theme as "light" | "dark",
         specie_id: data.specie_id,
+        is_published: data.is_published || false,
       },
     });
     onClose();
@@ -93,6 +100,34 @@ const UpdateProcessogramModal = ({
           "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
       }}
     >
+      <PublishContainer>
+        <Text variant="body2">Publish this processogram</Text>
+        <Controller
+          control={control}
+          name="is_published"
+          render={({ field }) => (
+            <Switch
+              sx={{
+                "& .MuiSwitch-switchBase.Mui-checked": {
+                  color: ThemeColors.gray,
+                },
+                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                  backgroundColor: ThemeColors.deep_blue,
+                },
+                "& .MuiSwitch-switchBase": {
+                  color: "white",
+                },
+                "& .MuiSwitch-track": {
+                  backgroundColor: "white",
+                  border: "1px solid grey",
+                },
+              }}
+              checked={field.value || false}
+              {...field}
+            />
+          )}
+        />
+      </PublishContainer>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FlexColumn mt={1} gap={2} height="100%" justify="space-between">
           <FlexColumn gap={2}>
@@ -178,6 +213,12 @@ const UpdateProcessogramModal = ({
     </ModalContainer>
   );
 };
+
+const PublishContainer = styled(FlexRow)`
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+`;
 
 const Form = styled.form`
   height: calc(100% - 3rem);
