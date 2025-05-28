@@ -32,15 +32,17 @@ export const useOptimizeSvgParts = (
   svgElement: SVGGraphicsElement | null,
   currentSvgElement: RefObject<SVGGraphicsElement | null>,
   updateSvgElement: (svgElement: SVGGraphicsElement) => void,
-  rasterImages: {
-    [key: string]: {
-      src: string;
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    };
-  },
+  rasterImages:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined,
   theme: "dark" | "light",
   base64ImagesRef?: RefObject<Map<string, string>>
 ) => {
@@ -74,7 +76,7 @@ export const useOptimizeSvgParts = (
             updateSvgElement(optimizedG);
           }
         } else {
-          const imageUrl = rasterImages[rootId];
+          const imageUrl = rasterImages?.[rootId];
           if (!imageUrl) return;
 
           const base64Image = base64ImagesRef?.current?.get(rootId);
@@ -124,7 +126,7 @@ export const useOptimizeSvgParts = (
             gElement.replaceWith(optimizedG);
           }
         } else {
-          const imageUrl = rasterImages[id];
+          const imageUrl = rasterImages?.[id];
           if (!imageUrl) continue;
 
           const base64Image = base64ImagesRef?.current?.get(id);

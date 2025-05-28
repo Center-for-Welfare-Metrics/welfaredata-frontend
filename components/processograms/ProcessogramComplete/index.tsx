@@ -13,15 +13,17 @@ type Props = {
   src: string;
   onClose: () => void;
   onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
-  rasterImages: {
-    [key: string]: {
-      src: string;
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    };
-  };
+  rasterImages:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
   isActive: boolean;

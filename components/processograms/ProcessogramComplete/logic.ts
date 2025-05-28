@@ -36,15 +36,17 @@ type Props = {
   onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
-  rasterImages: {
-    [key: string]: {
-      src: string;
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    };
-  };
+  rasterImages:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
   isActive: boolean;
   theme: "dark" | "light";
   base64ImagesRef?: RefObject<Map<string, string>>;
