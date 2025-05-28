@@ -48,7 +48,12 @@ export const useProcessogramEffects = ({
     if (!svgElement) return;
 
     if (!onHover) {
-      const currentLevel = getLevelNumberById(currentElementId.current);
+      let currentLevel = getLevelNumberById(currentElementId.current);
+
+      if (!startFromSpecie && currentLevel < 0) {
+        currentLevel = 0;
+      }
+
       const currentLevelId = INVERSE_DICT[currentLevel];
 
       const notHover = `[id*="${currentLevelId}"]:not([id="${currentElementId.current}"])`;
@@ -72,6 +77,8 @@ export const useProcessogramEffects = ({
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
+
+      return;
     }
 
     if (onHover) {
