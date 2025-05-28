@@ -8,6 +8,8 @@ import { Text } from "@/components/Text";
 import { useSetCreateSpecieModal } from "modals/CreateSpecieModal/hooks";
 import { ThemeColors } from "theme/globalStyle";
 import { CtaCreate } from "@/components/CtaCreate";
+import { SpecieCardSize } from "@/components/Cards/SpecieCard/const";
+import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
 
 export const ListSpecies = () => {
   const { data: species, isLoading } = useGetSpecies();
@@ -31,15 +33,10 @@ export const ListSpecies = () => {
       {isLoading ? (
         <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
           {Array.from({ length: 3 }).map((_, index) => (
-            <Skeleton
+            <CardSkeletonLoading
               key={index}
-              variant="rectangular"
-              animation="wave"
-              sx={{
-                bgcolor: ThemeColors.deep_blue,
-              }}
-              width={200}
-              height={150}
+              width={SpecieCardSize.width}
+              height={SpecieCardSize.height}
             />
           ))}
         </FlexRow>
@@ -62,7 +59,11 @@ export const ListSpecies = () => {
             </FlexRow>
           ) : (
             <>
-              <CtaCreate onClick={createSpecie}>
+              <CtaCreate
+                onClick={createSpecie}
+                width={SpecieCardSize.width}
+                height={SpecieCardSize.height}
+              >
                 <Text>
                   No species found. <br />
                   Click here to create your first species!

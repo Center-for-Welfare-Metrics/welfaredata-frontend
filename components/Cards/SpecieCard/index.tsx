@@ -15,8 +15,8 @@ type Props = {
   name: string;
   pathname: string;
   description: string | undefined;
-  processogramsCount: number;
   productionModulesCount: number;
+  processogramsCount: number;
   processogram_urls: string[] | undefined;
 };
 
@@ -29,8 +29,6 @@ export const SpecieCard = ({
   description,
   processogram_urls,
 }: Props) => {
-  console.log(processogram_urls);
-
   const setDeleteSpecieModal = useSetDeleteSpecieModal();
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -64,10 +62,6 @@ export const SpecieCard = ({
         query: {
           id: _id,
         },
-      }}
-      style={{
-        position: "relative",
-        textDecoration: "none",
       }}
     >
       {processogram_urls && (
@@ -108,14 +102,6 @@ export const SpecieCard = ({
     </LinkContainer>
   );
 };
-
-const LinkContainer = styled(Link)`
-  &:hover {
-    .mosaic {
-      opacity: 1;
-    }
-  }
-`;
 
 const BackDrop = styled.div`
   position: absolute;
@@ -183,4 +169,14 @@ const Container = styled.div`
       pointer-events: all;
     }
   }
+`;
+
+const LinkContainer = styled(Link)`
+  &:hover {
+    .mosaic {
+      opacity: 1;
+    }
+  }
+  position: relative;
+  text-decoration: none;
 `;

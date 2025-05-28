@@ -10,13 +10,14 @@ import { Edit, RefreshCw, Trash } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
-import { ProcessogramCardSkeleton } from "@/components/Cards/ProcessogramCard/skeleton";
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
 import { useGetProductionModuleById } from "@/api/react-query/production-modules/useGetProductionModules";
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
 import { useRouter } from "next/router";
 import { Switch } from "@mui/material";
+import { ProcessogramCardSize } from "@/components/Cards/ProcessogramCard/const";
+import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
 
 type Props = {
   productionModuleId: string;
@@ -164,7 +165,11 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
         {isLoading ? (
           <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
             {Array.from({ length: 3 }).map((_, index) => (
-              <ProcessogramCardSkeleton key={index} />
+              <CardSkeletonLoading
+                key={index}
+                width={ProcessogramCardSize.width}
+                height={ProcessogramCardSize.height}
+              />
             ))}
           </FlexRow>
         ) : (
@@ -182,18 +187,21 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                     theme={element.theme}
                     status={element.status}
                     is_published={element.is_published}
-                    image_url=""
+                    image_url={element.raster_images?.[element.identifier].src}
                   />
                 ))}
               </FlexRow>
             ) : (
               <>
                 {!!productionModule && (
-                  <CtaCreate onClick={createElement}>
+                  <CtaCreate
+                    onClick={createElement}
+                    width={ProcessogramCardSize.width}
+                    height={ProcessogramCardSize.height}
+                  >
                     <Text>
                       No processograms found. <br />
-                      Click here to upload your first one.
-                      {`(Each processogram should represent only one production system!)`}
+                      Click here to create your first one.
                     </Text>
                   </CtaCreate>
                 )}

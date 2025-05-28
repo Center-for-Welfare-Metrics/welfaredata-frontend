@@ -8,13 +8,15 @@ import { ProductionModuleCardSize } from "./const";
 import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 import { Edit, Trash } from "react-feather";
+import { ImageMosaic } from "@/components/ImageMosaic";
 
 type Props = {
   _id: string;
   name: string;
   specie_id: string;
   description: string | undefined;
-  image_url: string | undefined;
+  processogramsCount: number;
+  processograms_urls: string[] | undefined;
 };
 
 export const ProductionModuleCard = ({
@@ -22,7 +24,8 @@ export const ProductionModuleCard = ({
   name,
   description,
   specie_id,
-  image_url,
+  processogramsCount,
+  processograms_urls,
 }: Props) => {
   const setDeleteProductionModule = useSetDeleteProductionModuleModal();
 
@@ -51,31 +54,34 @@ export const ProductionModuleCard = ({
   };
 
   return (
-    <Link
+    <LinkContainer
       href={{
         pathname: "/admin/production_modules/[id]",
         query: {
           id: _id,
         },
       }}
-      style={{
-        textDecoration: "none",
-      }}
     >
-      <Container
-        style={
-          image_url
-            ? {
-                backgroundImage: `url(${image_url})`,
-              }
-            : undefined
-        }
-      >
-        <Info>
-          <FlexColumn gap={0}>
-            <Text variant="body2">{name}</Text>
-          </FlexColumn>
-        </Info>
+      {processograms_urls && (
+        <MosaicWrapper>
+          {" "}
+          <ImageMosaic urls={processograms_urls} className="mosaic" />
+        </MosaicWrapper>
+      )}
+      <BackDrop />
+      <Container>
+        <FlexRow justify="space-between">
+          <Info>
+            <FlexColumn gap={0}>
+              <Text variant="body2">{name}</Text>
+            </FlexColumn>
+          </Info>
+          <Info>
+            <FlexColumn gap={0} align="flex-end">
+              <Text variant="body2">{processogramsCount} processograms</Text>
+            </FlexColumn>
+          </Info>
+        </FlexRow>
         <ActionButtons>
           <FlexRow>
             <IconWrapper onClick={handleUpdate}>
@@ -87,7 +93,7 @@ export const ProductionModuleCard = ({
           </FlexRow>
         </ActionButtons>
       </Container>
-    </Link>
+    </LinkContainer>
   );
 };
 
@@ -101,6 +107,25 @@ const IconWrapper = styled.div`
   &:hover {
     transform: scale(1.1);
   }
+`;
+
+const BackDrop = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: ${transparentize(0.5, ThemeColors.black)};
+  backdrop-filter: blur(2px);
+`;
+
+const MosaicWrapper = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 `;
 
 const ActionButtons = styled.div`
@@ -138,4 +163,14 @@ const Container = styled.div`
       pointer-events: all;
     }
   }
+`;
+
+const LinkContainer = styled(Link)`
+  &:hover {
+    .mosaic {
+      opacity: 1;
+    }
+  }
+  position: relative;
+  text-decoration: none;
 `;

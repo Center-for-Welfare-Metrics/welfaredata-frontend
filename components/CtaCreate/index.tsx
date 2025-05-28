@@ -4,18 +4,29 @@ import { Text } from "../Text";
 
 type Props = {
   onClick?: () => void;
+  width: number;
+  height: number;
   children: React.ReactNode;
 };
 
-export const CtaCreate = ({ children, onClick }: Props) => {
-  return <Container onClick={onClick}>{children}</Container>;
+export const CtaCreate = ({ children, onClick, width, height }: Props) => {
+  return (
+    <Container
+      onClick={onClick}
+      style={{
+        width,
+        height,
+      }}
+    >
+      {children}
+    </Container>
+  );
 };
 
 const Container = styled.button`
   margin-top: 1rem;
   background-color: transparent;
   height: auto;
-  width: 200px;
   border: 1px solid ${ThemeColors.deep_blue};
   padding: 1rem;
   cursor: pointer;

@@ -12,10 +12,11 @@ import { ClipLoader } from "react-spinners";
 import styled from "styled-components";
 import { useGetProductionModules } from "@/api/react-query/production-modules/useGetProductionModules";
 import { ProductionModuleCard } from "@/components/Cards/ProductionModuleCard";
-import { ProductionModuleCardSkeleton } from "@/components/Cards/ProductionModuleCard/skeleton";
 import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
 import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
 import { useSetDeleteSpecieModal } from "modals/DeleteSpecieModal/hooks";
+import { ProductionModuleCardSize } from "@/components/Cards/ProductionModuleCard/const";
+import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
 
 type Props = {
   specie_id: string;
@@ -162,7 +163,11 @@ export const SpeciesPage = ({ specie_id }: Props) => {
         {isLoading ? (
           <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
             {Array.from({ length: 3 }).map((_, index) => (
-              <ProductionModuleCardSkeleton key={index} />
+              <CardSkeletonLoading
+                key={index}
+                width={ProductionModuleCardSize.width}
+                height={ProductionModuleCardSize.height}
+              />
             ))}
           </FlexRow>
         ) : (
@@ -175,15 +180,20 @@ export const SpeciesPage = ({ specie_id }: Props) => {
                     _id={productionModule._id}
                     description={productionModule.description}
                     specie_id={productionModule.specie_id}
+                    processograms_urls={productionModule.processograms_urls}
+                    processogramsCount={productionModule.processogramsCount}
                     name={productionModule.name}
-                    image_url=""
                   />
                 ))}
               </FlexRow>
             ) : (
               <>
                 {!!specie && (
-                  <CtaCreate onClick={createProductionModule}>
+                  <CtaCreate
+                    onClick={createProductionModule}
+                    width={ProductionModuleCardSize.width}
+                    height={ProductionModuleCardSize.height}
+                  >
                     <Text>
                       No production modules found. <br />
                       Click here to create your first production module!

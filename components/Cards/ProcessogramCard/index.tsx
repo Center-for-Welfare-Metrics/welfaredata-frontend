@@ -10,6 +10,7 @@ import { ProcessogramStatus } from "types/processogram";
 import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
 import { useSetUpdateProcessogramModal } from "modals/UpdateProcessogramModal/hooks";
 import { Edit, Trash } from "react-feather";
+import { ImageMosaic } from "@/components/ImageMosaic";
 
 type Props = {
   _id: string;
@@ -89,26 +90,22 @@ export const ProcessogramCard = ({
   };
 
   return (
-    <Link
+    <LinkContainer
       href={{
         pathname: "/admin/processograms/[id]",
         query: {
           id: _id,
         },
       }}
-      style={{
-        textDecoration: "none",
-      }}
     >
-      <Container
-        style={
-          image_url
-            ? {
-                backgroundImage: `url(${image_url})`,
-              }
-            : undefined
-        }
-      >
+      {image_url && (
+        <MosaicWrapper>
+          {" "}
+          <ImageMosaic urls={[image_url]} className="mosaic" />
+        </MosaicWrapper>
+      )}
+      <BackDrop />
+      <Container>
         <Info>
           <FlexColumn gap={0}>
             <Text variant="body2">{name}</Text>
@@ -128,9 +125,28 @@ export const ProcessogramCard = ({
           </FlexRow>
         </ActionButtons>
       </Container>
-    </Link>
+    </LinkContainer>
   );
 };
+
+const BackDrop = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: ${transparentize(0.5, ThemeColors.black)};
+  backdrop-filter: blur(2px);
+`;
+
+const MosaicWrapper = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+`;
 
 const IconWrapper = styled.div`
   width: fit-content;
@@ -178,4 +194,14 @@ const Container = styled.div`
       pointer-events: all;
     }
   }
+`;
+
+const LinkContainer = styled(Link)`
+  &:hover {
+    .mosaic {
+      opacity: 1;
+    }
+  }
+  position: relative;
+  text-decoration: none;
 `;

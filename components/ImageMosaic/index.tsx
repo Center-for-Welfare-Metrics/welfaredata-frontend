@@ -3,6 +3,10 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import { FlexColumn, FlexRow } from "../desing-components/Flex";
 
+const getRandomNumberBetween = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 type ImageMosaicProps = {
   urls: string[];
   className: string;
@@ -153,6 +157,7 @@ const Image = styled.img`
   backface-visibility: hidden;
   will-change: transform;
   animation: ${BouncingAnimation} 8s infinite;
+  animation-delay: ${() => getRandomNumberBetween(500, 2000)}ms;
   pointer-events: none;
 `;
 

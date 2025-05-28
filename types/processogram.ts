@@ -17,15 +17,17 @@ export type Processogram = {
   description: string;
   levelName: string;
   svg_url: string;
-  raster_images: {
-    [key: string]: {
-      src: string;
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    };
-  };
+  raster_images:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
   is_published: boolean;
   status: ProcessogramStatus;
   theme: ProcessogramTheme;

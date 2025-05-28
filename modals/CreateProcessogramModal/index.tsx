@@ -178,7 +178,7 @@ const CreateProcessogramModal = ({
                 <Text variant="body2">Size: {filesize(file.size)}</Text>
               </FlexColumn>
             )}
-            <FlexColumn>
+            <FlexColumn mt={!file ? 1 : 0}>
               <Dropzone onFileAccepted={onFileAccepted} />
               {errors.file?.message && (
                 <Text variant="body2" color="red">
