@@ -4,7 +4,11 @@ import { ThemeColors } from "theme/globalStyle";
 
 export const GeneralAddButton = () => {
   return (
-    <Container>
+    <Container
+      onClick={() => {
+        alert("This button is not implemented yet!");
+      }}
+    >
       <Plus size={24} />
     </Container>
   );
