@@ -1,14 +1,17 @@
+import { useSetCreateElementModal } from "modals/CreateProcessogramModal/hooks";
 import { Plus } from "react-feather";
 import styled, { keyframes } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 
 export const GeneralAddButton = () => {
+  const setCreateProessogram = useSetCreateElementModal();
+
+  const createProcessogram = () => {
+    setCreateProessogram({});
+  };
+
   return (
-    <Container
-      onClick={() => {
-        alert("This button is not implemented yet!");
-      }}
-    >
+    <Container onClick={createProcessogram}>
       <Plus size={24} />
     </Container>
   );

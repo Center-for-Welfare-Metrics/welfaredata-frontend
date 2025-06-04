@@ -49,9 +49,10 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
     if (!productionModule) return;
 
     setCreateElement({
-      specie_id: productionModule.specie_id,
-      pathname: productionModule.specie.pathname,
-      production_module_id: productionModuleId,
+      initialValues: {
+        specie_id: productionModule.specie_id,
+        production_module_id: productionModule._id,
+      },
     });
   };
 

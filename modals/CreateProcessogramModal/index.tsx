@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import styled from "styled-components";
 import { filesize } from "filesize";
@@ -18,9 +18,13 @@ import { FormInput } from "@/components/FormInput";
 import { Select } from "@/components/Select";
 import { Switch } from "@mui/material";
 import { ThemeColors } from "theme/globalStyle";
+import { useGetSpecies } from "@/api/react-query/species/useGetSpecies";
+import { useGetProductionModules } from "@/api/react-query/production-modules/useGetProductionModules";
 
 const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  specie_id: z.string().min(1, "Specie ID is required"),
+  production_module_id: z.string().min(1, "Production Module ID is required"),
   theme: z.enum(["light", "dark"], {
     message: "Theme is required",
   }),
@@ -34,25 +38,19 @@ type CreateProcessogramForm = z.infer<typeof CreateProcessogramSchema>;
 
 export type CreateProcessogramModalProps = {
   onClose: () => void;
-  specie_id: string;
-  production_module_id: string;
-  pathname: string;
+  initialValues?: Partial<CreateProcessogramForm>;
 };
 
 const CreateProcessogramModal = ({
   onClose,
-  specie_id,
-  production_module_id,
-  pathname,
+  initialValues,
 }: CreateProcessogramModalProps) => {
   const queryClient = useQueryClient();
 
   const { handleSubmit, register, formState, setValue, watch, reset, control } =
     useForm<CreateProcessogramForm>({
       resolver: zodResolver(CreateProcessogramSchema),
-      defaultValues: {
-        name: "",
-      },
+      defaultValues: initialValues,
     });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +58,22 @@ const CreateProcessogramModal = ({
   const { errors, isDirty } = formState;
 
   const file = watch("file");
+
+  const specieId = watch("specie_id");
+
+  const { data: species } = useGetSpecies();
+
+  const { data: productionModules } = useGetProductionModules({
+    specie_id: specieId,
+  });
+
+  const pathName = useMemo(() => {
+    const specie = species?.find((specie) => specie._id === specieId);
+
+    if (!specie) return "";
+
+    return specie.pathname;
+  }, [specieId, species]);
 
   const onFileAccepted = (file: File) => {
     setValue("file", file, {
@@ -74,9 +88,9 @@ const CreateProcessogramModal = ({
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("file", data.file);
-      formData.append("specie_id", specie_id);
-      formData.append("production_module_id", production_module_id);
-      formData.append("path", pathname);
+      formData.append("specie_id", data.specie_id);
+      formData.append("production_module_id", data.production_module_id);
+      formData.append("path", pathName);
       formData.append("theme", data.theme);
       formData.append("is_published", String(data.is_published || false));
 
@@ -147,6 +161,44 @@ const CreateProcessogramModal = ({
               error={errors.name?.message}
               {...register("name")}
             />
+            <FlexRow gap={2}>
+              <Controller
+                control={control}
+                name="specie_id"
+                render={({ field }) => (
+                  <Select
+                    label="Specie"
+                    placeholder="Select a specie"
+                    options={
+                      species?.map((specie) => ({
+                        label: specie.name,
+                        value: specie._id,
+                      })) || []
+                    }
+                    error={errors.specie_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name="production_module_id"
+                render={({ field }) => (
+                  <Select
+                    label="Production Module"
+                    placeholder="Select a production module"
+                    options={
+                      productionModules?.map((module) => ({
+                        label: module.name,
+                        value: module._id,
+                      })) || []
+                    }
+                    error={errors.production_module_id?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FlexRow>
             <FlexColumn>
               <Controller
                 control={control}
