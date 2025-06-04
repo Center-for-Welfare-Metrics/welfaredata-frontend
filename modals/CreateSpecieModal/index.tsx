@@ -17,15 +17,16 @@ export type CreateSpecieForm = z.infer<typeof CreateSpecieSchema>;
 
 export type CreateSpecieModalProps = {
   onClose: () => void;
+  initialValues?: Partial<CreateSpecieForm>;
 };
 
-const CreateSpecieModal = ({ onClose }: CreateSpecieModalProps) => {
+const CreateSpecieModal = ({
+  onClose,
+  initialValues,
+}: CreateSpecieModalProps) => {
   const { handleSubmit, register, formState } = useForm<CreateSpecieForm>({
     resolver: zodResolver(CreateSpecieSchema),
-    defaultValues: {
-      name: "",
-      pathname: "",
-    },
+    defaultValues: initialValues,
   });
 
   const { errors, isDirty } = formState;

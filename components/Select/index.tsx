@@ -14,7 +14,10 @@ import {
   ChevronIcon,
   NoResults,
 } from "./styled";
-import { ChevronDown } from "react-feather";
+import { ChevronDown, Plus } from "react-feather";
+import { Text } from "../Text";
+import { FlexRow } from "../desing-components/Flex";
+import { ThemeColors } from "theme/globalStyle";
 
 export interface SelectOption {
   value: string | number;
@@ -36,6 +39,8 @@ export interface ISelectProps extends ISelectBase {
   value?: string | number;
   onChange?: (value: string | number) => void;
   defaultValue?: string | number;
+  noOptionsText?: string;
+  onClickAdd?: (inputValue: string) => void;
 }
 
 export const Select = forwardRef<HTMLDivElement, ISelectProps>(
@@ -52,6 +57,8 @@ export const Select = forwardRef<HTMLDivElement, ISelectProps>(
       searchable = true,
       defaultValue,
       customStyle,
+      noOptionsText = "No options available",
+      onClickAdd,
     },
     ref
   ) => {
@@ -167,7 +174,29 @@ export const Select = forwardRef<HTMLDivElement, ISelectProps>(
                     </DropdownItem>
                   ))
                 ) : (
-                  <NoResults>No options found</NoResults>
+                  <>
+                    <NoResults>{noOptionsText}</NoResults>
+                  </>
+                )}
+                {!!onClickAdd && (
+                  <DropdownItem
+                    onClick={() => {
+                      onClickAdd(searchValue);
+                    }}
+                    $isSelected={false}
+                    style={{
+                      cursor: "pointer",
+                      color: "blue",
+                      display: "flex",
+                      justifyContent:
+                        filteredOptions.length === 0 ? "center" : "flex-start",
+                    }}
+                  >
+                    <FlexRow gap={0.25} align="center">
+                      <Text variant="body2">Create</Text>
+                      <Plus size={14} color={ThemeColors.white} />
+                    </FlexRow>
+                  </DropdownItem>
                 )}
               </DropdownContainer>
             )}

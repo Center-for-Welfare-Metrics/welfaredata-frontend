@@ -20,6 +20,9 @@ import { Switch } from "@mui/material";
 import { ThemeColors } from "theme/globalStyle";
 import { useGetSpecies } from "@/api/react-query/species/useGetSpecies";
 import { useGetProductionModules } from "@/api/react-query/production-modules/useGetProductionModules";
+import { useSetCreateSpecieModal } from "modals/CreateSpecieModal/hooks";
+import slufigy from "slugify";
+import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
 
 const CreateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -67,6 +70,10 @@ const CreateProcessogramModal = ({
     specie_id: specieId,
   });
 
+  const setCreateSpecie = useSetCreateSpecieModal();
+
+  const setCreateProductionModule = useSetCreateProductionModuleModal();
+
   const pathName = useMemo(() => {
     const specie = species?.find((specie) => specie._id === specieId);
 
@@ -112,16 +119,38 @@ const CreateProcessogramModal = ({
     }
   };
 
+  const onClickAddSpecie = (specieName: string) => {
+    setCreateSpecie({
+      initialValues: {
+        name: specieName,
+        pathname: slufigy(specieName, {
+          lower: true,
+        }),
+      },
+    });
+  };
+
+  const onClickAddProductionModule = (moduleName: string) => {
+    if (!specieId) return;
+
+    setCreateProductionModule({
+      initialValues: {
+        specie_id: specieId,
+        name: moduleName,
+      },
+    });
+  };
+
   return (
     <ModalContainer
       open={true}
       onClose={onClose}
       title="Create a Processogram"
-      unsavedChanges={{
-        enabled: isDirty,
-        message:
-          "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
-      }}
+      // unsavedChanges={{
+      //   enabled: isDirty,
+      //   message:
+      //     "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
+      // }}
     >
       <PublishContainer>
         <Text variant="body2">Publish this processogram</Text>
@@ -176,6 +205,7 @@ const CreateProcessogramModal = ({
                       })) || []
                     }
                     error={errors.specie_id?.message}
+                    onClickAdd={onClickAddSpecie}
                     {...field}
                   />
                 )}
@@ -194,6 +224,12 @@ const CreateProcessogramModal = ({
                       })) || []
                     }
                     error={errors.production_module_id?.message}
+                    noOptionsText={
+                      !specieId ? "Please select a specie first" : undefined
+                    }
+                    onClickAdd={
+                      !specieId ? undefined : onClickAddProductionModule
+                    }
                     {...field}
                   />
                 )}

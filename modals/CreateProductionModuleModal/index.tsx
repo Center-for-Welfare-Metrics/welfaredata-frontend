@@ -9,6 +9,7 @@ import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 
 const CreateProductionModuleSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  specie_id: z.string().min(1, "Specie ID is required"),
 });
 
 export type CreateProductionModuleForm = z.infer<
@@ -21,19 +22,17 @@ export type CreateSpecieModalProps = {
 
 export type CreateProductionModuleModalProps = {
   onClose: () => void;
-  specie_id: string;
+  initialValues?: Partial<CreateProductionModuleForm>;
 };
 
 const CreateProductionModuleModal = ({
   onClose,
-  specie_id,
+  initialValues,
 }: CreateProductionModuleModalProps) => {
   const { handleSubmit, register, formState } =
     useForm<CreateProductionModuleForm>({
       resolver: zodResolver(CreateProductionModuleSchema),
-      defaultValues: {
-        name: "",
-      },
+      defaultValues: initialValues,
     });
 
   const { errors, isDirty } = formState;
@@ -44,7 +43,7 @@ const CreateProductionModuleModal = ({
     await createProductionModule.mutateAsync({
       body: {
         name: data.name,
-        specie_id,
+        specie_id: data.specie_id,
       },
     });
     onClose();
