@@ -163,7 +163,7 @@ export const ProcessogramLoader = ({
                     position: "fixed",
                     top: "50%",
                     translateY: "-50%",
-                    width: "100vh",
+                    width: "calc(100% - 464px)",
                   });
                   initialized.current = true;
                 },
