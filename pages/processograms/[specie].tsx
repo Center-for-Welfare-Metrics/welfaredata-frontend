@@ -143,7 +143,7 @@ const PublicSpeciePage = ({
     const map = new Map<string, ProcessogramData>();
 
     processogramDatas.forEach((el) => {
-      map.set(el.svg_element_id, el);
+      map.set(el.processogram_id, el);
     });
 
     return map;
@@ -184,6 +184,8 @@ const PublicSpeciePage = ({
   const elementsDataContent = useMemo(() => {
     if (!!active) {
       const elementData = processogramDatasMap.get(active);
+
+      console.log(processogramDatasMap);
 
       if (!elementData) return {};
 

@@ -14,6 +14,7 @@ import { useUpdateProcessogramData } from "@/api/react-query/processogram-datas/
 import { CloudCheckIcon, CloudSnowIcon } from "@phosphor-icons/react";
 import { ClipLoader } from "react-spinners";
 import { Tooltip } from "@mui/material";
+import { AiChat } from "../ProcessogramMainHud/tabs/AiChat";
 
 const ProcessogramDataSchema = z.object({
   description: z.string().min(1, "Description is required"),

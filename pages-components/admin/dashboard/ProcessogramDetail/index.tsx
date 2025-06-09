@@ -263,22 +263,6 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
               position: "relative",
             }}
           >
-            <BreadcrumbsContainer>
-              <BreadcrumbHud
-                hierarchy={
-                  hierarchy ?? [
-                    {
-                      id: element.identifier,
-                      level: "Production System",
-                      levelNumber: 1,
-                      name: element.name,
-                      rawId: element.identifier,
-                    },
-                  ]
-                }
-                onClick={onClickBreadcrumb}
-              />
-            </BreadcrumbsContainer>
             <FlexRow height={"100%"}>
               {!!elementData && (
                 <ProgressogramEditableHud
@@ -310,8 +294,25 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   overflow: "hidden",
                   backgroundColor:
                     element.theme === "light" ? ThemeColors.white : undefined,
+                  position: "relative",
                 }}
               >
+                <BreadcrumbsContainer>
+                  <BreadcrumbHud
+                    hierarchy={
+                      hierarchy ?? [
+                        {
+                          id: element.identifier,
+                          level: "Production System",
+                          levelNumber: 1,
+                          name: element.name,
+                          rawId: element.identifier,
+                        },
+                      ]
+                    }
+                    onClick={onClickBreadcrumb}
+                  />
+                </BreadcrumbsContainer>
                 <ProcessogramComplete
                   src={element.svg_url}
                   rasterImages={element.raster_images}
@@ -352,17 +353,10 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   );
 };
 
-const QuestionsHudContainer = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-`;
-
 const BreadcrumbsContainer = styled.div`
   position: absolute;
   top: 0;
-  left: 350px;
-  padding-left: 2rem;
+  left: 0;
   z-index: 1000;
 `;
 

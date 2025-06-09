@@ -91,7 +91,7 @@ const Application = ({ children }: ApplicationProps) => {
         />
         {children}
         <Modals />
-        <GeneralAddButton />
+        {user && <GeneralAddButton />}
       </UserContext.Provider>
     </ThemeProvider>
   );

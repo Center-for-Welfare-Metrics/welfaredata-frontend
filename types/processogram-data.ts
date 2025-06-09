@@ -2,7 +2,7 @@ export type ProcessogramData = {
   _id: string;
   production_system_name: string;
   specie_id: string;
-  svg_element_id: string;
+  processogram_id: string;
   data: {
     [key: string]: {
       id: string;
