@@ -48,7 +48,9 @@ export const SpeciesPage = ({ specie_id }: Props) => {
     if (!specie) return;
 
     setCreateProductionModule({
-      specie_id,
+      initialValues: {
+        specie_id,
+      },
     });
   };
 
