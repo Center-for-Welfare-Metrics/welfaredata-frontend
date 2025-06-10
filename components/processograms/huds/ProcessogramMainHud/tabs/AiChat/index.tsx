@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Text } from "components/Text";
 import { FlexColumn, FlexRow } from "components/desing-components/Flex";
+import {
+  usePublicChat,
+  OpenAiMessage,
+} from "queries/react-query/public/usePublicChat";
+import { ProcessogramHierarchy } from "types/processogram";
+import Markdown from "markdown-to-jsx";
 
 // Types
 interface Message {
@@ -16,15 +22,11 @@ interface QuestionPill {
   text: string;
 }
 
-// Mock function to simulate API response
-const simulateApiResponse = async (message: string): Promise<string> => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return `Here is a response to: "${message}"`;
+type AiChatProps = {
+  hierarchy: ProcessogramHierarchy[];
 };
 
-// Component
-export const AiChat = () => {
+export const AiChat = ({ hierarchy }: AiChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -34,8 +36,20 @@ export const AiChat = () => {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [chatHistory, setChatHistory] = useState<OpenAiMessage[]>([
+    { role: "assistant", content: "Hello! How can I assist you today?" },
+  ]);
+
+  // Use the chat hook
+  const {
+    sendMessage,
+    streamedResponse,
+    isPending,
+    isError,
+    error,
+    isComplete,
+  } = usePublicChat();
 
   // Sample pre-defined questions
   const questionPills: QuestionPill[] = [
@@ -48,7 +62,35 @@ export const AiChat = () => {
   // Scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, streamedResponse]);
+
+  // Effect to update the AI response message when streaming is complete
+  useEffect(() => {
+    if (isComplete && streamedResponse) {
+      // Update the last AI message with the complete response
+      setMessages((prevMessages) => {
+        const lastMessageIndex = prevMessages.findIndex(
+          (msg) => msg.sender === "ai" && msg.text === ""
+        );
+
+        if (lastMessageIndex === -1) return prevMessages;
+
+        const updatedMessages = [...prevMessages];
+        updatedMessages[lastMessageIndex] = {
+          ...updatedMessages[lastMessageIndex],
+          text: streamedResponse,
+        };
+
+        return updatedMessages;
+      });
+
+      // Update chat history for context
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "assistant", content: streamedResponse },
+      ]);
+    }
+  }, [isComplete, streamedResponse]);
 
   // Handle sending a new message
   const handleSendMessage = async (text: string) => {
@@ -61,36 +103,43 @@ export const AiChat = () => {
       timestamp: new Date(),
     };
 
+    // Add user message to UI
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
     setInputValue("");
-    setIsTyping(true);
 
+    // Add empty AI message that will be filled with streaming content
+    const placeholderAiMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text: "",
+      sender: "ai",
+      timestamp: new Date(),
+    };
+
+    setMessages((prevMessages) => [...prevMessages, placeholderAiMessage]);
+
+    // Update chat history
+    const updatedHistory: OpenAiMessage[] = [
+      ...chatHistory,
+      { role: "user", content: text },
+    ];
+    setChatHistory(updatedHistory);
+
+    // Send message to API
     try {
-      // Get AI response
-      const response = await simulateApiResponse(text);
-
-      const newAiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: response,
-        sender: "ai",
-        timestamp: new Date(),
-      };
-
-      setMessages((prevMessages) => [...prevMessages, newAiMessage]);
+      sendMessage({ messages: updatedHistory, hierarchy });
     } catch (error) {
       console.error("Error getting AI response:", error);
 
-      // Error message if API fails
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "Sorry, I encountered an error. Please try again.",
-        sender: "ai",
-        timestamp: new Date(),
-      };
-
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
-    } finally {
-      setIsTyping(false);
+      // Update the placeholder message with error text
+      setMessages((prevMessages) => {
+        const lastMessageIndex = prevMessages.length - 1;
+        const updatedMessages = [...prevMessages];
+        updatedMessages[lastMessageIndex] = {
+          ...updatedMessages[lastMessageIndex],
+          text: "Sorry, I encountered an error. Please try again.",
+        };
+        return updatedMessages;
+      });
     }
   };
 
@@ -109,7 +158,16 @@ export const AiChat = () => {
                 variant="body1"
                 color={message.sender === "ai" ? "white" : "black"}
               >
-                {message.text}
+                {<Markdown>{message.text}</Markdown>}
+                {message.sender === "ai" && !message.text && isPending && (
+                  <StreamingText>
+                    {streamedResponse ? (
+                      <Markdown>{streamedResponse}</Markdown>
+                    ) : (
+                      "Typing..."
+                    )}
+                  </StreamingText>
+                )}
               </Text>
               <Text
                 variant="caption"
@@ -128,14 +186,12 @@ export const AiChat = () => {
           </MessageWrapper>
         ))}
 
-        {isTyping && (
-          <MessageWrapper $sender="ai">
-            <MessageBubble $sender="ai">
-              <Text variant="body2" color="white">
-                Typing...
-              </Text>
-            </MessageBubble>
-          </MessageWrapper>
+        {isError && (
+          <ErrorMessage>
+            <Text variant="body2" color="white">
+              Error: {error?.message || "Failed to get response"}
+            </Text>
+          </ErrorMessage>
         )}
 
         <div ref={messagesEndRef} />
@@ -170,16 +226,17 @@ export const AiChat = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) =>
-              e.key === "Enter" && handleSendMessage(inputValue)
+              e.key === "Enter" && !isPending && handleSendMessage(inputValue)
             }
+            disabled={isPending}
           />
           <SendButton
             onClick={() => handleSendMessage(inputValue)}
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || isPending}
           >
             <Text
               variant="body1Bold"
-              color={inputValue.trim() ? "black" : "gray"}
+              color={inputValue.trim() && !isPending ? "black" : "gray"}
             >
               Send
             </Text>
@@ -304,4 +361,29 @@ const SendButton = styled.button`
   &:hover:not(:disabled) {
     opacity: 0.9;
   }
+`;
+
+const StreamingText = styled.span`
+  display: inline-block;
+  animation: blink 1.2s infinite;
+
+  @keyframes blink {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+`;
+
+const ErrorMessage = styled.div`
+  background-color: #e74c3c;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  width: 100%;
 `;

@@ -1,16 +1,14 @@
-import { Text } from "@/components/Text";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { transparentize } from "polished";
-import { deslugify } from "@/utils/string";
-import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
-import { getElementNameFromId } from "../../utils/extractInfoFromId";
 import { ProcessogramInfo } from "./tabs/Info";
 import { Info } from "react-feather";
 import { ChatIcon } from "@phosphor-icons/react";
 import { AiChat } from "./tabs/AiChat";
+import { ProcessogramHierarchy } from "types/processogram";
 
 type Props = {
   currentElement: string;
@@ -20,30 +18,18 @@ type Props = {
     };
   };
   notReady: boolean;
+  hierarchy: ProcessogramHierarchy[];
 };
 
 export const ProgressogramMainHud = ({
   currentElement: realTimeElement,
   data,
   notReady,
+  hierarchy,
 }: Props) => {
   const [tab, setTab] = useState<"info" | "chat">("info");
 
   const currentElement = useDebounce(realTimeElement, 250);
-
-  const currentTab = useMemo(() => {
-    if (tab === "chat") {
-      return <AiChat />;
-    }
-
-    return (
-      <ProcessogramInfo
-        currentElement={currentElement}
-        data={data}
-        notReady={notReady}
-      />
-    );
-  }, [tab]);
 
   return (
     <Container
@@ -51,7 +37,28 @@ export const ProgressogramMainHud = ({
       onMouseUp={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
-      <Content>{currentTab}</Content>
+      <Content>
+        <div
+          style={{
+            height: "100%",
+            display: tab === "chat" ? undefined : "none",
+          }}
+        >
+          <AiChat hierarchy={hierarchy} />
+        </div>
+        <div
+          style={{
+            height: "100%",
+            display: tab === "info" ? undefined : "none",
+          }}
+        >
+          <ProcessogramInfo
+            currentElement={currentElement}
+            data={data}
+            notReady={notReady}
+          />
+        </div>
+      </Content>
       <FooterTabs justify="flex-start" gap={0}>
         <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
           <Info size={24} color={ThemeColors.white} />

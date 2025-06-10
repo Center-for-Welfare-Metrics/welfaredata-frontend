@@ -185,8 +185,6 @@ const PublicSpeciePage = ({
     if (!!active) {
       const elementData = processogramDatasMap.get(active);
 
-      console.log(processogramDatasMap);
-
       if (!elementData) return {};
 
       return elementData.data;
@@ -264,6 +262,7 @@ const PublicSpeciePage = ({
               currentElement={currentElement ?? speciesData.pathname}
               data={elementsDataContent}
               notReady={false}
+              hierarchy={hierarchy}
             />
           </HudContainer>
           <ProcessogramListContainer
