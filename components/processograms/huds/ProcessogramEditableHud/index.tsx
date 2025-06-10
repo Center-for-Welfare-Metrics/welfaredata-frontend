@@ -11,10 +11,9 @@ import { useForm, z, zodResolver } from "@/utils/validation";
 import { TextArea } from "@/components/Textarea";
 import { useStopTypingDebounce } from "@/utils/hooks/useStopTypingDebounce";
 import { useUpdateProcessogramData } from "@/api/react-query/processogram-datas/useProcessogramData";
-import { CloudCheckIcon, CloudSnowIcon } from "@phosphor-icons/react";
 import { ClipLoader } from "react-spinners";
 import { Tooltip } from "@mui/material";
-import { AiChat } from "../ProcessogramMainHud/tabs/AiChat";
+import { Cloud, CloudSnow } from "react-feather";
 
 const ProcessogramDataSchema = z.object({
   description: z.string().min(1, "Description is required"),
@@ -137,9 +136,9 @@ export const ProgressogramEditableHud = ({
       <Tooltip title={isPending ? "Saving changes..." : "Up to date"}>
         <CloudSyncContainer justify="flex-end">
           {isPending ? (
-            <CloudSnowIcon size={20} color={ThemeColors.yellow} weight="bold" />
+            <CloudSnow size={20} color={ThemeColors.yellow} />
           ) : (
-            <CloudCheckIcon size={20} color={ThemeColors.green} weight="bold" />
+            <Cloud size={20} color={ThemeColors.green} />
           )}
 
           {isPending && (

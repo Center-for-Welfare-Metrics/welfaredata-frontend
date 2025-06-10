@@ -1,10 +1,4 @@
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { RefObject, useCallback, useState } from "react";
 import { styled } from "styled-components";
 
 import { ProcessogramLoader } from "../ProcessogramLoader";

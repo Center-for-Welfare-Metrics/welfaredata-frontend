@@ -5,8 +5,7 @@ import { transparentize } from "polished";
 import { FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { ProcessogramInfo } from "./tabs/Info";
-import { Info } from "react-feather";
-import { ChatIcon } from "@phosphor-icons/react";
+import { Info, MessageSquare } from "react-feather";
 import { AiChat } from "./tabs/AiChat";
 import { ProcessogramHierarchy } from "types/processogram";
 
@@ -64,7 +63,7 @@ export const ProgressogramMainHud = ({
           <Info size={24} color={ThemeColors.white} />
         </Tab>
         <Tab $selected={tab === "chat"} onClick={() => setTab("chat")}>
-          <ChatIcon size={24} color={ThemeColors.white} />
+          <MessageSquare size={24} color={ThemeColors.white} />
         </Tab>
       </FooterTabs>
     </Container>

@@ -1,5 +1,3 @@
-// import { Buffer } from "buffer";
-// import fetch from "node-fetch";
 import Head from "next/head";
 import { ProcessogramsList } from "@/components/processograms/ProcessogramsList";
 import { Processogram, ProcessogramHierarchy } from "types/processogram";
@@ -9,7 +7,6 @@ import {
   getPublicProcessograms,
   getPublicProcessogramDatas,
   getPublicSpeciesByPathname,
-  getPublicProcessogramQuestions,
 } from "@/api/react-query/public/useGetPublicElements";
 import { FlexRow } from "@/components/desing-components/Flex";
 import { useMemo, useRef, useState } from "react";
