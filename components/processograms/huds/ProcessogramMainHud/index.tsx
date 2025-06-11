@@ -8,6 +8,7 @@ import { ProcessogramInfo } from "./tabs/Info";
 import { Info, MessageSquare } from "react-feather";
 import { AiChat } from "./tabs/AiChat";
 import { ProcessogramHierarchy } from "types/processogram";
+import { ProcessogramQuestionData } from "types/processogram-questions";
 
 type Props = {
   currentElement: string;
@@ -18,6 +19,7 @@ type Props = {
   };
   notReady: boolean;
   hierarchy: ProcessogramHierarchy[];
+  questionData: ProcessogramQuestionData | null;
 };
 
 export const ProgressogramMainHud = ({
@@ -25,6 +27,7 @@ export const ProgressogramMainHud = ({
   data,
   notReady,
   hierarchy,
+  questionData,
 }: Props) => {
   const [tab, setTab] = useState<"info" | "chat">("info");
 
@@ -43,7 +46,10 @@ export const ProgressogramMainHud = ({
             display: tab === "chat" ? undefined : "none",
           }}
         >
-          <AiChat hierarchy={hierarchy} />
+          <AiChat
+            hierarchy={hierarchy}
+            questions={questionData?.data?.[currentElement]?.questions ?? []}
+          />
         </div>
         <div
           style={{

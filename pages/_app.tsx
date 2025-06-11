@@ -11,7 +11,6 @@ import "theme/fast.css";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Modals } from "modals";
-import { GeneralAddButton } from "@/components/GeneralAddButton";
 
 type ApplicationProps = {
   children: React.ReactNode;
@@ -91,7 +90,6 @@ const Application = ({ children }: ApplicationProps) => {
         />
         {children}
         <Modals />
-        {user && <GeneralAddButton />}
       </UserContext.Provider>
     </ThemeProvider>
   );

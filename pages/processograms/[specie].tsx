@@ -7,6 +7,7 @@ import {
   getPublicProcessograms,
   getPublicProcessogramDatas,
   getPublicSpeciesByPathname,
+  getPublicProcessogramQuestions,
 } from "@/api/react-query/public/useGetPublicElements";
 import { FlexRow } from "@/components/desing-components/Flex";
 import { useMemo, useRef, useState } from "react";
@@ -17,18 +18,21 @@ import { ProcessogramData } from "types/processogram-data";
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
 import { ThemeColors } from "theme/globalStyle";
+import { ProcessogramQuestionData } from "types/processogram-questions";
 
 type Props = {
   specie: string;
   speciesData: Specie;
   processograms: Processogram[];
   processogramDatas: ProcessogramData[];
+  processogramQuestions: ProcessogramQuestionData[];
 };
 
 const PublicSpeciePage = ({
   processograms,
   specie,
   processogramDatas,
+  processogramQuestions,
   speciesData,
 }: Props) => {
   const [active, setActive] = useState<string | null>(null);
@@ -142,6 +146,16 @@ const PublicSpeciePage = ({
     return map;
   }, [processogramDatas]);
 
+  const processogramQuestionsMap = useMemo(() => {
+    const map = new Map<string, ProcessogramQuestionData>();
+
+    processogramQuestions.forEach((el) => {
+      map.set(el.processogram_id, el);
+    });
+
+    return map;
+  }, [processogramQuestions]);
+
   const currentActiveElement = useMemo(() => {
     if (!active) return null;
 
@@ -192,6 +206,12 @@ const PublicSpeciePage = ({
     return allData;
   }, [processogramDatas, active, processograms, currentElement, speciesData]);
 
+  const currentProcessogramQuestions = useMemo(() => {
+    if (!active) return null;
+
+    return processogramQuestionsMap.get(active) ?? null;
+  }, [active, processogramQuestionsMap]);
+
   return (
     <Container>
       <Head>
@@ -208,6 +228,7 @@ const PublicSpeciePage = ({
               data={elementsDataContent}
               notReady={false}
               hierarchy={hierarchy}
+              questionData={currentProcessogramQuestions}
             />
           </HudContainer>
           <ProcessogramListContainer
@@ -280,16 +301,21 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { specie } = context.params as { specie: string };
 
-  const [processograms, processogramDatas, speciesData] = await Promise.all([
-    getPublicProcessograms({ specie }),
-    getPublicProcessogramDatas({ specie }),
-    getPublicSpeciesByPathname({ pathname: specie }),
-  ]);
+  const [processograms, processogramDatas, speciesData, processogramQuestions] =
+    await Promise.all([
+      getPublicProcessograms({ specie }),
+      getPublicProcessogramDatas({ specie }),
+      getPublicSpeciesByPathname({ pathname: specie }),
+      getPublicProcessogramQuestions({
+        specie,
+      }),
+    ]);
 
   return {
     props: {
       processograms,
       processogramDatas,
+      processogramQuestions,
       speciesData,
       specie,
     },

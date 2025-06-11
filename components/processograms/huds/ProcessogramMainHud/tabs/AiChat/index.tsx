@@ -9,7 +9,6 @@ import {
 import { ProcessogramHierarchy } from "types/processogram";
 import Markdown from "markdown-to-jsx";
 
-// Types
 interface Message {
   id: string;
   text: string;
@@ -24,9 +23,10 @@ interface QuestionPill {
 
 type AiChatProps = {
   hierarchy: ProcessogramHierarchy[];
+  questions: string[];
 };
 
-export const AiChat = ({ hierarchy }: AiChatProps) => {
+export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -36,10 +36,11 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [chatHistory, setChatHistory] = useState<OpenAiMessage[]>([
     { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Use the chat hook
   const {
@@ -50,19 +51,6 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
     error,
     isComplete,
   } = usePublicChat();
-
-  // Sample pre-defined questions
-  const questionPills: QuestionPill[] = [
-    { id: "q1", text: "How does this process work?" },
-    { id: "q2", text: "What are the next steps?" },
-    { id: "q3", text: "Can I get more details?" },
-    { id: "q4", text: "Show me relevant resources" },
-  ];
-
-  // Scroll to bottom when messages update
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamedResponse]);
 
   // Effect to update the AI response message when streaming is complete
   useEffect(() => {
@@ -127,6 +115,9 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
     // Send message to API
     try {
       sendMessage({ messages: updatedHistory, hierarchy });
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 0);
     } catch (error) {
       console.error("Error getting AI response:", error);
 
@@ -158,15 +149,14 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
                 variant="body1"
                 color={message.sender === "ai" ? "white" : "black"}
               >
-                {<Markdown>{message.text}</Markdown>}
-                {message.sender === "ai" && !message.text && isPending && (
-                  <StreamingText>
-                    {streamedResponse ? (
-                      <Markdown>{streamedResponse}</Markdown>
-                    ) : (
-                      "Typing..."
-                    )}
-                  </StreamingText>
+                {message.sender === "ai" ? (
+                  <Markdown>
+                    {isPending && !message.text
+                      ? streamedResponse || "Typing..."
+                      : message.text}
+                  </Markdown>
+                ) : (
+                  <Markdown>{message.text}</Markdown>
                 )}
               </Text>
               <Text
@@ -193,7 +183,6 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
             </Text>
           </ErrorMessage>
         )}
-
         <div ref={messagesEndRef} />
       </MessageArea>
 
@@ -201,10 +190,10 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
         {messages.length === 1 && (
           <PillsContainer>
             <FlexRow gap={0.5} flexWrap="wrap">
-              {questionPills.map((pill) => (
+              {questions.map((question, index) => (
                 <QuestionPill
-                  key={pill.id}
-                  onClick={() => handlePillClick(pill.text)}
+                  key={index}
+                  onClick={() => handlePillClick(question)}
                 >
                   <Text
                     variant="body2"
@@ -212,7 +201,7 @@ export const AiChat = ({ hierarchy }: AiChatProps) => {
                     textElipsis
                     maxWidth="100%"
                   >
-                    {pill.text}
+                    {question}
                   </Text>
                 </QuestionPill>
               ))}
@@ -308,7 +297,7 @@ const QuestionPill = styled.button`
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
-  max-width: 200px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -365,19 +354,6 @@ const SendButton = styled.button`
 
 const StreamingText = styled.span`
   display: inline-block;
-  animation: blink 1.2s infinite;
-
-  @keyframes blink {
-    0% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.5;
-    }
-  }
 `;
 
 const ErrorMessage = styled.div`
