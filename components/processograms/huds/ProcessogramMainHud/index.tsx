@@ -5,10 +5,11 @@ import { transparentize } from "polished";
 import { FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { ProcessogramInfo } from "./tabs/Info";
-import { Info, MessageSquare } from "react-feather";
+import { Image, Info, MessageSquare } from "react-feather";
 import { AiChat } from "./tabs/AiChat";
 import { ProcessogramHierarchy } from "types/processogram";
 import { ProcessogramQuestionData } from "types/processogram-questions";
+import MediaGallery from "./tabs/MediaGallery";
 
 type Props = {
   currentElement: string;
@@ -29,7 +30,7 @@ export const ProgressogramMainHud = ({
   hierarchy,
   questionData,
 }: Props) => {
-  const [tab, setTab] = useState<"info" | "chat">("info");
+  const [tab, setTab] = useState<"info" | "chat" | "media">("info");
 
   const currentElement = useDebounce(realTimeElement, 250);
 
@@ -63,6 +64,14 @@ export const ProgressogramMainHud = ({
             notReady={notReady}
           />
         </div>
+        <div
+          style={{
+            height: "100%",
+            display: tab === "media" ? undefined : "none",
+          }}
+        >
+          <MediaGallery />
+        </div>
       </Content>
       <FooterTabs justify="flex-start" gap={0}>
         <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
@@ -70,6 +79,9 @@ export const ProgressogramMainHud = ({
         </Tab>
         <Tab $selected={tab === "chat"} onClick={() => setTab("chat")}>
           <MessageSquare size={24} color={ThemeColors.white} />
+        </Tab>
+        <Tab $selected={tab === "media"} onClick={() => setTab("media")}>
+          <Image size={24} color={ThemeColors.white} />
         </Tab>
       </FooterTabs>
     </Container>
