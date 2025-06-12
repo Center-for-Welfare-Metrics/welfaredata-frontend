@@ -19,4 +19,7 @@ export const QueryKeys = {
     List: "element-questions",
     ByID: "element-questions-by-id",
   },
+  GET_IMAGES: {
+    List: "get-images",
+  },
 };

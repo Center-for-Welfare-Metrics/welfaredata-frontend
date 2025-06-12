@@ -52,26 +52,16 @@ export const ProgressogramMainHud = ({
             questions={questionData?.data?.[currentElement]?.questions ?? []}
           />
         </div>
-        <div
-          style={{
-            height: "100%",
-            display: tab === "info" ? undefined : "none",
-          }}
-        >
+
+        {tab === "info" && (
           <ProcessogramInfo
             currentElement={currentElement}
             data={data}
             notReady={notReady}
           />
-        </div>
-        <div
-          style={{
-            height: "100%",
-            display: tab === "media" ? undefined : "none",
-          }}
-        >
-          <MediaGallery />
-        </div>
+        )}
+
+        {tab === "media" && <MediaGallery hierarchy={hierarchy} />}
       </Content>
       <FooterTabs justify="flex-start" gap={0}>
         <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
