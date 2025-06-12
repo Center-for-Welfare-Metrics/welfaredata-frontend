@@ -20,13 +20,22 @@ export type SearchImageRespose = {
   searchTerm: string;
 };
 
+const removeRawId = (hierarchy: ProcessogramHierarchy[]) => {
+  return hierarchy.map((item) => {
+    const { rawId, ...rest } = item;
+    return rest;
+  });
+};
+
 const getImages = async ({ hierarchy }: Params) => {
+  const sanitizedHierarchy = removeRawId(hierarchy);
+
   const { data } = await request<SearchImageRespose>({
     method: "POST",
     service: "public",
     url: "/search-images",
     data: {
-      hierarchy,
+      hierarchy: sanitizedHierarchy,
     },
   });
 
