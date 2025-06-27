@@ -10,6 +10,8 @@ import {
   UserSection,
 } from "./index-styled";
 import { NavItens } from "./nav-map";
+import { ThemeToggler } from "../ThemeToggler";
+import { FlexRow } from "../desing-components/Flex";
 
 const NavBar = () => {
   const { user, logOut } = useContext(UserContext);
@@ -38,12 +40,15 @@ const NavBar = () => {
         ))}
       </NavItems>
 
-      {user && (
-        <UserSection>
-          <UserName>user: {user.name.split(" ")[0]}</UserName>
-          <LogOut onClick={logOut}>logout</LogOut>
-        </UserSection>
-      )}
+      <FlexRow gap={2}>
+        <ThemeToggler />
+        {user && (
+          <UserSection>
+            <UserName>user: {user.name.split(" ")[0]}</UserName>
+            <LogOut onClick={logOut}>logout</LogOut>
+          </UserSection>
+        )}
+      </FlexRow>
     </Containter>
   );
 };
