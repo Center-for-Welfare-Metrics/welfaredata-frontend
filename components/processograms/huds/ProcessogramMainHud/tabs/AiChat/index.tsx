@@ -226,10 +226,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
             disabled={!inputValue.trim() || isPending}
             buttonStyle="success"
           >
-            <Text
-              variant="body1Bold"
-              color={inputValue.trim() && !isPending ? "grey_700" : "gray"}
-            >
+            <Text variant="body1Bold" color={"white"}>
               Send
             </Text>
           </Button>

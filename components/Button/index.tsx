@@ -136,7 +136,7 @@ const PrimaryButton = styled(DefaultButton)`
 
 const SuccessButton = styled(DefaultButton)`
   background-color: ${GetColorType({ type: "success" })};
-
+  color: ${ThemeColors.white};
   &:hover {
     background-color: ${GetColorType({ type: "success" })};
   }
