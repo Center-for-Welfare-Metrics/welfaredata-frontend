@@ -41,7 +41,12 @@ export const FormInput = forwardRef<HTMLInputElement, IFormInput>(
     ref
   ) => {
     return (
-      <Box width="100%">
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-end"
+      >
         <Container style={customStyle}>
           <Label $multiline={multiline} $hasValue={!!value} htmlFor={name}>
             {label}
@@ -55,8 +60,8 @@ export const FormInput = forwardRef<HTMLInputElement, IFormInput>(
             ref={ref}
             {...(rest as InputHTMLAttributes<HTMLInputElement>)}
           />
-          {error && <Error>{error}</Error>}
         </Container>
+        {error && <Error>{error}</Error>}
       </Box>
     );
   }

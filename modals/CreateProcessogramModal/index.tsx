@@ -24,18 +24,25 @@ import { useSetCreateSpecieModal } from "modals/CreateSpecieModal/hooks";
 import slufigy from "slugify";
 import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
 
-const CreateProcessogramSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  specie_id: z.string().min(1, "Specie ID is required"),
-  production_module_id: z.string().min(1, "Production Module ID is required"),
-  theme: z.enum(["light", "dark"], {
-    message: "Theme is required",
-  }),
-  file: z.custom<File>().refine((file) => !!file, {
-    message: "File is required",
-  }),
-  is_published: z.boolean().optional(),
-});
+const CreateProcessogramSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    specie_id: z.string().min(1, "Specie ID is required"),
+    production_module_id: z.string().min(1, "Production Module ID is required"),
+    file_light: z.custom<File>().optional().nullable(),
+    file_dark: z.custom<File>().optional().nullable(),
+    is_published: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      // Ensure at least one file is provided
+      return Boolean(data.file_light) || Boolean(data.file_dark);
+    },
+    {
+      message: "At least one SVG file is required",
+      path: ["file_light"],
+    }
+  );
 
 type CreateProcessogramForm = z.infer<typeof CreateProcessogramSchema>;
 
@@ -60,7 +67,8 @@ const CreateProcessogramModal = ({
 
   const { errors, isDirty } = formState;
 
-  const file = watch("file");
+  const file_light = watch("file_light");
+  const file_dark = watch("file_dark");
 
   const specieId = watch("specie_id");
 
@@ -82,8 +90,14 @@ const CreateProcessogramModal = ({
     return specie.pathname;
   }, [specieId, species]);
 
-  const onFileAccepted = (file: File) => {
-    setValue("file", file, {
+  const onFileLightAccepted = (file: File) => {
+    setValue("file_light", file, {
+      shouldValidate: true,
+    });
+  };
+
+  const onFileDarkAccepted = (file: File) => {
+    setValue("file_dark", file, {
       shouldValidate: true,
     });
   };
@@ -91,14 +105,20 @@ const CreateProcessogramModal = ({
   const onSubmit = async (data: CreateProcessogramForm) => {
     setIsLoading(true);
 
+    console.log(data);
+
     try {
       const formData = new FormData();
       formData.append("name", data.name);
-      formData.append("file", data.file);
+      if (data.file_light) {
+        formData.append("file_light", data.file_light);
+      }
+      if (data.file_dark) {
+        formData.append("file_dark", data.file_dark);
+      }
       formData.append("specie_id", data.specie_id);
       formData.append("production_module_id", data.production_module_id);
       formData.append("path", pathName);
-      formData.append("theme", data.theme);
       formData.append("is_published", String(data.is_published || false));
 
       await uploadSvgElement(formData);
@@ -146,6 +166,7 @@ const CreateProcessogramModal = ({
       open={true}
       onClose={onClose}
       title="Create a Processogram"
+      height="590px"
       // unsavedChanges={{
       //   enabled: isDirty,
       //   message:
@@ -168,10 +189,13 @@ const CreateProcessogramModal = ({
                 },
                 "& .MuiSwitch-switchBase": {
                   color: "white",
+                  "&:hover": {
+                    backgroundColor: ThemeColors.grey_200,
+                  },
                 },
                 "& .MuiSwitch-track": {
                   backgroundColor: "white",
-                  border: "1px solid grey",
+                  border: `1px solid ${ThemeColors.grey_600}`,
                 },
               }}
               checked={field.value || false}
@@ -181,7 +205,7 @@ const CreateProcessogramModal = ({
         />
       </PublishContainer>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FlexColumn>
+        <FlexColumn gap={1}>
           <FormBody mt={1} gap={2} width="100%">
             <FormInput
               label="Name"
@@ -236,54 +260,58 @@ const CreateProcessogramModal = ({
               />
             </FlexRow>
             <FlexColumn>
-              <Controller
-                control={control}
-                name="theme"
-                render={({ field }) => (
-                  <Select
-                    label="Theme"
-                    placeholder="Select a theme"
-                    options={[
-                      { label: "Light", value: "light" },
-                      { label: "Dark", value: "dark" },
-                    ]}
-                    error={errors.theme?.message}
-                    {...field}
-                    // value={field.value || ""}
+              <Text variant="body2">Provide at least one SVG file.</Text>
+              <FlexRow justify="flex-start" gap={1} align="flex-start">
+                <FlexColumn>
+                  <Text variant="body2">Light mode</Text>
+                  <Dropzone
+                    onFileAccepted={onFileLightAccepted}
+                    textContent={
+                      file_light ? (
+                        <FlexColumn gap={0} justify="flex-start">
+                          <Text variant="body2" align="left">
+                            File: {file_light.name}
+                          </Text>
+                          <Text variant="body2" align="left">
+                            Size: {filesize(file_light.size)}
+                          </Text>
+                        </FlexColumn>
+                      ) : undefined
+                    }
                   />
-                )}
-              />
-              {errors.theme?.message && (
-                <Text variant="body2" color="red">
-                  {errors.theme.message}
-                </Text>
-              )}
-            </FlexColumn>
-
-            <FlexColumn mt={!file ? 1 : 0}>
-              <Dropzone
-                onFileAccepted={onFileAccepted}
-                textContent={
-                  file ? (
-                    <FlexColumn gap={0} justify="flex-start">
-                      <Text variant="body2" align="left">
-                        File: {file.name}
-                      </Text>
-                      <Text variant="body2" align="left">
-                        Size: {filesize(file.size)}
-                      </Text>
-                    </FlexColumn>
-                  ) : undefined
-                }
-              />
-              {errors.file?.message && (
-                <Text variant="body2" color="red">
-                  {errors.file.message}
-                </Text>
-              )}
+                  {errors.file_light?.message && (
+                    <Text variant="body2" color="red">
+                      {errors.file_light.message}
+                    </Text>
+                  )}
+                </FlexColumn>
+                <FlexColumn>
+                  <Text variant="body2">Dark mode</Text>
+                  <Dropzone
+                    onFileAccepted={onFileDarkAccepted}
+                    textContent={
+                      file_dark ? (
+                        <FlexColumn gap={0} justify="flex-start">
+                          <Text variant="body2" align="left">
+                            File: {file_dark.name}
+                          </Text>
+                          <Text variant="body2" align="left">
+                            Size: {filesize(file_dark.size)}
+                          </Text>
+                        </FlexColumn>
+                      ) : undefined
+                    }
+                  />
+                  {errors.file_dark?.message && (
+                    <Text variant="body2" color="red">
+                      {errors.file_dark.message}
+                    </Text>
+                  )}
+                </FlexColumn>
+              </FlexRow>
             </FlexColumn>
           </FormBody>
-          <FlexRow justify="flex-end">
+          <FlexRow justify="flex-end" mt={1.5}>
             <Button buttonStyle="success" loading={isLoading}>
               Create Processogram
             </Button>

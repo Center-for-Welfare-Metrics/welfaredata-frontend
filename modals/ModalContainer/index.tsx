@@ -28,6 +28,8 @@ type Props = {
     enabled: boolean;
     message?: string;
   };
+  width?: string;
+  height?: string;
 } & Omit<BoxProps, "title">;
 
 export const ModalContainer: React.FC<Props> = ({
@@ -48,6 +50,8 @@ export const ModalContainer: React.FC<Props> = ({
   closeId,
   centerTitle,
   unsavedChanges,
+  width = "900px",
+  height = "578px",
   ...rest
 }) => {
   const { triggerDialog } = useUnsavedChanges({
@@ -104,8 +108,8 @@ export const ModalContainer: React.FC<Props> = ({
       disableEscapeKeyDown={keyDisableEsc}
     >
       <Wrapper
-        width="800px"
-        height="478px"
+        width={width}
+        height={height}
         padding={3}
         paddingY={6}
         $fullScreenOnMobile={fullScreenOnMobile}
@@ -113,21 +117,25 @@ export const ModalContainer: React.FC<Props> = ({
       >
         <CloseButton $closeButtonTop={closeButtonTop}>
           {(closeType === "minimize" || closeType === "both") && (
-            <Minimize2
-              cursor="pointer"
-              onClick={close}
-              size={24}
-              color={ThemeColors.white}
-            />
+            <ButtonWrapper>
+              <Minimize2
+                cursor="pointer"
+                onClick={close}
+                size={24}
+                color={ThemeColors.white}
+              />
+            </ButtonWrapper>
           )}
           {(closeType === "close" || closeType === "both") && (
-            <X
-              id={closeId}
-              cursor="pointer"
-              onClick={close}
-              size={30}
-              color={ThemeColors.white}
-            />
+            <ButtonWrapper>
+              <X
+                id={closeId}
+                cursor="pointer"
+                onClick={close}
+                size={30}
+                color={ThemeColors.white}
+              />
+            </ButtonWrapper>
           )}
         </CloseButton>
         {title && handleTitle()}
@@ -137,6 +145,23 @@ export const ModalContainer: React.FC<Props> = ({
     </ModalStyled>
   );
 };
+
+const ButtonWrapper = styled.button`
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5rem;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: ${ThemeColors.grey_200};
+  }
+`;
 
 type WrapperProps = {
   $fullScreenOnMobile?: boolean;
@@ -155,6 +180,8 @@ const Wrapper = styled(Box)<WrapperProps>`
 	`}
   overflow: auto;
   max-width: ${({ $maxWidth }) => ($maxWidth ? $maxWidth : "98vw")};
+  max-height: 100vh;
+  box-sizing: border-box;
   ${({ $fullScreenOnMobile }) =>
     !$fullScreenOnMobile
       ? media.up.medium`
@@ -165,8 +192,7 @@ const Wrapper = styled(Box)<WrapperProps>`
       width: 100%;
       padding: 1rem;
       height: 100%;
-      max-width: 100vw;
-      max-height: 100vh;
+      max-width: 100vw;      
       border-radius: 0;
     `}
 `;
@@ -177,8 +203,8 @@ type CloseButtonProps = {
 
 const CloseButton = styled.div<CloseButtonProps>`
   position: absolute;
-  top: ${({ theme, $closeButtonTop }) => "1rem"};
-  right: 1rem;
+  top: 0.5rem;
+  right: 0.5rem;
   z-index: 10;
   display: flex;
   align-items: center;

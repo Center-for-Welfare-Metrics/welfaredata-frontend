@@ -1,14 +1,8 @@
 import { useGetProcessogramDataByProcessogramId } from "@/api/react-query/processogram-datas/useGetProcessogramDatas";
-import { useGetProcessogramQuestionsByProcessogramId } from "@/api/react-query/processogram-questions/useGetProcessogramQuestions";
 import { useGetProcessogramById } from "@/api/react-query/processograms/useGetProcessograms";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { BreadcrumbHud } from "@/components/processograms/huds/BreadcrumbHud";
 import { ProgressogramEditableHud } from "@/components/processograms/huds/ProcessogramEditableHud";
-import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
-import {
-  ProgressogramQuestionsHud,
-  QuestionData,
-} from "@/components/processograms/huds/QuestionsHud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramComplete";
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
@@ -16,6 +10,7 @@ import { Text } from "@/components/Text";
 import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
 import { useSetUpdateProcessogramModal } from "modals/UpdateProcessogramModal/hooks";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
@@ -39,6 +34,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   );
 
   const [eventBus, setEventBus] = useState<EventBus | null>(null);
+
+  const { resolvedTheme } = useTheme();
 
   const {
     data: element,
@@ -72,14 +69,6 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   } = useGetProcessogramDataByProcessogramId({
     processogram_id,
   });
-
-  // const {
-  //   data: questionsData,
-  //   refetch: questionsRefetch,
-  //   isFetching: isFetchingQuestions,
-  // } = useGetProcessogramQuestionsByProcessogramId({
-  //   processogram_id,
-  // });
 
   const setElementDetailsModal = useSetElementDetailsModal();
 
@@ -147,7 +136,6 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   const handleDataRefetch = (e: React.MouseEvent) => {
     e.stopPropagation();
     dataRefetch();
-    // questionsRefetch();
   };
 
   const getStatusText = (status: ProcessogramStatus) => {
@@ -184,6 +172,30 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   };
 
   if (!element) return <></>;
+
+  const getSvgUrl = () => {
+    if (resolvedTheme === "dark") {
+      return element.svg_url_dark || element.svg_url_light;
+    } else {
+      return element.svg_url_light || element.svg_url_dark;
+    }
+  };
+
+  const getBackgroundColor = () => {
+    if (resolvedTheme === "dark") {
+      if (!!element.svg_url_dark) return undefined;
+
+      return ThemeColors.fixedBackgroundWhite;
+    }
+
+    if (resolvedTheme === "light") {
+      if (!!element.svg_url_light) return undefined;
+
+      return ThemeColors.fixedBackgroundBlack;
+    }
+
+    return undefined;
+  };
 
   return (
     <Container width="100%" gap={0} mt={2}>
@@ -292,10 +304,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                 justify="center"
                 style={{
                   overflow: "hidden",
-                  backgroundColor:
-                    element.theme === "light"
-                      ? ThemeColors.fixedBackgroundWhite
-                      : ThemeColors.fixedBackgroundBlack,
+                  backgroundColor: getBackgroundColor(),
                   position: "relative",
                 }}
               >
@@ -316,7 +325,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   />
                 </BreadcrumbsContainer>
                 <ProcessogramComplete
-                  src={element.svg_url}
+                  src={getSvgUrl()}
                   rasterImages={element.raster_images}
                   enableBruteOptimization={false}
                   onChange={handleChange}

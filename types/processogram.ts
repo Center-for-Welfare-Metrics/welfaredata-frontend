@@ -53,7 +53,8 @@ export type ProcessogramById = {
   name: string;
   description: string;
   levelName: string;
-  svg_url: string;
+  svg_url_dark: string;
+  svg_url_light: string;
   raster_images: {
     [key: string]: {
       src: string;

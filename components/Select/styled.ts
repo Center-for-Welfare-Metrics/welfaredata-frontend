@@ -6,6 +6,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  align-items: flex-end;
   width: 100%;
 `;
 
@@ -101,7 +102,6 @@ export const Error = styled.span`
   color: ${ThemeColors.red};
   white-space: pre-wrap;
   font-weight: bold;
-  margin-top: 4px;
 `;
 
 export const Placeholder = styled.span`

@@ -38,10 +38,13 @@ export const ThemeToggler = () => {
           },
           "& .MuiSwitch-switchBase": {
             color: "white",
+            "&:hover": {
+              backgroundColor: ThemeColors.grey_200,
+            },
           },
           "& .MuiSwitch-track": {
             backgroundColor: "white",
-            border: "1px solid grey",
+            border: `1px solid ${ThemeColors.grey_600}`,
           },
         }}
         checked={resolvedTheme === "dark"}

@@ -9,8 +9,10 @@ export const Name = styled.div<Props>`
   cursor: pointer;
   transition: color 500ms;
   font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
   &:hover {
-    transform: scale(1.1);
+    background-color: ${ThemeColors.grey_200};
   }
 
   ${({ $isCurrentRoute }) =>
@@ -48,7 +50,7 @@ export const Children = styled.a<ChildrenProps>`
         `}
 
   &:hover {
-    transform: scale(1.1);
+    background-color: ${ThemeColors.grey_200};
   }
 `;
 

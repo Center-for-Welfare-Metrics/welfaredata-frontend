@@ -95,6 +95,10 @@ const DefaultButton = styled.button<DefaultButtonProps>`
   &:hover {
     border: 1px solid ${ThemeColors.white};
   }
+
+  &:active {
+    box-shadow: 0 0 0 2px ${ThemeColors.white} inset;
+  }
 `;
 
 const shake = keyframes`
