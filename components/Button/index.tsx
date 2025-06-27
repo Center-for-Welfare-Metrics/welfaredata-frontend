@@ -10,6 +10,7 @@ type ButtonProps = {
   children?: React.ReactNode;
   type?: "button" | "submit" | "reset";
   buttonStyle?: "success" | "danger" | "primary" | "warning";
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 export const Button = ({
@@ -18,6 +19,7 @@ export const Button = ({
   type,
   disabled,
   buttonStyle = "primary",
+  onClick,
 }: ButtonProps) => {
   const getButtonByStyle = () => {
     switch (buttonStyle) {
@@ -39,6 +41,7 @@ export const Button = ({
         type={type}
         disabled={disabled}
         as={getButtonByStyle()}
+        onClick={onClick}
       >
         {children}
       </DefaultButton>
@@ -152,5 +155,4 @@ const Wrapper = styled.div`
   position: relative;
   width: fit-content;
   height: fit-content;
-  margin-top: 1rem;
 `;

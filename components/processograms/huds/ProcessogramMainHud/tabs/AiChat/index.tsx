@@ -8,6 +8,8 @@ import {
 } from "queries/react-query/public/usePublicChat";
 import { ProcessogramHierarchy } from "types/processogram";
 import Markdown from "markdown-to-jsx";
+import { ThemeColors } from "theme/globalStyle";
+import { Button } from "@/components/Button";
 
 interface Message {
   id: string;
@@ -147,7 +149,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
             <MessageBubble $sender={message.sender}>
               <Text
                 variant="body1"
-                color={message.sender === "ai" ? "white" : "black"}
+                color={message.sender === "ai" ? "grey_50" : "grey_900"}
               >
                 {message.sender === "ai" ? (
                   <Markdown>
@@ -162,7 +164,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
               <Text
                 variant="caption"
                 opacity={0.7}
-                color={message.sender === "ai" ? "white" : "black"}
+                color={message.sender === "ai" ? "grey_50" : "grey_900"}
                 style={{
                   lineHeight: "1",
                 }}
@@ -197,7 +199,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
                 >
                   <Text
                     variant="body2"
-                    color="white"
+                    color="grey_50"
                     textElipsis
                     maxWidth="100%"
                   >
@@ -219,17 +221,18 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
             }
             disabled={isPending}
           />
-          <SendButton
+          <Button
             onClick={() => handleSendMessage(inputValue)}
             disabled={!inputValue.trim() || isPending}
+            buttonStyle="success"
           >
             <Text
               variant="body1Bold"
-              color={inputValue.trim() && !isPending ? "black" : "gray"}
+              color={inputValue.trim() && !isPending ? "grey_700" : "gray"}
             >
               Send
             </Text>
-          </SendButton>
+          </Button>
         </InputArea>
       </FlexColumn>
     </ChatContainer>
@@ -279,7 +282,7 @@ const MessageBubble = styled.div<{ $sender: "user" | "ai" }>`
   border-radius: ${(props) =>
     props.$sender === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px"};
   background-color: ${(props) =>
-    props.$sender === "user" ? "#E2F7CB" : "#3E4042"};
+    props.$sender === "user" ? ThemeColors.grey_100 : ThemeColors.grey_800};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -331,29 +334,6 @@ const ChatInput = styled.input`
   &::placeholder {
     color: #aaa;
   }
-`;
-
-const SendButton = styled.button`
-  flex-shrink: 0;
-  padding: 0.75rem 1.25rem;
-  border-radius: 20px;
-  background-color: #e2f7cb;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &:hover:not(:disabled) {
-    opacity: 0.9;
-  }
-`;
-
-const StreamingText = styled.span`
-  display: inline-block;
 `;
 
 const ErrorMessage = styled.div`

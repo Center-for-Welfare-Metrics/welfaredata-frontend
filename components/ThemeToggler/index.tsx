@@ -8,13 +8,24 @@ import styled from "styled-components";
 export const ThemeToggler = () => {
   const { resolvedTheme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
+  const toggleTheme = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
+
+  const setDarkTheme = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTheme("dark");
+  };
+
+  const setLightTheme = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setTheme("light");
   };
 
   return (
     <FlexRow gap={0}>
-      <IconWrapper onClick={() => setTheme("light")}>
+      <IconWrapper onClick={setLightTheme}>
         <Sun size={16} />
       </IconWrapper>
       <Switch
@@ -36,7 +47,7 @@ export const ThemeToggler = () => {
         checked={resolvedTheme === "dark"}
         onClick={toggleTheme}
       />
-      <IconWrapper onClick={() => setTheme("dark")}>
+      <IconWrapper onClick={setDarkTheme}>
         <Moon size={16} />
       </IconWrapper>
     </FlexRow>

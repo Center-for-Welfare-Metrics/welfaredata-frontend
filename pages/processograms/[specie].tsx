@@ -19,6 +19,7 @@ import { EventBus } from "@/components/processograms/ProcessogramComplete/types"
 import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
 import { ThemeColors } from "theme/globalStyle";
 import { ProcessogramQuestionData } from "types/processogram-questions";
+import { ThemeToggler } from "@/components/ThemeToggler";
 
 type Props = {
   specie: string;
@@ -235,7 +236,9 @@ const PublicSpeciePage = ({
             ref={listContainerRef}
             style={{
               backgroundColor:
-                selectedItemTheme === "light" ? ThemeColors.white : undefined,
+                selectedItemTheme === "light"
+                  ? ThemeColors.fixedBackgroundWhite
+                  : undefined,
             }}
           >
             <ProcessogramsList
@@ -249,9 +252,21 @@ const PublicSpeciePage = ({
           </ProcessogramListContainer>
         </FlexRow>
       </FlexRow>
+      <ThemeTogglerContainer>
+        <ThemeToggler />
+      </ThemeTogglerContainer>
     </Container>
   );
 };
+
+const ThemeTogglerContainer = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  border-radius: 8rem;
+  background-color: ${ThemeColors.grey_50};
+`;
 
 const ProcessogramListContainer = styled.div`
   width: 100%;
@@ -259,13 +274,6 @@ const ProcessogramListContainer = styled.div`
   overflow: auto;
   position: relative;
   transition: background-color 500ms;
-`;
-
-const QuestionsHudContainer = styled.div`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
 `;
 
 const BreadcrumbsContainer = styled.div`

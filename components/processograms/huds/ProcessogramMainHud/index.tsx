@@ -91,7 +91,7 @@ const Tab = styled.div<TabProps>`
   justify-content: center;
   width: 100%;
   &:hover {
-    background-color: ${ThemeColors.white};
+    background-color: ${ThemeColors.grey_300};
   }
 
   ${({ $selected }) =>
