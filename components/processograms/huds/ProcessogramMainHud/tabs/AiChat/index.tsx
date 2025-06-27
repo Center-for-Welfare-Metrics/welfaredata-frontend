@@ -199,7 +199,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
                 >
                   <Text
                     variant="body2"
-                    color="grey_50"
+                    color="grey_900"
                     textElipsis
                     maxWidth="100%"
                   >
@@ -216,7 +216,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
             placeholder="Type your message..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) =>
+            onKeyDown={(e) =>
               e.key === "Enter" && !isPending && handleSendMessage(inputValue)
             }
             disabled={isPending}
@@ -294,7 +294,7 @@ const PillsContainer = styled.div`
 `;
 
 const QuestionPill = styled.button`
-  background-color: #4a4a4a;
+  background-color: ${ThemeColors.grey_100};
   border: none;
   border-radius: 16px;
   padding: 0.5rem 1rem;
@@ -306,7 +306,7 @@ const QuestionPill = styled.button`
   white-space: nowrap;
 
   &:hover {
-    background-color: #5a5a5a;
+    background-color: ${ThemeColors.grey_200};
   }
 `;
 
