@@ -1,4 +1,3 @@
-import { darken } from "polished";
 import styled, { css, keyframes } from "styled-components";
 import { ClipLoader } from "react-spinners";
 
@@ -69,7 +68,7 @@ const LoadingContainer = styled.div`
 
 const DefaultButton = styled.button<DefaultButtonProps>`
   position: relative;
-  background-color: ${({ theme }) => GetColorType({ theme, type: "default" })};
+  background-color: ${GetColorType({ type: "default" })};
   color: white;
   border: none;
   border-radius: 1rem;
@@ -107,8 +106,7 @@ const shake = keyframes`
 `;
 
 const DangerButton = styled(DefaultButton)`
-  background-color: ${({ theme }) =>
-    darken(0.15, GetColorType({ theme, type: "danger" }))};
+  background-color: ${GetColorType({ type: "danger" })};
   color: ${ThemeColors.white};
   &:hover {
     animation: ${shake} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
@@ -118,33 +116,30 @@ const DangerButton = styled(DefaultButton)`
 `;
 
 const PrimaryButton = styled(DefaultButton)`
-  background-color: ${({ theme }) => GetColorType({ theme, type: "primary" })};
+  background-color: ${GetColorType({ type: "primary" })};
   color: ${ThemeColors.black};
 
   transition: background-color 250ms;
 
   &:hover {
-    background-color: ${({ theme }) =>
-      darken(0.1, GetColorType({ theme, type: "primary" }))};
+    background-color: ${GetColorType({ type: "primary" })};
   }
 `;
 
 const SuccessButton = styled(DefaultButton)`
-  background-color: ${({ theme }) => GetColorType({ theme, type: "success" })};
+  background-color: ${GetColorType({ type: "success" })};
 
   &:hover {
-    background-color: ${({ theme }) =>
-      darken(0.1, GetColorType({ theme, type: "success" }))};
+    background-color: ${GetColorType({ type: "success" })};
   }
 `;
 
 const WarningButton = styled(DefaultButton)`
-  background-color: ${({ theme }) => GetColorType({ theme, type: "warning" })};
+  background-color: ${GetColorType({ type: "warning" })};
   color: ${ThemeColors.black};
 
   &:hover {
-    background-color: ${({ theme }) =>
-      darken(0.1, GetColorType({ theme, type: "warning" }))};
+    background-color: ${GetColorType({ type: "warning" })};
   }
 `;
 

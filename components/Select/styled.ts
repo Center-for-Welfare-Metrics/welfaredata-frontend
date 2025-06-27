@@ -1,5 +1,4 @@
 import { css, styled } from "styled-components";
-import { lighten, transparentize } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 
 export const Container = styled.div`
@@ -29,7 +28,7 @@ export const SelectInput = styled.div`
   font-size: 14px;
 
   &.focused {
-    border-bottom: 1px solid ${lighten(0.3, ThemeColors.blue)};
+    border-bottom: 1px solid ${ThemeColors.blue};
   }
 
   &.disabled {
@@ -50,7 +49,7 @@ export const SearchInput = styled.input`
   border-bottom: 1px solid ${ThemeColors.blue};
 
   &:focus {
-    border-bottom: 1px solid ${lighten(0.3, ThemeColors.blue)};
+    border-bottom: 1px solid ${ThemeColors.blue};
   }
 `;
 
@@ -76,11 +75,11 @@ export const DropdownItem = styled.div<{ $isSelected: boolean }>`
   ${(props) =>
     props.$isSelected &&
     css`
-      background-color: ${transparentize(0.7, ThemeColors.blue)};
+      background-color: ${ThemeColors.blue};
     `}
 
   &:hover {
-    background-color: ${transparentize(0.8, ThemeColors.blue)};
+    background-color: ${ThemeColors.blue};
   }
 `;
 
@@ -90,7 +89,7 @@ type LabelProps = {
 };
 
 export const Label = styled.label<LabelProps>`
-  color: ${transparentize(0.5, ThemeColors.blue)};
+  color: ${ThemeColors.blue};
   position: absolute;
   transform: translateY(105%);
   ${css`
@@ -110,7 +109,7 @@ export const Error = styled.span`
 `;
 
 export const Placeholder = styled.span`
-  color: ${transparentize(0.5, ThemeColors.white)};
+  color: ${ThemeColors.white};
 `;
 
 export const ChevronIcon = styled.div<{ $isOpen: boolean }>`

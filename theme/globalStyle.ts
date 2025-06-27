@@ -1,7 +1,6 @@
-import { lighten } from "polished";
 import { createGlobalStyle, css } from "styled-components";
 
-export const ThemeColors = {
+const darkColors = {
   blue: "#ffebff",
   deep_blue: "#0c1a27",
   yellow: "#FFE74C",
@@ -13,7 +12,29 @@ export const ThemeColors = {
   gray: "#919191",
 };
 
-export type ThemeColorsType = keyof typeof ThemeColors;
+const lightColors = {
+  blue: "#2d3a4a",
+  deep_blue: "#eaf1f8",
+  yellow: "#FFD600",
+  white: "#FFFFFF",
+  pink: "#e57390",
+  red: "#e57373",
+  green: "#81c784",
+  black: "#f5f5f5",
+  gray: "#bdbdbd",
+};
+
+const themeVars = Object.keys(darkColors).reduce(
+  (acc, key) => {
+    acc[key as keyof typeof darkColors] = `var(--color-${key})`;
+    return acc;
+  },
+  {} as Record<keyof typeof darkColors, string>
+);
+
+export const ThemeColors = themeVars;
+
+export type ThemeColorsType = keyof typeof darkColors;
 
 const scrollBar = (color: ThemeColorsType, size = ".5rem") => css`
   ::-webkit-scrollbar {
@@ -26,13 +47,12 @@ const scrollBar = (color: ThemeColorsType, size = ".5rem") => css`
     border-radius: 2rem;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: ${lighten(0.1, ThemeColors[color])};
+    background-color: ${ThemeColors[color]};
     transition: background-color 500ms;
   }
 `;
 
 export const GlobalStyles = createGlobalStyle`
-
     #__next, html{
       height:100%;
     }
@@ -42,13 +62,13 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     html{
-      background-color: ${ThemeColors.black};          
+      background-color: var(--color-black);          
     }
     html,body,div,textarea{        
       ${scrollBar("gray")}
     }
     body{
-      background-color: ${ThemeColors.black};        
+      background-color: var(--color-black);        
       width:100%;
       height: 100%;
       font-family: 'Titillium Web', sans-serif;         
@@ -76,4 +96,18 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     /* --------------------- hack | gambiarra ---------------- */
+
+    :root {
+      /* light mode (default) */
+      ${Object.entries(lightColors)
+        .map(([key, value]) => `--color-${key}: ${value};`)
+        .join("\n  ")}
+    }
+
+    [data-theme="dark"] {
+      /* Dark mode overrides */
+      ${Object.entries(darkColors)
+        .map(([key, value]) => `--color-${key}: ${value};`)
+        .join("\n  ")}
+    }
 `;

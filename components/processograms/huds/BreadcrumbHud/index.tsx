@@ -1,7 +1,6 @@
 import { FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import useDebounce from "@/utils/hooks/useDebounce";
-import { transparentize } from "polished";
 import { ChevronRight } from "react-feather";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
@@ -60,7 +59,7 @@ const ClickableName = styled.button`
 `;
 
 const Container = styled.div`
-  background-color: ${transparentize(0.4, ThemeColors.black)};
+  background-color: ${ThemeColors.black};
   padding-inline: 1rem;
   padding-block: 0.5rem;
 `;

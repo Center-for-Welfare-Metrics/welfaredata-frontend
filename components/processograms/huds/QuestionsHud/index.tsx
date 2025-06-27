@@ -1,9 +1,8 @@
 import useDebounce from "@/utils/hooks/useDebounce";
 import { useCallback, useMemo, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { HelpCircle } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
-import { transparentize } from "polished";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 
@@ -120,8 +119,8 @@ const CloseButton = styled.button`
 
 const AnswerContent = styled.div`
   padding: 15px;
-  border-top: 1px solid ${transparentize(0.6, ThemeColors.deep_blue)};
-  background-color: ${transparentize(0.85, ThemeColors.black)};
+  border-top: 1px solid ${ThemeColors.deep_blue};
+  background-color: ${ThemeColors.black};
 `;
 
 type ExpandIconProps = {
@@ -144,21 +143,19 @@ const QuestionHeader = styled.div<QuestionHeaderProps>`
   padding: 10px;
   cursor: pointer;
   background-color: ${({ $isActive }) =>
-    $isActive
-      ? transparentize(0.5, ThemeColors.deep_blue)
-      : transparentize(0.8, ThemeColors.deep_blue)};
+    $isActive ? ThemeColors.deep_blue : ThemeColors.deep_blue};
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   &:hover {
-    background-color: ${transparentize(0.5, ThemeColors.deep_blue)};
+    background-color: ${ThemeColors.deep_blue};
   }
 `;
 
 const QuestionItem = styled.div`
   width: 100%;
-  border: 1px solid ${transparentize(0.5, ThemeColors.deep_blue)};
+  border: 1px solid ${ThemeColors.deep_blue};
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -198,7 +195,7 @@ const IconContainer = styled.div<IconContainerProps>`
 
   &:hover {
     transform: scale(1.1);
-    background-color: ${transparentize(0.2, ThemeColors.deep_blue)};
+    background-color: ${ThemeColors.deep_blue};
   }
 `;
 
@@ -213,10 +210,10 @@ const Container = styled.div<ContainerProps>`
   transition: all 0.3s ease;
   ${({ $isExpanded }) =>
     $isExpanded &&
-    `
-    border: 2px ${ThemeColors.deep_blue} solid;
-    background-color: ${transparentize(0.3, ThemeColors.black)};
-    backdrop-filter: blur(5px);
-    overflow: auto;
-  `}
+    css`
+      border: 2px ${ThemeColors.deep_blue} solid;
+      background-color: ${ThemeColors.black};
+      backdrop-filter: blur(5px);
+      overflow: auto;
+    `}
 `;

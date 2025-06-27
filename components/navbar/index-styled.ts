@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { lighten } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 import { NAV_HEIGHT } from "./const";
 
@@ -37,7 +36,7 @@ export const LogOut = styled.div`
   color: ${ThemeColors.blue};
   transition: all 500ms;
   :hover {
-    color: ${lighten(0.25, ThemeColors.blue)};
+    color: ${ThemeColors.blue};
     transition: all 500ms;
   }
 `;

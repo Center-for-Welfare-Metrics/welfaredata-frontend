@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { lighten } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 
 type Props = {
@@ -17,7 +16,7 @@ export const Name = styled.div<Props>`
   ${({ $isCurrentRoute }) =>
     $isCurrentRoute
       ? css`
-          color: ${lighten(0.25, ThemeColors.blue)};
+          color: ${ThemeColors.blue};
           text-decoration: underline;
         `
       : css`
@@ -41,7 +40,7 @@ export const Children = styled.a<ChildrenProps>`
   ${({ $isCurrentRoute }) =>
     $isCurrentRoute
       ? css`
-          color: ${lighten(0.25, ThemeColors.blue)};
+          color: ${ThemeColors.blue};
           text-decoration: underline;
         `
       : css`

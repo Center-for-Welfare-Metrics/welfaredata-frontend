@@ -2,7 +2,6 @@ import { Text } from "@/components/Text";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
@@ -181,7 +180,7 @@ const Container = styled.div`
   box-sizing: border-box;
   height: 100%;
   border: 2px ${ThemeColors.deep_blue} solid;
-  background-color: ${transparentize(0.3, ThemeColors.black)};
+  background-color: ${ThemeColors.black};
   backdrop-filter: blur(5px);
   overflow: auto;
   position: relative;

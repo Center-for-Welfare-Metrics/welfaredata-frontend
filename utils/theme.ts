@@ -1,3 +1,5 @@
+import { ThemeColors } from "theme/globalStyle";
+
 export type StyleTypes =
   | "primary"
   | "success"
@@ -6,23 +8,22 @@ export type StyleTypes =
   | "default";
 
 export interface IColorType {
-  theme: any;
   type: StyleTypes;
 }
 
-export const GetColorType = ({ theme, type }: IColorType) => {
+export const GetColorType = ({ type }: IColorType) => {
   switch (type) {
     case "primary":
-      return theme.colors.blue;
+      return ThemeColors.blue;
     case "success":
-      return theme.colors.green;
+      return ThemeColors.green;
     case "danger":
-      return theme.colors.red;
+      return ThemeColors.red;
     case "warning":
-      return theme.colors.yellow;
+      return ThemeColors.yellow;
     case "default":
-      return theme.colors.deep_blue;
+      return ThemeColors.deep_blue;
     default:
-      return theme.colors.white;
+      return ThemeColors.white;
   }
 };

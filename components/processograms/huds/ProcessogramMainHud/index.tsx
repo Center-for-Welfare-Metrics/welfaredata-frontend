@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { transparentize } from "polished";
 import { FlexRow } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { ProcessogramInfo } from "./tabs/Info";
@@ -92,7 +91,7 @@ const Tab = styled.div<TabProps>`
   justify-content: center;
   width: 100%;
   &:hover {
-    background-color: ${transparentize(0.8, ThemeColors.white)};
+    background-color: ${ThemeColors.white};
   }
 
   ${({ $selected }) =>
@@ -113,7 +112,7 @@ const Container = styled.div`
   box-sizing: border-box;
   height: 100%;
   border: 2px ${ThemeColors.deep_blue} solid;
-  background-color: ${transparentize(0.3, ThemeColors.black)};
+  background-color: ${ThemeColors.black};
   backdrop-filter: blur(5px);
   overflow: auto;
   position: relative;

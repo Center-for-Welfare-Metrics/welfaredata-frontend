@@ -1,4 +1,3 @@
-import { lighten, transparentize } from "polished";
 import { styled, css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import TextareaAutosize from "react-textarea-autosize";
@@ -16,7 +15,7 @@ type LabelProps = {
 };
 
 export const Label = styled.label<LabelProps>`
-  color: ${transparentize(0.5, ThemeColors.blue)};
+  color: ${ThemeColors.blue};
   position: absolute;
   transform: translateY(105%);
   ${css`
@@ -50,6 +49,6 @@ export const CleanTextArea = styled(TextareaAutosize)`
     cursor: not-allowed;
   }
   &:focus {
-    border-bottom: 1px solid ${lighten(0.3, ThemeColors.blue)};
+    border-bottom: 1px solid ${ThemeColors.blue};
   }
 `;

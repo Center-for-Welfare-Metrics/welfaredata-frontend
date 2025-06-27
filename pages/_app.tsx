@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import { ThemeProvider } from "styled-components";
 import { Provider } from "jotai";
-import { Theme, useTheme } from "../theme/useTheme";
 import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
 import authApi from "queries/auth";
@@ -11,6 +9,7 @@ import "theme/fast.css";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Modals } from "modals";
+import { ThemeProvider } from "next-themes";
 
 type ApplicationProps = {
   children: React.ReactNode;
@@ -20,14 +19,7 @@ const Application = ({ children }: ApplicationProps) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [firstLoad, setFirstLoad] = useState(false);
 
-  const { theme, themeLoaded } = useTheme();
-  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
-
   const { pathname } = useRouter();
-
-  useEffect(() => {
-    setSelectedTheme(theme);
-  }, [themeLoaded]);
 
   const logOut = () => {
     authApi.logout().then(() => {
@@ -64,10 +56,8 @@ const Application = ({ children }: ApplicationProps) => {
 
   if (!firstLoad) return null;
 
-  if (!selectedTheme) return null;
-
   return (
-    <ThemeProvider theme={selectedTheme}>
+    <ThemeProvider>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { darken, lighten } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 
 let baseLine = "0.05rem";
@@ -26,11 +25,11 @@ export const Line = styled.div<Props>`
   background-color: ${({ theme, current, strength }) => {
     let color = ThemeColors.red;
     if (strength > 1) {
-      color = darken(0.1, ThemeColors.green);
+      color = ThemeColors.green;
     }
 
     if (strength >= current) {
-      color = lighten(0.1, ThemeColors.green);
+      color = ThemeColors.green;
     }
     return color;
   }};
@@ -47,15 +46,15 @@ export const StrengthText = styled.span<TextProps>`
     let color = ThemeColors.red;
 
     if (strength == 1) {
-      color = lighten(0.05, ThemeColors.red);
+      color = ThemeColors.red;
     }
 
     if (strength > 1) {
-      color = darken(0.1, ThemeColors.green);
+      color = ThemeColors.green;
     }
 
     if (strength > 2) {
-      color = lighten(0.1, ThemeColors.green);
+      color = ThemeColors.green;
     }
     return color;
   }};

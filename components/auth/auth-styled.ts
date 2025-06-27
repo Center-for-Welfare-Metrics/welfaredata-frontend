@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { transparentize } from "polished";
 import { ThemeColors } from "theme/globalStyle";
 
 export const Container = styled.div`
@@ -28,7 +27,7 @@ export const LinkTo = styled.span`
   margin-top: 0.5rem;
   color: white;
   a {
-    color: ${({ theme }) => transparentize(0.6, ThemeColors.yellow)};
+    color: ${ThemeColors.yellow};
     transition: color 500ms;
     margin-left: 0.5rem;
     cursor: not-allowed;

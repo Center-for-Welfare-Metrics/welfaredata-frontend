@@ -1,8 +1,6 @@
 import { Text } from "@/components/Text";
 import { useMemo } from "react";
 import styled from "styled-components";
-import { ThemeColors } from "theme/globalStyle";
-import { transparentize } from "polished";
 import { deslugify } from "@/utils/string";
 import { FlexColumn } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";

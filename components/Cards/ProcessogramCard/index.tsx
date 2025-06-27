@@ -1,7 +1,6 @@
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import Link from "next/link";
-import { transparentize } from "polished";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ProcessogramCardSize } from "./const";
@@ -135,7 +134,7 @@ const BackDrop = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background-color: ${transparentize(0.5, ThemeColors.black)};
+  background-color: ${ThemeColors.black};
   backdrop-filter: blur(2px);
 `;
 
@@ -170,7 +169,7 @@ const ActionButtons = styled.div`
 `;
 
 const Info = styled.div`
-  background-color: ${transparentize(0.3, ThemeColors.black)};
+  background-color: ${ThemeColors.black};
 `;
 
 const Container = styled.div`
