@@ -70,7 +70,10 @@ export const ProcessogramComplete = ({
         style={{
           maxHeight: maxHeight,
           overflow: "visible",
-          backgroundColor: theme === "light" ? ThemeColors.white : undefined,
+          backgroundColor:
+            theme === "light"
+              ? ThemeColors.fixedBackgroundWhite
+              : ThemeColors.fixedBackgroundBlack,
         }}
         onMouseMove={isActive ? onMouseMove : undefined}
         onMouseLeave={isActive ? onMouseLeave : undefined}

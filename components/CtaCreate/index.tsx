@@ -27,7 +27,7 @@ const Container = styled.button`
   margin-top: 1rem;
   background-color: transparent;
   height: auto;
-  border: 1px solid ${ThemeColors.deep_blue};
+  border: 1px solid ${ThemeColors.grey_300};
   padding: 1rem;
   cursor: pointer;
   transition: transform 0.25s ease-in-out;
@@ -36,6 +36,6 @@ const Container = styled.button`
   transition: border 0.25s ease-in-out;
 
   &:hover {
-    border: 1px solid ${ThemeColors.blue};
+    border: 1px solid ${ThemeColors.grey_800};
   }
 `;

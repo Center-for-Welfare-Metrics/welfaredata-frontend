@@ -11,7 +11,6 @@ export const Container = styled.div`
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 15px 17px 20px -5px ${ThemeColors.deep_blue};
   padding: 1rem;
 `;
 
@@ -25,7 +24,7 @@ export const Form = styled.form`
 
 export const LinkTo = styled.span`
   margin-top: 0.5rem;
-  color: white;
+  color: ${ThemeColors.white};
   a {
     color: ${ThemeColors.yellow};
     transition: color 500ms;

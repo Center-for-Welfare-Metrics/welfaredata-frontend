@@ -260,14 +260,22 @@ const CreateProcessogramModal = ({
               )}
             </FlexColumn>
 
-            {file && (
-              <FlexColumn gap={0}>
-                <Text variant="body2">File: {file.name}</Text>
-                <Text variant="body2">Size: {filesize(file.size)}</Text>
-              </FlexColumn>
-            )}
             <FlexColumn mt={!file ? 1 : 0}>
-              <Dropzone onFileAccepted={onFileAccepted} />
+              <Dropzone
+                onFileAccepted={onFileAccepted}
+                textContent={
+                  file ? (
+                    <FlexColumn gap={0} justify="flex-start">
+                      <Text variant="body2" align="left">
+                        File: {file.name}
+                      </Text>
+                      <Text variant="body2" align="left">
+                        Size: {filesize(file.size)}
+                      </Text>
+                    </FlexColumn>
+                  ) : undefined
+                }
+              />
               {errors.file?.message && (
                 <Text variant="body2" color="red">
                   {errors.file.message}

@@ -70,7 +70,7 @@ const DefaultButton = styled.button<DefaultButtonProps>`
   position: relative;
   background-color: ${GetColorType({ type: "default" })};
   color: white;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 1rem;
   cursor: pointer;
   padding: 0.5rem 0.8rem 0.5rem 0.8rem;
@@ -88,6 +88,10 @@ const DefaultButton = styled.button<DefaultButtonProps>`
           opacity: 0.5;
         `
       : ""}
+
+  &:hover {
+    border: 1px solid ${ThemeColors.white};
+  }
 `;
 
 const shake = keyframes`
@@ -108,6 +112,7 @@ const shake = keyframes`
 const DangerButton = styled(DefaultButton)`
   background-color: ${GetColorType({ type: "danger" })};
   color: ${ThemeColors.white};
+
   &:hover {
     animation: ${shake} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     transform: translate3d(0, 0, 0);

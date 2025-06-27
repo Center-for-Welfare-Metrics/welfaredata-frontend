@@ -4,6 +4,8 @@ import onlyGuest from "@/components/HOC/only-guest";
 import UserContext from "@/context/user";
 import auth from "queries/auth";
 import Head from "next/head";
+import styled from "styled-components";
+import { ThemeToggler } from "@/components/ThemeToggler";
 
 const Validator = require("validatorjs");
 
@@ -72,6 +74,9 @@ const LoginPage = () => {
       <Head>
         <title>Welfare Data - Login</title>
       </Head>
+      <ThemeTogglerContainer>
+        <ThemeToggler />
+      </ThemeTogglerContainer>
       <Login
         email={email}
         setEmail={setEmail}
@@ -84,5 +89,12 @@ const LoginPage = () => {
     </>
   );
 };
+
+const ThemeTogglerContainer = styled.div`
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+`;
 
 export default onlyGuest(LoginPage);

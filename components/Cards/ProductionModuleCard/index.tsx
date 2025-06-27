@@ -114,7 +114,7 @@ const BackDrop = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  background-color: ${ThemeColors.black};
+  background-color: color-mix(in srgb, ${ThemeColors.black}, transparent 50%);
   backdrop-filter: blur(2px);
 `;
 
@@ -144,7 +144,7 @@ const Container = styled.div`
   width: ${ProductionModuleCardSize.width}px;
   height: ${ProductionModuleCardSize.height}px;
   border-radius: 4px;
-  border: 1px solid ${ThemeColors.deep_blue};
+  border: 1px solid ${ThemeColors.grey_300};
   padding: 1rem;
   position: relative;
   cursor: pointer;
@@ -155,7 +155,7 @@ const Container = styled.div`
   transition: border 0.25s ease-in-out;
 
   &:hover {
-    border: 1px solid ${ThemeColors.blue};
+    border: 1px solid ${ThemeColors.grey_800};
 
     ${ActionButtons} {
       opacity: 1;

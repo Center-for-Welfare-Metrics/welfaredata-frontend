@@ -19,7 +19,7 @@ export const SelectInput = styled.div`
   border: none;
   background-color: transparent;
   color: ${ThemeColors.white};
-  border-bottom: 1px solid ${ThemeColors.blue};
+  border-bottom: 1px solid ${ThemeColors.grey_600};
   outline: none;
   cursor: pointer;
   display: flex;
@@ -28,7 +28,7 @@ export const SelectInput = styled.div`
   font-size: 14px;
 
   &.focused {
-    border-bottom: 1px solid ${ThemeColors.blue};
+    border-bottom: 1px solid ${ThemeColors.white};
   }
 
   &.disabled {
@@ -46,11 +46,7 @@ export const SearchInput = styled.input`
   color: ${ThemeColors.white};
   outline: none;
   font-size: 14px;
-  border-bottom: 1px solid ${ThemeColors.blue};
-
-  &:focus {
-    border-bottom: 1px solid ${ThemeColors.blue};
-  }
+  border-bottom: 1px solid ${ThemeColors.grey_600};
 `;
 
 export const DropdownContainer = styled.div`
@@ -59,7 +55,7 @@ export const DropdownContainer = styled.div`
   left: 0;
   right: 0;
   background-color: ${ThemeColors.black};
-  border: 1px solid ${ThemeColors.blue};
+  border: 1px solid ${ThemeColors.grey_600};
   border-top: none;
   max-height: 200px;
   overflow-y: auto;
@@ -75,11 +71,11 @@ export const DropdownItem = styled.div<{ $isSelected: boolean }>`
   ${(props) =>
     props.$isSelected &&
     css`
-      background-color: ${ThemeColors.blue};
+      background-color: ${ThemeColors.grey_300};
     `}
 
   &:hover {
-    background-color: ${ThemeColors.blue};
+    background-color: ${ThemeColors.grey_200};
   }
 `;
 

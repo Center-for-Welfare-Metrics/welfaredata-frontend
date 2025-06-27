@@ -293,7 +293,9 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                 style={{
                   overflow: "hidden",
                   backgroundColor:
-                    element.theme === "light" ? ThemeColors.white : undefined,
+                    element.theme === "light"
+                      ? ThemeColors.fixedBackgroundWhite
+                      : ThemeColors.fixedBackgroundBlack,
                   position: "relative",
                 }}
               >

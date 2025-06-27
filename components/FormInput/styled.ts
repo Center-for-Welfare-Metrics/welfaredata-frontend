@@ -7,13 +7,13 @@ export const LabeledInput = styled.input`
   border: none;
   background-color: transparent;
   color: ${ThemeColors.white};
-  border-bottom: 1px solid ${ThemeColors.blue};
+  border-bottom: 1px solid ${ThemeColors.grey_600};
   outline: none;
   &:disabled {
     cursor: not-allowed;
   }
   &:focus {
-    border-bottom: 1px solid ${ThemeColors.blue};
+    border-bottom: 1px solid ${ThemeColors.white};
   }
   font-size: 14px;
 `;

@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
-
 import {
   Container,
   SelectContainer,
@@ -11,7 +10,6 @@ import {
   Error,
   SearchInput,
   Placeholder,
-  ChevronIcon,
   NoResults,
 } from "./styled";
 import { ChevronDown, Plus } from "react-feather";
