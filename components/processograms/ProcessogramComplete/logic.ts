@@ -48,7 +48,6 @@ type Props = {
       }
     | undefined;
   isActive: boolean;
-  theme: "dark" | "light";
   base64ImagesRef?: RefObject<Map<string, string>>;
   disableHover?: boolean;
 };
@@ -61,7 +60,6 @@ export const useProcessogramLogic = ({
   startFromSpecie,
   rasterImages,
   isActive,
-  theme,
   base64ImagesRef,
   disableHover,
 }: Props) => {
@@ -95,7 +93,6 @@ export const useProcessogramLogic = ({
     currentSvgElement,
     updateSvgElement,
     rasterImages,
-    theme,
     base64ImagesRef
   );
 
@@ -113,13 +110,13 @@ export const useProcessogramLogic = ({
 
       if (toPrevious) {
         gsap.to(currentLevelElements, {
-          filter: FOCUSED_FILTER[theme],
+          // filter: FOCUSED_FILTER[theme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
       } else {
         gsap.set(currentLevelElements, {
-          filter: FOCUSED_FILTER[theme],
+          // filter: FOCUSED_FILTER[theme],
         });
       }
     },
@@ -156,7 +153,6 @@ export const useProcessogramLogic = ({
     svgElement,
     enableBruteOptimization,
     getElementIdentifierWithHierarchy,
-    theme,
   });
 
   const { handleClick, onMouseLeave, onMouseMove } =
@@ -194,7 +190,6 @@ export const useProcessogramLogic = ({
     svgElement,
     startFromSpecie,
     isActive,
-    theme,
     disableHover,
   });
 

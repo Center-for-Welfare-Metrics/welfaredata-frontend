@@ -88,7 +88,7 @@ export const ModalContainer: React.FC<Props> = ({
     return description;
   };
 
-  const close = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
+  const close = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (unsavedChanges?.enabled) {
@@ -117,21 +117,15 @@ export const ModalContainer: React.FC<Props> = ({
       >
         <CloseButton $closeButtonTop={closeButtonTop}>
           {(closeType === "minimize" || closeType === "both") && (
-            <ButtonWrapper>
-              <Minimize2
-                cursor="pointer"
-                onClick={close}
-                size={24}
-                color={ThemeColors.white}
-              />
+            <ButtonWrapper onClick={close}>
+              <Minimize2 cursor="pointer" size={24} color={ThemeColors.white} />
             </ButtonWrapper>
           )}
           {(closeType === "close" || closeType === "both") && (
-            <ButtonWrapper>
+            <ButtonWrapper onClick={close}>
               <X
                 id={closeId}
                 cursor="pointer"
-                onClick={close}
                 size={30}
                 color={ThemeColors.white}
               />

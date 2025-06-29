@@ -17,12 +17,14 @@ import { ProductionModule } from "types/production-module";
 import { Text } from "@/components/Text";
 import { Switch } from "@mui/material";
 import { ThemeColors } from "theme/globalStyle";
+import { CheckCircle } from "react-feather";
+import Dropzone from "@/components/Dropzone";
+import { filesize } from "filesize";
 
 const UpdateProcessogramSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   production_module_id: z.string().min(1, "Production module is required"),
-  theme: z.string().min(1, "Theme is required"),
   specie_id: z.string().min(1, "Specie is required"),
   is_published: z.boolean().optional(),
 });
@@ -36,15 +38,27 @@ export type UpdateProcessogramModalProps = {
     name: string;
     description?: string;
     production_module_id: string;
-    theme: "light" | "dark";
     specie_id: string;
     is_published: boolean;
+  };
+  files: {
+    light?: {
+      original_size: number;
+      final_size: number;
+      name: string;
+    };
+    dark?: {
+      original_size: number;
+      final_size: number;
+      name: string;
+    };
   };
 };
 
 const UpdateProcessogramModal = ({
   onClose,
   processogram,
+  files,
 }: UpdateProcessogramModalProps) => {
   const { handleSubmit, register, formState, control, watch } =
     useForm<UpdateProcessogramForm>({
@@ -53,7 +67,6 @@ const UpdateProcessogramModal = ({
         name: processogram.name,
         description: processogram.description || "",
         production_module_id: processogram.production_module_id,
-        theme: processogram.theme,
         specie_id: processogram.specie_id,
         is_published: processogram.is_published || false,
       },
@@ -81,7 +94,6 @@ const UpdateProcessogramModal = ({
         name: data.name,
         description: data.description,
         production_module_id: data.production_module_id,
-        theme: data.theme as "light" | "dark",
         specie_id: data.specie_id,
         is_published: data.is_published || false,
       },
@@ -94,11 +106,12 @@ const UpdateProcessogramModal = ({
       open={true}
       onClose={onClose}
       title="Update processogram"
-      unsavedChanges={{
-        enabled: isDirty,
-        message:
-          "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
-      }}
+      height="590px"
+      // unsavedChanges={{
+      //   enabled: isDirty,
+      //   message:
+      //     "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
+      // }}
     >
       <PublishContainer>
         <Text variant="body2">Publish this processogram</Text>
@@ -182,23 +195,55 @@ const UpdateProcessogramModal = ({
               error={errors.description?.message}
               {...register("description")}
             />
-            <FlexColumn>
-              <Controller
-                control={control}
-                name="theme"
-                render={({ field }) => (
-                  <Select
-                    label="Theme"
-                    options={[
-                      { label: "Light", value: "light" },
-                      { label: "Dark", value: "dark" },
-                    ]}
-                    error={errors.theme?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </FlexColumn>
+
+            <FlexRow justify="flex-start" gap={1} align="flex-start">
+              <FlexColumn>
+                <FlexRow justify="flex-start">
+                  <Text variant="body2">Light mode</Text>
+                  {!!files.light && (
+                    <CheckCircle size={16} color={ThemeColors.green} />
+                  )}
+                </FlexRow>
+                <Dropzone
+                  // onFileAccepted={onFileLightAccepted}
+                  // onFileRemoved={() => onFileRemoved("light")}
+                  textContent={
+                    files.light ? (
+                      <FlexColumn gap={0} justify="flex-start">
+                        <Text variant="body2" align="left">
+                          File: {files.light.name}
+                        </Text>
+                        <Text variant="body2" align="left">
+                          Size: {filesize(files.light.final_size)}
+                        </Text>
+                      </FlexColumn>
+                    ) : undefined
+                  }
+                />
+              </FlexColumn>
+              <FlexColumn>
+                <FlexRow justify="flex-start" align="center">
+                  <Text variant="body2">Dark mode</Text>
+                  {!!files.dark && (
+                    <CheckCircle size={16} color={ThemeColors.green} />
+                  )}
+                </FlexRow>
+                <Dropzone
+                  textContent={
+                    files.dark ? (
+                      <FlexColumn gap={0} justify="flex-start">
+                        <Text variant="body2" align="left">
+                          File: {files.dark.name}
+                        </Text>
+                        <Text variant="body2" align="left">
+                          Size: {filesize(files.dark.final_size)}
+                        </Text>
+                      </FlexColumn>
+                    ) : undefined
+                  }
+                />
+              </FlexColumn>
+            </FlexRow>
           </FlexColumn>
           <FlexRow justify="flex-end">
             <Button

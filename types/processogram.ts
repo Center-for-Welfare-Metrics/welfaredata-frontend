@@ -11,12 +11,20 @@ export type Processogram = {
   identifier: string;
   specie_id: string;
   production_module_id: string;
-  root_id: string | null;
-  element_type: string;
   name: string;
   description: string;
   levelName: string;
-  svg_url: string;
+
+  original_name_light: string;
+  svg_url_light: string;
+  original_size_light: number;
+  final_size_light: number;
+
+  original_name_dark: string;
+  svg_url_dark: string;
+  original_size_dark: number;
+  final_size_dark: number;
+
   raster_images:
     | {
         [key: string]: {
@@ -48,13 +56,11 @@ export type ProcessogramById = {
     __v: number;
   };
   specie_id: string;
-  root_id: string | null;
-  element_type: string;
+
   name: string;
   description: string;
   levelName: string;
-  svg_url_dark: string;
-  svg_url_light: string;
+
   raster_images: {
     [key: string]: {
       src: string;
@@ -74,7 +80,17 @@ export type ProcessogramById = {
     updatedAt: string;
   };
   status: ProcessogramStatus;
-  theme: ProcessogramTheme;
+
+  original_name_light: string;
+  svg_url_light: string;
+  original_size_light: number;
+  final_size_light: number;
+
+  original_name_dark: string;
+  svg_url_dark: string;
+  original_size_dark: number;
+  final_size_dark: number;
+
   originalSize: number;
   finalSize: number;
   createdAt: string;

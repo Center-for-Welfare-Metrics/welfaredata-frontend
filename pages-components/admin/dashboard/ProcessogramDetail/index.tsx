@@ -97,9 +97,20 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         name: element.name,
         description: element.description || "",
         production_module_id: element.production_module_id,
-        theme: element.theme,
         specie_id: element.specie_id,
         is_published: element.is_published,
+      },
+      files: {
+        light: {
+          original_size: element.original_size_light,
+          final_size: element.final_size_light,
+          name: element.original_name_light,
+        },
+        dark: {
+          original_size: element.original_size_dark,
+          final_size: element.final_size_dark,
+          name: element.original_name_dark,
+        },
       },
     });
   };
@@ -332,7 +343,6 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   eventBusHandler={setEventBus}
                   onClose={onClose}
                   maxHeight="70vh"
-                  theme={element.theme}
                   startFromSpecie={false}
                   isActive={true}
                   disableHover

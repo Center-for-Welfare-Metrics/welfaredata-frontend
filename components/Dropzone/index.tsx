@@ -1,28 +1,32 @@
 import React, { useCallback, useMemo } from "react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
-import { Upload } from "react-feather";
-import styled from "styled-components";
+import { Upload, X } from "react-feather";
+import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { Text } from "../Text";
 import { FlexColumn } from "../desing-components/Flex";
 
 interface DropzoneProps {
-  onFileAccepted: (file: File) => void;
+  onFileAccepted?: (file: File) => void;
+  onFileRemoved?: () => void;
   onFileRejected?: (fileRejections: any[]) => void;
   maxFiles?: number;
   textContent?: React.ReactNode;
+  currentFile?: File | null;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({
   onFileAccepted,
+  onFileRemoved,
   onFileRejected,
   textContent,
   maxFiles = 1,
+  currentFile,
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: any[]) => {
       if (acceptedFiles.length > 0) {
-        onFileAccepted(acceptedFiles[0]);
+        onFileAccepted?.(acceptedFiles[0]);
       }
 
       if (rejectedFiles.length > 0 && onFileRejected) {
@@ -43,16 +47,37 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     [onDrop, maxFiles]
   );
 
+  const onClickDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onFileRemoved) {
+      onFileRemoved();
+    }
+  };
+
   const { getRootProps, getInputProps, isDragActive, fileRejections } =
     useDropzone(dropzoneOptions);
 
   return (
     <div>
-      <DropzoneActive {...getRootProps()} isDragActive={isDragActive}>
+      <DropzoneActive
+        {...getRootProps()}
+        $isDragActive={isDragActive}
+        $hasFile={!!currentFile}
+      >
         <input {...getInputProps()} />
         <FlexColumn align="center">
           {textContent ? (
-            textContent
+            <>
+              {isDragActive ? (
+                <>
+                  <Text variant="body1" align="center">
+                    Will replace the current SVG file with the new one.
+                  </Text>
+                </>
+              ) : (
+                textContent
+              )}
+            </>
           ) : (
             <>
               <Upload size={24} color={ThemeColors.white} />
@@ -64,6 +89,11 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             </>
           )}
         </FlexColumn>
+        {!!currentFile && (
+          <IconWrapper onClick={onClickDelete}>
+            <X color={ThemeColors.grey_900} />
+          </IconWrapper>
+        )}
       </DropzoneActive>
       {fileRejections.length > 0 && (
         <ErrorText>
@@ -75,8 +105,35 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   );
 };
 
-const DropzoneContainer = styled.div`
-  border: 2px dashed ${ThemeColors.grey_400};
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: ${ThemeColors.grey_200};
+  }
+`;
+
+type DropzoneContainerProps = {
+  $hasFile: boolean;
+};
+
+const DropzoneContainer = styled.div<DropzoneContainerProps>`
+  ${({ $hasFile }) =>
+    $hasFile
+      ? css`
+          border: 2px solid ${ThemeColors.green};
+        `
+      : css`
+          border: 2px dashed ${ThemeColors.grey_400};
+        `}
+
   border-radius: 8px;
   padding: 24px;
   display: flex;
@@ -93,11 +150,31 @@ const DropzoneContainer = styled.div`
   }
 `;
 
-const DropzoneActive = styled(DropzoneContainer)<{ isDragActive: boolean }>`
-  border-color: ${(props) =>
-    props.isDragActive ? ThemeColors.green : ThemeColors.grey_300};
-  background-color: ${(props) =>
-    props.isDragActive ? ThemeColors.green : "inherit"};
+type DropzoneActiveProps = {
+  $isDragActive: boolean;
+};
+
+const DropzoneActive = styled(DropzoneContainer)<DropzoneActiveProps>`
+  position: relative;
+
+  ${({ $isDragActive }) =>
+    $isDragActive &&
+    css`
+      border-color: ${ThemeColors.green};
+      background-color: ${ThemeColors.green};
+    `}
+
+  ${IconWrapper} {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover {
+    ${IconWrapper} {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
 `;
 
 const ErrorText = styled.p`

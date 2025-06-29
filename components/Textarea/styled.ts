@@ -43,12 +43,15 @@ export const CleanTextArea = styled(TextareaAutosize)`
 
   font-size: 14px;
 
-  border-bottom: 1px solid ${ThemeColors.blue};
+  border-bottom: 1px solid ${ThemeColors.grey_600};
   outline: none;
   &:disabled {
     cursor: not-allowed;
   }
   &:focus {
-    border-bottom: 1px solid ${ThemeColors.blue};
+    border-bottom: 1px solid ${ThemeColors.white};
+    ~ ${Label} {
+      color: ${ThemeColors.white};
+    }
   }
 `;

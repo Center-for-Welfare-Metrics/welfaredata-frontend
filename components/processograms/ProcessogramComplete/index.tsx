@@ -27,7 +27,6 @@ type Props = {
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
   isActive: boolean;
-  theme: "dark" | "light";
   enableBruteOptimization?: boolean;
   maxHeight?: string;
   base64ImagesRef?: RefObject<Map<string, string>>;
@@ -45,7 +44,6 @@ export const ProcessogramComplete = ({
   eventBusHandler,
   base64ImagesRef,
   isActive,
-  theme,
   disableHover,
 }: Props) => {
   const { updateSvgElement, loadingOptimization, onMouseMove, onMouseLeave } =
@@ -58,7 +56,6 @@ export const ProcessogramComplete = ({
       eventBusHandler,
       base64ImagesRef,
       isActive,
-      theme,
       disableHover,
     });
 
@@ -70,10 +67,6 @@ export const ProcessogramComplete = ({
         style={{
           maxHeight: maxHeight,
           overflow: "visible",
-          backgroundColor:
-            theme === "light"
-              ? ThemeColors.fixedBackgroundWhite
-              : ThemeColors.fixedBackgroundBlack,
         }}
         onMouseMove={isActive ? onMouseMove : undefined}
         onMouseLeave={isActive ? onMouseLeave : undefined}

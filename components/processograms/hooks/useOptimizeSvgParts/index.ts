@@ -43,7 +43,6 @@ export const useOptimizeSvgParts = (
         };
       }
     | undefined,
-  theme: "dark" | "light",
   base64ImagesRef?: RefObject<Map<string, string>>
 ) => {
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
@@ -70,7 +69,7 @@ export const useOptimizeSvgParts = (
           const optimizedG = optimizedGElements.current.get(rootId);
           if (optimizedG) {
             if (applyUnfocusedFilter) {
-              optimizedG.style.filter = UNFOCUSED_FILTER[theme];
+              // optimizedG.style.filter = UNFOCUSED_FILTER[theme];
             }
             currentSvgElement.current.replaceWith(optimizedG);
             updateSvgElement(optimizedG);
@@ -94,7 +93,7 @@ export const useOptimizeSvgParts = (
 
           if (optimizedElement) {
             if (applyUnfocusedFilter) {
-              optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
+              // optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
             }
             currentSvgElement.current.replaceWith(optimizedElement);
             updateSvgElement(optimizedElement);
@@ -121,7 +120,7 @@ export const useOptimizeSvgParts = (
           const optimizedG = optimizedGElements.current.get(id);
           if (optimizedG) {
             if (applyUnfocusedFilter) {
-              optimizedG.style.filter = UNFOCUSED_FILTER[theme];
+              // optimizedG.style.filter = UNFOCUSED_FILTER[theme];
             }
             gElement.replaceWith(optimizedG);
           }
@@ -144,7 +143,7 @@ export const useOptimizeSvgParts = (
 
           if (optimizedElement) {
             if (applyUnfocusedFilter) {
-              optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
+              // optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
             }
             gElement.replaceWith(optimizedElement);
             optimizedGElements.current.set(id, optimizedElement);
@@ -172,7 +171,7 @@ export const useOptimizeSvgParts = (
 
         if (!originalG) return;
 
-        originalG.style.filter = FOCUSED_FILTER[theme];
+        // originalG.style.filter = FOCUSED_FILTER[theme];
 
         currentSvgElement.current.replaceWith(originalG);
         updateSvgElement(originalG);
@@ -197,7 +196,7 @@ export const useOptimizeSvgParts = (
           if (originalG.tagName === "g") continue;
         }
 
-        originalG.style.filter = FOCUSED_FILTER[theme];
+        // originalG.style.filter = FOCUSED_FILTER[theme];
 
         gElement.replaceWith(originalG);
       }

@@ -309,21 +309,16 @@ export async function getStaticPaths() {
 export async function getStaticProps(context: GetStaticPropsContext) {
   const { specie } = context.params as { specie: string };
 
-  const [processograms, processogramDatas, speciesData, processogramQuestions] =
-    await Promise.all([
-      getPublicProcessograms({ specie }),
-      getPublicProcessogramDatas({ specie }),
-      getPublicSpeciesByPathname({ pathname: specie }),
-      getPublicProcessogramQuestions({
-        specie,
-      }),
-    ]);
+  const [processograms, processogramDatas, speciesData] = await Promise.all([
+    getPublicProcessograms({ specie }),
+    getPublicProcessogramDatas({ specie }),
+    getPublicSpeciesByPathname({ pathname: specie }),
+  ]);
 
   return {
     props: {
       processograms,
       processogramDatas,
-      processogramQuestions,
       speciesData,
       specie,
     },

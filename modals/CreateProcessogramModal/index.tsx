@@ -23,6 +23,7 @@ import { useGetProductionModules } from "@/api/react-query/production-modules/us
 import { useSetCreateSpecieModal } from "modals/CreateSpecieModal/hooks";
 import slufigy from "slugify";
 import { useSetCreateProductionModuleModal } from "modals/CreateProductionModuleModal/hooks";
+import { CheckCircle } from "react-feather";
 
 const CreateProcessogramSchema = z
   .object({
@@ -102,10 +103,20 @@ const CreateProcessogramModal = ({
     });
   };
 
+  const onFileRemoved = (fileType: "light" | "dark") => {
+    if (fileType === "light") {
+      setValue("file_light", null, {
+        shouldValidate: true,
+      });
+    } else if (fileType === "dark") {
+      setValue("file_dark", null, {
+        shouldValidate: true,
+      });
+    }
+  };
+
   const onSubmit = async (data: CreateProcessogramForm) => {
     setIsLoading(true);
-
-    console.log(data);
 
     try {
       const formData = new FormData();
@@ -167,11 +178,11 @@ const CreateProcessogramModal = ({
       onClose={onClose}
       title="Create a Processogram"
       height="590px"
-      // unsavedChanges={{
-      //   enabled: isDirty,
-      //   message:
-      //     "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
-      // }}
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished creating this processogram. If you leave now, your changes will be lost.",
+      }}
     >
       <PublishContainer>
         <Text variant="body2">Publish this processogram</Text>
@@ -263,9 +274,15 @@ const CreateProcessogramModal = ({
               <Text variant="body2">Provide at least one SVG file.</Text>
               <FlexRow justify="flex-start" gap={1} align="flex-start">
                 <FlexColumn>
-                  <Text variant="body2">Light mode</Text>
+                  <FlexRow justify="flex-start">
+                    <Text variant="body2">Light mode</Text>
+                    {!!file_light && (
+                      <CheckCircle size={16} color={ThemeColors.green} />
+                    )}
+                  </FlexRow>
                   <Dropzone
                     onFileAccepted={onFileLightAccepted}
+                    onFileRemoved={() => onFileRemoved("light")}
                     textContent={
                       file_light ? (
                         <FlexColumn gap={0} justify="flex-start">
@@ -278,6 +295,7 @@ const CreateProcessogramModal = ({
                         </FlexColumn>
                       ) : undefined
                     }
+                    currentFile={file_light}
                   />
                   {errors.file_light?.message && (
                     <Text variant="body2" color="red">
@@ -286,9 +304,15 @@ const CreateProcessogramModal = ({
                   )}
                 </FlexColumn>
                 <FlexColumn>
-                  <Text variant="body2">Dark mode</Text>
+                  <FlexRow justify="flex-start" align="center">
+                    <Text variant="body2">Dark mode</Text>
+                    {!!file_dark && (
+                      <CheckCircle size={16} color={ThemeColors.green} />
+                    )}
+                  </FlexRow>
                   <Dropzone
                     onFileAccepted={onFileDarkAccepted}
+                    onFileRemoved={() => onFileRemoved("dark")}
                     textContent={
                       file_dark ? (
                         <FlexColumn gap={0} justify="flex-start">
@@ -301,6 +325,7 @@ const CreateProcessogramModal = ({
                         </FlexColumn>
                       ) : undefined
                     }
+                    currentFile={file_dark}
                   />
                   {errors.file_dark?.message && (
                     <Text variant="body2" color="red">

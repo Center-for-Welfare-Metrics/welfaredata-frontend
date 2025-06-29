@@ -2,22 +2,6 @@ import { css, styled } from "styled-components";
 
 import { ThemeColors } from "theme/globalStyle";
 
-export const LabeledInput = styled.input`
-  padding: 0.5rem 0 0.5rem 0;
-  border: none;
-  background-color: transparent;
-  color: ${ThemeColors.white};
-  border-bottom: 1px solid ${ThemeColors.grey_600};
-  outline: none;
-  &:disabled {
-    cursor: not-allowed;
-  }
-  &:focus {
-    border-bottom: 1px solid ${ThemeColors.white};
-  }
-  font-size: 14px;
-`;
-
 export const Container = styled.div`
   position: relative;
   display: flex;
@@ -47,4 +31,23 @@ export const Error = styled.span`
   color: ${ThemeColors.red};
   white-space: pre-wrap;
   font-weight: bold;
+`;
+
+export const LabeledInput = styled.input`
+  padding: 0.5rem 0 0.5rem 0;
+  border: none;
+  background-color: transparent;
+  color: ${ThemeColors.white};
+  border-bottom: 1px solid ${ThemeColors.grey_600};
+  outline: none;
+  &:disabled {
+    cursor: not-allowed;
+  }
+  &:focus {
+    border-bottom: 1px solid ${ThemeColors.white};
+    ~ ${Label} {
+      color: ${ThemeColors.white};
+    }
+  }
+  font-size: 14px;
 `;

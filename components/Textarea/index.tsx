@@ -47,10 +47,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, IFormInput>(
     return (
       <Box width="100%" style={customStyle}>
         <Container>
-          <Label $hasValue={!!value} htmlFor={name}>
-            {label}
-          </Label>
-
           <CleanTextArea
             id={name}
             name={name}
@@ -59,7 +55,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, IFormInput>(
             ref={ref}
             {...rest}
           />
-
+          <Label $hasValue={!!value} htmlFor={name}>
+            {label}
+          </Label>
           {error && <Error>{error}</Error>}
         </Container>
       </Box>

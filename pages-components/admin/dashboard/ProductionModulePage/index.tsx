@@ -179,13 +179,24 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
               <FlexRow mt={1} gap={1} flexWrap="wrap" justify="flex-start">
                 {processogramsList.map((element) => (
                   <ProcessogramCard
+                    files={{
+                      dark: {
+                        final_size: element.original_size_dark,
+                        name: element.original_name_dark,
+                        original_size: element.original_size_dark,
+                      },
+                      light: {
+                        final_size: element.original_size_light,
+                        name: element.original_name_light,
+                        original_size: element.original_size_light,
+                      },
+                    }}
                     key={element._id}
                     _id={element._id}
                     name={element.name}
                     description={element.description}
                     production_module_id={element.production_module_id}
                     specie_id={element.specie_id}
-                    theme={element.theme}
                     status={element.status}
                     is_published={element.is_published}
                     image_url={element.raster_images?.[element.identifier].src}

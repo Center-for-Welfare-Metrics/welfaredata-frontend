@@ -17,10 +17,21 @@ type Props = {
   production_module_id: string;
   specie_id: string;
   description: string | undefined;
-  theme: "dark" | "light";
   status: ProcessogramStatus;
   image_url: string | undefined;
   is_published: boolean;
+  files: {
+    light?: {
+      original_size: number;
+      final_size: number;
+      name: string;
+    };
+    dark?: {
+      original_size: number;
+      final_size: number;
+      name: string;
+    };
+  };
 };
 
 export const ProcessogramCard = ({
@@ -31,8 +42,8 @@ export const ProcessogramCard = ({
   description,
   production_module_id,
   specie_id,
-  theme,
   is_published,
+  files,
 }: Props) => {
   const statusColor = useMemo(() => {
     if (status === "error") return ThemeColors.red;
@@ -81,10 +92,10 @@ export const ProcessogramCard = ({
         name,
         production_module_id,
         specie_id,
-        theme,
         description,
         is_published,
       },
+      files,
     });
   };
 

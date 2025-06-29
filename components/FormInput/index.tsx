@@ -48,9 +48,6 @@ export const FormInput = forwardRef<HTMLInputElement, IFormInput>(
         alignItems="flex-end"
       >
         <Container style={customStyle}>
-          <Label $multiline={multiline} $hasValue={!!value} htmlFor={name}>
-            {label}
-          </Label>
           <LabeledInput
             id={name}
             name={name}
@@ -60,6 +57,9 @@ export const FormInput = forwardRef<HTMLInputElement, IFormInput>(
             ref={ref}
             {...(rest as InputHTMLAttributes<HTMLInputElement>)}
           />
+          <Label $multiline={multiline} $hasValue={!!value} htmlFor={name}>
+            {label}
+          </Label>
         </Container>
         {error && <Error>{error}</Error>}
       </Box>
