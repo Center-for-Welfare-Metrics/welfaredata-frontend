@@ -86,6 +86,7 @@ export const ProcessogramCard = ({
   const handleUpdate = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+
     setUpdateProcessogram({
       processogram: {
         _id,

@@ -9,14 +9,7 @@ type UpdateProcessogramayload = {
   params: {
     id: string;
   };
-  body: {
-    name?: string;
-    description?: string;
-    production_module_id?: string;
-    theme?: "light" | "dark";
-    specie_id?: string;
-    is_published?: boolean;
-  };
+  body: FormData;
 };
 
 const updateProcessogram = async ({
@@ -28,6 +21,9 @@ const updateProcessogram = async ({
     service: "admin-processograms",
     url: `/${params.id}`,
     data: body,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
   return data as Processogram;
 };

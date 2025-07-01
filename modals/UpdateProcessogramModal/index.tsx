@@ -27,6 +27,8 @@ const UpdateProcessogramSchema = z.object({
   production_module_id: z.string().min(1, "Production module is required"),
   specie_id: z.string().min(1, "Specie is required"),
   is_published: z.boolean().optional(),
+  file_light: z.custom<File>().optional().nullable(),
+  file_dark: z.custom<File>().optional().nullable(),
 });
 
 export type UpdateProcessogramForm = z.infer<typeof UpdateProcessogramSchema>;
@@ -60,7 +62,7 @@ const UpdateProcessogramModal = ({
   processogram,
   files,
 }: UpdateProcessogramModalProps) => {
-  const { handleSubmit, register, formState, control, watch } =
+  const { handleSubmit, register, formState, control, watch, setValue } =
     useForm<UpdateProcessogramForm>({
       resolver: zodResolver(UpdateProcessogramSchema),
       defaultValues: {
@@ -74,6 +76,9 @@ const UpdateProcessogramModal = ({
 
   const specieId = watch("specie_id");
 
+  const file_light = watch("file_light");
+  const file_dark = watch("file_dark");
+
   const { errors, isDirty } = formState;
 
   const { data: species } = useGetSpecies();
@@ -83,22 +88,99 @@ const UpdateProcessogramModal = ({
     !!specieId
   );
 
+  const onFileLightAccepted = (file: File) => {
+    setValue("file_light", file, {
+      shouldValidate: true,
+    });
+  };
+
+  const onFileDarkAccepted = (file: File) => {
+    setValue("file_dark", file, {
+      shouldValidate: true,
+    });
+  };
+
   const updateProcessogram = useUpdateProcessogram();
 
   const onSubmit = async (data: UpdateProcessogramForm) => {
+    const formData = new FormData();
+
+    if (data.file_light) {
+      formData.append("file_light", data.file_light);
+    }
+    if (data.file_dark) {
+      formData.append("file_dark", data.file_dark);
+    }
+
+    formData.append("name", data.name);
+    formData.append("specie_id", data.specie_id);
+    formData.append("description", data.description || "");
+    formData.append("production_module_id", data.production_module_id);
+    formData.append("is_published", String(data.is_published || false));
+
     await updateProcessogram.mutateAsync({
       params: {
         id: processogram._id,
       },
-      body: {
-        name: data.name,
-        description: data.description,
-        production_module_id: data.production_module_id,
-        specie_id: data.specie_id,
-        is_published: data.is_published || false,
-      },
+      body: formData,
     });
     onClose();
+  };
+
+  const getFileLightText = () => {
+    if (file_light) {
+      return (
+        <FlexColumn gap={0} justify="flex-start">
+          <Text variant="body2" align="left">
+            File: {file_light.name}
+          </Text>
+          <Text variant="body2" align="left">
+            Size: {filesize(file_light.size)}
+          </Text>
+        </FlexColumn>
+      );
+    }
+
+    if (files.light) {
+      return (
+        <FlexColumn gap={0} justify="flex-start">
+          <Text variant="body2" align="left">
+            File: {files.light.name}
+          </Text>
+          <Text variant="body2" align="left">
+            Size: {filesize(files.light.final_size)}
+          </Text>
+        </FlexColumn>
+      );
+    }
+  };
+
+  const getFileDarkText = () => {
+    if (file_dark) {
+      return (
+        <FlexColumn gap={0} justify="flex-start">
+          <Text variant="body2" align="left">
+            File: {file_dark.name}
+          </Text>
+          <Text variant="body2" align="left">
+            Size: {filesize(file_dark.size)}
+          </Text>
+        </FlexColumn>
+      );
+    }
+
+    if (files.dark) {
+      return (
+        <FlexColumn gap={0} justify="flex-start">
+          <Text variant="body2" align="left">
+            File: {files.dark.name}
+          </Text>
+          <Text variant="body2" align="left">
+            Size: {filesize(files.dark.final_size)}
+          </Text>
+        </FlexColumn>
+      );
+    }
   };
 
   return (
@@ -106,7 +188,7 @@ const UpdateProcessogramModal = ({
       open={true}
       onClose={onClose}
       title="Update processogram"
-      height="590px"
+      height="650px"
       // unsavedChanges={{
       //   enabled: isDirty,
       //   message:
@@ -205,20 +287,8 @@ const UpdateProcessogramModal = ({
                   )}
                 </FlexRow>
                 <Dropzone
-                  // onFileAccepted={onFileLightAccepted}
-                  // onFileRemoved={() => onFileRemoved("light")}
-                  textContent={
-                    files.light ? (
-                      <FlexColumn gap={0} justify="flex-start">
-                        <Text variant="body2" align="left">
-                          File: {files.light.name}
-                        </Text>
-                        <Text variant="body2" align="left">
-                          Size: {filesize(files.light.final_size)}
-                        </Text>
-                      </FlexColumn>
-                    ) : undefined
-                  }
+                  onFileAccepted={onFileLightAccepted}
+                  textContent={getFileLightText()}
                 />
               </FlexColumn>
               <FlexColumn>
@@ -229,18 +299,8 @@ const UpdateProcessogramModal = ({
                   )}
                 </FlexRow>
                 <Dropzone
-                  textContent={
-                    files.dark ? (
-                      <FlexColumn gap={0} justify="flex-start">
-                        <Text variant="body2" align="left">
-                          File: {files.dark.name}
-                        </Text>
-                        <Text variant="body2" align="left">
-                          Size: {filesize(files.dark.final_size)}
-                        </Text>
-                      </FlexColumn>
-                    ) : undefined
-                  }
+                  onFileAccepted={onFileDarkAccepted}
+                  textContent={getFileDarkText()}
                 />
               </FlexColumn>
             </FlexRow>

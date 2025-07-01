@@ -7,6 +7,10 @@ import { ProcessogramComplete } from "@/components/processograms/ProcessogramCom
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
+import {
+  getDarkProcessogramDetails,
+  getLightProcessogramDetails,
+} from "@/utils/processogram-theme";
 import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
 import { useSetUpdateProcessogramModal } from "modals/UpdateProcessogramModal/hooks";
@@ -101,16 +105,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         is_published: element.is_published,
       },
       files: {
-        light: {
-          original_size: element.original_size_light,
-          final_size: element.final_size_light,
-          name: element.original_name_light,
-        },
-        dark: {
-          original_size: element.original_size_dark,
-          final_size: element.final_size_dark,
-          name: element.original_name_dark,
-        },
+        light: getLightProcessogramDetails(element),
+        dark: getDarkProcessogramDetails(element),
       },
     });
   };

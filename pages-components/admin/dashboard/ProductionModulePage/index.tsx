@@ -15,9 +15,12 @@ import { useGetProductionModuleById } from "@/api/react-query/production-modules
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
 import { useRouter } from "next/router";
-import { Switch } from "@mui/material";
 import { ProcessogramCardSize } from "@/components/Cards/ProcessogramCard/const";
 import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
+import {
+  getDarkProcessogramDetails,
+  getLightProcessogramDetails,
+} from "@/utils/processogram-theme";
 
 type Props = {
   productionModuleId: string;
@@ -180,16 +183,8 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                 {processogramsList.map((element) => (
                   <ProcessogramCard
                     files={{
-                      dark: {
-                        final_size: element.original_size_dark,
-                        name: element.original_name_dark,
-                        original_size: element.original_size_dark,
-                      },
-                      light: {
-                        final_size: element.original_size_light,
-                        name: element.original_name_light,
-                        original_size: element.original_size_light,
-                      },
+                      dark: getDarkProcessogramDetails(element),
+                      light: getLightProcessogramDetails(element),
                     }}
                     key={element._id}
                     _id={element._id}

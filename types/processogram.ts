@@ -15,15 +15,15 @@ export type Processogram = {
   description: string;
   levelName: string;
 
-  original_name_light: string;
+  original_name_light: string | undefined;
   svg_url_light: string;
-  original_size_light: number;
-  final_size_light: number;
+  original_size_light: number | undefined;
+  final_size_light: number | undefined;
 
-  original_name_dark: string;
+  original_name_dark: string | undefined;
   svg_url_dark: string;
-  original_size_dark: number;
-  final_size_dark: number;
+  original_size_dark: number | undefined;
+  final_size_dark: number | undefined;
 
   raster_images:
     | {
@@ -81,15 +81,15 @@ export type ProcessogramById = {
   };
   status: ProcessogramStatus;
 
-  original_name_light: string;
+  original_name_light: string | undefined;
   svg_url_light: string;
-  original_size_light: number;
-  final_size_light: number;
+  original_size_light: number | undefined;
+  final_size_light: number | undefined;
 
-  original_name_dark: string;
+  original_name_dark: string | undefined;
   svg_url_dark: string;
-  original_size_dark: number;
-  final_size_dark: number;
+  original_size_dark: number | undefined;
+  final_size_dark: number | undefined;
 
   originalSize: number;
   finalSize: number;

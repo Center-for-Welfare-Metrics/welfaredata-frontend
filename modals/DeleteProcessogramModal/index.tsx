@@ -38,7 +38,7 @@ const DeleteProcessogramModal = ({
       onClose={onClose}
       title="Delete Processogram"
       centerTitle
-      height="250px"
+      height="350px"
     >
       <Content>
         <FlexColumn gap={1} mt={1}>
