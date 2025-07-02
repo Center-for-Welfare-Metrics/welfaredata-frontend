@@ -1,3 +1,4 @@
+import { ThemeColors } from "theme/globalStyle";
 import { Processogram } from "types/processogram";
 
 type PartialProcessogram = {
@@ -39,4 +40,52 @@ export const getLightProcessogramDetails = (element: PartialProcessogram) => {
   }
 
   return undefined;
+};
+
+type GetSvgThemeParams = {
+  theme: string | undefined;
+  element: {
+    svg_url_dark?: string;
+    svg_url_light?: string;
+  };
+};
+
+export const getSvgUrl = ({ element, theme }: GetSvgThemeParams) => {
+  if (theme === "dark") {
+    return element.svg_url_dark || element.svg_url_light;
+  } else {
+    return element.svg_url_light || element.svg_url_dark;
+  }
+};
+
+export const getBackgroundColor = ({ element, theme }: GetSvgThemeParams) => {
+  if (theme === "dark") {
+    if (!!element.svg_url_dark) return undefined;
+
+    return ThemeColors.fixedBackgroundWhite;
+  }
+
+  if (theme === "light") {
+    if (!!element.svg_url_light) return undefined;
+
+    return ThemeColors.fixedBackgroundBlack;
+  }
+
+  return undefined;
+};
+
+export const getCurrentTheme = ({ element, theme }: GetSvgThemeParams) => {
+  if (theme === "dark") {
+    if (element.svg_url_dark) {
+      return "dark";
+    } else {
+      return "light";
+    }
+  } else {
+    if (element.svg_url_light) {
+      return "light";
+    } else {
+      return "dark";
+    }
+  }
 };

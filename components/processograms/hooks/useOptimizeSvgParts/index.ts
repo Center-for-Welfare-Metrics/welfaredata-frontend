@@ -1,14 +1,14 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useMemo, useRef } from "react";
 import { MAX_LEVEL } from "../../ProcessogramsList/consts";
 import { generateRasterSvgElement } from "./utils";
-import {
-  getLevelNumberById,
-  INVERSE_DICT,
-} from "../../utils/extractInfoFromId";
+import { INVERSE_DICT } from "../../utils/extractInfoFromId";
 import {
   FOCUSED_FILTER,
   UNFOCUSED_FILTER,
 } from "../../ProcessogramComplete/consts";
+import { getCurrentTheme } from "@/utils/processogram-theme";
+import { useTheme } from "next-themes";
+import { useProcessogramTheme } from "../useProcessogramTheme";
 
 type ReplaceWithOptimizedParams = {
   selector: string;
@@ -28,29 +28,48 @@ type OptimizeLevelElementsParams = {
   bruteOptimization?: boolean;
 };
 
-export const useOptimizeSvgParts = (
-  svgElement: SVGGraphicsElement | null,
-  currentSvgElement: RefObject<SVGGraphicsElement | null>,
-  updateSvgElement: (svgElement: SVGGraphicsElement) => void,
-  rasterImages:
-    | {
-        [key: string]: {
-          src: string;
-          width: number;
-          height: number;
-          x: number;
-          y: number;
-        };
-      }
-    | undefined,
-  base64ImagesRef?: RefObject<Map<string, string>>
-) => {
+type RasterImage = {
+  src: string;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+};
+
+type UseOptimizeSvgPartsParams = {
+  svgElement: SVGGraphicsElement | null;
+  currentSvgElement: RefObject<SVGGraphicsElement | null>;
+  updateSvgElement: (svgElement: SVGGraphicsElement) => void;
+  element: {
+    svg_url_dark?: string;
+    svg_url_light?: string;
+  };
+  rasterImages?: {
+    [key: string]: RasterImage;
+  };
+  base64ImagesRef?: RefObject<Map<string, string>>;
+};
+
+export const useOptimizeSvgParts = ({
+  currentSvgElement,
+  svgElement,
+  element,
+  updateSvgElement,
+  base64ImagesRef,
+  rasterImages,
+}: UseOptimizeSvgPartsParams) => {
+  const { resolvedTheme } = useTheme();
+
   const originalGElements = useRef<Map<string, SVGGraphicsElement>>(
     new Map<string, SVGGraphicsElement>()
   );
   const optimizedGElements = useRef<Map<string, SVGGraphicsElement>>(
     new Map<string, SVGGraphicsElement>()
   );
+
+  const { currentTheme } = useProcessogramTheme({
+    element,
+  });
 
   const replaceWithOptimized = useCallback(
     ({
@@ -69,7 +88,7 @@ export const useOptimizeSvgParts = (
           const optimizedG = optimizedGElements.current.get(rootId);
           if (optimizedG) {
             if (applyUnfocusedFilter) {
-              // optimizedG.style.filter = UNFOCUSED_FILTER[theme];
+              optimizedG.style.filter = UNFOCUSED_FILTER[currentTheme];
             }
             currentSvgElement.current.replaceWith(optimizedG);
             updateSvgElement(optimizedG);
@@ -93,7 +112,7 @@ export const useOptimizeSvgParts = (
 
           if (optimizedElement) {
             if (applyUnfocusedFilter) {
-              // optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
+              optimizedElement.style.filter = UNFOCUSED_FILTER[currentTheme];
             }
             currentSvgElement.current.replaceWith(optimizedElement);
             updateSvgElement(optimizedElement);
@@ -120,7 +139,7 @@ export const useOptimizeSvgParts = (
           const optimizedG = optimizedGElements.current.get(id);
           if (optimizedG) {
             if (applyUnfocusedFilter) {
-              // optimizedG.style.filter = UNFOCUSED_FILTER[theme];
+              optimizedG.style.filter = UNFOCUSED_FILTER[currentTheme];
             }
             gElement.replaceWith(optimizedG);
           }
@@ -143,7 +162,7 @@ export const useOptimizeSvgParts = (
 
           if (optimizedElement) {
             if (applyUnfocusedFilter) {
-              // optimizedElement.style.filter = UNFOCUSED_FILTER[theme];
+              optimizedElement.style.filter = UNFOCUSED_FILTER[currentTheme];
             }
             gElement.replaceWith(optimizedElement);
             optimizedGElements.current.set(id, optimizedElement);
@@ -171,7 +190,7 @@ export const useOptimizeSvgParts = (
 
         if (!originalG) return;
 
-        // originalG.style.filter = FOCUSED_FILTER[theme];
+        originalG.style.filter = FOCUSED_FILTER[currentTheme];
 
         currentSvgElement.current.replaceWith(originalG);
         updateSvgElement(originalG);
@@ -196,7 +215,7 @@ export const useOptimizeSvgParts = (
           if (originalG.tagName === "g") continue;
         }
 
-        // originalG.style.filter = FOCUSED_FILTER[theme];
+        originalG.style.filter = FOCUSED_FILTER[currentTheme];
 
         gElement.replaceWith(originalG);
       }

@@ -25,6 +25,7 @@ type Props = {
   ) => [string, ProcessogramHierarchy[]];
   startFromSpecie: boolean;
   isActive: boolean;
+  currentTheme: "dark" | "light";
   disableHover?: boolean;
 };
 
@@ -40,6 +41,7 @@ export const useProcessogramEffects = ({
   getElementIdentifierWithHierarchy,
   startFromSpecie,
   isActive,
+  currentTheme,
   disableHover,
 }: Props) => {
   useEffect(() => {
@@ -59,7 +61,7 @@ export const useProcessogramEffects = ({
       const notHoverElements = svgElement.querySelectorAll(notHover);
 
       gsap.to(notHoverElements, {
-        // filter: UNFOCUSED_FILTER[theme],
+        filter: UNFOCUSED_FILTER[currentTheme],
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
@@ -71,7 +73,7 @@ export const useProcessogramEffects = ({
       const hoverElements = svgElement.querySelectorAll(hoverSelector);
 
       gsap.to(hoverElements, {
-        // filter: FOCUSED_FILTER[theme],
+        filter: FOCUSED_FILTER[currentTheme],
         duration: ANIMATION_DURATION / 2,
         ease: ANIMATION_EASE,
       });
@@ -87,7 +89,7 @@ export const useProcessogramEffects = ({
         const hoverSelector = `[id="${onHover}"]`;
         const hoverElements = svgElement.querySelectorAll(hoverSelector);
         gsap.to(hoverElements, {
-          // filter: FOCUSED_FILTER[theme],
+          filter: FOCUSED_FILTER[currentTheme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
@@ -97,7 +99,7 @@ export const useProcessogramEffects = ({
         const notHoverElement = `[id*="${onHoverKey}"]:not([id="${onHover}"])`;
         const notHoverElements = svgElement.querySelectorAll(notHoverElement);
         gsap.to(notHoverElements, {
-          // filter: UNFOCUSED_FILTER[theme],
+          filter: UNFOCUSED_FILTER[currentTheme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
@@ -113,12 +115,12 @@ export const useProcessogramEffects = ({
         const notHoverSelector = `[id*="${currentLevelId}"]:not([id="${onHover}"]),[id*="${levelID}"]:not([id="${onHover}"])`;
         const notHoverElements = svgElement.querySelectorAll(notHoverSelector);
         gsap.to(notHoverElements, {
-          // filter: UNFOCUSED_FILTER[theme],
+          filter: UNFOCUSED_FILTER[currentTheme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
         gsap.to(onHoverElements, {
-          // filter: FOCUSED_FILTER[theme],
+          filter: FOCUSED_FILTER[currentTheme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });

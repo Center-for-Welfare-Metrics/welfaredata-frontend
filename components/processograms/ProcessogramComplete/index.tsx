@@ -27,6 +27,10 @@ type Props = {
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
   isActive: boolean;
+  element: {
+    svg_url_dark?: string;
+    svg_url_light?: string;
+  };
   enableBruteOptimization?: boolean;
   maxHeight?: string;
   base64ImagesRef?: RefObject<Map<string, string>>;
@@ -41,6 +45,7 @@ export const ProcessogramComplete = ({
   startFromSpecie,
   enableBruteOptimization,
   maxHeight,
+  element,
   eventBusHandler,
   base64ImagesRef,
   isActive,
@@ -57,6 +62,7 @@ export const ProcessogramComplete = ({
       base64ImagesRef,
       isActive,
       disableHover,
+      element,
     });
 
   return (

@@ -71,6 +71,8 @@ const UpdateProcessogramModal = ({
         production_module_id: processogram.production_module_id,
         specie_id: processogram.specie_id,
         is_published: processogram.is_published || false,
+        file_dark: null,
+        file_light: null,
       },
     });
 
@@ -91,12 +93,14 @@ const UpdateProcessogramModal = ({
   const onFileLightAccepted = (file: File) => {
     setValue("file_light", file, {
       shouldValidate: true,
+      shouldDirty: true,
     });
   };
 
   const onFileDarkAccepted = (file: File) => {
     setValue("file_dark", file, {
       shouldValidate: true,
+      shouldDirty: true,
     });
   };
 
@@ -140,6 +144,8 @@ const UpdateProcessogramModal = ({
         </FlexColumn>
       );
     }
+
+    console.log(files);
 
     if (files.light) {
       return (
@@ -189,11 +195,11 @@ const UpdateProcessogramModal = ({
       onClose={onClose}
       title="Update processogram"
       height="650px"
-      // unsavedChanges={{
-      //   enabled: isDirty,
-      //   message:
-      //     "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
-      // }}
+      unsavedChanges={{
+        enabled: isDirty,
+        message:
+          "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
+      }}
     >
       <PublishContainer>
         <Text variant="body2">Publish this processogram</Text>

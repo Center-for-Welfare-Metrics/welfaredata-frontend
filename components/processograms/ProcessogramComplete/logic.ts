@@ -1,4 +1,11 @@
-import { RefObject, useCallback, useEffect, useRef, useState } from "react";
+import {
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ANIMATION_DURATION,
   ANIMATION_EASE,
@@ -23,6 +30,7 @@ import { useProcessogramEventHanders } from "./hooks/useEventHandlers";
 import { useProcessogramEffects } from "./hooks/useEffects";
 import { useProcessogramHelpers } from "./hooks/useHelpers";
 import { FOCUSED_FILTER } from "./consts";
+import { useProcessogramTheme } from "../hooks/useProcessogramTheme";
 
 export type HistoryLevel = {
   [key: number]: {
@@ -36,6 +44,10 @@ type Props = {
   onChange: (id: string, hierarchy: ProcessogramHierarchy[]) => void;
   eventBusHandler: EventBusHandler;
   startFromSpecie: boolean;
+  element: {
+    svg_url_dark?: string;
+    svg_url_light?: string;
+  };
   rasterImages:
     | {
         [key: string]: {
@@ -62,6 +74,7 @@ export const useProcessogramLogic = ({
   isActive,
   base64ImagesRef,
   disableHover,
+  element,
 }: Props) => {
   // Refs
 
@@ -88,13 +101,18 @@ export const useProcessogramLogic = ({
 
   const isReady = useRef<boolean>(false);
 
-  const { optimizeLevelElements } = useOptimizeSvgParts(
+  const { optimizeLevelElements } = useOptimizeSvgParts({
     svgElement,
     currentSvgElement,
     updateSvgElement,
     rasterImages,
-    base64ImagesRef
-  );
+    base64ImagesRef,
+    element,
+  });
+
+  const { currentTheme } = useProcessogramTheme({
+    element,
+  });
 
   const setFullBrightnessToCurrentLevel = useCallback(
     (toPrevious: boolean) => {
@@ -110,13 +128,13 @@ export const useProcessogramLogic = ({
 
       if (toPrevious) {
         gsap.to(currentLevelElements, {
-          // filter: FOCUSED_FILTER[theme],
+          filter: FOCUSED_FILTER[currentTheme],
           duration: ANIMATION_DURATION / 2,
           ease: ANIMATION_EASE,
         });
       } else {
         gsap.set(currentLevelElements, {
-          // filter: FOCUSED_FILTER[theme],
+          filter: FOCUSED_FILTER[currentTheme],
         });
       }
     },
@@ -153,6 +171,7 @@ export const useProcessogramLogic = ({
     svgElement,
     enableBruteOptimization,
     getElementIdentifierWithHierarchy,
+    currentTheme,
   });
 
   const { handleClick, onMouseLeave, onMouseMove } =
@@ -191,6 +210,7 @@ export const useProcessogramLogic = ({
     startFromSpecie,
     isActive,
     disableHover,
+    currentTheme,
   });
 
   return {

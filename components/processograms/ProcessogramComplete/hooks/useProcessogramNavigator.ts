@@ -35,6 +35,7 @@ type Props = {
   getElementIdentifierWithHierarchy: (
     elementId: string
   ) => [string, ProcessogramHierarchy[]];
+  currentTheme: "dark" | "light";
   enableBruteOptimization?: boolean;
 };
 
@@ -48,6 +49,7 @@ export const useProcessogramNavigator = ({
   svgElement,
   currentElementId,
   currentLevel,
+  currentTheme,
   getElementIdentifierWithHierarchy,
 }: Props) => {
   const outOfFocusAnimation = useRef<gsap.core.Tween | null>(null);
@@ -86,7 +88,7 @@ export const useProcessogramNavigator = ({
 
       if (outOfFocusElements.length > 0) {
         outOfFocusAnimation.current = gsap.to(outOfFocusElements, {
-          // filter: UNFOCUSED_FILTER[theme],
+          filter: UNFOCUSED_FILTER[currentTheme],
           // cursor: "default",
           duration: ANIMATION_DURATION,
           ease: ANIMATION_EASE,

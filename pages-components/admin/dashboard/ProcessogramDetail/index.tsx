@@ -8,8 +8,10 @@ import { EventBus } from "@/components/processograms/ProcessogramComplete/types"
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
 import {
+  getBackgroundColor,
   getDarkProcessogramDetails,
   getLightProcessogramDetails,
+  getSvgUrl,
 } from "@/utils/processogram-theme";
 import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
 import { useSetElementDetailsModal } from "modals/ProcessogramDetailsModal/hooks";
@@ -180,30 +182,6 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
 
   if (!element) return <></>;
 
-  const getSvgUrl = () => {
-    if (resolvedTheme === "dark") {
-      return element.svg_url_dark || element.svg_url_light;
-    } else {
-      return element.svg_url_light || element.svg_url_dark;
-    }
-  };
-
-  const getBackgroundColor = () => {
-    if (resolvedTheme === "dark") {
-      if (!!element.svg_url_dark) return undefined;
-
-      return ThemeColors.fixedBackgroundWhite;
-    }
-
-    if (resolvedTheme === "light") {
-      if (!!element.svg_url_light) return undefined;
-
-      return ThemeColors.fixedBackgroundBlack;
-    }
-
-    return undefined;
-  };
-
   return (
     <Container width="100%" gap={0} mt={2}>
       <FlexRow justify="flex-start">
@@ -294,24 +272,16 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   processogram_id={processogram_id}
                 />
               )}
-              {/* {questionsData && (
-                <QuestionsHudContainer>
-                  <ProgressogramQuestionsHud
-                    notReady={element.status === "generating"}
-                    currentElement={
-                      currentElement || getElementNameFromId(element.identifier)
-                    }
-                    data={questionsData?.data ?? {}}
-                  />
-                </QuestionsHudContainer>
-              )} */}
               <FlexColumn
                 height="100%"
                 width="100%"
                 justify="center"
                 style={{
                   overflow: "hidden",
-                  backgroundColor: getBackgroundColor(),
+                  backgroundColor: getBackgroundColor({
+                    theme: resolvedTheme,
+                    element,
+                  }),
                   position: "relative",
                 }}
               >
@@ -332,7 +302,13 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   />
                 </BreadcrumbsContainer>
                 <ProcessogramComplete
-                  src={getSvgUrl()}
+                  src={
+                    getSvgUrl({
+                      element,
+                      theme: resolvedTheme,
+                    }) ?? ""
+                  }
+                  element={element}
                   rasterImages={element.raster_images}
                   enableBruteOptimization={false}
                   onChange={handleChange}
