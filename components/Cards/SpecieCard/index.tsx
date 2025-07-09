@@ -1,13 +1,14 @@
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { SpecieCardSize } from "./const";
 import { Edit, Trash } from "react-feather";
 import { useSetDeleteSpecieModal } from "modals/DeleteSpecieModal/hooks";
 import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
 import { ImageMosaic } from "@/components/ImageMosaic";
+import { useMemo } from "react";
 
 type Props = {
   _id: string;
@@ -17,6 +18,9 @@ type Props = {
   productionModulesCount: number;
   processogramsCount: number;
   processogram_urls: string[] | undefined;
+  disablePermissions?: boolean;
+  redirectToPublicPath?: boolean;
+  fullWidth?: boolean;
 };
 
 export const SpecieCard = ({
@@ -27,6 +31,9 @@ export const SpecieCard = ({
   productionModulesCount,
   description,
   processogram_urls,
+  disablePermissions,
+  redirectToPublicPath,
+  fullWidth,
 }: Props) => {
   const setDeleteSpecieModal = useSetDeleteSpecieModal();
 
@@ -42,6 +49,7 @@ export const SpecieCard = ({
   const setUpdateSpecieModal = useSetUpdateSpecieModal();
 
   const handleUpdate = (e: React.MouseEvent) => {
+    if (pathname === undefined) return;
     e.stopPropagation();
     e.preventDefault();
     setUpdateSpecieModal({
@@ -54,13 +62,29 @@ export const SpecieCard = ({
     });
   };
 
+  const href = useMemo(() => {
+    if (redirectToPublicPath) {
+      return {
+        pathname: "/[pathname]",
+        query: {
+          pathname,
+        },
+      };
+    }
+
+    return {
+      pathname: "/admin/species/[id]",
+      query: {
+        id: _id,
+      },
+    };
+  }, [redirectToPublicPath, _id, pathname]);
+
   return (
     <LinkContainer
-      href={{
-        pathname: "/admin/species/[id]",
-        query: {
-          id: _id,
-        },
+      href={href}
+      style={{
+        width: fullWidth ? "100%" : undefined,
       }}
     >
       {processogram_urls && (
@@ -70,12 +94,12 @@ export const SpecieCard = ({
         </MosaicWrapper>
       )}
       <BackDrop />
-      <Container>
+      <Container $fullWidth={fullWidth}>
         <FlexRow justify="space-between">
           <Info>
             <FlexColumn gap={0}>
               <Text variant="body2">{name}</Text>
-              <Text variant="body2">/{pathname}</Text>
+              {pathname && <Text variant="body2">/{pathname}</Text>}
             </FlexColumn>
           </Info>
           <Info>
@@ -87,16 +111,18 @@ export const SpecieCard = ({
             </FlexColumn>
           </Info>
         </FlexRow>
-        <ActionButtons>
-          <FlexRow>
-            <IconWrapper onClick={handleUpdate}>
-              <Edit color={ThemeColors.white} size={16} />
-            </IconWrapper>
-            <IconWrapper onClick={handleDelete}>
-              <Trash color={ThemeColors.red} size={16} />
-            </IconWrapper>
-          </FlexRow>
-        </ActionButtons>
+        {!disablePermissions && (
+          <ActionButtons>
+            <FlexRow>
+              <IconWrapper onClick={handleUpdate}>
+                <Edit color={ThemeColors.white} size={16} />
+              </IconWrapper>
+              <IconWrapper onClick={handleDelete}>
+                <Trash color={ThemeColors.red} size={16} />
+              </IconWrapper>
+            </FlexRow>
+          </ActionButtons>
+        )}
       </Container>
     </LinkContainer>
   );
@@ -146,9 +172,22 @@ const Info = styled.div`
   background-color: ${ThemeColors.black};
 `;
 
-const Container = styled.div`
-  width: ${SpecieCardSize.width}px;
-  height: ${SpecieCardSize.height}px;
+type ContainerProps = {
+  $fullWidth?: boolean;
+};
+
+const Container = styled.div<ContainerProps>`
+  ${({ $fullWidth }) =>
+    $fullWidth
+      ? css`
+          width: 100%;
+          height: ${SpecieCardSize.height * 1.5}px;
+        `
+      : css`
+          width: ${SpecieCardSize.width}px;
+          height: ${SpecieCardSize.height}px;
+        `}
+
   border-radius: 4px;
   border: 1px solid ${ThemeColors.grey_300};
   padding: 1rem;

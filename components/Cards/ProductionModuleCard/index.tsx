@@ -1,13 +1,14 @@
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ProductionModuleCardSize } from "./const";
 import { useSetDeleteProductionModuleModal } from "modals/DeleteProductionModuleModal/hooks";
 import { useSetUpdateProductionModuleModal } from "modals/UpdateProductionModuleModal/hooks";
 import { Edit, Trash } from "react-feather";
 import { ImageMosaic } from "@/components/ImageMosaic";
+import { useMemo } from "react";
 
 type Props = {
   _id: string;
@@ -16,6 +17,10 @@ type Props = {
   description: string | undefined;
   processogramsCount: number;
   processograms_urls: string[] | undefined;
+  pathname?: string;
+  disablePermissions?: boolean;
+  redirectToPublicPath?: boolean;
+  halfWidth?: boolean;
 };
 
 export const ProductionModuleCard = ({
@@ -25,6 +30,10 @@ export const ProductionModuleCard = ({
   specie_id,
   processogramsCount,
   processograms_urls,
+  pathname,
+  disablePermissions,
+  redirectToPublicPath,
+  halfWidth,
 }: Props) => {
   const setDeleteProductionModule = useSetDeleteProductionModuleModal();
 
@@ -52,13 +61,30 @@ export const ProductionModuleCard = ({
     });
   };
 
-  return (
-    <LinkContainer
-      href={{
-        pathname: "/admin/production_modules/[id]",
+  const href = useMemo(() => {
+    if (pathname && redirectToPublicPath) {
+      return {
+        pathname: "/[pathname]/[id]",
         query: {
+          pathname,
           id: _id,
         },
+      };
+    }
+
+    return {
+      pathname: "/admin/production_modules/[id]",
+      query: {
+        id: _id,
+      },
+    };
+  }, [redirectToPublicPath, _id, pathname]);
+
+  return (
+    <LinkContainer
+      href={href}
+      style={{
+        width: halfWidth ? "50%" : undefined,
       }}
     >
       {processograms_urls && (
@@ -68,7 +94,7 @@ export const ProductionModuleCard = ({
         </MosaicWrapper>
       )}
       <BackDrop />
-      <Container>
+      <Container $halfWidth={halfWidth}>
         <FlexRow justify="space-between">
           <Info>
             <FlexColumn gap={0}>
@@ -81,16 +107,18 @@ export const ProductionModuleCard = ({
             </FlexColumn>
           </Info>
         </FlexRow>
-        <ActionButtons>
-          <FlexRow>
-            <IconWrapper onClick={handleUpdate}>
-              <Edit color={ThemeColors.white} size={16} />
-            </IconWrapper>
-            <IconWrapper onClick={handleDelete}>
-              <Trash color={ThemeColors.red} size={16} />
-            </IconWrapper>
-          </FlexRow>
-        </ActionButtons>
+        {!disablePermissions && (
+          <ActionButtons>
+            <FlexRow>
+              <IconWrapper onClick={handleUpdate}>
+                <Edit color={ThemeColors.white} size={16} />
+              </IconWrapper>
+              <IconWrapper onClick={handleDelete}>
+                <Trash color={ThemeColors.red} size={16} />
+              </IconWrapper>
+            </FlexRow>
+          </ActionButtons>
+        )}
       </Container>
     </LinkContainer>
   );
@@ -140,9 +168,22 @@ const Info = styled.div`
   background-color: ${ThemeColors.black};
 `;
 
-const Container = styled.div`
-  width: ${ProductionModuleCardSize.width}px;
-  height: ${ProductionModuleCardSize.height}px;
+type ContainerProps = {
+  $halfWidth?: boolean;
+};
+
+const Container = styled.div<ContainerProps>`
+  ${({ $halfWidth }) =>
+    $halfWidth
+      ? css`
+          width: 100%;
+          height: ${ProductionModuleCardSize.height * 1.5}px;
+        `
+      : css`
+          width: ${ProductionModuleCardSize.width}px;
+          height: ${ProductionModuleCardSize.height}px;
+        `}
+
   border-radius: 4px;
   border: 1px solid ${ThemeColors.grey_300};
   padding: 1rem;

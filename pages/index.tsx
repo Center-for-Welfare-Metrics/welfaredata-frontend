@@ -1,14 +1,50 @@
-import onlyGuest from '@/components/HOC/only-guest'
-import Router from 'next/router'
-import { useEffect } from 'react'
+import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicElements";
+import { SpecieCard } from "@/components/Cards/SpecieCard";
+import { FlexRow } from "@/components/desing-components/Flex";
+import styled from "styled-components";
+import { Specie } from "types/species";
 
-const Home = () => {
+type HomeProps = {
+  species: Specie[];
+};
 
-  useEffect(()=>{
-    Router.push('/login')
-  },[])
+const Home = ({ species }: HomeProps) => {
+  return (
+    <Container>
+      <FlexRow justify="flex-start" flexWrap="wrap">
+        {species.map((specie) => (
+          <SpecieCard
+            key={specie._id}
+            _id={specie._id}
+            name={specie.name}
+            description={specie.description}
+            pathname={specie.pathname}
+            processogram_urls={specie.processograms_urls}
+            productionModulesCount={specie.productionModulesCount}
+            processogramsCount={specie.processogramsCount}
+            fullWidth
+            disablePermissions
+            redirectToPublicPath
+          />
+        ))}
+      </FlexRow>
+    </Container>
+  );
+};
 
-  return <></>
-}
+const Container = styled.div`
+  padding: 2rem;
+`;
 
-export default onlyGuest(Home)
+export const getStaticProps = async () => {
+  const speciesData = await getPublicSpeciesList();
+
+  return {
+    props: {
+      species: speciesData,
+    },
+    revalidate: 60, // Revalidate every 24 hours
+  };
+};
+
+export default Home;
