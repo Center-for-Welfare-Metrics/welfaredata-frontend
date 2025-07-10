@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Modals } from "modals";
 import { ThemeProvider } from "next-themes";
+import { PublicNavbarNavigation } from "@/components/PublicNavbarNavigation";
+import { useWhereIs } from "@/utils/hooks/useWhereIs";
 
 type ApplicationProps = {
   children: React.ReactNode;
@@ -21,10 +23,20 @@ const Application = ({ children }: ApplicationProps) => {
 
   const { pathname } = useRouter();
 
+  const { isExactPath, pathStartsWith } = useWhereIs();
+
   const logOut = () => {
     authApi.logout().then(() => {
       setUser(null);
     });
+  };
+
+  const shouldHidePublicNavBar = () => {
+    if (isExactPath("/login")) return true;
+
+    if (pathStartsWith("/admin")) return true;
+
+    return false;
   };
 
   const userValue: IUserContext = { user, setUser, logOut };
@@ -70,7 +82,6 @@ const Application = ({ children }: ApplicationProps) => {
           rel="stylesheet"
         />
       </Head>
-
       <GlobalStyles />
       <UserContext.Provider value={userValue}>
         <Toaster
@@ -78,6 +89,7 @@ const Application = ({ children }: ApplicationProps) => {
           reverseOrder={false}
           toastOptions={{ duration: 5000 }}
         />
+        {!shouldHidePublicNavBar() && <PublicNavbarNavigation />}
         {children}
         <Modals />
       </UserContext.Provider>

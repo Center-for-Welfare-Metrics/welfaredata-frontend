@@ -67,6 +67,7 @@ interface TextProps extends React.ComponentPropsWithoutRef<"span"> {
   fontStyle?: CSSProperties["fontStyle"];
   letterSpacing?: CSSProperties["letterSpacing"];
   cursor?: CSSProperties["cursor"];
+  maxLines?: number;
 }
 
 export const Text = ({
@@ -89,6 +90,7 @@ export const Text = ({
   fontStyle,
   letterSpacing,
   cursor,
+  maxLines,
   ...rest
 }: TextProps) => {
   return (
@@ -113,6 +115,7 @@ export const Text = ({
       $letterSpacing={letterSpacing}
       title={textElipsis ? (children as string) : undefined}
       $cursor={cursor}
+      $maxLines={maxLines}
       {...rest}
     >
       {children}
@@ -136,6 +139,7 @@ type TextStyledProps = {
   $fontStyle?: CSSProperties["fontStyle"];
   $letterSpacing?: CSSProperties["letterSpacing"];
   $cursor?: CSSProperties["cursor"];
+  $maxLines?: number;
 };
 
 const TextStyled = styled.span<TextStyledProps>`
@@ -225,5 +229,15 @@ const TextStyled = styled.span<TextStyledProps>`
     $cursor &&
     css`
       cursor: ${$cursor};
+    `}
+
+    ${({ $maxLines }) =>
+    $maxLines &&
+    css`
+      display: -webkit-box;
+      -webkit-line-clamp: ${$maxLines};
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     `}
 `;

@@ -263,6 +263,7 @@ export const ProcessogramLoader = ({
     >
       <SvgContainer ref={svgContainerRef} style={overStyle}>
         <ProcessogramComplete
+          element={element}
           src={element.svg_url_dark}
           onClose={onClose}
           onChange={onChange}

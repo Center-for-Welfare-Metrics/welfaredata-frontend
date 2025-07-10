@@ -1,6 +1,7 @@
 import { getProductionModulesByPathname } from "@/api/react-query/public/useGetPublicElements";
-import { ProductionModuleCard } from "@/components/Cards/ProductionModuleCard";
-import { FlexRow } from "@/components/desing-components/Flex";
+import { PublicProductionModuleCard } from "@/components/Cards/ProductionModuleCard/PublicCard";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { Text } from "@/components/Text";
 import { GetStaticPropsContext } from "next";
 import { useParams } from "next/navigation";
 import styled from "styled-components";
@@ -14,21 +15,23 @@ const SpeciesPage = ({ productionModules }: HomeProps) => {
   const { pathname } = useParams<{ pathname: string }>();
 
   return (
-    <Container>
-      <FlexRow justify="flex-start" flexWrap="wrap">
+    <Container gap={2}>
+      <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
+        <Text variant="h1">Choose a module to explore</Text>
+        <Text variant="body1">
+          Select a module to view its production systems and details.
+        </Text>
+      </FlexColumn>
+      <FlexRow justify="flex-start" flexWrap="wrap" gap={1}>
         {productionModules.map((productionModule) => (
-          <ProductionModuleCard
+          <PublicProductionModuleCard
             key={productionModule._id}
             _id={productionModule._id}
             name={productionModule.name}
             description={productionModule.description}
             processogramsCount={productionModule.processogramsCount}
             processograms_urls={productionModule.processograms_urls}
-            specie_id={productionModule.specie_id}
             pathname={pathname}
-            disablePermissions
-            redirectToPublicPath
-            halfWidth
           />
         ))}
       </FlexRow>
@@ -36,7 +39,7 @@ const SpeciesPage = ({ productionModules }: HomeProps) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled(FlexColumn)`
   padding: 2rem;
 `;
 

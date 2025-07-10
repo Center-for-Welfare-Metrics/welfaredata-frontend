@@ -1,6 +1,9 @@
 import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicElements";
 import { SpecieCard } from "@/components/Cards/SpecieCard";
-import { FlexRow } from "@/components/desing-components/Flex";
+import { PublicSpecieCard } from "@/components/Cards/SpecieCard/PublicCard";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { PublicNavbarNavigation } from "@/components/PublicNavbarNavigation";
+import { Text } from "@/components/Text";
 import styled from "styled-components";
 import { Specie } from "types/species";
 
@@ -10,30 +13,39 @@ type HomeProps = {
 
 const Home = ({ species }: HomeProps) => {
   return (
-    <Container>
-      <FlexRow justify="flex-start" flexWrap="wrap">
-        {species.map((specie) => (
-          <SpecieCard
-            key={specie._id}
-            _id={specie._id}
-            name={specie.name}
-            description={specie.description}
-            pathname={specie.pathname}
-            processogram_urls={specie.processograms_urls}
-            productionModulesCount={specie.productionModulesCount}
-            processogramsCount={specie.processogramsCount}
-            fullWidth
-            disablePermissions
-            redirectToPublicPath
-          />
-        ))}
-      </FlexRow>
-    </Container>
+    <>
+      <Container gap={2}>
+        <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
+          <Text variant="h1">Choose a species to explore</Text>
+          <Text variant="body1">
+            Select a species to view its production modules and processograms.
+          </Text>
+        </FlexColumn>
+        <CardsList justify="flex-start" flexWrap="wrap" gap={1}>
+          {species.map((specie) => (
+            <PublicSpecieCard
+              key={specie._id}
+              name={specie.name}
+              pathname={specie.pathname}
+              description={specie.description}
+              processogram_urls={specie.processograms_urls}
+              productionModulesCount={specie.productionModulesCount}
+              processogramsCount={specie.processogramsCount}
+            />
+          ))}
+        </CardsList>
+      </Container>
+    </>
   );
 };
 
-const Container = styled.div`
+const CardsList = styled(FlexRow)`
+  box-sizing: border-box;
+`;
+
+const Container = styled(FlexColumn)`
   padding: 2rem;
+  box-sizing: border-box;
 `;
 
 export const getStaticProps = async () => {
