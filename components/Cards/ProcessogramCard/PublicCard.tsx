@@ -3,28 +3,30 @@ import { Text } from "@/components/Text";
 import Link from "next/link";
 import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
-import { SpecieCardSize } from "./const";
-import { ImageMosaic } from "@/components/ImageMosaic";
+import { ProcessogramCardSize } from "./const";
 import { useMemo, useState } from "react";
-import { Package, Target, Wind } from "react-feather";
+import { Target } from "react-feather";
+import { ImageMosaic } from "@/components/ImageMosaic";
 import { useTheme } from "next-themes";
 
 type Props = {
+  _id: string;
   name: string;
   pathname: string;
-  description: string;
-  productionModulesCount: number;
-  processogramsCount: number;
-  processogram_urls: string[] | undefined;
+  slug: string;
+  processogramSlug: string;
+  description: string | undefined;
+  image_url: string | undefined;
 };
 
-export const PublicSpecieCard = ({
-  name,
+export const PublicProcessogramCard = ({
+  _id,
   pathname,
+  slug,
+  processogramSlug,
+  name,
+  image_url,
   description,
-  processogramsCount,
-  productionModulesCount,
-  processogram_urls,
 }: Props) => {
   const { resolvedTheme } = useTheme();
 
@@ -42,12 +44,14 @@ export const PublicSpecieCard = ({
 
   const href = useMemo(() => {
     return {
-      pathname: "/[pathname]",
+      pathname: "/[pathname]/[slug]/[processogram]",
       query: {
         pathname,
+        slug: slug,
+        processogram: processogramSlug,
       },
     };
-  }, [pathname]);
+  }, [slug, pathname]);
 
   return (
     <LinkContainer
@@ -55,10 +59,10 @@ export const PublicSpecieCard = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {processogram_urls && (
+      {image_url && (
         <MosaicWrapper>
           {" "}
-          <ImageMosaic urls={processogram_urls} enableAnimation={isMouseOver} />
+          <ImageMosaic urls={[image_url]} enableAnimation={isMouseOver} />
         </MosaicWrapper>
       )}
       <Container>
@@ -66,7 +70,7 @@ export const PublicSpecieCard = ({
           <Info>
             <FlexColumn gap={0}>
               <FlexRow justify="flex-start" align="center">
-                <Wind size={16} color={ThemeColors.grey_900} />
+                <Target size={16} color={ThemeColors.grey_900} />
                 <Text variant="body1" fontWeight="700">
                   {name}
                 </Text>
@@ -79,22 +83,6 @@ export const PublicSpecieCard = ({
               >
                 {description}
               </Text>
-            </FlexColumn>
-          </Info>
-          <Info>
-            <FlexColumn gap={0}>
-              <FlexRow justify="flex-start" align="center">
-                <Package size={12} color={ThemeColors.grey_900} />
-                <Text variant="caption" color="grey_900">
-                  {productionModulesCount} modules
-                </Text>
-              </FlexRow>
-              <FlexRow justify="flex-start" align="center">
-                <Target size={12} color={ThemeColors.grey_900} />
-                <Text variant="caption" color="grey_900">
-                  {processogramsCount} processograms
-                </Text>
-              </FlexRow>
             </FlexColumn>
           </Info>
         </InfoWrapper>
@@ -132,7 +120,7 @@ const InfoWrapper = styled(FlexColumn)<InfoWrapperProps>`
 
 const Container = styled.div`
   width: 100%;
-  height: ${SpecieCardSize.height * 2}px;
+  height: ${ProcessogramCardSize.height * 2}px;
   position: relative;
   cursor: pointer;
   display: flex;
@@ -147,28 +135,24 @@ const LinkContainer = styled(Link)`
   text-decoration: none;
   border: 1px solid ${ThemeColors.grey_300};
   border-radius: 8px;
+
   overflow: hidden;
 
   transition: transform 0.25s ease-in-out;
 
   box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
 
   &:hover {
     transform: scale(1.02);
   }
 
-  width: calc(50% - 0.5rem);
+  width: 100%;
 
   @media (min-width: 2000px) {
-    width: calc(33.33% - 0.5rem);
+    width: calc(50% - 0.5rem);
   }
 
   @media (min-width: 3000px) {
-    width: calc(20% - 0.5rem);
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
+    width: calc(33% - 0.5rem);
   }
 `;

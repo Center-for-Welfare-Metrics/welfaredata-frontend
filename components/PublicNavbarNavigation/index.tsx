@@ -6,41 +6,66 @@ import { ThemeColors } from "theme/globalStyle";
 import React from "react";
 import { ThemeToggler } from "../ThemeToggler";
 import { useWhereIs } from "@/utils/hooks/useWhereIs";
+import { Package, Target, Wind } from "react-feather";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 
-const items = ["Species", "Modules", "Production"];
+const items = ["species", "modules", "production"] as const;
+
+type Item = (typeof items)[number];
+
+const LabelMap: Record<Item, string> = {
+  species: "Species",
+  modules: "Modules",
+  production: "Production Systems",
+};
+
+const IconMap: Record<
+  Item,
+  React.ComponentType<{ size: number; color: string }>
+> = {
+  species: Wind,
+  modules: Package,
+  production: Target,
+};
 
 export const PublicNavbarNavigation = () => {
   const { isHomePage, isExactPath } = useWhereIs();
 
-  const checkIfItemIsActive = (item: string) => {
-    if (item === "Species") {
+  const { pathname, slug } = useParams<{
+    pathname: string | undefined;
+    slug: string | undefined;
+  }>();
+
+  const checkIfItemIsActive = (item: Item) => {
+    if (item === "species") {
       return isHomePage();
     }
 
-    if (item === "Modules") {
+    if (item === "modules") {
       return isExactPath("/[pathname]");
     }
 
-    if (item === "Production") {
+    if (item === "production") {
       return isExactPath("/[pathname]/[slug]");
     }
 
     return false;
   };
 
-  const checkIfItemIsHighlighted = (item: string) => {
-    if (item === "Species") {
+  const checkIfItemIsHighlighted = (item: Item) => {
+    if (item === "species") {
       return isExactPath("/[pathname]") || isExactPath("/[pathname]/[slug]");
     }
 
-    if (item === "Modules") {
+    if (item === "modules") {
       return isExactPath("/[pathname]/[slug]");
     }
 
     return false;
   };
 
-  const getItemColor = (item: string) => {
+  const getItemColor = (item: Item) => {
     if (checkIfItemIsActive(item)) {
       return ThemeColors.blue;
     }
@@ -50,35 +75,79 @@ export const PublicNavbarNavigation = () => {
     return ThemeColors.grey_300;
   };
 
+  const Icon = ({ item }: { item: Item }) => {
+    const IconComponent = IconMap[item];
+
+    if (!IconComponent) {
+      return <></>;
+    }
+
+    return <IconComponent size={22} color={getItemColor(item)} />;
+  };
+
+  const renderNavigationItem = (item: Item, children: React.ReactNode) => {
+    if (item === "species") {
+      if (checkIfItemIsHighlighted(item)) {
+        return (
+          <LinkContainer
+            href={{
+              pathname: "/",
+            }}
+          >
+            {children}
+          </LinkContainer>
+        );
+      }
+    } else if (item === "modules") {
+      if (checkIfItemIsHighlighted(item) && pathname) {
+        return (
+          <LinkContainer
+            href={{
+              pathname: "/[pathname]",
+              query: { pathname },
+            }}
+          >
+            {children}
+          </LinkContainer>
+        );
+      }
+    } else if (item === "production") {
+      if (checkIfItemIsHighlighted(item) && pathname && slug) {
+        return (
+          <LinkContainer
+            href={{
+              pathname: "/[pathname]/[slug]",
+              query: { pathname, slug },
+            }}
+          >
+            {children}
+          </LinkContainer>
+        );
+      }
+    }
+
+    return children;
+  };
+
   return (
     <Container>
       <FlexRow gap={1.5} align="center" justify="flex-start">
         {items.map((item, index) => (
           <React.Fragment key={item}>
-            <Item>
-              <RoundedBox
-                style={{
-                  borderColor: getItemColor(item),
-                }}
-              >
+            {renderNavigationItem(
+              item,
+              <Item>
+                <Icon item={item} />
                 <Text
                   variant="body2"
+                  fontWeight="700"
                   customColor={getItemColor(item)}
-                  style={{
-                    height: "22px",
-                  }}
                 >
-                  {index + 1}
+                  {LabelMap[item]}
                 </Text>
-              </RoundedBox>
-              <Text
-                variant="body2"
-                fontWeight="700"
-                customColor={getItemColor(item)}
-              >
-                {item}
-              </Text>
-            </Item>
+              </Item>
+            )}
+
             {items.length - 1 > index && <ArrowRight size={18} />}
           </React.Fragment>
         ))}
@@ -87,16 +156,6 @@ export const PublicNavbarNavigation = () => {
     </Container>
   );
 };
-
-const RoundedBox = styled.div`
-  border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 2px solid ${ThemeColors.grey_300};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const Item = styled(FlexRow)``;
 
@@ -113,4 +172,9 @@ const Container = styled(FlexRow)`
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+`;
+
+const LinkContainer = styled(Link)`
+  position: relative;
+  text-decoration: none;
 `;

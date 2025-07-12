@@ -3,12 +3,11 @@ import {
   getPublicProcessograms,
 } from "@/api/react-query/public/useGetPublicElements";
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
-import { FlexRow } from "@/components/desing-components/Flex";
-import {
-  getDarkProcessogramDetails,
-  getLightProcessogramDetails,
-} from "@/utils/processogram-theme";
+import { PublicProcessogramCard } from "@/components/Cards/ProcessogramCard/PublicCard";
+import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
+import { Text } from "@/components/Text";
 import { GetStaticPropsContext } from "next";
+import { useParams } from "next/navigation";
 import styled from "styled-components";
 import { Processogram } from "types/processogram";
 
@@ -17,26 +16,30 @@ type HomeProps = {
 };
 
 const ModulePage = ({ processograms }: HomeProps) => {
+  const { pathname, slug } = useParams<{ pathname: string; slug: string }>();
+
   return (
     <Container>
+      <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
+        <Text variant="h1">Choose a production system to explore</Text>
+        <Text variant="body1">
+          Select a production system to view its details, medias, and AI
+          insights.
+        </Text>
+      </FlexColumn>
       <FlexRow justify="flex-start" flexWrap="wrap">
         {processograms.map((processogram) => (
-          <ProcessogramCard
-            files={{
-              dark: getDarkProcessogramDetails(processogram),
-              light: getLightProcessogramDetails(processogram),
-            }}
+          <PublicProcessogramCard
             key={processogram._id}
             _id={processogram._id}
-            name={processogram.name}
             description={processogram.description}
-            production_module_id={processogram.production_module_id}
-            specie_id={processogram.specie_id}
-            status={processogram.status}
-            is_published={processogram.is_published}
+            name={processogram.name}
+            pathname={pathname}
+            slug={slug}
             image_url={
               processogram.raster_images?.[processogram.identifier].src
             }
+            processogramSlug="lorem"
           />
         ))}
       </FlexRow>
@@ -44,7 +47,7 @@ const ModulePage = ({ processograms }: HomeProps) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled(FlexColumn)`
   padding: 2rem;
 `;
 
