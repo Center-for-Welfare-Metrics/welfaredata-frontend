@@ -58,9 +58,18 @@ const Login = ({
           Login
         </Button>
       </Form>
-      <LinkTo>
-        Don't have an account?<Link href="/register">Register now!</Link>
-      </LinkTo>
+      {/* <LinkTo>
+        Don't have an account?
+        <Link
+          href="/register"
+          style={{
+            opacity: 0.5,
+            pointerEvents: "none",
+          }}
+        >
+          Register now!
+        </Link>
+      </LinkTo> */}
     </Container>
   );
 };

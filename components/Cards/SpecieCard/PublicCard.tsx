@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { SpecieCardSize } from "./const";
 import { ImageMosaic } from "@/components/ImageMosaic";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { limitText } from "@/utils/string";
 import { Package, Target, Wind } from "react-feather";
 import { useTheme } from "next-themes";
@@ -31,6 +31,16 @@ export const PublicSpecieCard = ({
 
   const isDarkMode = resolvedTheme === "dark";
 
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const onMouseEnter = () => {
+    setIsMouseOver(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsMouseOver(false);
+  };
+
   const href = useMemo(() => {
     return {
       pathname: "/[pathname]",
@@ -41,11 +51,15 @@ export const PublicSpecieCard = ({
   }, [pathname]);
 
   return (
-    <LinkContainer href={href}>
+    <LinkContainer
+      href={href}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {processogram_urls && (
         <MosaicWrapper>
           {" "}
-          <ImageMosaic urls={processogram_urls} className="mosaic" />
+          <ImageMosaic urls={processogram_urls} enableAnimation={isMouseOver} />
         </MosaicWrapper>
       )}
       <Container>
@@ -130,10 +144,6 @@ const Container = styled.div`
 `;
 
 const LinkContainer = styled(Link)`
-  .mosaic {
-    opacity: 1;
-  }
-
   position: relative;
   text-decoration: none;
   border: 1px solid ${ThemeColors.grey_300};

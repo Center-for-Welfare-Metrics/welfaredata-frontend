@@ -5,12 +5,13 @@ import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { ProductionModuleCardSize } from "./const";
 import { ImageMosaic } from "@/components/ImageMosaic";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import { Package, Target } from "react-feather";
 
 type Props = {
   _id: string;
+  slug: string;
   name: string;
   description: string | undefined;
   processogramsCount: number;
@@ -20,6 +21,7 @@ type Props = {
 
 export const PublicProductionModuleCard = ({
   _id,
+  slug,
   name,
   description,
   processogramsCount,
@@ -30,22 +32,39 @@ export const PublicProductionModuleCard = ({
 
   const isDarkMode = resolvedTheme === "dark";
 
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
+  const onMouseEnter = () => {
+    setIsMouseOver(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsMouseOver(false);
+  };
+
   const href = useMemo(() => {
     return {
-      pathname: "/[pathname]/[id]",
+      pathname: "/[pathname]/[slug]",
       query: {
         pathname,
-        id: _id,
+        slug: slug,
       },
     };
-  }, [_id, pathname]);
+  }, [slug, pathname]);
 
   return (
-    <LinkContainer href={href}>
+    <LinkContainer
+      href={href}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       {processograms_urls && (
         <MosaicWrapper>
           {" "}
-          <ImageMosaic urls={processograms_urls} className="mosaic" />
+          <ImageMosaic
+            urls={processograms_urls}
+            enableAnimation={isMouseOver}
+          />
         </MosaicWrapper>
       )}
       <Container>
@@ -124,10 +143,6 @@ const Container = styled.div`
 `;
 
 const LinkContainer = styled(Link)`
-  .mosaic {
-    opacity: 1;
-  }
-
   position: relative;
   text-decoration: none;
   border: 1px solid ${ThemeColors.grey_300};

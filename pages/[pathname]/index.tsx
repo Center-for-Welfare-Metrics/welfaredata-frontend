@@ -27,6 +27,7 @@ const SpeciesPage = ({ productionModules }: HomeProps) => {
           <PublicProductionModuleCard
             key={productionModule._id}
             _id={productionModule._id}
+            slug={productionModule.slug}
             name={productionModule.name}
             description={productionModule.description}
             processogramsCount={productionModule.processogramsCount}
@@ -59,7 +60,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     props: {
       productionModules: productionModules,
     },
-    revalidate: 60, // Revalidate every 24 hours
+    revalidate: 60,
   };
 }
 

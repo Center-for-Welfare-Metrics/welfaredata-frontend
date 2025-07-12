@@ -9,7 +9,6 @@ export const useWhereIs = () => {
   };
 
   const isExactPath = (path: string) => {
-    console.log(pathname);
     return pathname === path || asPath === path;
   };
 

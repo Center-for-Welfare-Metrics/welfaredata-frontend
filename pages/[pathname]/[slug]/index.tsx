@@ -1,4 +1,7 @@
-import { getProductionModulesByPathname } from "@/api/react-query/public/useGetPublicElements";
+import {
+  getProductionModulesByPathname,
+  getPublicProcessograms,
+} from "@/api/react-query/public/useGetPublicElements";
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
 import { FlexRow } from "@/components/desing-components/Flex";
 import {
@@ -53,15 +56,21 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const { pathname } = context.params as { pathname: string };
+  const { pathname, slug } = context.params as {
+    pathname: string;
+    slug: string;
+  };
 
-  const productionModules = await getProductionModulesByPathname({ pathname });
+  const processograms = await getPublicProcessograms({
+    specie: pathname,
+    productionModule: slug,
+  });
 
   return {
     props: {
-      productionModules: productionModules,
+      processograms: processograms,
     },
-    revalidate: 60, // Revalidate every 24 hours
+    revalidate: 60,
   };
 }
 

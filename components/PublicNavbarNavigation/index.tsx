@@ -22,7 +22,7 @@ export const PublicNavbarNavigation = () => {
     }
 
     if (item === "Production") {
-      return isExactPath("/[pathname]/[id]");
+      return isExactPath("/[pathname]/[slug]");
     }
 
     return false;
@@ -30,11 +30,11 @@ export const PublicNavbarNavigation = () => {
 
   const checkIfItemIsHighlighted = (item: string) => {
     if (item === "Species") {
-      return isExactPath("/[pathname]") || isExactPath("/[pathname]/[id]");
+      return isExactPath("/[pathname]") || isExactPath("/[pathname]/[slug]");
     }
 
     if (item === "Modules") {
-      return isExactPath("/[pathname]/[id]");
+      return isExactPath("/[pathname]/[slug]");
     }
 
     return false;

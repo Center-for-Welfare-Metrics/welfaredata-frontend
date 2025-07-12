@@ -34,6 +34,8 @@ const Application = ({ children }: ApplicationProps) => {
   const shouldHidePublicNavBar = () => {
     if (isExactPath("/login")) return true;
 
+    if (isExactPath("/register")) return true;
+
     if (pathStartsWith("/admin")) return true;
 
     return false;

@@ -7,6 +7,7 @@ import UserContext from "@/context/user";
 import { passwordStrength as checkPasswordStrength } from "check-password-strength";
 import Head from "next/head";
 import { PasswordStrength } from "@/components/miscellaneous/strong-password-bar";
+import { useRouter } from "next/router";
 
 const Validator = require("validatorjs");
 
@@ -30,6 +31,8 @@ const RegisterPage = () => {
   const [onFetch, setOnFetch] = useState<boolean>(false);
 
   const { setUser } = useContext(UserContext);
+
+  const router = useRouter();
 
   const [passwordStrength, setPasswordStrength] = useState<
     PasswordStrength | ""
@@ -79,6 +82,10 @@ const RegisterPage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    router.replace("/login");
+  }, []);
 
   return (
     <>

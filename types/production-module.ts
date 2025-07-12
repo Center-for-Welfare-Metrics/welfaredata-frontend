@@ -1,5 +1,6 @@
 export type ProductionModule = {
   name: string;
+  slug: string;
   description: string;
   specie_id: string;
   processogramsCount: number;

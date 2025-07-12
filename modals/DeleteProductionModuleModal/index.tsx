@@ -37,7 +37,7 @@ const DeleteProductionModuleModal = ({
       onClose={onClose}
       title="Delete Production Module"
       centerTitle
-      height="250px"
+      height="300px"
     >
       <Content>
         <FlexColumn gap={1} mt={1}>

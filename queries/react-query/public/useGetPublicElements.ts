@@ -6,6 +6,7 @@ import { ProductionModule } from "types/production-module";
 
 type GetPublicElementsParams = {
   specie: string;
+  productionModule: string;
 };
 
 export const getPublicProcessograms = async (
