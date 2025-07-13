@@ -177,4 +177,10 @@ const Container = styled(FlexRow)`
 const LinkContainer = styled(Link)`
   position: relative;
   text-decoration: none;
+
+  transition: transform 0.25s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 `;

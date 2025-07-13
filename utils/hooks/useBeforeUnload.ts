@@ -29,8 +29,6 @@ export const useBeforeUnload = (
       return;
     }
 
-    console.log("desgraça");
-
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {

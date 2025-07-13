@@ -39,7 +39,7 @@ const ModulePage = ({ processograms }: HomeProps) => {
             image_url={
               processogram.raster_images?.[processogram.identifier].src
             }
-            processogramSlug="lorem"
+            processogramSlug={processogram.slug}
           />
         ))}
       </FlexRow>

@@ -12,6 +12,7 @@ export type Processogram = {
   specie_id: string;
   production_module_id: string;
   name: string;
+  slug: string;
   description: string;
   levelName: string;
 
