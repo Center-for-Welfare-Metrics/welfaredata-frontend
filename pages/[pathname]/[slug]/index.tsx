@@ -1,7 +1,7 @@
 import {
   getProductionModulesByPathname,
   getPublicProcessograms,
-} from "@/api/react-query/public/useGetPublicElements";
+} from "@/api/react-query/public/useGetPublicProcessograms";
 import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
 import { PublicProcessogramCard } from "@/components/Cards/ProcessogramCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";

@@ -1,4 +1,4 @@
-import { getProductionModulesByPathname } from "@/api/react-query/public/useGetPublicElements";
+import { getProductionModulesByPathname } from "@/api/react-query/public/useGetPublicProcessograms";
 import { PublicProductionModuleCard } from "@/components/Cards/ProductionModuleCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";

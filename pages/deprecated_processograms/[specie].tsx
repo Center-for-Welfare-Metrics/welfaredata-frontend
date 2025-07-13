@@ -8,7 +8,7 @@ import {
   getPublicProcessogramDatas,
   getPublicSpeciesByPathname,
   getPublicProcessogramQuestions,
-} from "@/api/react-query/public/useGetPublicElements";
+} from "@/api/react-query/public/useGetPublicProcessograms";
 import { FlexRow } from "@/components/desing-components/Flex";
 import { useMemo, useRef, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";

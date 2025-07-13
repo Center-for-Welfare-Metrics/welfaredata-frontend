@@ -1,8 +1,6 @@
-import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicElements";
-import { SpecieCard } from "@/components/Cards/SpecieCard";
+import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicProcessograms";
 import { PublicSpecieCard } from "@/components/Cards/SpecieCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
-import { PublicNavbarNavigation } from "@/components/PublicNavbarNavigation";
 import { Text } from "@/components/Text";
 import styled from "styled-components";
 import { Specie } from "types/species";

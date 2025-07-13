@@ -65,8 +65,9 @@ const LoginPage = () => {
 
   // Transform error state to match LoginErrorProps
   const transformedError: LoginErrorProps = {
-    email: error.email.length > 0 ? error.email[0] : undefined,
-    password: error.password.length > 0 ? error.password[0] : undefined,
+    email: (error.email?.length ?? 0) > 0 ? error.email?.[0] : undefined,
+    password:
+      (error.password?.length ?? 0) > 0 ? error.password?.[0] : undefined,
   };
 
   return (

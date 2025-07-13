@@ -45,7 +45,11 @@ const Application = ({ children }: ApplicationProps) => {
 
   useEffect(() => {
     if (!user) {
-      if (pathname.startsWith("/admin")) {
+      if (
+        pathname.startsWith("/admin") ||
+        pathname === "/login" ||
+        pathname === "/register"
+      ) {
         authApi
           .get_user()
           .then(({ data }) => {

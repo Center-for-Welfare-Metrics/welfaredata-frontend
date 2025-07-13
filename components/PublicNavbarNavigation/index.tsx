@@ -55,11 +55,22 @@ export const PublicNavbarNavigation = () => {
 
   const checkIfItemIsHighlighted = (item: Item) => {
     if (item === "species") {
-      return isExactPath("/[pathname]") || isExactPath("/[pathname]/[slug]");
+      return (
+        isExactPath("/[pathname]") ||
+        isExactPath("/[pathname]/[slug]") ||
+        isExactPath("/[pathname]/[slug]/[processogram]")
+      );
     }
 
     if (item === "modules") {
-      return isExactPath("/[pathname]/[slug]");
+      return (
+        isExactPath("/[pathname]/[slug]") ||
+        isExactPath("/[pathname]/[slug]/[processogram]")
+      );
+    }
+
+    if (item === "production") {
+      return isExactPath("/[pathname]/[slug]/[processogram]");
     }
 
     return false;

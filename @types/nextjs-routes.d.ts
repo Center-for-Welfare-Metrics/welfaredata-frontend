@@ -14,6 +14,7 @@ declare module "nextjs-routes" {
     | StaticRoute<"/">
     | DynamicRoute<"/[pathname]", { "pathname": string }>
     | DynamicRoute<"/[pathname]/[slug]", { "pathname": string; "slug": string }>
+    | DynamicRoute<"/[pathname]/[slug]/[processogram]", { "pathname": string; "slug": string; "processogram": string }>
     | StaticRoute<"/admin">
     | DynamicRoute<"/admin/processograms/[id]", { "id": string }>
     | DynamicRoute<"/admin/production_modules/[id]", { "id": string }>

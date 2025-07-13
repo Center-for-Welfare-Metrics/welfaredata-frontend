@@ -3,6 +3,7 @@ import { request } from "../request";
 import { ProcessogramData } from "types/processogram-data";
 import { ProcessogramQuestionData } from "types/processogram-questions";
 import { ProductionModule } from "types/production-module";
+import { ProcessogramById } from "types/processogram";
 
 type GetPublicElementsParams = {
   specie: string;
@@ -93,6 +94,31 @@ export const getProductionModulesByPathname = async ({
     method: "GET",
     service: "public",
     url: `production-modules/${pathname}`,
+  });
+
+  return data;
+};
+
+type GetProcessogramAndDataBySlugParams = {
+  processogram: string;
+  specie: string;
+  productionModule: string;
+};
+
+export const getProcessogramAndDataBySlug = async ({
+  processogram,
+  specie,
+  productionModule,
+}: GetProcessogramAndDataBySlugParams) => {
+  const { data } = await request<{
+    processogram: ProcessogramById;
+    processogramData: ProcessogramData;
+    processogramQuestions: ProcessogramQuestionData;
+  }>({
+    method: "GET",
+    service: "public",
+    url: `processograms/by-slug`,
+    query: { processogram, specie, productionModule },
   });
 
   return data;
