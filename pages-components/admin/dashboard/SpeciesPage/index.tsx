@@ -124,9 +124,9 @@ export const SpeciesPage = ({ specie_id }: Props) => {
             Visit page:{" "}
             <Link
               href={{
-                pathname: "/processograms/[specie]",
+                pathname: "/[pathname]",
                 query: {
-                  specie: specie.pathname,
+                  pathname: specie.pathname,
                 },
               }}
               target="_blank"
@@ -136,7 +136,7 @@ export const SpeciesPage = ({ specie_id }: Props) => {
                 color: "#0070f3",
               }}
             >
-              {`/processograms/${specie?.pathname}`}
+              {`/${specie?.pathname}`}
             </Link>
           </Text>
         )}
