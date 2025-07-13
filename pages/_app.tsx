@@ -45,7 +45,7 @@ const Application = ({ children }: ApplicationProps) => {
 
   useEffect(() => {
     if (!user) {
-      if (pathname !== "/processograms/[specie]" && pathname !== "/") {
+      if (pathname.startsWith("/admin")) {
         authApi
           .get_user()
           .then(({ data }) => {
