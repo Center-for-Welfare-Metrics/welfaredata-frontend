@@ -15,6 +15,7 @@ export type Processogram = {
   slug: string;
   description: string;
   levelName: string;
+  dataDescription: string | undefined;
 
   original_name_light: string | undefined;
   svg_url_light: string;

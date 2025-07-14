@@ -1,8 +1,4 @@
-import {
-  getProductionModulesByPathname,
-  getPublicProcessograms,
-} from "@/api/react-query/public/useGetPublicProcessograms";
-import { ProcessogramCard } from "@/components/Cards/ProcessogramCard";
+import { getPublicProcessograms } from "@/api/react-query/public/useGetPublicProcessograms";
 import { PublicProcessogramCard } from "@/components/Cards/ProcessogramCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
@@ -18,6 +14,8 @@ type HomeProps = {
 const ModulePage = ({ processograms }: HomeProps) => {
   const { pathname, slug } = useParams<{ pathname: string; slug: string }>();
 
+  console.log(processograms);
+
   return (
     <Container>
       <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
@@ -32,7 +30,7 @@ const ModulePage = ({ processograms }: HomeProps) => {
           <PublicProcessogramCard
             key={processogram._id}
             _id={processogram._id}
-            description={processogram.description}
+            description={processogram.dataDescription}
             name={processogram.name}
             pathname={pathname}
             slug={slug}

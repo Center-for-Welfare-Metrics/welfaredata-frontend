@@ -3,7 +3,7 @@ import { request } from "../request";
 import { ProcessogramData } from "types/processogram-data";
 import { ProcessogramQuestionData } from "types/processogram-questions";
 import { ProductionModule } from "types/production-module";
-import { ProcessogramById } from "types/processogram";
+import { Processogram, ProcessogramById } from "types/processogram";
 
 type GetPublicElementsParams = {
   specie: string;
@@ -13,7 +13,7 @@ type GetPublicElementsParams = {
 export const getPublicProcessograms = async (
   params: GetPublicElementsParams
 ) => {
-  const { data } = await request<Element[]>({
+  const { data } = await request<Processogram[]>({
     method: "GET",
     service: "public",
     url: "/processograms",
