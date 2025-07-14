@@ -111,7 +111,7 @@ const Container = styled.div`
   width: 400px;
   box-sizing: border-box;
   height: 100%;
-  border: 2px ${ThemeColors.deep_blue} solid;
+  border-right: 2px ${ThemeColors.deep_blue} solid;
   background-color: ${ThemeColors.black};
   backdrop-filter: blur(5px);
   overflow: auto;

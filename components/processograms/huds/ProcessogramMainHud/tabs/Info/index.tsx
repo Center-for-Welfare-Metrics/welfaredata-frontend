@@ -16,13 +16,7 @@ type Props = {
   notReady: boolean;
 };
 
-export const ProcessogramInfo = ({
-  currentElement: realTimeElement,
-  data,
-  notReady,
-}: Props) => {
-  const currentElement = useDebounce(realTimeElement, 250);
-
+export const ProcessogramInfo = ({ currentElement, data, notReady }: Props) => {
   const title = useMemo(() => {
     const lastString = currentElement.split(".").pop();
 

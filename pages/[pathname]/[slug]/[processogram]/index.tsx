@@ -157,6 +157,7 @@ const ProcessogramPage = ({
               maxHeight="70vh"
               startFromSpecie={false}
               isActive={true}
+              base64ImagesRef={base64ImagesRef}
             />
           </FlexColumn>
         </FlexRow>

@@ -92,7 +92,7 @@ export const PublicSpecieCard = ({
               <FlexRow justify="flex-start" align="center">
                 <Target size={12} color={ThemeColors.grey_900} />
                 <Text variant="caption" color="grey_900">
-                  {processogramsCount} processograms
+                  {processogramsCount} production systems
                 </Text>
               </FlexRow>
             </FlexColumn>

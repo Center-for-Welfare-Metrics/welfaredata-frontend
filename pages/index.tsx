@@ -16,7 +16,8 @@ const Home = ({ species }: HomeProps) => {
         <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
           <Text variant="h1">Choose a species to explore</Text>
           <Text variant="body1">
-            Select a species to view its production modules and processograms.
+            Select a species to view its production modules and production
+            systems.
           </Text>
         </FlexColumn>
         <CardsList justify="flex-start" flexWrap="wrap" gap={1}>
