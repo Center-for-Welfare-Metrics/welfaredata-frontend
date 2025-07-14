@@ -93,8 +93,6 @@ export type ProcessogramById = {
   original_size_dark: number | undefined;
   final_size_dark: number | undefined;
 
-  originalSize: number;
-  finalSize: number;
   createdAt: string;
   updatedAt: string;
 };

@@ -84,8 +84,10 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
 
     setElementDetailsModal({
       element: {
-        finalSize: element.finalSize,
-        originalSize: element.originalSize,
+        final_size_dark: element.final_size_dark,
+        final_size_light: element.final_size_light,
+        original_size_dark: element.original_size_dark,
+        original_size_light: element.original_size_light,
         elementsCount: Object.keys(elementData.data).length,
         createdAt: element.createdAt,
       },
