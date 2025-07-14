@@ -9,6 +9,7 @@ import { AiChat } from "./tabs/AiChat";
 import { ProcessogramHierarchy } from "types/processogram";
 import { ProcessogramQuestionData } from "types/processogram-questions";
 import MediaGallery from "./tabs/MediaGallery";
+import { Tooltip } from "@mui/material";
 
 type Props = {
   currentElement: string;
@@ -63,15 +64,21 @@ export const ProgressogramMainHud = ({
         {tab === "media" && <MediaGallery hierarchy={hierarchy} />}
       </Content>
       <FooterTabs justify="flex-start" gap={0}>
-        <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
-          <Info size={24} color={ThemeColors.white} />
-        </Tab>
-        <Tab $selected={tab === "chat"} onClick={() => setTab("chat")}>
-          <MessageSquare size={24} color={ThemeColors.white} />
-        </Tab>
-        <Tab $selected={tab === "media"} onClick={() => setTab("media")}>
-          <Image size={24} color={ThemeColors.white} />
-        </Tab>
+        <Tooltip title="Information" placement="top">
+          <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
+            <Info size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip>
+        <Tooltip title="Chat with AI" placement="top">
+          <Tab $selected={tab === "chat"} onClick={() => setTab("chat")}>
+            <MessageSquare size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip>
+        <Tooltip title="Media Gallery" placement="top">
+          <Tab $selected={tab === "media"} onClick={() => setTab("media")}>
+            <Image size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip>
       </FooterTabs>
     </Container>
   );
