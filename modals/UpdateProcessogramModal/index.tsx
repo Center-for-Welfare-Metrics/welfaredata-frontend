@@ -135,7 +135,13 @@ const UpdateProcessogramModal = ({
     if (file_light) {
       return (
         <FlexColumn gap={0} justify="flex-start">
-          <Text variant="body2" align="left">
+          <Text
+            variant="body2"
+            align="left"
+            style={{
+              wordBreak: "break-all",
+            }}
+          >
             File: {file_light.name}
           </Text>
           <Text variant="body2" align="left">
@@ -145,12 +151,16 @@ const UpdateProcessogramModal = ({
       );
     }
 
-    console.log(files);
-
     if (files.light) {
       return (
         <FlexColumn gap={0} justify="flex-start">
-          <Text variant="body2" align="left">
+          <Text
+            variant="body2"
+            align="left"
+            style={{
+              wordBreak: "break-all",
+            }}
+          >
             File: {files.light.name}
           </Text>
           <Text variant="body2" align="left">

@@ -286,7 +286,13 @@ const CreateProcessogramModal = ({
                     textContent={
                       file_light ? (
                         <FlexColumn gap={0} justify="flex-start">
-                          <Text variant="body2" align="left">
+                          <Text
+                            variant="body2"
+                            align="left"
+                            style={{
+                              wordBreak: "break-all",
+                            }}
+                          >
                             File: {file_light.name}
                           </Text>
                           <Text variant="body2" align="left">
@@ -316,7 +322,13 @@ const CreateProcessogramModal = ({
                     textContent={
                       file_dark ? (
                         <FlexColumn gap={0} justify="flex-start">
-                          <Text variant="body2" align="left">
+                          <Text
+                            variant="body2"
+                            align="left"
+                            style={{
+                              wordBreak: "break-all",
+                            }}
+                          >
                             File: {file_dark.name}
                           </Text>
                           <Text variant="body2" align="left">

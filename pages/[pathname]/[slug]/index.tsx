@@ -14,8 +14,6 @@ type HomeProps = {
 const ModulePage = ({ processograms }: HomeProps) => {
   const { pathname, slug } = useParams<{ pathname: string; slug: string }>();
 
-  console.log(processograms);
-
   return (
     <Container>
       <FlexColumn align="center" justify="center" width="100%" mt={1} mb={1}>
