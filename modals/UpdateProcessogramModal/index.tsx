@@ -175,7 +175,13 @@ const UpdateProcessogramModal = ({
     if (file_dark) {
       return (
         <FlexColumn gap={0} justify="flex-start">
-          <Text variant="body2" align="left">
+          <Text
+            variant="body2"
+            align="left"
+            style={{
+              wordBreak: "break-all",
+            }}
+          >
             File: {file_dark.name}
           </Text>
           <Text variant="body2" align="left">
@@ -188,7 +194,13 @@ const UpdateProcessogramModal = ({
     if (files.dark) {
       return (
         <FlexColumn gap={0} justify="flex-start">
-          <Text variant="body2" align="left">
+          <Text
+            variant="body2"
+            align="left"
+            style={{
+              wordBreak: "break-all",
+            }}
+          >
             File: {files.dark.name}
           </Text>
           <Text variant="body2" align="left">
@@ -199,17 +211,20 @@ const UpdateProcessogramModal = ({
     }
   };
 
+  const shouldShowReplaceImageWarning =
+    updateProcessogram.isPending && (file_light || file_dark);
+
   return (
     <ModalContainer
       open={true}
       onClose={onClose}
       title="Update processogram"
       height="650px"
-      unsavedChanges={{
-        enabled: isDirty,
-        message:
-          "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
-      }}
+      // unsavedChanges={{
+      //   enabled: isDirty,
+      //   message:
+      //     "You haven’t finished updating this processogram. If you leave now, your changes will be lost.",
+      // }}
     >
       <PublishContainer>
         <Text variant="body2">Publish this processogram</Text>
@@ -321,7 +336,17 @@ const UpdateProcessogramModal = ({
               </FlexColumn>
             </FlexRow>
           </FlexColumn>
-          <FlexRow justify="flex-end">
+          <FlexRow
+            justify={
+              shouldShowReplaceImageWarning ? "space-between" : "flex-end"
+            }
+          >
+            {shouldShowReplaceImageWarning && (
+              <Text variant="body2">
+                Replacing files can take a few seconds. Please wait until the
+                process is complete.
+              </Text>
+            )}
             <Button
               buttonStyle="success"
               loading={updateProcessogram.isPending}

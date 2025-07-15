@@ -20,7 +20,9 @@ import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonL
 import {
   getDarkProcessogramDetails,
   getLightProcessogramDetails,
+  getRasterImages,
 } from "@/utils/processogram-theme";
+import { useTheme } from "next-themes";
 
 type Props = {
   productionModuleId: string;
@@ -32,6 +34,10 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
   });
 
   const router = useRouter();
+
+  const { resolvedTheme } = useTheme();
+
+  const isDark = resolvedTheme === "dark";
 
   const {
     data: processograms,
@@ -194,7 +200,12 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
                     specie_id={element.specie_id}
                     status={element.status}
                     is_published={element.is_published}
-                    image_url={element.raster_images?.[element.identifier].src}
+                    image_url={
+                      getRasterImages({
+                        element,
+                        resolvedTheme,
+                      })?.[element.identifier].src
+                    }
                   />
                 ))}
               </FlexRow>

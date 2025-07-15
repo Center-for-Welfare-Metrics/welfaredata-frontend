@@ -2,6 +2,8 @@ import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicProce
 import { PublicSpecieCard } from "@/components/Cards/SpecieCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
+import { getProcessogramUrls } from "@/utils/processogram-theme";
+import { useTheme } from "next-themes";
 import styled from "styled-components";
 import { Specie } from "types/species";
 
@@ -10,6 +12,8 @@ type HomeProps = {
 };
 
 const Home = ({ species }: HomeProps) => {
+  const { resolvedTheme } = useTheme();
+
   return (
     <>
       <Container gap={2}>
@@ -27,7 +31,10 @@ const Home = ({ species }: HomeProps) => {
               name={specie.name}
               pathname={specie.pathname}
               description={specie.description}
-              processogram_urls={specie.processograms_urls}
+              processogram_urls={getProcessogramUrls({
+                item: specie,
+                resolvedTheme,
+              })}
               productionModulesCount={specie.productionModulesCount}
               processogramsCount={specie.processogramsCount}
             />

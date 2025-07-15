@@ -10,9 +10,13 @@ import { ThemeColors } from "theme/globalStyle";
 import { CtaCreate } from "@/components/CtaCreate";
 import { SpecieCardSize } from "@/components/Cards/SpecieCard/const";
 import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
+import { useTheme } from "next-themes";
+import { getProcessogramUrls } from "@/utils/processogram-theme";
 
 export const ListSpecies = () => {
   const { data: species, isLoading } = useGetSpecies();
+
+  const { resolvedTheme } = useTheme();
 
   const speciesList = species ?? [];
 
@@ -53,7 +57,10 @@ export const ListSpecies = () => {
                   description={specie.description}
                   processogramsCount={specie.processogramsCount}
                   productionModulesCount={specie.productionModulesCount}
-                  processogram_urls={specie.processograms_urls}
+                  processogram_urls={getProcessogramUrls({
+                    item: specie,
+                    resolvedTheme,
+                  })}
                 />
               ))}
             </FlexRow>

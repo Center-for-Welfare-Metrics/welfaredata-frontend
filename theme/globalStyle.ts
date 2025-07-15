@@ -42,7 +42,7 @@ const lightColors = {
   pink: "#e57390",
   red: "#e57373",
   green: "#81c784",
-  black: "#f5f5f5",
+  black: "#ffffff",
   gray: "#bdbdbd",
   fixedBackgroundWhite: "#f5f5f5",
   fixedBackgroundBlack: "#000000",

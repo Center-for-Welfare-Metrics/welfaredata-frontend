@@ -27,7 +27,7 @@ export type Processogram = {
   original_size_dark: number | undefined;
   final_size_dark: number | undefined;
 
-  raster_images:
+  raster_images_light:
     | {
         [key: string]: {
           src: string;
@@ -38,6 +38,18 @@ export type Processogram = {
         };
       }
     | undefined;
+  raster_images_dark:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
+
   is_published: boolean;
   status: ProcessogramStatus;
   theme: ProcessogramTheme;
@@ -63,15 +75,28 @@ export type ProcessogramById = {
   description: string;
   levelName: string;
 
-  raster_images: {
-    [key: string]: {
-      src: string;
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    };
-  };
+  raster_images_light:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
+  raster_images_dark:
+    | {
+        [key: string]: {
+          src: string;
+          width: number;
+          height: number;
+          x: number;
+          y: number;
+        };
+      }
+    | undefined;
   is_published: boolean;
   production_module_id: string;
   production_module: {

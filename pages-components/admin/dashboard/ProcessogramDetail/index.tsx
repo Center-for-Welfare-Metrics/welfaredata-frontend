@@ -11,6 +11,7 @@ import {
   getBackgroundColor,
   getDarkProcessogramDetails,
   getLightProcessogramDetails,
+  getRasterImages,
   getSvgUrl,
 } from "@/utils/processogram-theme";
 import { useSetDeleteProcessogramModal } from "modals/DeleteProcessogramModal/hooks";
@@ -311,7 +312,10 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                     }) ?? ""
                   }
                   element={element}
-                  rasterImages={element.raster_images}
+                  rasterImages={getRasterImages({
+                    element,
+                    resolvedTheme,
+                  })}
                   enableBruteOptimization={false}
                   onChange={handleChange}
                   eventBusHandler={setEventBus}

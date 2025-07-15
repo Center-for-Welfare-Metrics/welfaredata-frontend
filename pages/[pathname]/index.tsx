@@ -2,7 +2,9 @@ import { getProductionModulesByPathname } from "@/api/react-query/public/useGetP
 import { PublicProductionModuleCard } from "@/components/Cards/ProductionModuleCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
+import { getProcessogramUrls } from "@/utils/processogram-theme";
 import { GetStaticPropsContext } from "next";
+import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
 import styled from "styled-components";
 import { ProductionModule } from "types/production-module";
@@ -13,6 +15,8 @@ type HomeProps = {
 
 const SpeciesPage = ({ productionModules }: HomeProps) => {
   const { pathname } = useParams<{ pathname: string }>();
+
+  const { resolvedTheme } = useTheme();
 
   return (
     <Container gap={2}>
@@ -31,7 +35,10 @@ const SpeciesPage = ({ productionModules }: HomeProps) => {
             name={productionModule.name}
             description={productionModule.description}
             processogramsCount={productionModule.processogramsCount}
-            processograms_urls={productionModule.processograms_urls}
+            processograms_urls={getProcessogramUrls({
+              item: productionModule,
+              resolvedTheme,
+            })}
             pathname={pathname}
           />
         ))}

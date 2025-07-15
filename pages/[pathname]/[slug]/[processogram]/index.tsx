@@ -10,7 +10,11 @@ import { ProcessogramQuestionData } from "types/processogram-questions";
 import { BreadcrumbHud } from "@/components/processograms/huds/BreadcrumbHud";
 import { ProgressogramMainHud } from "@/components/processograms/huds/ProcessogramMainHud";
 import { ProcessogramComplete } from "@/components/processograms/ProcessogramComplete";
-import { getBackgroundColor, getSvgUrl } from "@/utils/processogram-theme";
+import {
+  getBackgroundColor,
+  getRasterImages,
+  getSvgUrl,
+} from "@/utils/processogram-theme";
 import { useTheme } from "next-themes";
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -98,8 +102,14 @@ const ProcessogramPage = ({
 
       await Promise.all(promises);
     };
-    if (processogram.raster_images) {
-      fetchBase64Images(processogram.raster_images);
+
+    const rasterImages = getRasterImages({
+      element: processogram,
+      resolvedTheme,
+    });
+
+    if (rasterImages) {
+      fetchBase64Images(rasterImages);
     }
   }, [processogram]);
 
@@ -149,7 +159,10 @@ const ProcessogramPage = ({
                 }) ?? ""
               }
               element={processogram}
-              rasterImages={processogram.raster_images}
+              rasterImages={getRasterImages({
+                element: processogram,
+                resolvedTheme,
+              })}
               enableBruteOptimization={false}
               onChange={handleChange}
               eventBusHandler={setEventBus}

@@ -18,6 +18,8 @@ import { Processogram, ProcessogramHierarchy } from "types/processogram";
 import { EventBusHandler } from "../ProcessogramComplete/types";
 import { ThemeColors } from "theme/globalStyle";
 import { useTheme } from "next-themes";
+import { isEmpty } from "lodash";
+import { getRasterImages } from "@/utils/processogram-theme";
 
 function calcularTopCentralizado(
   containerEl: HTMLElement | null,
@@ -239,18 +241,16 @@ export const ProcessogramLoader = ({
 
       await Promise.all(promises);
     };
-    if (element.raster_images) {
-      fetchBase64Images(element.raster_images);
-    }
-  }, [element]);
-
-  const getSvgUrl = () => {
     if (resolvedTheme === "dark") {
-      return element.svg_url_dark || element.svg_url_light;
+      if (element.raster_images_dark) {
+        fetchBase64Images(element.raster_images_dark);
+      }
     } else {
-      return element.svg_url_light || element.svg_url_dark;
+      if (element.raster_images_light) {
+        fetchBase64Images(element.raster_images_light);
+      }
     }
-  };
+  }, [element, resolvedTheme]);
 
   return (
     <ProcessogramContainer
@@ -269,7 +269,7 @@ export const ProcessogramLoader = ({
           onChange={onChange}
           enableBruteOptimization={enabledBruteOptimization}
           startFromSpecie={true}
-          rasterImages={element.raster_images}
+          rasterImages={getRasterImages({ element, resolvedTheme })}
           eventBusHandler={eventBusHandler}
           base64ImagesRef={base64ImagesRef}
           isActive={isActive}

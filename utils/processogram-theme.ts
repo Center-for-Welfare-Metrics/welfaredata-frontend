@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { ThemeColors } from "theme/globalStyle";
 import { Processogram } from "types/processogram";
 
@@ -86,6 +87,78 @@ export const getCurrentTheme = ({ element, theme }: GetSvgThemeParams) => {
       return "light";
     } else {
       return "dark";
+    }
+  }
+};
+
+type GetRasterImagesParams = {
+  resolvedTheme: string | undefined;
+  element: {
+    raster_images_dark?: {
+      [key: string]: {
+        src: string;
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+      };
+    };
+    raster_images_light?: {
+      [key: string]: {
+        src: string;
+        width: number;
+        height: number;
+        x: number;
+        y: number;
+      };
+    };
+  };
+};
+
+export const getRasterImages = ({
+  element,
+  resolvedTheme,
+}: GetRasterImagesParams) => {
+  if (resolvedTheme === "dark") {
+    if (!isEmpty(element.raster_images_dark)) {
+      return element.raster_images_dark;
+    } else {
+      return element.raster_images_light;
+    }
+  } else {
+    if (!isEmpty(element.raster_images_light)) {
+      return element.raster_images_light;
+    } else {
+      return element.raster_images_dark;
+    }
+  }
+};
+
+type GetProcessogramUrlsParams = {
+  item: {
+    processograms_urls_dark?: string[];
+    processograms_urls_light?: string[];
+  };
+  resolvedTheme: string | undefined;
+};
+
+export const getProcessogramUrls = ({
+  item,
+  resolvedTheme,
+}: GetProcessogramUrlsParams) => {
+  if (resolvedTheme === "dark") {
+    console.log(item);
+    console.log(isEmpty(item.processograms_urls_dark));
+    if (!isEmpty(item.processograms_urls_dark)) {
+      return item.processograms_urls_dark;
+    } else {
+      return item.processograms_urls_light;
+    }
+  } else {
+    if (!isEmpty(item.processograms_urls_light)) {
+      return item.processograms_urls_light;
+    } else {
+      return item.processograms_urls_dark;
     }
   }
 };

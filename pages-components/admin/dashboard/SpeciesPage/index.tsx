@@ -17,6 +17,8 @@ import { useSetUpdateSpecieModal } from "modals/UpdateSpecieModal/hooks";
 import { useSetDeleteSpecieModal } from "modals/DeleteSpecieModal/hooks";
 import { ProductionModuleCardSize } from "@/components/Cards/ProductionModuleCard/const";
 import { CardSkeletonLoading } from "@/components/Cards/components/CardSkeletonLoading";
+import { useTheme } from "next-themes";
+import { getProcessogramUrls } from "@/utils/processogram-theme";
 
 type Props = {
   specie_id: string;
@@ -33,6 +35,9 @@ export const SpeciesPage = ({ specie_id }: Props) => {
   });
 
   const router = useRouter();
+
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const { data: specie } = useGetSpecieById({
     specie_id,
@@ -182,7 +187,10 @@ export const SpeciesPage = ({ specie_id }: Props) => {
                     _id={productionModule._id}
                     description={productionModule.description}
                     specie_id={productionModule.specie_id}
-                    processograms_urls={productionModule.processograms_urls}
+                    processograms_urls={getProcessogramUrls({
+                      item: productionModule,
+                      resolvedTheme,
+                    })}
                     processogramsCount={productionModule.processogramsCount}
                     name={productionModule.name}
                   />
