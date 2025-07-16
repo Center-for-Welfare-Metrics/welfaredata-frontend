@@ -1,6 +1,11 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import styled, { css } from "styled-components";
+import { Image, Info, MessageSquare } from "react-feather";
+import { ClipLoader } from "react-spinners";
+import { Tooltip } from "@mui/material";
+import { Cloud, CloudSnow } from "react-feather";
+
 import { Text } from "@/components/Text";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import styled from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
 import { deslugify } from "@/utils/string";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
@@ -10,9 +15,6 @@ import { useForm, z, zodResolver } from "@/utils/validation";
 import { TextArea } from "@/components/Textarea";
 import { useStopTypingDebounce } from "@/utils/hooks/useStopTypingDebounce";
 import { useUpdateProcessogramData } from "@/api/react-query/processogram-datas/useProcessogramData";
-import { ClipLoader } from "react-spinners";
-import { Tooltip } from "@mui/material";
-import { Cloud, CloudSnow } from "react-feather";
 
 const ProcessogramDataSchema = z.object({
   description: z.string().min(1, "Description is required"),
@@ -45,6 +47,8 @@ export const ProgressogramEditableHud = ({
       description: "",
     },
   });
+
+  const [tab, setTab] = useState<"info" | "chat" | "media">("info");
 
   const updateDescription = useUpdateProcessogramData();
 
@@ -147,18 +151,71 @@ export const ProgressogramEditableHud = ({
           )}
         </CloudSyncContainer>
       </Tooltip>
-      <FlexColumn>
-        <Text variant="h3">{title}</Text>
+      {tab === "info" && (
+        <FlexColumn>
+          <Text variant="h3">{title}</Text>
 
-        {notReady && !text ? (
-          <Text>Not ready yet, generating AI content</Text>
-        ) : (
-          <TextArea label="Description" {...register("description")} />
-        )}
-      </FlexColumn>
+          {notReady && !text ? (
+            <Text>Not ready yet, generating AI content</Text>
+          ) : (
+            <TextArea label="Description" {...register("description")} />
+          )}
+        </FlexColumn>
+      )}
+      {/* {tab === "chat" && <div style={{ height: "100%" }}></div>} */}
+      {tab === "media" && (
+        <div style={{ height: "100%" }}>
+          <Text variant="body2" align="center">
+            Under construction, coming soon!
+          </Text>
+        </div>
+      )}
+      <FooterTabs justify="flex-start" gap={0}>
+        <Tooltip title="Information" placement="top">
+          <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
+            <Info size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip>
+        {/* <Tooltip title="Chat with AI" placement="top">
+          <Tab $selected={tab === "chat"} onClick={() => setTab("chat")}>
+            <MessageSquare size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip> */}
+        <Tooltip title="Media Gallery" placement="top">
+          <Tab $selected={tab === "media"} onClick={() => setTab("media")}>
+            <Image size={24} color={ThemeColors.white} />
+          </Tab>
+        </Tooltip>
+      </FooterTabs>
     </Container>
   );
 };
+
+type TabProps = {
+  $selected: boolean;
+};
+
+const Tab = styled.div<TabProps>`
+  padding-block: 1.5rem;
+  padding-inline: 2rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  &:hover {
+    background-color: ${ThemeColors.grey_300};
+  }
+
+  ${({ $selected }) =>
+    $selected &&
+    css`
+      box-shadow: inset 0 -2px 0 ${ThemeColors.white};
+    `};
+`;
+
+const FooterTabs = styled(FlexRow)``;
 
 const LoadingContainer = styled.div`
   position: absolute;
@@ -185,4 +242,7 @@ const Container = styled.div`
   overflow: auto;
   position: relative;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
