@@ -15,6 +15,8 @@ import { useForm, z, zodResolver } from "@/utils/validation";
 import { TextArea } from "@/components/Textarea";
 import { useStopTypingDebounce } from "@/utils/hooks/useStopTypingDebounce";
 import { useUpdateProcessogramData } from "@/api/react-query/processogram-datas/useProcessogramData";
+import { ImagesTab } from "./components/ImagesTab";
+import { ProcessogramHierarchy } from "types/processogram";
 
 const ProcessogramDataSchema = z.object({
   description: z.string().min(1, "Description is required"),
@@ -32,6 +34,7 @@ type Props = {
     };
   };
   notReady: boolean;
+  hierarchy: ProcessogramHierarchy[];
 };
 
 export const ProgressogramEditableHud = ({
@@ -40,6 +43,7 @@ export const ProgressogramEditableHud = ({
   currentElement: realTimeElement,
   data,
   notReady,
+  hierarchy,
 }: Props) => {
   const { reset, watch, register } = useForm<ProcessogramDataForm>({
     resolver: zodResolver(ProcessogramDataSchema),
@@ -164,11 +168,11 @@ export const ProgressogramEditableHud = ({
       )}
       {/* {tab === "chat" && <div style={{ height: "100%" }}></div>} */}
       {tab === "media" && (
-        <div style={{ height: "100%" }}>
-          <Text variant="body2" align="center">
-            Under construction, coming soon!
-          </Text>
-        </div>
+        <ImagesTab
+          hierarchy={hierarchy}
+          processogramId={processogram_id}
+          currentElement={currentElement}
+        />
       )}
       <FooterTabs justify="flex-start" gap={0}>
         <Tooltip title="Information" placement="top">
@@ -233,7 +237,7 @@ const CloudSyncContainer = styled(FlexRow)`
 
 const Container = styled.div`
   padding: 2rem;
-  width: 500px;
+  width: 700px;
   box-sizing: border-box;
   height: 100%;
   border: 2px ${ThemeColors.deep_blue} solid;

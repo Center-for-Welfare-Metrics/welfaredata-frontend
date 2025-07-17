@@ -27,7 +27,7 @@ const removeRawId = (hierarchy: ProcessogramHierarchy[]) => {
   });
 };
 
-const getImages = async ({ hierarchy }: Params) => {
+const searchImages = async ({ hierarchy }: Params) => {
   const sanitizedHierarchy = removeRawId(hierarchy);
 
   const { data } = await request<SearchImageRespose>({
@@ -42,10 +42,10 @@ const getImages = async ({ hierarchy }: Params) => {
   return data;
 };
 
-export const useGetImages = (params: Params, enabled = true) => {
+export const useGetSearchedImages = (params: Params, enabled = true) => {
   return useQuery({
-    queryKey: [QueryKeys.GET_IMAGES.List, params],
-    queryFn: () => getImages(params),
+    queryKey: [QueryKeys.GET_IMAGES.Search, params],
+    queryFn: () => searchImages(params),
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     enabled,

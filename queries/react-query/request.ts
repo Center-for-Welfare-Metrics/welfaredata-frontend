@@ -7,6 +7,7 @@ export type RequestService =
   | "admin-processogram-datas"
   | "admin-processogram-questions"
   | "admin-production-modules"
+  | "admin-processogram-images"
   | "public";
 
 const servicesKeyPair: { [key in RequestService]: string } = {
@@ -16,6 +17,7 @@ const servicesKeyPair: { [key in RequestService]: string } = {
   "admin-processogram-datas": "admin/processogram-datas",
   "admin-processogram-questions": "admin/processogram-questions",
   "admin-production-modules": "admin/production-modules",
+  "admin-processogram-images": "admin/processogram-images",
   public: "public",
 };
 

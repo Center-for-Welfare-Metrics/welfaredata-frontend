@@ -186,7 +186,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   if (!element) return <></>;
 
   return (
-    <Container width="100%" gap={0} mt={2}>
+    <Container width="100%" gap={0}>
       <FlexRow justify="flex-start">
         <Link href="/admin">
           <Text variant="h2">Dashboard</Text>
@@ -259,8 +259,8 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
           <div
             style={{
               marginTop: "2rem",
-              height: "70vh",
               position: "relative",
+              height: "calc(100vh - 10rem)",
             }}
           >
             <FlexRow height={"100%"}>
@@ -273,6 +273,17 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
                   id={elementData._id}
                   data={elementData.data ?? {}}
                   processogram_id={processogram_id}
+                  hierarchy={
+                    hierarchy ?? [
+                      {
+                        id: element.identifier,
+                        level: "Production System",
+                        levelNumber: 1,
+                        name: element.name,
+                        rawId: element.identifier,
+                      },
+                    ]
+                  }
                 />
               )}
               <FlexColumn
@@ -372,7 +383,8 @@ const IconWrapper = styled.div`
 `;
 
 const Container = styled(FlexColumn)`
-  padding-inline: 4rem;
+  padding-inline: 2rem;
+  height: calc(100vh - 103px);
   svg {
     [id*="--"] {
       cursor: pointer;
