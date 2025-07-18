@@ -130,6 +130,7 @@ export const SearchImagesTab = ({
           images={searchedImages}
           isLoading={isLoading}
           onClickAdd={handleAddImage}
+          addLoading={addProcessogramImage.isPending}
           onDelete={handleDeleteImage}
           selectedImages={imagesSet}
           onClick={handleMediaClick}

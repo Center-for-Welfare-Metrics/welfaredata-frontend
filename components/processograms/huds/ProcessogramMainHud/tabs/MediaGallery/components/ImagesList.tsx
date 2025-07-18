@@ -5,11 +5,14 @@ import { Text } from "@/components/Text";
 import { CheckCircle, Plus, Trash } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
 import { FlexColumn } from "@/components/desing-components/Flex";
+import { LoadingWrapper } from "@/components/LoadingWrapper";
 
 type Props = {
   images: SearchedImageResult[];
   isLoading: boolean;
   onClick: (item: SearchedImageResult) => void;
+  addLoading?: boolean;
+  deleteLoading?: boolean;
   onClickAdd?: (item: SearchedImageResult) => void;
   onClickNewImage?: () => void;
   onDelete?: (item: SearchedImageResult) => void;
@@ -24,6 +27,8 @@ export const ImagesList = ({
   onClickNewImage,
   onDelete,
   selectedImages,
+  addLoading,
+  deleteLoading,
 }: Props) => {
   return (
     <MediaGrid>
@@ -84,18 +89,24 @@ export const ImagesList = ({
                 </Tooltip>
               )}
               {onClickAdd && !selectedImages?.has(item.link) && (
-                <Tooltip title="Add to processogram">
+                <Tooltip title={addLoading ? null : "Add to processogram"}>
                   <AddContainer
                     onClick={(e) => {
                       e.stopPropagation();
                       onClickAdd(item);
                     }}
                   >
-                    <Plus
-                      size={16}
-                      color={ThemeColors.fixedBackgroundWhite}
-                      strokeWidth={3}
-                    />
+                    <LoadingWrapper
+                      size={14}
+                      loading={addLoading}
+                      color={ThemeColors.white}
+                    >
+                      <Plus
+                        size={16}
+                        color={ThemeColors.fixedBackgroundWhite}
+                        strokeWidth={3}
+                      />
+                    </LoadingWrapper>
                   </AddContainer>
                 </Tooltip>
               )}
