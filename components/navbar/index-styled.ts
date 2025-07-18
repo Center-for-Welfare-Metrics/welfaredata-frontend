@@ -6,20 +6,27 @@ export const Containter = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+
   width: 100%;
-  display: flex;
-  z-index: 90;
-  justify-content: space-between;
-  padding: 1rem 0 1rem 0;
-  background-color: ${ThemeColors.black};
-  box-sizing: border-box;
   height: ${NAV_HEIGHT}px;
+
+  padding: 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+
+  background-color: ${ThemeColors.black};
+  border-bottom: 1px solid ${ThemeColors.grey_300};
+
+  z-index: 90;
 `;
 
 export const NavItems = styled.div`
   display: flex;
+  height: fit-content;
   gap: 4rem;
-  padding-left: 4rem;
 `;
 export const UserSection = styled.div`
   display: flex;

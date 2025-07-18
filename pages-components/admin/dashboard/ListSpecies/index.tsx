@@ -29,7 +29,7 @@ export const ListSpecies = () => {
   };
 
   return (
-    <FlexColumn align="flex-start" width="100%" px={4} mt={4}>
+    <FlexColumn align="flex-start" width="100%" mt={1}>
       <FlexRow>
         <Text>Species {hasSpecies ? `(${speciesList.length})` : ``}</Text>
         <AddButton onClick={createSpecie} />

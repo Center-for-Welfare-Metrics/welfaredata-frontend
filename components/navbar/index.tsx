@@ -12,12 +12,15 @@ import {
 import { NavItens } from "./nav-map";
 import { ThemeToggler } from "../ThemeToggler";
 import { FlexRow } from "../desing-components/Flex";
+import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 
 const NavBar = () => {
   const { user, logOut } = useContext(UserContext);
 
+  const { loggedInNavBarRef } = useNavBar();
+
   return (
-    <Containter id="main-nav-menu">
+    <Containter id="main-nav-menu" ref={loggedInNavBarRef}>
       <NavItems>
         {NavItens.map((nav_item) => (
           <React.Fragment key={`${nav_item.name}_${nav_item.route}`}>

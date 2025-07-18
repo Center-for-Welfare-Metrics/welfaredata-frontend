@@ -23,6 +23,7 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/deprecated_processograms/[specie]", { "specie": string }>
     | StaticRoute<"/home">
     | StaticRoute<"/login">
+    | StaticRoute<"/Providers">
     | StaticRoute<"/register">;
 
   interface StaticRoute<Pathname> {

@@ -7,6 +7,7 @@ import { ProcessogramComplete } from "@/components/processograms/ProcessogramCom
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { Text } from "@/components/Text";
+import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 import {
   getBackgroundColor,
   getDarkProcessogramDetails,
@@ -186,7 +187,7 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
   if (!element) return <></>;
 
   return (
-    <Container width="100%" gap={0}>
+    <Container width="100%" gap={0} mt={1}>
       <FlexRow justify="flex-start">
         <Link href="/admin">
           <Text variant="h2">Dashboard</Text>
@@ -255,109 +256,98 @@ export const ProcessogramDetail = ({ processogram_id }: Props) => {
         </IconWrapper>
       </FlexRow>
       {element.status === "ready" || element.status === "generating" ? (
-        <>
-          <div
+        <FlexRow height="calc(100% - 64px)" mt={1} mb={1}>
+          {!!elementData && (
+            <ProgressogramEditableHud
+              notReady={element.status === "generating"}
+              currentElement={
+                currentElement || getElementNameFromId(element.identifier)
+              }
+              id={elementData._id}
+              data={elementData.data ?? {}}
+              processogram_id={processogram_id}
+              hierarchy={
+                hierarchy ?? [
+                  {
+                    id: element.identifier,
+                    level: "Production System",
+                    levelNumber: 1,
+                    name: element.name,
+                    rawId: element.identifier,
+                  },
+                ]
+              }
+            />
+          )}
+          <FlexColumn
+            height="100%"
+            width="100%"
+            px={1}
+            justify="center"
             style={{
-              marginTop: "2rem",
+              overflow: "hidden",
+              backgroundColor: getBackgroundColor({
+                theme: resolvedTheme,
+                element,
+              }),
               position: "relative",
-              height: "calc(100vh - 10rem)",
             }}
           >
-            <FlexRow height={"100%"}>
-              {!!elementData && (
-                <ProgressogramEditableHud
-                  notReady={element.status === "generating"}
-                  currentElement={
-                    currentElement || getElementNameFromId(element.identifier)
-                  }
-                  id={elementData._id}
-                  data={elementData.data ?? {}}
-                  processogram_id={processogram_id}
-                  hierarchy={
-                    hierarchy ?? [
-                      {
-                        id: element.identifier,
-                        level: "Production System",
-                        levelNumber: 1,
-                        name: element.name,
-                        rawId: element.identifier,
-                      },
-                    ]
-                  }
-                />
-              )}
-              <FlexColumn
-                height="100%"
-                width="100%"
-                justify="center"
-                style={{
-                  overflow: "hidden",
-                  backgroundColor: getBackgroundColor({
-                    theme: resolvedTheme,
-                    element,
-                  }),
-                  position: "relative",
-                }}
-              >
-                <BreadcrumbsContainer>
-                  <BreadcrumbHud
-                    hierarchy={
-                      hierarchy ?? [
-                        {
-                          id: element.identifier,
-                          level: "Production System",
-                          levelNumber: 1,
-                          name: element.name,
-                          rawId: element.identifier,
-                        },
-                      ]
-                    }
-                    onClick={onClickBreadcrumb}
-                  />
-                </BreadcrumbsContainer>
-                <ProcessogramComplete
-                  src={
-                    getSvgUrl({
-                      element,
-                      theme: resolvedTheme,
-                    }) ?? ""
-                  }
-                  element={element}
-                  rasterImages={getRasterImages({
-                    element,
-                    resolvedTheme,
-                  })}
-                  enableBruteOptimization={false}
-                  onChange={handleChange}
-                  eventBusHandler={setEventBus}
-                  onClose={onClose}
-                  maxHeight="70vh"
-                  startFromSpecie={false}
-                  isActive={true}
-                  disableHover
-                />
-              </FlexColumn>
-            </FlexRow>
-          </div>
-        </>
+            <BreadcrumbsContainer>
+              <BreadcrumbHud
+                hierarchy={
+                  hierarchy ?? [
+                    {
+                      id: element.identifier,
+                      level: "Production System",
+                      levelNumber: 1,
+                      name: element.name,
+                      rawId: element.identifier,
+                    },
+                  ]
+                }
+                onClick={onClickBreadcrumb}
+              />
+            </BreadcrumbsContainer>
+            <ProcessogramComplete
+              src={
+                getSvgUrl({
+                  element,
+                  theme: resolvedTheme,
+                }) ?? ""
+              }
+              element={element}
+              rasterImages={getRasterImages({
+                element,
+                resolvedTheme,
+              })}
+              enableBruteOptimization={false}
+              onChange={handleChange}
+              eventBusHandler={setEventBus}
+              onClose={onClose}
+              maxHeight="70vh"
+              startFromSpecie={false}
+              isActive={true}
+              disableHover
+            />
+          </FlexColumn>
+        </FlexRow>
       ) : (
-        <>
-          <FlexRow justify="flex-start" align="center" mt={2}>
-            <Text variant="h3">{getStatusText(element.status)}</Text>
-            {isFetching ? (
-              <ClipLoader size={18} color={ThemeColors.white} loading />
-            ) : (
-              <IconWrapper>
-                <RefreshCw
-                  color={ThemeColors.white}
-                  cursor="pointer"
-                  size={18}
-                  onClick={handleRefetch}
-                />
-              </IconWrapper>
-            )}
-          </FlexRow>
-        </>
+        <FlexRow justify="flex-start" align="center" mt={2}>
+          <Text variant="h3">{getStatusText(element.status)}</Text>
+          {isFetching ? (
+            <ClipLoader size={18} color={ThemeColors.white} loading />
+          ) : (
+            <IconWrapper>
+              <RefreshCw
+                color={ThemeColors.white}
+                cursor="pointer"
+                size={18}
+                onClick={handleRefetch}
+              />
+            </IconWrapper>
+          )}
+        </FlexRow>
       )}
     </Container>
   );
@@ -383,8 +373,6 @@ const IconWrapper = styled.div`
 `;
 
 const Container = styled(FlexColumn)`
-  padding-inline: 2rem;
-  height: calc(100vh - 103px);
   svg {
     [id*="--"] {
       cursor: pointer;

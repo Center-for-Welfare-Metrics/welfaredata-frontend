@@ -155,25 +155,27 @@ export const ProgressogramEditableHud = ({
           )}
         </CloudSyncContainer>
       </Tooltip>
-      {tab === "info" && (
-        <FlexColumn>
-          <Text variant="h3">{title}</Text>
+      <Content>
+        {tab === "info" && (
+          <FlexColumn>
+            <Text variant="h3">{title}</Text>
 
-          {notReady && !text ? (
-            <Text>Not ready yet, generating AI content</Text>
-          ) : (
-            <TextArea label="Description" {...register("description")} />
-          )}
-        </FlexColumn>
-      )}
-      {/* {tab === "chat" && <div style={{ height: "100%" }}></div>} */}
-      {tab === "media" && (
-        <ImagesTab
-          hierarchy={hierarchy}
-          processogramId={processogram_id}
-          currentElement={currentElement}
-        />
-      )}
+            {notReady && !text ? (
+              <Text>Not ready yet, generating AI content</Text>
+            ) : (
+              <TextArea label="Description" {...register("description")} />
+            )}
+          </FlexColumn>
+        )}
+        {/* {tab === "chat" && <div style={{ height: "100%" }}></div>} */}
+        {tab === "media" && (
+          <ImagesTab
+            hierarchy={hierarchy}
+            processogramId={processogram_id}
+            currentElement={currentElement}
+          />
+        )}
+      </Content>
       <FooterTabs justify="flex-start" gap={0}>
         <Tooltip title="Information" placement="top">
           <Tab $selected={tab === "info"} onClick={() => setTab("info")}>
@@ -194,6 +196,12 @@ export const ProgressogramEditableHud = ({
     </Container>
   );
 };
+
+const Content = styled(FlexColumn)`
+  padding: 1rem;
+  padding-top: 3rem;
+  height: calc(100% - 140px);
+`;
 
 type TabProps = {
   $selected: boolean;
@@ -231,12 +239,11 @@ const LoadingContainer = styled.div`
 const CloudSyncContainer = styled(FlexRow)`
   position: absolute;
   width: fit-content;
-  top: 1rem;
-  right: 1rem;
+  top: 0.5rem;
+  right: 0.5rem;
 `;
 
 const Container = styled.div`
-  padding: 2rem;
   width: 700px;
   box-sizing: border-box;
   height: 100%;

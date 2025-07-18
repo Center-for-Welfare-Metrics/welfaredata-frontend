@@ -17,6 +17,9 @@ const NavItem = ({ name, route }: INavItem) => {
         href={{
           pathname: route,
         }}
+        style={{
+          height: "fit-content",
+        }}
       >
         <Container>
           <Name

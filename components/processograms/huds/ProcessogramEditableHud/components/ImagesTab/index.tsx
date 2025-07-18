@@ -147,7 +147,6 @@ const MediaContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: auto;
-  padding: 1rem;
   padding-inline-end: 0;
   box-sizing: border-box;
 `;

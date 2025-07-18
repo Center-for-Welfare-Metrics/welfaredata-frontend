@@ -2,6 +2,7 @@ import { getPublicSpeciesList } from "@/api/react-query/public/useGetPublicProce
 import { PublicSpecieCard } from "@/components/Cards/SpecieCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
+import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 import { getProcessogramUrls } from "@/utils/processogram-theme";
 import { useTheme } from "next-themes";
 import styled from "styled-components";

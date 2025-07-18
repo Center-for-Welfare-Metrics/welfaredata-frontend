@@ -104,13 +104,7 @@ export const ProductionModulePage = ({ productionModuleId }: Props) => {
   };
 
   return (
-    <FlexColumn
-      justify="flex-start"
-      align="flex-start"
-      width="100%"
-      px={4}
-      mt={2}
-    >
+    <FlexColumn justify="flex-start" align="flex-start" width="100%" mt={1}>
       <FlexColumn>
         <FlexRow justify="flex-start">
           <Link href="/admin">

@@ -12,6 +12,8 @@ import { Modals } from "modals";
 import { ThemeProvider } from "next-themes";
 import { PublicNavbarNavigation } from "@/components/PublicNavbarNavigation";
 import { useWhereIs } from "@/utils/hooks/useWhereIs";
+import { NavBarProvider } from "@/context/useNavBar/NavBarProvider";
+import { Providers } from "./Providers";
 
 type ApplicationProps = {
   children: React.ReactNode;
@@ -132,11 +134,11 @@ function MyApp({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider>
+      <Providers>
         <Application>
           <Component {...pageProps} />
         </Application>
-      </Provider>
+      </Providers>
     </QueryClientProvider>
   );
 }
