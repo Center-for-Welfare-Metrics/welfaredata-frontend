@@ -16,6 +16,7 @@ import {
 } from "@/api/react-query/processogram-images/useGetImages";
 import { ImagesList } from "@/components/processograms/huds/ProcessogramMainHud/tabs/MediaGallery/components/ImagesList";
 import { ImageModal } from "@/components/processograms/huds/ProcessogramMainHud/tabs/MediaGallery/components/ImageModal";
+import { useSetDeleteProcessogramImageConfirmationModalModal } from "modals/DeleteProcessogramImageConfirmationModalModal/hooks";
 
 type Props = {
   hierarchy: ProcessogramHierarchy[];
@@ -57,8 +58,6 @@ export const SearchImagesTab = ({
 
   const addProcessogramImage = useAddProcessogramImage();
 
-  const deleteProcessogramImage = useDeleteProcessogramImage();
-
   const updateAutoSearch = useUpdateAutoSearch();
 
   const images = useMemo(() => {
@@ -78,11 +77,14 @@ export const SearchImagesTab = ({
     return set;
   }, [images]);
 
+  const setDeleteProcessogramImageModal =
+    useSetDeleteProcessogramImageConfirmationModalModal();
+
   const handleDeleteImage = async (item: SearchedImageResult) => {
-    deleteProcessogramImage.mutateAsync({
-      processogram_id: processogramId,
-      key: currentElement,
-      url: item.link,
+    setDeleteProcessogramImageModal({
+      currentElement,
+      processogramId,
+      item,
     });
   };
 
@@ -91,6 +93,7 @@ export const SearchImagesTab = ({
       processogram_id: processogramId,
       key: currentElement,
       url: item.link,
+      title: item.title,
     });
   };
 

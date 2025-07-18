@@ -4,12 +4,14 @@ import { Skeleton, Tooltip } from "@mui/material";
 import { Text } from "@/components/Text";
 import { CheckCircle, Plus, Trash } from "react-feather";
 import { ThemeColors } from "theme/globalStyle";
+import { FlexColumn } from "@/components/desing-components/Flex";
 
 type Props = {
   images: SearchedImageResult[];
   isLoading: boolean;
   onClick: (item: SearchedImageResult) => void;
   onClickAdd?: (item: SearchedImageResult) => void;
+  onClickNewImage?: () => void;
   onDelete?: (item: SearchedImageResult) => void;
   selectedImages?: Set<string>;
 };
@@ -19,11 +21,26 @@ export const ImagesList = ({
   isLoading,
   onClick,
   onClickAdd,
+  onClickNewImage,
   onDelete,
   selectedImages,
 }: Props) => {
   return (
     <MediaGrid>
+      {onClickNewImage && (
+        <AddMediaItem onClick={onClickNewImage}>
+          <FlexColumn align="center" justify="center">
+            <Text
+              variant="body2"
+              color={"white"}
+              style={{ cursor: "pointer", textAlign: "center" }}
+            >
+              Add New Image
+            </Text>
+            <Plus size={16} />
+          </FlexColumn>
+        </AddMediaItem>
+      )}
       {isLoading
         ? Array.from({ length: 9 }).map((_, index) => (
             <SkeletonItem key={index}>
@@ -205,6 +222,20 @@ const MediaItem = styled.div`
       opacity: 1;
       pointer-events: auto;
     }
+  }
+`;
+
+const AddMediaItem = styled(MediaItem)`
+  background-color: ${ThemeColors.grey_100};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${ThemeColors.grey_200};
   }
 `;
 

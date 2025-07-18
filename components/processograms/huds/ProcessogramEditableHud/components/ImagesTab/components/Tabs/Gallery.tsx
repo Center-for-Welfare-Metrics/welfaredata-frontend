@@ -16,6 +16,8 @@ import {
 } from "@/api/react-query/processogram-images/useGetImages";
 import { ImagesList } from "@/components/processograms/huds/ProcessogramMainHud/tabs/MediaGallery/components/ImagesList";
 import { ImageModal } from "@/components/processograms/huds/ProcessogramMainHud/tabs/MediaGallery/components/ImageModal";
+import { useSetAddImageToProcessogramModalModal } from "modals/AddImageToProcessogramModalModal/hooks";
+import { useSetDeleteProcessogramImageConfirmationModalModal } from "modals/DeleteProcessogramImageConfirmationModalModal/hooks";
 
 type Props = {
   processogramId: string;
@@ -41,10 +43,6 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
 
   const addProcessogramImage = useAddProcessogramImage();
 
-  const deleteProcessogramImage = useDeleteProcessogramImage();
-
-  const updateAutoSearch = useUpdateAutoSearch();
-
   const images: SearchedImageResult[] = useMemo((): SearchedImageResult[] => {
     if (!processogramImages?.images) return [];
 
@@ -55,7 +53,7 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
         thumbnailLink: image.url,
       },
       link: image.url,
-      title: "",
+      title: image.title,
     }));
   }, [processogramImages, currentElement]);
 
@@ -68,11 +66,14 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
     return set;
   }, [images]);
 
+  const setDeleteProcessogramImageModal =
+    useSetDeleteProcessogramImageConfirmationModalModal();
+
   const handleDeleteImage = async (item: SearchedImageResult) => {
-    deleteProcessogramImage.mutateAsync({
-      processogram_id: processogramId,
-      key: currentElement,
-      url: item.link,
+    setDeleteProcessogramImageModal({
+      currentElement,
+      processogramId,
+      item,
     });
   };
 
@@ -81,13 +82,23 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
       processogram_id: processogramId,
       key: currentElement,
       url: item.link,
+      title: item.title,
+    });
+  };
+
+  const setNewImageModal = useSetAddImageToProcessogramModalModal();
+
+  const handleCreateNewImage = () => {
+    setNewImageModal({
+      currentElement,
+      processogramId,
     });
   };
 
   return (
     <MediaContainer>
       <FlexColumn gap={1} align="flex-start">
-        <FlexRow justify="space-between" width="100%">
+        <FlexRow mt={1} justify="space-between" width="100%">
           <Text variant="body2" color="white" opacity={0.8}>
             Images Gallery {"(Public available)"}
           </Text>
@@ -99,6 +110,7 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
           onDelete={handleDeleteImage}
           selectedImages={imagesSet}
           onClick={handleMediaClick}
+          onClickNewImage={handleCreateNewImage}
         />
       </FlexColumn>
       <Portal>

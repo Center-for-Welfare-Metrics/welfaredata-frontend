@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { useDropzone, DropzoneOptions } from "react-dropzone";
+import { useDropzone, DropzoneOptions, Accept } from "react-dropzone";
 import { Upload, X } from "react-feather";
 import styled, { css } from "styled-components";
 import { ThemeColors } from "theme/globalStyle";
@@ -13,6 +13,7 @@ interface DropzoneProps {
   maxFiles?: number;
   textContent?: React.ReactNode;
   currentFile?: File | null;
+  accept?: Accept;
 }
 
 export const Dropzone: React.FC<DropzoneProps> = ({
@@ -22,6 +23,9 @@ export const Dropzone: React.FC<DropzoneProps> = ({
   textContent,
   maxFiles = 1,
   currentFile,
+  accept = {
+    "image/svg+xml": [".svg"],
+  },
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[], rejectedFiles: any[]) => {
@@ -40,9 +44,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     () => ({
       onDrop,
       maxFiles,
-      accept: {
-        "image/svg+xml": [".svg"],
-      },
+      accept,
     }),
     [onDrop, maxFiles]
   );

@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { request } from "../request";
 import { QueryKeys } from "../keys";
-import { SearchedImageResult } from "../public/useGetImages";
 import toast from "react-hot-toast";
 
 type UploadedImageResult = {
   source: "url-only" | "bucket-s3";
   url: string;
   updated_at: string;
+  title: string;
 };
 
 type ProcessogramImages = {
@@ -40,6 +40,7 @@ type AddProcessogramImage = {
   processogram_id: string;
   key: string;
   url: string;
+  title: string;
 };
 
 const addProcessogramImage = async (params: AddProcessogramImage) => {
@@ -50,10 +51,48 @@ const addProcessogramImage = async (params: AddProcessogramImage) => {
     data: {
       key: params.key,
       url: params.url,
+      title: params.title,
     },
   });
 
   return data;
+};
+
+const addProcessogramImageWithFile = async (params: {
+  processogram_id: string;
+  body: FormData;
+}) => {
+  const { data } = await request<ProcessogramImages>({
+    method: "PATCH",
+    service: "admin-processogram-images",
+    url: `/${params.processogram_id}`,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: params.body,
+  });
+
+  return data;
+};
+
+export const useAddProcessogramImageWithFile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: { processogram_id: string; body: FormData }) =>
+      addProcessogramImageWithFile(params),
+    onSuccess: (_, { processogram_id }) => {
+      toast.success("Image added successfully");
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.GET_IMAGES.List, processogram_id],
+      });
+    },
+    onError: (error: any) => {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+      toast.error("Error adding image");
+    },
+  });
 };
 
 export const useAddProcessogramImage = () => {
@@ -66,10 +105,22 @@ export const useAddProcessogramImage = () => {
         queryKey: [QueryKeys.GET_IMAGES.List, processogram_id],
       });
     },
+    onError: (error: any) => {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+      toast.error("Error adding image");
+    },
   });
 };
 
-const deleteProcessogram = async (params: AddProcessogramImage) => {
+type DeleteProcessogramImage = {
+  processogram_id: string;
+  key: string;
+  url: string;
+};
+
+const deleteProcessogram = async (params: DeleteProcessogramImage) => {
   const { data } = await request<ProcessogramImages>({
     method: "PATCH",
     service: "admin-processogram-images",
@@ -86,7 +137,7 @@ const deleteProcessogram = async (params: AddProcessogramImage) => {
 export const useDeleteProcessogramImage = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (params: AddProcessogramImage) => deleteProcessogram(params),
+    mutationFn: (params: DeleteProcessogramImage) => deleteProcessogram(params),
     onSuccess: (_, { processogram_id }) => {
       toast.success("Image deleted successfully");
       queryClient.invalidateQueries({
