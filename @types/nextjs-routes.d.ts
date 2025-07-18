@@ -20,7 +20,6 @@ declare module "nextjs-routes" {
     | DynamicRoute<"/admin/production_modules/[id]", { "id": string }>
     | DynamicRoute<"/admin/species/[id]", { "id": string }>
     | StaticRoute<"/api/revalidate">
-    | DynamicRoute<"/deprecated_processograms/[specie]", { "specie": string }>
     | StaticRoute<"/home">
     | StaticRoute<"/login">
     | StaticRoute<"/Providers">

@@ -129,6 +129,7 @@ const ProcessogramPage = ({
               notReady={false}
               hierarchy={hierarchy}
               questionData={processogramQuestions}
+              processogramId={processogram._id}
             />
           </HudContainer>
           <FlexColumn

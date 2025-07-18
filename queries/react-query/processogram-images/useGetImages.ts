@@ -3,14 +3,14 @@ import { request } from "../request";
 import { QueryKeys } from "../keys";
 import toast from "react-hot-toast";
 
-type UploadedImageResult = {
+export type UploadedImageResult = {
   source: "url-only" | "bucket-s3";
   url: string;
   updated_at: string;
   title: string;
 };
 
-type ProcessogramImages = {
+export type ProcessogramImages = {
   autoSearch: boolean;
   processogram_id: string;
   images: Record<string, UploadedImageResult[]> | undefined;

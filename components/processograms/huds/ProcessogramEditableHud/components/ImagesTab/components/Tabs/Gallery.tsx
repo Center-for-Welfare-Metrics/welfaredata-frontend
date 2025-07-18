@@ -39,9 +39,9 @@ export const Gallery = ({ processogramId, currentElement }: Props) => {
     setSelectedImage(null);
   };
 
-  const { data: processogramImages, isLoading } = useGetImages(processogramId);
-
   const addProcessogramImage = useAddProcessogramImage();
+
+  const { data: processogramImages, isLoading } = useGetImages(processogramId);
 
   const images: SearchedImageResult[] = useMemo((): SearchedImageResult[] => {
     if (!processogramImages?.images) return [];

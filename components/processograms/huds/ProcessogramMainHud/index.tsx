@@ -18,6 +18,7 @@ type Props = {
       description: string;
     };
   };
+  processogramId: string;
   notReady: boolean;
   hierarchy: ProcessogramHierarchy[];
   questionData: ProcessogramQuestionData | null;
@@ -29,6 +30,7 @@ export const ProgressogramMainHud = ({
   notReady,
   hierarchy,
   questionData,
+  processogramId,
 }: Props) => {
   const [tab, setTab] = useState<"info" | "chat" | "media">("info");
 
@@ -61,7 +63,12 @@ export const ProgressogramMainHud = ({
           />
         )}
 
-        {tab === "media" && <MediaGallery hierarchy={hierarchy} />}
+        {tab === "media" && (
+          <MediaGallery
+            currentElement={currentElement}
+            processogramId={processogramId}
+          />
+        )}
       </Content>
       <FooterTabs justify="flex-start" gap={0}>
         <Tooltip title="Information" placement="top">

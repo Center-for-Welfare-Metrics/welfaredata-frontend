@@ -4,18 +4,18 @@ import { Text } from "components/Text";
 import { FlexColumn } from "components/desing-components/Flex";
 import {
   SearchedImageResult,
-  useGetSearchedImages,
+  useGetPublicImages,
 } from "@/api/react-query/public/useGetImages";
-import { ProcessogramHierarchy } from "types/processogram";
 import { ImageModal } from "./components/ImageModal";
 import { Portal } from "@mui/material";
 import { ImagesList } from "./components/ImagesList";
 
 type Props = {
-  hierarchy: ProcessogramHierarchy[];
+  processogramId: string;
+  currentElement: string;
 };
 
-export const MediaGallery = ({ hierarchy }: Props) => {
+export const MediaGallery = ({ processogramId, currentElement }: Props) => {
   const [selectedImage, setSelectedImage] =
     useState<SearchedImageResult | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,11 +30,22 @@ export const MediaGallery = ({ hierarchy }: Props) => {
     setSelectedImage(null);
   };
 
-  const { data, isLoading } = useGetSearchedImages({ hierarchy });
+  const { data: processogramImages, isLoading } =
+    useGetPublicImages(processogramId);
 
-  const images = useMemo(() => {
-    return data?.images ?? [];
-  }, [data]);
+  const images: SearchedImageResult[] = useMemo((): SearchedImageResult[] => {
+    if (!processogramImages?.images) return [];
+
+    const allImages = processogramImages.images[currentElement] ?? [];
+
+    return allImages.map((image) => ({
+      image: {
+        thumbnailLink: image.url,
+      },
+      link: image.url,
+      title: image.title,
+    }));
+  }, [processogramImages, currentElement]);
 
   return (
     <MediaContainer>
@@ -42,11 +53,19 @@ export const MediaGallery = ({ hierarchy }: Props) => {
         <Text variant="body2" color="white" opacity={0.8}>
           {isLoading ? "Loading images..." : "Browse through images"}
         </Text>
-        <ImagesList
-          images={images}
-          isLoading={isLoading}
-          onClick={handleMediaClick}
-        />
+        {images.length > 0 ? (
+          <ImagesList
+            images={images}
+            isLoading={isLoading}
+            onClick={handleMediaClick}
+          />
+        ) : (
+          <FlexColumn align="center" justify="center">
+            <Text variant="body2" color="white" opacity={0.5}>
+              No images found for this processogram.
+            </Text>
+          </FlexColumn>
+        )}
       </FlexColumn>
       <Portal>
         <ImageModal
