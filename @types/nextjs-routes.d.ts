@@ -22,7 +22,6 @@ declare module "nextjs-routes" {
     | StaticRoute<"/api/revalidate">
     | StaticRoute<"/home">
     | StaticRoute<"/login">
-    | StaticRoute<"/Providers">
     | StaticRoute<"/register">;
 
   interface StaticRoute<Pathname> {

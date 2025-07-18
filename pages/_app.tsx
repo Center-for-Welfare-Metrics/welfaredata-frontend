@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import { Provider } from "jotai";
 import { GlobalStyles } from "../theme/globalStyle";
 import UserContext, { IUser, IUserContext } from "@/context/user";
 import authApi from "queries/auth";
@@ -12,8 +11,7 @@ import { Modals } from "modals";
 import { ThemeProvider } from "next-themes";
 import { PublicNavbarNavigation } from "@/components/PublicNavbarNavigation";
 import { useWhereIs } from "@/utils/hooks/useWhereIs";
-import { NavBarProvider } from "@/context/useNavBar/NavBarProvider";
-import { Providers } from "./Providers";
+import { Providers } from "../Providers";
 
 type ApplicationProps = {
   children: React.ReactNode;
