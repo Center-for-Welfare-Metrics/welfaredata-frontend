@@ -141,6 +141,9 @@ const AddImageToProcessogramModalModal = ({
       open={true}
       onClose={onClose}
       title="Add Image to Processogram"
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseUp={(e) => e.stopPropagation()}
     >
       <Box
         component="form"

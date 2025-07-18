@@ -23,11 +23,13 @@ const DeleteProcessogramImageConfirmationModalModal = ({
   const deleteProcessogramImage = useDeleteProcessogramImage();
 
   const handleDeleteImage = async () => {
-    deleteProcessogramImage.mutateAsync({
+    await deleteProcessogramImage.mutateAsync({
       processogram_id: processogramId,
       key: currentElement,
       url: item.link,
     });
+
+    onClose();
   };
 
   return (
@@ -37,6 +39,9 @@ const DeleteProcessogramImageConfirmationModalModal = ({
       title="Delete Image"
       centerTitle
       height="350px"
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseUp={(e) => e.stopPropagation()}
     >
       <Content>
         <FlexColumn gap={1} mt={1}>
