@@ -6,6 +6,7 @@ import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 import { getProcessogramUrls } from "@/utils/processogram-theme";
 import { useTheme } from "next-themes";
 import styled from "styled-components";
+import { media } from "styles/media";
 import { Specie } from "types/species";
 
 type HomeProps = {
@@ -53,6 +54,10 @@ const CardsList = styled(FlexRow)`
 const Container = styled(FlexColumn)`
   padding: 2rem;
   box-sizing: border-box;
+
+  ${media.up.medium`
+    padding:1rem;
+  `}
 `;
 
 export const getStaticProps = async () => {

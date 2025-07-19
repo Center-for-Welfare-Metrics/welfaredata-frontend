@@ -9,6 +9,9 @@ import { useWhereIs } from "@/utils/hooks/useWhereIs";
 import { Package, Target, Wind } from "react-feather";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { useDevice } from "@/utils/hooks/useDevice";
+import { media } from "styles/media";
+import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 
 const items = ["species", "modules", "production"] as const;
 
@@ -32,10 +35,14 @@ const IconMap: Record<
 export const PublicNavbarNavigation = () => {
   const { isHomePage, isExactPath } = useWhereIs();
 
+  const { isMobile } = useDevice();
+
   const { pathname, slug } = useParams<{
     pathname: string | undefined;
     slug: string | undefined;
   }>();
+
+  const { setPublicNavBarRef } = useNavBar();
 
   const checkIfItemIsActive = (item: Item) => {
     if (item === "species") {
@@ -141,7 +148,7 @@ export const PublicNavbarNavigation = () => {
   };
 
   return (
-    <Container>
+    <Container ref={setPublicNavBarRef}>
       <FlexRow gap={1.5} align="center" justify="flex-start">
         {items.map((item, index) => (
           <React.Fragment key={item}>
@@ -149,13 +156,15 @@ export const PublicNavbarNavigation = () => {
               item,
               <Item>
                 <Icon item={item} />
-                <Text
-                  variant="body2"
-                  fontWeight="700"
-                  customColor={getItemColor(item)}
-                >
-                  {LabelMap[item]}
-                </Text>
+                {!isMobile && (
+                  <Text
+                    variant="body2"
+                    fontWeight="700"
+                    customColor={getItemColor(item)}
+                  >
+                    {LabelMap[item]}
+                  </Text>
+                )}
               </Item>
             )}
 
@@ -183,6 +192,14 @@ const Container = styled(FlexRow)`
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  background-color: color-mix(in srgb, ${ThemeColors.black} 50%, transparent);
+  backdrop-filter: blur(10px);
+
+  ${media.up.medium`
+    width: 100vw;
+    overflow: auto;
+    padding: 1rem;
+  `}
 `;
 
 const LinkContainer = styled(Link)`

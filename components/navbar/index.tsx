@@ -17,10 +17,10 @@ import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 const NavBar = () => {
   const { user, logOut } = useContext(UserContext);
 
-  const { loggedInNavBarRef } = useNavBar();
+  const { setLoggedInNavBarRef } = useNavBar();
 
   return (
-    <Containter id="main-nav-menu" ref={loggedInNavBarRef}>
+    <Containter id="main-nav-menu" ref={setLoggedInNavBarRef}>
       <NavItems>
         {NavItens.map((nav_item) => (
           <React.Fragment key={`${nav_item.name}_${nav_item.route}`}>

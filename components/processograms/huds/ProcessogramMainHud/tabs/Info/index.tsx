@@ -5,6 +5,7 @@ import { deslugify } from "@/utils/string";
 import { FlexColumn } from "@/components/desing-components/Flex";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
+import { media } from "styles/media";
 
 type Props = {
   currentElement: string;
@@ -47,4 +48,8 @@ export const ProcessogramInfo = ({ currentElement, data, notReady }: Props) => {
 const Container = styled.div`
   padding-inline: 2rem;
   padding-top: 2rem;
+
+  ${media.up.medium`
+    padding: 0.5rem;
+  `}
 `;

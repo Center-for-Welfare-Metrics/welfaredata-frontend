@@ -3,6 +3,7 @@ import { Text } from "@/components/Text";
 import useDebounce from "@/utils/hooks/useDebounce";
 import { ChevronRight } from "react-feather";
 import styled from "styled-components";
+import { media } from "styles/media";
 import { ThemeColors } from "theme/globalStyle";
 import { ProcessogramHierarchy } from "types/processogram";
 
@@ -62,4 +63,8 @@ const Container = styled.div`
   background-color: ${ThemeColors.black};
   padding-inline: 1rem;
   padding-block: 0.5rem;
+
+  ${media.up.medium`    
+    padding-inline: 0;
+  `}
 `;

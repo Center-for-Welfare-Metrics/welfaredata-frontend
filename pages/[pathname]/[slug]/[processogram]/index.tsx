@@ -19,6 +19,8 @@ import { useTheme } from "next-themes";
 import { EventBus } from "@/components/processograms/ProcessogramComplete/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
+import { media } from "styles/media";
+import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 
 type HomeProps = {
   processogram: Processogram;
@@ -40,6 +42,8 @@ const ProcessogramPage = ({
   const [currentHierarchy, setHierarchy] = useState<ProcessogramHierarchy[]>(
     []
   );
+
+  const { publicNavBarRect } = useNavBar();
 
   const hierarchy = useMemo(() => {
     if (currentHierarchy.length > 0) return currentHierarchy;
@@ -114,12 +118,16 @@ const ProcessogramPage = ({
   }, [processogram]);
 
   return (
-    <Container>
+    <Container
+      style={{
+        height: `calc(100vh - ${publicNavBarRect?.height}px)`,
+      }}
+    >
       <Head>
         <title>Welfare Data - {processogram.name}</title>
       </Head>
       <PageBody>
-        <FlexRow height="100%" width="100%">
+        <MainContainer height="100%" width="100%">
           <HudContainer>
             <ProgressogramMainHud
               currentElement={
@@ -132,11 +140,10 @@ const ProcessogramPage = ({
               processogramId={processogram._id}
             />
           </HudContainer>
-          <FlexColumn
+          <ProcessogramWrapper
             height="100%"
             width="100%"
             justify="center"
-            px={1}
             style={{
               overflow: "hidden",
               backgroundColor: getBackgroundColor({
@@ -173,17 +180,12 @@ const ProcessogramPage = ({
               isActive={true}
               base64ImagesRef={base64ImagesRef}
             />
-          </FlexColumn>
-        </FlexRow>
+          </ProcessogramWrapper>
+        </MainContainer>
       </PageBody>
     </Container>
   );
 };
-
-const PageBody = styled(FlexRow)`
-  height: calc(100vh - 103px);
-  width: 100%;
-`;
 
 const BreadcrumbsContainer = styled.div`
   position: absolute;
@@ -193,11 +195,39 @@ const BreadcrumbsContainer = styled.div`
 `;
 
 const HudContainer = styled.div`
-  top: 0;
-  left: 0;
   width: 400px;
+  min-width: 400px;
   height: 100%;
   z-index: 1000;
+
+  ${media.up.medium`
+    width: 100vw;
+    min-width: 100vw;
+    height: 40vh;
+    max-height: 40vh;
+    min-height: 40vh;
+  `}
+`;
+
+const ProcessogramWrapper = styled(FlexColumn)`
+  padding-inline: 1rem;
+
+  ${media.up.medium`
+    padding-inline: 0rem;
+    width: 95vw;
+  `}
+`;
+
+const MainContainer = styled(FlexRow)`
+  ${media.up.medium`
+    flex-direction: column-reverse;
+    gap: 0;
+  `}
+`;
+
+const PageBody = styled(FlexRow)`
+  width: 100%;
+  height: 100%;
 `;
 
 const Container = styled(FlexColumn)`

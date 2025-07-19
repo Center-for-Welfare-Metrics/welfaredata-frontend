@@ -10,6 +10,7 @@ import { ProcessogramHierarchy } from "types/processogram";
 import { ProcessogramQuestionData } from "types/processogram-questions";
 import MediaGallery from "./tabs/MediaGallery";
 import { Tooltip } from "@mui/material";
+import { media } from "styles/media";
 
 type Props = {
   currentElement: string;
@@ -43,6 +44,14 @@ export const ProgressogramMainHud = ({
       onClick={(e) => e.stopPropagation()}
     >
       <Content>
+        {tab === "info" && (
+          <ProcessogramInfo
+            currentElement={currentElement}
+            data={data}
+            notReady={notReady}
+          />
+        )}
+
         <div
           style={{
             height: "100%",
@@ -54,14 +63,6 @@ export const ProgressogramMainHud = ({
             questions={questionData?.data?.[currentElement]?.questions ?? []}
           />
         </div>
-
-        {tab === "info" && (
-          <ProcessogramInfo
-            currentElement={currentElement}
-            data={data}
-            notReady={notReady}
-          />
-        )}
 
         {tab === "media" && (
           <MediaGallery
@@ -112,17 +113,38 @@ const Tab = styled.div<TabProps>`
     $selected &&
     css`
       box-shadow: inset 0 -2px 0 ${ThemeColors.white};
+
+      ${media.up.medium`
+        box-shadow: inset -2px 0px 0px 0px ${ThemeColors.white};
+      `}
     `};
+
+  ${media.up.medium`
+    padding-inline: 0rem;
+    width: 50px;
+    height: 100%;
+  `}
 `;
 
-const FooterTabs = styled(FlexRow)``;
+const FooterTabs = styled(FlexRow)`
+  ${media.up.medium`
+    flex-direction: column;
+    position: sticky;
+    height: 100%;
+    top: 0;
+  `}
+`;
 
 const Content = styled.div`
   height: calc(100% - 5rem);
+
+  ${media.up.medium`
+    height: 100%;
+  `}
 `;
 
 const Container = styled.div`
-  width: 400px;
+  width: 100%;
   box-sizing: border-box;
   height: 100%;
   border-right: 2px ${ThemeColors.deep_blue} solid;
@@ -134,4 +156,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  ${media.up.medium`
+    flex-direction: row-reverse;
+    border-right: none;
+    border-top: 2px ${ThemeColors.deep_blue} solid;
+  `}
 `;

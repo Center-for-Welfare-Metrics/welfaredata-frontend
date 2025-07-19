@@ -32,7 +32,7 @@ const MockDOMRectPublic: DOMRect = {
   x: 0,
   y: 0,
   width: 0,
-  height: 100,
+  height: 71,
   top: 0,
   right: 0,
   bottom: 0,
@@ -41,8 +41,11 @@ const MockDOMRectPublic: DOMRect = {
 };
 
 export const NavBarProvider: React.FC<NavBarProviderProps> = ({ children }) => {
-  const loggedInNavBarRef = useRef<HTMLDivElement | null>(null);
-  const publicNavBarRef = useRef<HTMLDivElement | null>(null);
+  const [loggedInNavBarRef, setLoggedInNavBarRef] =
+    useState<HTMLDivElement | null>(null);
+  const [publicNavBarRef, setPublicNavBarRef] = useState<HTMLDivElement | null>(
+    null
+  );
 
   const [loggedInNavBarRect, setLoggedInNavBarRect] = useState<DOMRect | null>(
     MockDOMRectLoggedIn
@@ -53,37 +56,37 @@ export const NavBarProvider: React.FC<NavBarProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const loggedInObserver = new ResizeObserver(() => {
-      if (loggedInNavBarRef.current) {
-        setLoggedInNavBarRect(
-          loggedInNavBarRef.current.getBoundingClientRect()
-        );
+      if (loggedInNavBarRef) {
+        setLoggedInNavBarRect(loggedInNavBarRef.getBoundingClientRect());
       }
     });
 
     const publicObserver = new ResizeObserver(() => {
-      if (publicNavBarRef.current) {
-        setPublicNavBarRect(publicNavBarRef.current.getBoundingClientRect());
+      if (publicNavBarRef) {
+        setPublicNavBarRect(publicNavBarRef.getBoundingClientRect());
       }
     });
 
-    if (loggedInNavBarRef.current) {
-      loggedInObserver.observe(loggedInNavBarRef.current);
-      setLoggedInNavBarRect(loggedInNavBarRef.current.getBoundingClientRect());
+    if (loggedInNavBarRef) {
+      loggedInObserver.observe(loggedInNavBarRef);
+      setLoggedInNavBarRect(loggedInNavBarRef.getBoundingClientRect());
     }
 
-    if (publicNavBarRef.current) {
-      publicObserver.observe(publicNavBarRef.current);
-      setPublicNavBarRect(publicNavBarRef.current.getBoundingClientRect());
+    if (publicNavBarRef) {
+      publicObserver.observe(publicNavBarRef);
+      setPublicNavBarRect(publicNavBarRef.getBoundingClientRect());
     }
 
     return () => {
       loggedInObserver.disconnect();
       publicObserver.disconnect();
     };
-  }, []);
+  }, [loggedInNavBarRef, publicNavBarRef]);
 
   const value: NavBarContextType = {
+    setLoggedInNavBarRef,
     loggedInNavBarRef,
+    setPublicNavBarRef,
     publicNavBarRef,
     loggedInNavBarRect,
     publicNavBarRect,

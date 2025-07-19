@@ -4,6 +4,7 @@ import { Moon, Sun } from "react-feather";
 import { Switch } from "@mui/material";
 import { ThemeColors } from "theme/globalStyle";
 import styled from "styled-components";
+import { media } from "styles/media";
 
 export const ThemeToggler = () => {
   const { resolvedTheme, setTheme } = useTheme();
@@ -70,4 +71,8 @@ const IconWrapper = styled.div`
   &:hover {
     background-color: ${ThemeColors.grey_200};
   }
+
+  ${media.up.medium`
+      padding: 0;
+    `}
 `;

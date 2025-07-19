@@ -10,6 +10,8 @@ import { ProcessogramHierarchy } from "types/processogram";
 import Markdown from "markdown-to-jsx";
 import { ThemeColors } from "theme/globalStyle";
 import { Button } from "@/components/Button";
+import { media } from "styles/media";
+import { useDevice } from "@/utils/hooks/useDevice";
 
 interface Message {
   id: string;
@@ -41,6 +43,8 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
   const [chatHistory, setChatHistory] = useState<OpenAiMessage[]>([
     { role: "assistant", content: "Hello! How can I assist you today?" },
   ]);
+
+  const { isMobile } = useDevice();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -189,7 +193,7 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
       </MessageArea>
 
       <FlexColumn gap={0}>
-        {messages.length === 1 && (
+        {!isMobile && messages.length === 1 && (
           <PillsContainer>
             <FlexRow gap={0.5} flexWrap="wrap">
               {questions.map((question, index) => (
@@ -236,13 +240,6 @@ export const AiChat = ({ hierarchy, questions }: AiChatProps) => {
   );
 };
 
-// Styled Components
-const ChatContainer = styled(FlexColumn)`
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-`;
-
 const MessageArea = styled.div`
   flex: 1;
   overflow-y: auto;
@@ -264,6 +261,10 @@ const MessageArea = styled.div`
     background: #555;
     border-radius: 4px;
   }
+
+  ${media.up.medium`
+    padding: 0.5rem;
+  `}
 `;
 
 const MessageWrapper = styled.div<{ $sender: "user" | "ai" }>`
@@ -305,6 +306,10 @@ const QuestionPill = styled.button`
   &:hover {
     background-color: ${ThemeColors.grey_200};
   }
+
+  ${media.up.medium`
+    display: none;
+  `}
 `;
 
 const InputArea = styled(FlexRow)`
@@ -312,6 +317,10 @@ const InputArea = styled(FlexRow)`
   width: 100%;
   border-top: 1px solid #333;
   box-sizing: border-box;
+
+  ${media.up.medium`
+    padding: 0.5rem;
+  `}
 `;
 
 const ChatInput = styled.input`
@@ -331,6 +340,12 @@ const ChatInput = styled.input`
   &::placeholder {
     color: #aaa;
   }
+
+  ${media.up.medium`
+    padding: 0;
+    height: 40px;
+    width: 100%;
+  `}
 `;
 
 const ErrorMessage = styled.div`
@@ -339,4 +354,15 @@ const ErrorMessage = styled.div`
   border-radius: 8px;
   margin: 0.5rem 0;
   width: 100%;
+`;
+
+const ChatContainer = styled(FlexColumn)`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  ${media.up.medium`
+    overflow:auto;
+    gap: 0.5rem;
+  `}
 `;

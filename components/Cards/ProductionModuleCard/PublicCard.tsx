@@ -8,6 +8,7 @@ import { ImageMosaic } from "@/components/ImageMosaic";
 import { useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import { Package, Target } from "react-feather";
+import { media } from "styles/media";
 
 type Props = {
   _id: string;
@@ -167,4 +168,8 @@ const LinkContainer = styled(Link)`
   @media (min-width: 3000px) {
     width: calc(15% - 0.5rem);
   }
+
+  ${media.up.medium`
+    width: 100%;
+  `}
 `;
