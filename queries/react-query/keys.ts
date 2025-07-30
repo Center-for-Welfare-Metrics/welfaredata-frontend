@@ -23,4 +23,7 @@ export const QueryKeys = {
     Search: "search-images",
     List: "get-images",
   },
+  REGISTRATION_CODE: {
+    GET: "get-registration-code",
+  },
 };

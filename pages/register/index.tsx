@@ -30,6 +30,8 @@ const RegisterPage = () => {
 
   const [onFetch, setOnFetch] = useState<boolean>(false);
 
+  const [registrationCode, setRegistrationCode] = useState<string>("");
+
   const { setUser } = useContext(UserContext);
 
   const router = useRouter();
@@ -66,7 +68,13 @@ const RegisterPage = () => {
       validation.passes(() => {
         setOnFetch(true);
         auth
-          .register({ name, email, password, password_confirmation })
+          .register({
+            name,
+            email,
+            password,
+            password_confirmation,
+            registrationCode,
+          })
           .then((response) => {
             setOnFetch(false);
             setUser(response.data);
@@ -83,10 +91,6 @@ const RegisterPage = () => {
     }
   };
 
-  useEffect(() => {
-    router.replace("/login");
-  }, []);
-
   return (
     <>
       <Head>
@@ -99,10 +103,13 @@ const RegisterPage = () => {
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
+        registrationCode={registrationCode}
+        setRegistrationCode={setRegistrationCode}
         password_confirmation={password_confirmation}
         setPasswordConfirmation={setPasswordConfirmation}
         error={error}
         register={register}
+        onFetch={onFetch}
         passwordStrength={passwordStrength as any}
       />
     </>

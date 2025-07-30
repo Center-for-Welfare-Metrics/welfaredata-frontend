@@ -30,7 +30,6 @@ export const LinkTo = styled.span`
     color: ${ThemeColors.yellow};
     transition: color 500ms;
     margin-left: 0.5rem;
-    cursor: not-allowed;
   }
   a:hover {
     transition: color 500ms;

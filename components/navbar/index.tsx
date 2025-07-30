@@ -26,11 +26,25 @@ const NavBar = () => {
           <React.Fragment key={`${nav_item.name}_${nav_item.route}`}>
             {nav_item.auth ? (
               user && (
-                <NavItem
-                  route={nav_item.route}
-                  name={nav_item.name}
-                  key={nav_item.route}
-                />
+                <>
+                  {nav_item.super ? (
+                    <>
+                      {user.super && (
+                        <NavItem
+                          route={nav_item.route}
+                          name={nav_item.name}
+                          key={nav_item.route}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <NavItem
+                      route={nav_item.route}
+                      name={nav_item.name}
+                      key={nav_item.route}
+                    />
+                  )}
+                </>
               )
             ) : (
               <NavItem

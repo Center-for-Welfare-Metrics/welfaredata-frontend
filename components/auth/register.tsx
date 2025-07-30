@@ -15,12 +15,15 @@ interface RegisterProps {
   password: string;
   setPassword: (password: string) => void;
   password_confirmation: string;
+  registrationCode: string;
+  setRegistrationCode: (registrationCode: string) => void;
   setPasswordConfirmation: (passwordConfirmation: string) => void;
   error: {
     name?: string;
     email?: string;
     password?: string;
     password_confirmation?: string;
+    registrationCode?: string;
   };
   register: (e: FormEvent<HTMLFormElement>) => void;
   passwordStrength: PasswordStrength;
@@ -34,6 +37,8 @@ const Register: React.FC<RegisterProps> = ({
   setEmail,
   password,
   setPassword,
+  registrationCode,
+  setRegistrationCode,
   password_confirmation,
   setPasswordConfirmation,
   error,
@@ -86,6 +91,16 @@ const Register: React.FC<RegisterProps> = ({
           name="password_confirmation"
           type="password"
           icon="fa-lock"
+        />
+        <FormInput
+          label="Registration Code"
+          value={registrationCode}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setRegistrationCode(e.target.value)
+          }
+          error={error.registrationCode}
+          name="registration_code"
+          icon="fa-key"
         />
         <Button loading={onFetch} type="submit" buttonStyle="success">
           Register

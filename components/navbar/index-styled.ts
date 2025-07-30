@@ -26,7 +26,7 @@ export const Containter = styled.div`
 export const NavItems = styled.div`
   display: flex;
   height: fit-content;
-  gap: 4rem;
+  gap: 1rem;
 `;
 export const UserSection = styled.div`
   display: flex;
