@@ -147,8 +147,6 @@ export const getProcessogramUrls = ({
   resolvedTheme,
 }: GetProcessogramUrlsParams) => {
   if (resolvedTheme === "dark") {
-    console.log(item);
-    console.log(isEmpty(item.processograms_urls_dark));
     if (!isEmpty(item.processograms_urls_dark)) {
       return item.processograms_urls_dark;
     } else {

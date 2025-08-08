@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getElementNameFromId } from "@/components/processograms/utils/extractInfoFromId";
 import { media } from "styles/media";
 import { useNavBar } from "@/context/useNavBar/NavBarProvider";
+import { LoadingWrapper } from "@/components/LoadingWrapper";
 
 type HomeProps = {
   processogram: Processogram;
@@ -42,6 +43,8 @@ const ProcessogramPage = ({
   const [currentHierarchy, setHierarchy] = useState<ProcessogramHierarchy[]>(
     []
   );
+
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const { publicNavBarRect } = useNavBar();
 
@@ -85,6 +88,8 @@ const ProcessogramPage = ({
     const fetchBase64Images = async (rasterImages: {
       [key: string]: { src: string };
     }) => {
+      setIsFetching(true);
+
       const promises = Object.entries(rasterImages).map(
         async ([key, value]) => {
           const response = await fetch(value.src, {
@@ -105,6 +110,8 @@ const ProcessogramPage = ({
       );
 
       await Promise.all(promises);
+
+      setIsFetching(false);
     };
 
     const rasterImages = getRasterImages({
@@ -153,6 +160,24 @@ const ProcessogramPage = ({
               position: "relative",
             }}
           >
+            {isFetching && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                  backdropFilter: "blur(5px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <LoadingWrapper loading size={120} />
+              </div>
+            )}
             <BreadcrumbsContainer>
               <BreadcrumbHud
                 hierarchy={hierarchy}
