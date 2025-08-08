@@ -60,3 +60,17 @@ export const StrengthText = styled.span<TextProps>`
   }};
   transition: color 1s;
 `;
+
+export const SuggestionsContainer = styled.div`
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+
+export const SuggestionItem = styled.span`
+  font-size: 0.75rem;
+  color: ${({ theme }) => ThemeColors.red};
+  opacity: 0.8;
+  text-align: center;
+`;

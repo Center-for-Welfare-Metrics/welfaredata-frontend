@@ -27,6 +27,12 @@ interface RegisterProps {
   };
   register: (e: FormEvent<HTMLFormElement>) => void;
   passwordStrength: PasswordStrength;
+  passwordResult?: {
+    contains: string[];
+    length: number;
+    id: number;
+    value: string;
+  };
   onFetch?: boolean;
 }
 
@@ -44,6 +50,7 @@ const Register: React.FC<RegisterProps> = ({
   error,
   register,
   passwordStrength,
+  passwordResult,
   onFetch = false,
 }) => {
   return (
@@ -80,7 +87,10 @@ const Register: React.FC<RegisterProps> = ({
           type="password"
           icon="fa-key"
         />
-        <StrongPasswordBar strength={passwordStrength} />
+        <StrongPasswordBar
+          strength={passwordStrength}
+          passwordResult={passwordResult}
+        />
         <FormInput
           label="Password Confirmation"
           value={password_confirmation}

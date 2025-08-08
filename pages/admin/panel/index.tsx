@@ -24,6 +24,11 @@ function AdminPanelPage() {
       </DefaultLayout>
     );
 
+  const getRegistrationRoute = () => {
+    const host = window.location.host;
+    return host + `/register?code=${data?.registrationCode}`;
+  };
+
   return (
     <DefaultLayout>
       <AdminLayout>
@@ -35,11 +40,11 @@ function AdminPanelPage() {
             <CopyButton
               buttonStyle="primary"
               onCopy={(uuid) => console.log("Copied UUID:", uuid)}
-              content={data?.registrationCode || ""}
+              content={getRegistrationRoute()}
             >
-              Copy Registration Code
+              Copy Registration Path
             </CopyButton>
-            <Text variant="body2">{data?.registrationCode}</Text>
+            <Text variant="body2">{getRegistrationRoute()}</Text>
           </FlexRow>
         </FlexColumn>
       </AdminLayout>

@@ -40,20 +40,38 @@ const RegisterPage = () => {
     PasswordStrength | ""
   >("");
 
+  const [passwordResult, setPasswordResult] = useState<
+    | {
+        contains: string[];
+        length: number;
+        id: number;
+        value: string;
+      }
+    | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (router.query.code && typeof router.query.code === "string") {
+      setRegistrationCode(router.query.code);
+    }
+  }, [router.query.code]);
+
   useEffect(() => {
     if (password) {
       // Cast the string value to the PasswordStrengthValue type
-      const strength = checkPasswordStrength(password)
-        .value as PasswordStrength;
+      const passwordStrengthResult = checkPasswordStrength(password);
+      const strength = passwordStrengthResult.value as PasswordStrength;
       setPasswordStrength(strength);
+      setPasswordResult(passwordStrengthResult);
     } else {
       setPasswordStrength("");
+      setPasswordResult(undefined);
     }
   }, [password]);
 
   const register = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (passwordStrength === "Weak") {
+    if (passwordStrength === "Weak" || passwordStrength === "Too weak") {
       setError({ password: ["Password too weak!"] });
     } else {
       let validation = new Validator(
@@ -111,6 +129,7 @@ const RegisterPage = () => {
         register={register}
         onFetch={onFetch}
         passwordStrength={passwordStrength as any}
+        passwordResult={passwordResult}
       />
     </>
   );
