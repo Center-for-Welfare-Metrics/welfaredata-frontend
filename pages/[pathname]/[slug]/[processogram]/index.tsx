@@ -122,7 +122,7 @@ const ProcessogramPage = ({
     if (rasterImages) {
       fetchBase64Images(rasterImages);
     }
-  }, [processogram]);
+  }, [processogram, resolvedTheme]);
 
   return (
     <Container

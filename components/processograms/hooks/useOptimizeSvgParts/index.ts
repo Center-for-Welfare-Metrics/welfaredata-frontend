@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useMemo, useRef } from "react";
+import { RefObject, useCallback, useEffect, useMemo, useRef } from "react";
 import { MAX_LEVEL } from "../../ProcessogramsList/consts";
 import { generateRasterSvgElement } from "./utils";
 import { INVERSE_DICT } from "../../utils/extractInfoFromId";
@@ -70,6 +70,11 @@ export const useOptimizeSvgParts = ({
   const { currentTheme } = useProcessogramTheme({
     element,
   });
+
+  useEffect(() => {
+    originalGElements.current.clear();
+    optimizedGElements.current.clear();
+  }, [resolvedTheme]);
 
   const replaceWithOptimized = useCallback(
     ({
