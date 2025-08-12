@@ -2,7 +2,7 @@ import { getPublicProcessograms } from "@/api/react-query/public/useGetPublicPro
 import { PublicProcessogramCard } from "@/components/Cards/ProcessogramCard/PublicCard";
 import { FlexColumn, FlexRow } from "@/components/desing-components/Flex";
 import { Text } from "@/components/Text";
-import { getRasterImages } from "@/utils/processogram-theme";
+import { getMainImageUrl, getRasterImages } from "@/utils/processogram-theme";
 import { GetStaticPropsContext } from "next";
 import { useTheme } from "next-themes";
 import { useParams } from "next/navigation";
@@ -36,12 +36,11 @@ const ModulePage = ({ processograms }: HomeProps) => {
             name={processogram.name}
             pathname={pathname}
             slug={slug}
-            image_url={
-              getRasterImages({
-                element: processogram,
-                resolvedTheme,
-              })?.[processogram.identifier].src
-            }
+            image_url={getMainImageUrl({
+              element: processogram,
+              identifier: processogram.identifier,
+              resolvedTheme,
+            })}
             processogramSlug={processogram.slug}
           />
         ))}

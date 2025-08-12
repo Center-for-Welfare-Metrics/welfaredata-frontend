@@ -17,7 +17,7 @@ type Props = {
   description: string | undefined;
   productionModulesCount: number;
   processogramsCount: number;
-  processogram_urls: string[] | undefined;
+  processogram_urls: { url: string; theme: "light" | "dark" }[] | undefined;
   disablePermissions?: boolean;
   redirectToPublicPath?: boolean;
   fullWidth?: boolean;

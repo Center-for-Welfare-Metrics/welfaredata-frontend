@@ -134,10 +134,70 @@ export const getRasterImages = ({
   }
 };
 
+type GetMainImageParams = {
+  element: GetRasterImagesParams["element"];
+  resolvedTheme: string | undefined;
+  identifier: string;
+};
+
+export const getMainImageUrl = ({
+  element,
+  identifier,
+  resolvedTheme,
+}: GetMainImageParams) => {
+  if (resolvedTheme === "dark") {
+    const darkUrl = element.raster_images_dark?.[identifier]?.src;
+    if (darkUrl) {
+      return {
+        url: darkUrl,
+        theme: "dark" as const,
+      };
+    } else {
+      const lightUrl = element.raster_images_light?.[identifier]?.src;
+      if (lightUrl) {
+        return {
+          url: lightUrl,
+          theme: "light" as const,
+        };
+      }
+    }
+
+    return {
+      url: "",
+      theme: "dark" as const,
+    };
+  }
+
+  const lightUrl = element.raster_images_light?.[identifier]?.src;
+  if (lightUrl) {
+    return {
+      url: lightUrl,
+      theme: "light" as const,
+    };
+  } else {
+    const darkUrl = element.raster_images_dark?.[identifier]?.src;
+    if (darkUrl) {
+      return {
+        url: darkUrl,
+        theme: "dark" as const,
+      };
+    }
+  }
+
+  return {
+    url: "",
+    theme: "light" as const,
+  };
+};
+
 type GetProcessogramUrlsParams = {
   item: {
-    processograms_urls_dark?: string[];
-    processograms_urls_light?: string[];
+    processograms: {
+      _id: string;
+      identifier: string;
+      url_dark: string | undefined;
+      url_light: string | undefined;
+    }[];
   };
   resolvedTheme: string | undefined;
 };
@@ -145,18 +205,37 @@ type GetProcessogramUrlsParams = {
 export const getProcessogramUrls = ({
   item,
   resolvedTheme,
-}: GetProcessogramUrlsParams) => {
-  if (resolvedTheme === "dark") {
-    if (!isEmpty(item.processograms_urls_dark)) {
-      return item.processograms_urls_dark;
+}: GetProcessogramUrlsParams): { url: string; theme: "light" | "dark" }[] => {
+  return item.processograms.map((processogram) => {
+    if (resolvedTheme === "dark") {
+      if (processogram.url_dark) {
+        return {
+          url: processogram.url_dark,
+          theme: "dark" as const,
+        };
+      } else if (processogram.url_light) {
+        return {
+          url: processogram.url_light,
+          theme: "light" as const,
+        };
+      }
     } else {
-      return item.processograms_urls_light;
+      if (processogram.url_light) {
+        return {
+          url: processogram.url_light,
+          theme: "light" as const,
+        };
+      } else if (processogram.url_dark) {
+        return {
+          url: processogram.url_dark,
+          theme: "dark" as const,
+        };
+      }
     }
-  } else {
-    if (!isEmpty(item.processograms_urls_light)) {
-      return item.processograms_urls_light;
-    } else {
-      return item.processograms_urls_dark;
-    }
-  }
+
+    return {
+      url: processogram.url_light || processogram.url_dark || "",
+      theme: "light" as const,
+    };
+  });
 };

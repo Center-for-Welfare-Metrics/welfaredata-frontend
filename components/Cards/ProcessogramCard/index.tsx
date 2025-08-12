@@ -18,7 +18,12 @@ type Props = {
   specie_id: string;
   description: string | undefined;
   status: ProcessogramStatus;
-  image_url: string | undefined;
+  image_url:
+    | {
+        url: string;
+        theme: "dark" | "light";
+      }
+    | undefined;
   is_published: boolean;
   files: {
     light?: {

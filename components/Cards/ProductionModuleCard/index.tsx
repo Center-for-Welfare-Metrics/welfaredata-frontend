@@ -16,7 +16,7 @@ type Props = {
   specie_id: string;
   description: string | undefined;
   processogramsCount: number;
-  processograms_urls: string[] | undefined;
+  processogram_urls: { url: string; theme: "light" | "dark" }[] | undefined;
   pathname?: string;
   disablePermissions?: boolean;
   redirectToPublicPath?: boolean;
@@ -29,7 +29,7 @@ export const ProductionModuleCard = ({
   description,
   specie_id,
   processogramsCount,
-  processograms_urls,
+  processogram_urls,
   pathname,
   disablePermissions,
   redirectToPublicPath,
@@ -87,10 +87,10 @@ export const ProductionModuleCard = ({
         width: halfWidth ? "50%" : undefined,
       }}
     >
-      {processograms_urls && (
+      {processogram_urls && (
         <MosaicWrapper>
           {" "}
-          <ImageMosaic urls={processograms_urls} className="mosaic" />
+          <ImageMosaic urls={processogram_urls} className="mosaic" />
         </MosaicWrapper>
       )}
       <BackDrop />

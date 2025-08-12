@@ -16,7 +16,12 @@ type Props = {
   slug: string;
   processogramSlug: string;
   description: string | undefined;
-  image_url: string | undefined;
+  image_url:
+    | {
+        url: string;
+        theme: "dark" | "light";
+      }
+    | undefined;
 };
 
 export const PublicProcessogramCard = ({

@@ -181,7 +181,7 @@ export const SpeciesPage = ({ specie_id }: Props) => {
                     _id={productionModule._id}
                     description={productionModule.description}
                     specie_id={productionModule.specie_id}
-                    processograms_urls={getProcessogramUrls({
+                    processogram_urls={getProcessogramUrls({
                       item: productionModule,
                       resolvedTheme,
                     })}

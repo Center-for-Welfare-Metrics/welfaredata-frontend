@@ -15,7 +15,7 @@ type Props = {
   description: string;
   productionModulesCount: number;
   processogramsCount: number;
-  processogram_urls: string[] | undefined;
+  processogram_urls: { url: string; theme: "light" | "dark" }[] | undefined;
 };
 
 export const PublicSpecieCard = ({

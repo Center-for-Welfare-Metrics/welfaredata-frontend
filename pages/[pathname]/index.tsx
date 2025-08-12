@@ -35,7 +35,7 @@ const SpeciesPage = ({ productionModules }: HomeProps) => {
             name={productionModule.name}
             description={productionModule.description}
             processogramsCount={productionModule.processogramsCount}
-            processograms_urls={getProcessogramUrls({
+            processogram_urls={getProcessogramUrls({
               item: productionModule,
               resolvedTheme,
             })}

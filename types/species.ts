@@ -5,8 +5,12 @@ export type Specie = {
   description: string;
   processogramsCount: number;
   productionModulesCount: number;
-  processograms_urls_dark: string[];
-  processograms_urls_light: string[];
+  processograms: {
+    _id: string;
+    identifier: string;
+    url_dark: string | undefined;
+    url_light: string | undefined;
+  }[];
   createdAt: string;
   updatedAt: string;
 };

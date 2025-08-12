@@ -16,7 +16,7 @@ type Props = {
   name: string;
   description: string | undefined;
   processogramsCount: number;
-  processograms_urls: string[] | undefined;
+  processogram_urls: { url: string; theme: "light" | "dark" }[] | undefined;
   pathname: string;
 };
 
@@ -26,7 +26,7 @@ export const PublicProductionModuleCard = ({
   name,
   description,
   processogramsCount,
-  processograms_urls,
+  processogram_urls,
   pathname,
 }: Props) => {
   const { resolvedTheme } = useTheme();
@@ -59,13 +59,10 @@ export const PublicProductionModuleCard = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {processograms_urls && (
+      {processogram_urls && (
         <MosaicWrapper>
           {" "}
-          <ImageMosaic
-            urls={processograms_urls}
-            enableAnimation={isMouseOver}
-          />
+          <ImageMosaic urls={processogram_urls} enableAnimation={isMouseOver} />
         </MosaicWrapper>
       )}
       <Container>
