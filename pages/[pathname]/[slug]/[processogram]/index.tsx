@@ -23,6 +23,7 @@ import { media } from "styles/media";
 import { useNavBar } from "@/context/useNavBar/NavBarProvider";
 import { LoadingWrapper } from "@/components/LoadingWrapper";
 import { ThemeColors } from "theme/globalStyle";
+import { useSetThemeDialogModal } from "modals/ThemeDialogModal/hooks";
 
 type HomeProps = {
   processogram: Processogram;
@@ -85,6 +86,8 @@ const ProcessogramPage = ({
     new Map<string, string>()
   );
 
+  const setThemeDialog = useSetThemeDialogModal();
+
   useEffect(() => {
     const fetchBase64Images = async (rasterImages: {
       [key: string]: { src: string };
@@ -139,14 +142,21 @@ const ProcessogramPage = ({
       alert(
         "Sorry for the inconvenience, but this processogram is only available in light mode. The theme has been switched to light mode to ensure the best viewing experience."
       );
+      setThemeDialog({
+        title: "Theme Changed to Light Mode",
+        message:
+          "Sorry for the inconvenience, but this processogram is only available in light mode. The theme has been switched to light mode to ensure the best viewing experience.",
+      });
     } else if (
       resolvedTheme === "light" &&
       bgColor === ThemeColors.fixedBackgroundBlack
     ) {
       setTheme("dark");
-      alert(
-        "Sorry for the inconvenience, but this processogram is only available in dark mode. The theme has been switched to dark mode to ensure the best viewing experience."
-      );
+      setThemeDialog({
+        title: "Theme Changed to Dark Mode",
+        message:
+          "Sorry for the inconvenience, but this processogram is only available in dark mode. The theme has been switched to dark mode to ensure the best viewing experience.",
+      });
     }
   }, [processogram]);
 

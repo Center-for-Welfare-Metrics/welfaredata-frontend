@@ -11,6 +11,7 @@ import { UpdateProcessogramModalWrapper } from './UpdateProcessogramModal';
 import { DeleteProcessogramModalWrapper } from './DeleteProcessogramModal';
 import { AddImageToProcessogramModalModalWrapper } from './AddImageToProcessogramModalModal';
 import { DeleteProcessogramImageConfirmationModalModalWrapper } from './DeleteProcessogramImageConfirmationModalModal';
+import { ThemeDialogModalWrapper } from './ThemeDialogModal';
 
 export const Modals = () => {
   return (
@@ -29,6 +30,7 @@ export const Modals = () => {
       <CreateProcessogramModalWrapper />
       <AddImageToProcessogramModalModalWrapper />
       <DeleteProcessogramImageConfirmationModalModalWrapper />
+      <ThemeDialogModalWrapper />
     </>
   );
 };
