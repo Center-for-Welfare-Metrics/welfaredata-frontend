@@ -90,16 +90,13 @@ const ProcessogramPage = ({
 
   useEffect(() => {
     const fetchBase64Images = async (rasterImages: {
-      [key: string]: { src: string };
+      [key: string]: { src: string; bucket_key: string };
     }) => {
       setIsFetching(true);
 
       const promises = Object.entries(rasterImages).map(
         async ([key, value]) => {
-          const response = await fetch(value.src, {
-            method: "GET",
-            headers: { "Cache-Control": "no-cache" },
-          });
+          const response = await fetch(value.src);
           const blob = await response.blob();
           return new Promise<void>((resolve) => {
             const reader = new FileReader();

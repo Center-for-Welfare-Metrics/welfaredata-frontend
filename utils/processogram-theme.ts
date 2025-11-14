@@ -97,6 +97,7 @@ type GetRasterImagesParams = {
     raster_images_dark?: {
       [key: string]: {
         src: string;
+        bucket_key: string;
         width: number;
         height: number;
         x: number;
@@ -106,6 +107,7 @@ type GetRasterImagesParams = {
     raster_images_light?: {
       [key: string]: {
         src: string;
+        bucket_key: string;
         width: number;
         height: number;
         x: number;

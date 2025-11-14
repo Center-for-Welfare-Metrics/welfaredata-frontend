@@ -31,6 +31,7 @@ export type Processogram = {
     | {
         [key: string]: {
           src: string;
+          bucket_key: string;
           width: number;
           height: number;
           x: number;
@@ -42,6 +43,7 @@ export type Processogram = {
     | {
         [key: string]: {
           src: string;
+          bucket_key: string;
           width: number;
           height: number;
           x: number;
@@ -79,6 +81,7 @@ export type ProcessogramById = {
     | {
         [key: string]: {
           src: string;
+          bucket_key: string;
           width: number;
           height: number;
           x: number;
@@ -90,6 +93,7 @@ export type ProcessogramById = {
     | {
         [key: string]: {
           src: string;
+          bucket_key: string;
           width: number;
           height: number;
           x: number;
